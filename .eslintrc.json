@@ -1,0 +1,12 @@
+{
+	"extends": ["react-app"],
+	"rules": {
+		"semi": [1, "never"]
+	},
+	"env": {
+		"browser": true
+	}
+}
+
+
+

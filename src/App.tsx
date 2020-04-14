@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import {Switch, Route, BrowserRouter, Redirect, RouteProps} from 'react-router-dom'
+import { Provider } from 'react-redux'
+import store from 'store/initStore'
+import HomePage from 'pages/Home/HomePage'
+import LoginPage from 'pages/Login/LoginPage'
+import './App.css'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function PrivateRoute(props: RouteProps) {
+	const hasToken = true
+    const { component, ...rest } = props
+
+	return (
+		hasToken
+		?  <Route {...rest} component={component} />
+		: <Redirect to="/login" />
+	)
 }
 
-export default App;
+function App() {
+    return (
+        <Provider store={store}>
+            <div className="App">
+                <BrowserRouter>
+                    <Switch>
+                        <Route exact path="/login" component={LoginPage} />
+                        <PrivateRoute path="/home" component={HomePage} />
+                        <Redirect to="/home" />
+                    </Switch>
+                </BrowserRouter>
+            </div>
+        </Provider>
+    )
+}
+
+export default App
