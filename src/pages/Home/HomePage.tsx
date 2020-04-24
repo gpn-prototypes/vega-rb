@@ -1,6 +1,6 @@
-import React, {useEffect } from 'react'
+import React, { useEffect } from 'react'
 import style from './style.module.css'
-import {useDispatch} from 'react-redux'
+import { useDispatch } from 'react-redux'
 import projectDuck from 'store/projectDuck'
 
 const HomePage: React.FC<{}> = () => {
@@ -9,7 +9,6 @@ const HomePage: React.FC<{}> = () => {
     useEffect(() => {
         dispatch(projectDuck.actions.fetchParams.started('id'))
     }, [dispatch])
-
 
     return (
         <>

@@ -1,5 +1,11 @@
 import React from 'react'
-import {Switch, Route, BrowserRouter, Redirect, RouteProps} from 'react-router-dom'
+import {
+    BrowserRouter,
+    Redirect,
+    Route,
+    RouteProps,
+    Switch,
+} from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from 'store/initStore'
 import HomePage from 'pages/Home/HomePage'
@@ -7,14 +13,14 @@ import LoginPage from 'pages/Login/LoginPage'
 import './App.css'
 
 function PrivateRoute(props: RouteProps) {
-	const hasToken = true
+    const hasToken = true
     const { component, ...rest } = props
 
-	return (
-		hasToken
-		?  <Route {...rest} component={component} />
-		: <Redirect to="/login" />
-	)
+    return hasToken ? (
+        <Route {...rest} component={component} />
+    ) : (
+        <Redirect to="/login" />
+    )
 }
 
 function App() {

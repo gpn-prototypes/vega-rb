@@ -2,7 +2,7 @@ import * as io from 'io-ts'
 
 const OptionalParam = io.partial({
     /** Param name ? */
-    title: io.union([io.string, io.null])
+    title: io.union([io.string, io.null]),
 })
 
 const ParamRequired = io.interface({
@@ -25,4 +25,3 @@ export const Param = io.intersection([OptionalParam, ParamRequired])
 export const ParamArray = io.array(Param)
 
 export type Param = io.TypeOf<typeof Param>
-
