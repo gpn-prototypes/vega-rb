@@ -1,0 +1,71 @@
+.rc-tree {
+    border: 1px solid transparent;
+}
+
+.rc-tree-indent-unit {
+    padding-left: 10px;
+}
+
+.rc-tree-treenode {
+    display: flex;
+    align-items: stretch;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.rc-tree-treenode .rc-tree-title {
+    color: var(--color-font);
+}
+
+.rc-tree-treenode:nth-child(even) {
+    background-color: var(--color-default);
+}
+
+.rc-tree-treenode:nth-child(odd) {
+    background-color: var(--color-secondary);
+}
+
+.rc-tree .rc-tree-treenode .rc-tree-node-content-wrapper {
+    display: flex;
+    margin-left: 8px;
+    flex: 1;
+}
+
+.rc-tree-switcher {
+    display: flex;
+    align-items: center;
+}
+
+.rc-tree-switcher.rc-tree-switcher_open {
+    flex-direction: column;
+}
+
+.rc-tree-indent {
+    display: flex;
+    align-self: normal;
+}
+
+.rc-tree-indent-unit {
+    background-size: 1px 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: linear-gradient(
+        rgba(246, 251, 253, 0.28),
+        rgba(246, 251, 253, 0.28)
+    );
+}
+
+.rc-tree-iconEle {
+    display: flex;
+    align-self: center;
+}
+
+.rc-tree-title {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.rc-tree-focused:not(.rc-tree-active-focused) {
+    background-color: cyan;
+}

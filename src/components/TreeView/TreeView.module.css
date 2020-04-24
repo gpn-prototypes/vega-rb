@@ -1,0 +1,33 @@
+.root {
+    --color-default: #22272b;
+    --color-secondary: #161a1d;
+    --color-font: #fafafa;
+
+    font-family: Segoe UI;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 24px;
+
+    background-color: var(--color-default);
+    height: 100%;
+    overflow-y: auto;
+}
+
+.root::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.root::-webkit-scrollbar {
+    background-color: var(--color-secondary);
+}
+
+.switchIconWrapper {
+    display: flex;
+    flex-grow: 1;
+    align-items: flex-end;
+}
+
+.openedLineWrapper {
+    flex: 1;
+}

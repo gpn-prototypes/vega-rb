@@ -1,0 +1,5 @@
+.titleRow {
+    display: inline-flex;
+    flex: 1;
+    margin: 0 4px;
+}

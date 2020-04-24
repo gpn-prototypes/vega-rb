@@ -1,8 +1,5 @@
 {
-    "plugins": [
-        "stylelint-order",
-        "stylelint-prettier"
-    ],
+    "plugins": ["stylelint-order", "stylelint-prettier"],
     "rules": {
         "prettier/prettier": true,
         "indentation": 4,
@@ -15,10 +12,7 @@
         "shorthand-property-no-redundant-values": true,
         "declaration-no-important": true,
         "declaration-block-single-line-max-declarations": 1,
-        "order/order": [
-            "custom-properties",
-            "declarations"
-        ],
+        "order/order": ["custom-properties", "declarations"],
         "order/properties-order": [
             "display",
             "position",
