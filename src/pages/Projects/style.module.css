@@ -1,0 +1,39 @@
+.ProjectsPage {
+    padding: 12px;
+}
+.Headtext {
+    margin: 12px 0;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 32px;
+    color: #fafafa;
+}
+.FlexContainer {
+    display: flex;
+    justify-content: space-between;
+}
+.FlexContainerIn {
+    display: flex;
+}
+.ProjectList {
+    padding: 12px;
+    list-style-type: none;
+    color: #fafafa;
+    height: 60vh;
+    overflow-y: scroll;
+}
+.ProjectList li {
+    cursor: pointer;
+    margin: 0;
+    padding: 12px;
+}
+.ProjectList li:nth-child(even) {
+    background: rgba(246, 251, 253, 0.06);
+}
+.ProjectList li:nth-child(odd) {
+    background: #23272b;
+}
+.NavWrapper {
+    width: 302px;
+    padding-right: 40px;
+}
