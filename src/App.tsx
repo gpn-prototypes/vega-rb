@@ -15,13 +15,14 @@ import ProjectsPage from 'pages/Projects/Projects'
 import CreateProject from 'pages/Projects/CreateProject'
 import SchemePage from 'pages/Scheme/Scheme'
 import classNames from 'classnames'
+import { ReactComponent as IconLogo } from 'icons/logo.svg'
+
 import '@gpn-design/uikit/__internal__/src/components/Theme/Theme.css'
 import '@gpn-design/uikit/__internal__/src/components/Theme/_color/Theme_color_gpnDefault.css'
 import '@gpn-design/uikit/__internal__/src/components/Theme/_color/Theme_color_gpnDark.css'
 import '@gpn-design/uikit/__internal__/src/components/Theme/_color/Theme_color_gpnDisplay.css'
 import '@gpn-design/uikit/__internal__/src/components/Theme/_space/Theme_space_gpnDefault.css'
 import '@gpn-design/uikit/__internal__/src/components/Theme/_size/Theme_size_gpnDefault.css'
-import '@gpn-design/uikit/__internal__/src/components/Theme/_font/theme_font_gpnDefault.css'
 import '@gpn-design/uikit/__internal__/src/components/Theme/_control/Theme_control_gpnDefault.css'
 import '@gpn-design/uikit/__internal__/src/utils/whitepaper/whitepaper.css'
 import './App.css'
@@ -49,7 +50,12 @@ function App() {
     return (
         <Provider store={store}>
             <div className={classNames('App', themeClassname)}>
-                <div className="Header" />
+                <div className="Header">
+                    <a href="/">
+                        <IconLogo />
+                    </a>
+                </div>
+
                 <BrowserRouter>
                     <Switch>
                         <PrivateRoute path="/home" component={HomePage} />

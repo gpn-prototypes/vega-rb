@@ -1,3 +1,18 @@
 .SchemePage {
 
 }
+.Tabs {
+    padding: 8px;
+}
+.Header {
+    padding: 0px 16px;
+}
+.Content {
+    padding: 0px 16px;
+}
+.ButtonStructure {
+    margin-right: 12px;
+}
+.ButtonData {
+    margin-right: 12px;
+}
