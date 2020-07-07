@@ -16,3 +16,6 @@
 .ButtonData {
     margin-right: 12px;
 }
+.Content {
+    display:flex;
+}

@@ -1,11 +1,11 @@
 .App {
-    background-color: #22272B;
+    background-color: #22272b;
     height: 100vh;
     width: 100vw;
     color: #fafafa;
 }
 .Header {
-    background:#16191C;
+    background: #16191c;
     padding: 9px 16px;
 }
 .AppBody {

@@ -2,6 +2,7 @@ import React from 'react'
 import style from './style.module.css'
 import { Tabs } from '@gpn-prototypes/vega-ui'
 import { Button, ChoiceGroup } from '@gpn-prototypes/vega-ui'
+import DistributionChart from './components/DistributionChart'
 
 const choiceGroupItems = [
     {
@@ -56,7 +57,7 @@ const SchemePage: React.FC<{}> = () => {
                 />
             </div>
             <div className={style.Content}>
-                <div>content</div>
+                <DistributionChart />
             </div>
         </div>
     )
