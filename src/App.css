@@ -1,12 +1,27 @@
 .App {
-    background-color: #22272B;
+    background-color: #22272b;
     height: 100vh;
     width: 100vw;
     color: #fafafa;
 }
 .Header {
-    background:#16191C;
+    display: flex;
+    align-items: center;
+    background: #16191c;
     padding: 9px 16px;
+}
+.Header a {
+    display: inline-block;
+    margin-right: 6px;
+    width: 16px;
+    height: 16px;
+}
+.Header span {
+    font-family: Arial;
+    font-size: 14px;
+    line-height: 16px;
+    color: #fafafa;
+    text-transform: uppercase;
 }
 .AppBody {
 }

@@ -1,8 +1,10 @@
 .ProjectsPage {
-    padding: 12px;
+    padding: 24px 12px;
 }
 .Headtext {
-    margin: 12px 0;
+    padding:0;
+    margin:0;
+    padding-bottom: 12px;
     font-style: normal;
     font-weight: bold;
     font-size: 32px;
@@ -10,13 +12,12 @@
 }
 .FlexContainer {
     display: flex;
-    justify-content: space-between;
 }
 .FlexContainerIn {
     display: flex;
 }
 .ProjectList {
-    padding: 12px;
+    padding: 12px 0;
     list-style-type: none;
     color: #fafafa;
     height: 60vh;
@@ -35,5 +36,8 @@
 }
 .NavWrapper {
     width: 302px;
-    padding-right: 40px;
+    margin-right: 40px;
+}
+.TextField {
+    margin-right: 40px;
 }

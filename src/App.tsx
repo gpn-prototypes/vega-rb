@@ -16,6 +16,8 @@ import CreateProject from 'pages/Projects/CreateProject'
 import SchemePage from 'pages/Scheme/Scheme'
 import classNames from 'classnames'
 import { ReactComponent as IconLogo } from 'icons/logo.svg'
+import { ApolloProvider } from '@apollo/react-hooks'
+import client from 'client'
 
 import '@gpn-design/uikit/__internal__/src/components/Theme/Theme.css'
 import '@gpn-design/uikit/__internal__/src/components/Theme/_color/Theme_color_gpnDefault.css'
@@ -49,27 +51,30 @@ function PrivateRoute(props: RouteProps) {
 function App() {
     return (
         <Provider store={store}>
-            <div className={classNames('App', themeClassname)}>
-                <div className="Header">
-                    <a href="/">
-                        <IconLogo />
-                    </a>
-                </div>
+            <ApolloProvider client={client}>
+                <div className={classNames('App', themeClassname)}>
+                    <div className="Header">
+                        <a href="/">
+                            <IconLogo />
+                        </a>
+                        <span>Вега 1.0</span>
+                    </div>
 
-                <BrowserRouter>
-                    <Switch>
-                        <PrivateRoute path="/home" component={HomePage} />
-                        <Route exact path="/login" component={LoginPage} />
-                        <Route exact path="/p/:id" component={SchemePage} />
-                        <Route
-                            path="/projects/create"
-                            component={CreateProject}
-                        />
-                        <Route path="/projects" component={ProjectsPage} />
-                        <Redirect to="/projects" />
-                    </Switch>
-                </BrowserRouter>
-            </div>
+                    <BrowserRouter>
+                        <Switch>
+                            <PrivateRoute path="/home" component={HomePage} />
+                            <Route exact path="/login" component={LoginPage} />
+                            <Route exact path="/p/:id" component={SchemePage} />
+                            <Route
+                                path="/projects/create"
+                                component={CreateProject}
+                            />
+                            <Route path="/projects" component={ProjectsPage} />
+                            <Redirect to="/projects" />
+                        </Switch>
+                    </BrowserRouter>
+                </div>
+            </ApolloProvider>
         </Provider>
     )
 }

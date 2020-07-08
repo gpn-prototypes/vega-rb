@@ -1,16 +1,16 @@
 import React from 'react'
 import style from './style.module.css'
 import { Tabs } from '@gpn-prototypes/vega-ui'
-import { Button, ChoiceGroup } from '@gpn-prototypes/vega-ui'
+import { Button } from '@gpn-prototypes/vega-ui'
 
-const choiceGroupItems = [
-    {
-        name: 'Нефть',
-    },
-    {
-        name: 'Газ',
-    },
-]
+// const choiceGroupItems = [
+//     {
+//         name: 'Нефть',
+//     },
+//     {
+//         name: 'Газ',
+//     },
+// ]
 const tabItems = [
     {
         name: 'Пайплайн',
@@ -49,15 +49,15 @@ const SchemePage: React.FC<{}> = () => {
                     view="ghost"
                     className={style.ButtonData}
                 />
+                {/*
                 <ChoiceGroup
                     items={choiceGroupItems}
                     getItemKey={(item): string => item.name}
                     getItemLabel={(item): string => item.name}
                 />
+                  */}
             </div>
-            <div className={style.Content}>
-                <div>content</div>
-            </div>
+            <div className={style.Content}></div>
         </div>
     )
 }
