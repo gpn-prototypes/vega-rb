@@ -5,8 +5,23 @@
     color: #fafafa;
 }
 .Header {
+    display: flex;
+    align-items: center;
     background: #16191c;
     padding: 9px 16px;
+}
+.Header a {
+    display: inline-block;
+    margin-right: 6px;
+    width: 16px;
+    height: 16px;
+}
+.Header span {
+    font-family: Arial;
+    font-size: 14px;
+    line-height: 16px;
+    color: #fafafa;
+    text-transform: uppercase;
 }
 .AppBody {
 }

@@ -23,7 +23,7 @@ const CreateProjectPage: React.FC<{}> = () => {
             <div className={style.FlexContainer}>
                 <div className={style.FlexContainerIn}>
                     <div className={style.NavWrapper}>
-                        <NavigationList className={style.Nav}>
+                        <NavigationList>
                             <NavigationList.Item
                                 active={activeItem === '1'}
                                 onClick={(): void => {
@@ -34,13 +34,15 @@ const CreateProjectPage: React.FC<{}> = () => {
                             </NavigationList.Item>
                         </NavigationList>
                     </div>
-                    <TextField
-                        value={inputValue}
-                        size="m"
-                        type="text"
-                        placeholder="Название проекта"
-                        onChange={handleChange}
-                    />
+                    <div className={style.TextField}>
+                        <TextField
+                            value={inputValue}
+                            size="m"
+                            type="text"
+                            placeholder="Название проекта"
+                            onChange={handleChange}
+                        />
+                    </div>
                 </div>
                 <Button
                     label="Создать проект"
