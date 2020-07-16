@@ -153,6 +153,12 @@ const DistributionChart: React.FC<{}> = () => {
                 .datum(data)
                 .attr('fill', 'none')
                 .attr('stroke', '#56B9F2')
+                .call((g) =>
+                    g
+                        .selectAll('.tick:not(:first-of-type) line')
+                        .attr('stroke-opacity', 0.5)
+                        .attr('stroke-dasharray', '2,2')
+                )
                 .attr('stroke-width', 1)
                 .attr(
                     'd',
