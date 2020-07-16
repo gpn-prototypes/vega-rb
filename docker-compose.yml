@@ -1,0 +1,18 @@
+# copied from https://stash-gpn.nexign.com/projects/PROJTMPL/repos/react-template
+#
+version: '3.5'
+
+services:
+  app-front:
+	build:
+	  context: ./
+	  dockerfile: docker/Dockerfile-k8s
+	  args:
+		NPM_CONFIG_REGISTRY: https://artifactory-gpn.nexign.com/artifactory/api/npm/npm/
+		NPM_LOGIN: NPM_LOGIN
+		NPM_PASSWORD: NPM_PASSWORD
+	ports:
+	  - '8080:8080'
+	environment:
+	  # address to forward requests from nginx to api
+	  - BACKEND_API=http://localhost:5005

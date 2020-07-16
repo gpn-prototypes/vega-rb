@@ -1,8 +1,10 @@
 # Vega 1.0
 
-####Commands
+### `yarn`
+Установка зависимостей
 
--   `yarn` to install dependencies
--   `yarn start` to start project
--   `lint:fix` to launch eslint with prettier
--   `lint:css:fix` to launch stylelint with prettier
+### `yarn start`
+Запуск dev server `http://localhost:3009`
+
+### `yarn build`
+Production build в папку `./build`
