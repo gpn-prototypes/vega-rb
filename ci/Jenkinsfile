@@ -41,6 +41,7 @@ pipeline {
                 echo "================== Set Build name =================="
                 wrap([$class: 'BuildUser']){
                     script {
+                        notifyBitbucket()
                         env.GIT_COMMIT_SHORT = sh (
                             script: "printf \$(git rev-parse --short HEAD)",
                             returnStdout: true
@@ -58,7 +59,9 @@ pipeline {
                 echo "================== Build Docker image =================="
                 script {
                     docker.withRegistry("https://$DOCKER_REGISTRY", "ARTIFACTORY") {
-                        dockerImage = docker.build("$DOCKER_REGISTRY:$GIT_COMMIT_SHORT", "-f $DOCKER_FILE .")
+                        withCredentials([string(credentialsId: "$GITHUB_GPN_PROTOTYPES", variable: 'TOKEN')]) {
+                            dockerImage = docker.build("$DOCKER_REGISTRY:$GIT_COMMIT_SHORT", "--build-args REPOSITORY_TOKEN=${TOKEN} -f $DOCKER_FILE .")
+                        }
                     }
                 }
             }
