@@ -71,9 +71,11 @@ RUN echo "@gpn-prototypes:registry=https://npm.pkg.github.com"  >> ${HOME}/.npmr
 # add app
 COPY . ${APP_DIR}
 
+RUN cat ${HOME}/.npmrc
+
+
 RUN yarn install && yarn build
 
-RUN cat ${HOME}/.npmrc
 # RUN rm -f ${HOME}/.npmrc
 
 
