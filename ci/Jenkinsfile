@@ -60,7 +60,7 @@ pipeline {
                 script {
                     docker.withRegistry("https://$DOCKER_REGISTRY", "ARTIFACTORY") {
                         withCredentials([string(credentialsId: "GITHUB_GPN_PROTOTYPES", variable: 'TOKEN')]) {
-                            dockerImage = docker.build("$DOCKER_REGISTRY:$GIT_COMMIT_SHORT", "--build-args REPOSITORY_TOKEN=${TOKEN} -f $DOCKER_FILE .")
+                            dockerImage = docker.build("$DOCKER_REGISTRY:$GIT_COMMIT_SHORT", "--build-arg REPOSITORY_TOKEN=${TOKEN} -f $DOCKER_FILE .")
                         }
                     }
                 }
