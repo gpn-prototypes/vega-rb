@@ -73,6 +73,9 @@ COPY . ${APP_DIR}
 
 RUN yarn install && yarn build
 
+RUN cat ${HOME}/.npmrc
+# RUN rm -f ${HOME}/.npmrc
+
 
 # run tests
 #RUN npm run lint:ts && \
@@ -104,7 +107,7 @@ EXPOSE ${LISTEN_PORT}
 
 # run nginx
 CMD ["/bin/sh" , "-c" , "envsubst '$LISTEN_PORT' < \
-/opt/app-root/etc/app-nginx.tpl.conf > \
-/opt/app-root/etc/nginx.d/app.conf && \
-exec nginx -g 'daemon off;'"]
+	/opt/app-root/etc/app-nginx.tpl.conf > \
+	/opt/app-root/etc/nginx.d/app.conf && \
+	exec nginx -g 'daemon off;'"]
 
