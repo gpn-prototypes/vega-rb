@@ -61,8 +61,8 @@ COPY yarn.lock ${APP_DIR}/
 # то необходимо испрльзовать блок аутентификации
 # при этом registry используется из NPM_CONFIG_REGISTRY
 RUN echo "@gpn-prototypes:registry=https://npm.pkg.github.com"  >> ${HOME}/.npmrc && \
-	echo "_auth=${REPOSITORY_TOKEN}" >> ${HOME}/.npmrc && \
-	echo "always-auth=true" >> ${HOME}/.npmrc
+  echo "_auth=${REPOSITORY_TOKEN}" >> ${HOME}/.npmrc && \
+  echo "always-auth=true" >> ${HOME}/.npmrc
 
 # RUN	sleep 1 && \
 # 	npm i && \
@@ -94,7 +94,7 @@ ARG APP_DIR
 ARG BACKEND_API
 
 ENV LISTEN_PORT=8080 \
-	BACKEND_API=${BACKEND_API}
+  BACKEND_API=${BACKEND_API}
 
 # copy artifact build from the 'build environment'
 COPY --chown=2001:0 --from=node ${APP_DIR}/build /opt/app-root/www/
@@ -105,8 +105,8 @@ COPY --chown=2001:0 --from=node ${APP_DIR}/nginx/app-nginx.tpl.conf /opt/app-roo
 EXPOSE ${LISTEN_PORT}
 
 # run nginx
-CMD ["/bin/sh" , "-c" , "envsubst '$LISTEN_PORT' < \
-	/opt/app-root/etc/app-nginx.tpl.conf > \
-	/opt/app-root/etc/nginx.d/app.conf && \
-	exec nginx -g 'daemon off;'"]
+CMD ["/bin/sh" , "-c" , "envsubst '$BACKEND_API $LISTEN_PORT' < \
+  /opt/app-root/etc/app-nginx.tpl.conf > \
+  /opt/app-root/etc/nginx.d/app.conf && \
+  exec nginx -g 'daemon off;'"]
 
