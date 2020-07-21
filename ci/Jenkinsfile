@@ -39,13 +39,16 @@ pipeline {
         stage("Set build name") {
             steps {
                 echo "================== Set Build name =================="
-                script {
-                    env.GIT_COMMIT_SHORT = sh (
-                        script: "printf \$(git rev-parse --short HEAD)",
-                        returnStdout: true
-                    )
-                    // buildName "#$BUILD_NUMBER-$GIT_COMMIT_SHORT"
-                    buildName "#$BUILD_NUMBER-${params.BRANCH_APP}"
+                wrap([$class: 'BuildUser']){
+                    script {
+                        env.GIT_COMMIT_SHORT = sh (
+                            script: "printf \$(git rev-parse --short HEAD)",
+                            returnStdout: true
+                        )
+                        // buildName "#$BUILD_NUMBER-$GIT_COMMIT_SHORT"
+                        buildName "#$BUILD_NUMBER-${params.BRANCH_APP}"
+                        buildDescription "Executed @ ${NODE_NAME}. Build started by ${BUILD_USER}"
+                    }
                 }
             }
         }
