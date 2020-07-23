@@ -8,6 +8,7 @@
     padding: 0px 16px;
 }
 .Content {
+    display:flex;
     padding: 0px 16px;
 }
 .ButtonStructure {
@@ -18,4 +19,11 @@
 }
 .Content {
     display:flex;
+    justify-content:space-between;
+}
+.LeftPanel {
+
+}
+.RightPanel {
+    max-width:400px;
 }

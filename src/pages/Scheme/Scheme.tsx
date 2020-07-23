@@ -1,17 +1,8 @@
 import React from 'react'
+import { Button, Tabs } from '@gpn-prototypes/vega-ui'
+import ChartForm from './components/ChartForm'
 import style from './style.module.css'
-import { Tabs } from '@gpn-prototypes/vega-ui'
-import { Button, ChoiceGroup } from '@gpn-prototypes/vega-ui'
-import DistributionChart from './components/DistributionChart'
 
-// const choiceGroupItems = [
-//     {
-//         name: 'Нефть',
-//     },
-//     {
-//         name: 'Газ',
-//     },
-// ]
 const tabItems = [
     {
         name: 'Пайплайн',
@@ -50,16 +41,12 @@ const SchemePage: React.FC<{}> = () => {
                     view="ghost"
                     className={style.ButtonData}
                 />
-                {/*
-                <ChoiceGroup
-                    items={choiceGroupItems}
-                    getItemKey={(item): string => item.name}
-                    getItemLabel={(item): string => item.name}
-                />
-                  */}
             </div>
             <div className={style.Content}>
-                <DistributionChart />
+                <div className={style.LeftPanel}></div>
+                <div className={style.RightPanel}>
+                    <ChartForm />
+                </div>
             </div>
         </div>
     )

@@ -3,8 +3,8 @@ import * as d3 from 'd3'
 import style from './style.module.css'
 import './DistributionChart.css'
 
-const height = 300
-const width = 700
+const height = 188
+const width = 400
 
 function Random_normal_Dist(mean: number, sd: number) {
     const data = [] as { q: number; p: number }[]
@@ -22,26 +22,28 @@ function Random_normal_Dist(mean: number, sd: number) {
 }
 
 interface Data {
-    q: number
-    p: number
+    x: number
+    y: number
 }
-const array1 = Random_normal_Dist(30, 15) as Data[]
-const array2 = Random_normal_Dist(-16, 22) as Data[]
+// const array1 = Random_normal_Dist(30, 15) as Data[]
+// const array2 = Random_normal_Dist(-16, 22) as Data[]
 
-const DistributionChart: React.FC<{}> = () => {
+interface Props {
+    data: Data[]
+}
+
+const DistributionChart: React.FC<Props> = ({ data }) => {
     const d3Container = useRef(null)
 
     useEffect(() => {
         if (d3Container.current) {
             const margin = { top: 20, right: 30, bottom: 30, left: 40 }
-            const data = array1
-            const data2 = array2
             const svg = d3.select(d3Container.current)
 
             svg.selectAll('*').remove()
 
-            const getX = (d: Data) => d.q
-            const getY = (d: Data) => d.p
+            const getX = (d: Data) => d.x
+            const getY = (d: Data) => d.y
 
             const x = d3
                 .scaleLinear()
@@ -159,7 +161,7 @@ const DistributionChart: React.FC<{}> = () => {
                         .attr('stroke-opacity', 0.5)
                         .attr('stroke-dasharray', '2,2')
                 )
-                .attr('stroke-width', 1)
+                .attr('stroke-width', 2)
                 .attr(
                     'd',
                     d3
@@ -169,17 +171,17 @@ const DistributionChart: React.FC<{}> = () => {
                         .y((d: Data) => y(getY(d)))
                 )
 
-            svg.append('path')
-                .datum(data2)
-                .attr('fill', 'none')
-                .attr('stroke', '#fff')
-                .attr('stroke-width', 1.5)
-                .attr('stroke-linejoin', 'round')
-                .attr('stroke-linecap', 'round')
-                //@ts-ignore
-                .attr('d', line)
+            //svg.append('path')
+            //    .datum(data2)
+            //    .attr('fill', 'none')
+            //    .attr('stroke', '#fff')
+            //    .attr('stroke-width', 1.5)
+            //    .attr('stroke-linejoin', 'round')
+            //    .attr('stroke-linecap', 'round')
+            //    //@ts-ignore
+            //    .attr('d', line)
         }
-    }, [])
+    }, [data])
 
     return (
         <div className={style.Chart}>
