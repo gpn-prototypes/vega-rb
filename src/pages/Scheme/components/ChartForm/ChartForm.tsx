@@ -25,8 +25,8 @@ export default function ChartForm(props: {}) {
     const [value, setValue] = useState<Value>('norm')
     const [standard, setStandard] = useState('1')
     const [loc, setLoc] = useState('0')
-    const [min, setMin] = useState('0')
-    const [max, setMax] = useState('100')
+    const [min, setMin] = useState('-4')
+    const [max, setMax] = useState('4')
     const [step, setStep] = useState('0.01')
 
     const handleValueChange = (o: Option<string>) => {
