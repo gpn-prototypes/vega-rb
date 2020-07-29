@@ -9,7 +9,7 @@ ARG BACKEND_API=http://localhost:5005
 # стабильный репозиторий для установки внешних зависимостей
 ARG REPOSITORY_MIRROR=http://mirror.yandex.ru/mirrors
 # репозиторий для NPM
-# ARG NPM_CONFIG_REGISTRY=https://artifactory-gpn.nexign.com/artifactory/api/npm/npm/
+ARG NPM_CONFIG_REGISTRY=https://artifactory-gpn.nexign.com/artifactory/api/npm/npm/
 ARG SASS_BINARY_SITE=http://repo.nexign.com/packages/npm/node-sass
 
 # base image
@@ -27,7 +27,7 @@ RUN YUM_FORCE_TLS11=1 yum update -y && yum -y install rh-nodejs12-npm
 
 SHELL [ "/usr/bin/scl", "enable", "rh-nodejs12" ]
 
-RUN npm -g install yarn
+# RUN npm -g install yarn
 
 # Start e2e: Раздел для настройки e2e тестов.
 # В случае внедрения тестирования компонентов, например, на StoryBook, необходимо будет раскоментировать данный раздел
@@ -55,25 +55,30 @@ WORKDIR ${APP_DIR}
 
 # install and cache app dependencies
 COPY package*.json ${APP_DIR}/
-COPY yarn.lock ${APP_DIR}/
+#COPY yarn.lock ${APP_DIR}/
 
 # Если необходима аутентифиакация, например есть приватные пакеты во внутреннем репозитории,
 # то необходимо испрльзовать блок аутентификации
 # при этом registry используется из NPM_CONFIG_REGISTRY
-RUN echo "@gpn-prototypes:registry=https://npm.pkg.github.com"  >> ${HOME}/.npmrc && \
-  echo "_auth=${REPOSITORY_TOKEN}" >> ${HOME}/.npmrc && \
-  echo "always-auth=true" >> ${HOME}/.npmrc
 
-# RUN	sleep 1 && \
-# 	npm i && \
-# 	rm -f ${HOME}/.npmrc
+# RUN echo "@gpn-prototypes:registry=https://npm.pkg.github.com"  >> ${HOME}/.npmrc && \
+#   echo "_auth=${REPOSITORY_TOKEN}" >> ${HOME}/.npmrc && \
+#   echo "always-auth=true" >> ${HOME}/.npmrc
+
+RUN echo _auth=$(echo -n "$NPM_LOGIN:$NPM_PASSWORD" | base64 | tr -d \\n) >> ${HOME}/.npmrc && \
+  echo always-auth=true >> ${HOME}/.npmrc
+
+
+RUN	sleep 1 && \
+  npm i && \
+  rm -f ${HOME}/.npmrc
 
 # add app
 COPY . ${APP_DIR}
 
-RUN yarn install && yarn build
+# RUN yarn install && yarn build
 
-RUN rm -f ${HOME}/.npmrc
+# RUN rm -f ${HOME}/.npmrc
 
 
 # run tests
@@ -81,7 +86,7 @@ RUN rm -f ${HOME}/.npmrc
 #    npm run lint:scss
 
 # generate build
-#RUN npm run build
+RUN npm run build
 
 ##################
 ### production ###
