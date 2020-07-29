@@ -4,10 +4,6 @@
     --color-font: rgba(250, 250, 250, 0.8);
     --color-bg-border: rgba(255, 255, 255, 0.2);
     --color-control-bg-focus: rgba(0, 150, 235, 0.4);
-
-    font-family: Segoe UI, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-    font-style: normal;
-    font-weight: normal;
 }
 
 .Header {
@@ -17,9 +13,11 @@
     color: var(--color-font);
     align-items: center;
     font-weight: normal;
+    border-color: var(--color-bg-border);
 }
 
 .Renaming {
+    margin: -1px -1px 0 0;
     border: 2px solid #0091e6;
     box-sizing: border-box;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 0 3px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.25);

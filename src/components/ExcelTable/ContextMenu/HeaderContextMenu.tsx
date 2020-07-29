@@ -29,6 +29,7 @@ export default React.forwardRef<any, IProps>(function HeaderContextMenu(
                 title: 'Фильтр и сортировка',
                 onClick: () => {},
                 Icon: FilterIcon,
+                disabled: true,
             },
             {
                 title: 'Добавить столбец слева',
@@ -45,14 +46,17 @@ export default React.forwardRef<any, IProps>(function HeaderContextMenu(
                 title: 'Скрыть столбец',
                 onClick: () => {},
                 Icon: EyeIcon,
+                disabled: true,
             },
             {
                 title: 'Закрепить столбец',
                 onClick: () => {},
+                disabled: true,
             },
             {
                 title: 'Переименовать',
                 onClick: () => {},
+                disabled: true,
             },
         ],
         [onInsertLeft, onInsertRight]
@@ -60,11 +64,12 @@ export default React.forwardRef<any, IProps>(function HeaderContextMenu(
 
     return createPortal(
         <ContextMenu id={id} hideOnLeave ref={contextRef}>
-            {data.map(({ title, onClick, Icon }, index) => (
+            {data.map(({ title, onClick, Icon, disabled }, index) => (
                 <MenuItem
                     key={index}
                     onClick={onClick}
                     className={styles.MenuItem}
+                    disabled={disabled}
                 >
                     {Icon && <Icon className={styles.Icon} />}
                     <span className={styles.Title}>{title}</span>

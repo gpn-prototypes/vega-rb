@@ -15,6 +15,7 @@ import { DndProvider } from 'react-dnd'
 import { AutoSizer } from 'react-virtualized'
 import Input from './Input'
 import styles from './ExcelTable.module.css'
+import './react-data-grid.css'
 
 interface IProps {
     data: GridCollection
@@ -22,7 +23,7 @@ interface IProps {
 
 const HEADER_CONTEXT_ID = 'header-context-menu'
 
-export default React.memo<IProps>(function ExcelTable({ data }) {
+export default function ExcelTable({ data }: IProps) {
     const [rows, setRows] = useState(data.rows)
     const [columns, setColumns] = useState(data.columns)
     const [[sortColumn, sortDirection], setSort] = useState<
@@ -38,11 +39,7 @@ export default React.memo<IProps>(function ExcelTable({ data }) {
                     {...props}
                     onColumnsReorder={handleColumnsReorder}
                     onDoubleClick={() => {
-                        setColumns((prevState) => {
-                            const state = [...prevState]
-                            state[props.column.idx].isRenaming = true
-                            return state
-                        })
+                        setColumnProps(props.column.idx, 'isRenaming', true)
                     }}
                     editor={
                         <Input
@@ -69,11 +66,11 @@ export default React.memo<IProps>(function ExcelTable({ data }) {
                             onChange={(event) => {
                                 const value = event.target.value
                                 if (value) {
-                                    setColumns((prevState) => {
-                                        const state = [...prevState]
-                                        state[props.column.idx].name = value
-                                        return state
-                                    })
+                                    setColumnProps(
+                                        props.column.idx,
+                                        'name',
+                                        value
+                                    )
                                 }
                             }}
                         />
@@ -117,17 +114,31 @@ export default React.memo<IProps>(function ExcelTable({ data }) {
             setColumns(reorderedColumns)
         }
 
-        return columns.map((c) => {
-            if (c.key === 'id') return { ...c, headerCellClass: styles.Header }
+        function assemblyColumns(column: GridColumn) {
+            const item = { ...column, cellClass: styles.Cell }
+
+            if (item.key === 'id')
+                return {
+                    ...item,
+                    frozen: true,
+                    width: 1,
+                    headerCellClass: styles.Header,
+                }
+
             return {
-                ...c,
+                ...item,
+                editable: true,
+                resizable: true,
+                sortable: true,
                 headerCellClass: classNames(
                     styles.Header,
-                    c.isRenaming ? styles.Renaming : null
+                    item.isRenaming ? styles.Renaming : null
                 ),
                 headerRenderer: HeaderRenderer,
             }
-        })
+        }
+
+        return columns.map(assemblyColumns)
     }, [columns])
 
     const handleSort = useCallback(
@@ -150,6 +161,13 @@ export default React.memo<IProps>(function ExcelTable({ data }) {
         [rows]
     )
 
+    const onColumnDelete = (
+        e: React.MouseEvent<HTMLDivElement>,
+        { idx }: { idx: number }
+    ) => {
+        setColumns([...columns.slice(0, idx), ...columns.slice(idx + 1)])
+    }
+
     const onColumnInsertLeft = (
         e: React.MouseEvent<HTMLDivElement>,
         { idx }: { idx: number }
@@ -158,11 +176,10 @@ export default React.memo<IProps>(function ExcelTable({ data }) {
     const onColumnInsertRight = (
         e: React.MouseEvent<HTMLDivElement>,
         { idx }: { idx: number }
-    ) => pushColumn(idx)
+    ) => pushColumn(idx + 1)
 
-    function pushColumn(idx: number) {
+    function pushColumn(insertIdx: number) {
         const newCol = getNewColumn()
-        const insertIdx = idx + 1
 
         setColumns([
             ...columns.slice(0, insertIdx),
@@ -188,13 +205,13 @@ export default React.memo<IProps>(function ExcelTable({ data }) {
         <>
             <DndProvider backend={HTML5Backend}>
                 <AutoSizer className={styles.Root}>
-                    {({ width }) => (
+                    {({ height, width }) => (
                         <ReactDataGrid
                             columns={renderColumns}
                             rows={rows}
                             width={width}
+                            height={height}
                             rowHeight={32}
-                            height={500}
                             sortColumn={sortColumn}
                             onSort={handleSort}
                             onRowsUpdate={handleRowsUpdate}
@@ -208,10 +225,10 @@ export default React.memo<IProps>(function ExcelTable({ data }) {
             <HeaderContextMenu
                 id={HEADER_CONTEXT_ID}
                 title={'Insert StyledColumn'}
-                onDelete={() => {}}
+                onDelete={onColumnDelete}
                 onInsertLeft={onColumnInsertLeft}
                 onInsertRight={onColumnInsertRight}
             />
         </>
     )
-})
+}

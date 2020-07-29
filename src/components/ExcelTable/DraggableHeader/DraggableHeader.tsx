@@ -67,7 +67,7 @@ export function DraggableHeader<R>({
             }}
         >
             <div className={styles.WrapperIcon}>
-                <ResourceIcon color={'#00EEAA'} className={styles.Icon} />
+                <ResourceIcon color={'#00eeaa'} className={styles.Icon} />
             </div>
             <div className={styles.WrapperText} onDoubleClick={onDoubleClick}>
                 {isRenaming ? editor : <span>{name}</span>}

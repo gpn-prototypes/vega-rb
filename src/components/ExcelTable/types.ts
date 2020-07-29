@@ -1,13 +1,13 @@
-import { CalculatedColumn, Column } from 'react-data-grid'
+import { Column } from 'react-data-grid'
 
 export interface GridRow {
     id: number
-    area: string
-    deposit: string
-    layer: string
-    well: number
-    category: string
-    probability: number
+    area?: string
+    deposit?: string
+    layer?: string
+    well?: string
+    category?: string
+    probability?: string
 }
 
 export interface GridColumn extends Column<GridRow> {
