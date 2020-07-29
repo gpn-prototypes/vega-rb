@@ -16,7 +16,7 @@ import CreateProject from 'pages/Projects/CreateProject'
 import SchemePage from 'pages/Scheme/Scheme'
 import classNames from 'classnames'
 import { ReactComponent as IconLogo } from 'icons/logo.svg'
-import { ApolloProvider } from '@apollo/react-hooks'
+import { ApolloProvider } from '@apollo/client'
 import client from 'client'
 
 import '@gpn-design/uikit/__internal__/src/components/Theme/Theme.css'
