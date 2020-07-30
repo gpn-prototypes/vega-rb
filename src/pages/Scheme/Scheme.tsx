@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Tabs } from '@gpn-prototypes/vega-ui'
 import ChartForm from './components/ChartForm'
 import style from './style.module.css'
+import Table from './components/Table'
 
 const tabItems = [
     {
@@ -43,7 +44,9 @@ const SchemePage: React.FC<{}> = () => {
                 />
             </div>
             <div className={style.Content}>
-                <div className={style.LeftPanel}></div>
+                <div className={style.LeftPanel}>
+                    <Table />
+                </div>
                 <div className={style.RightPanel}>
                     <ChartForm />
                 </div>
