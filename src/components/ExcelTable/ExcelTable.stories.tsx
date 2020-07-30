@@ -51,7 +51,7 @@ const mockData: GridCollection = {
 }
 
 export const Default = () => (
-    <div>
+    <div style={{ height: '100vh' }}>
         <ExcelTable data={mockData} />
     </div>
 )
