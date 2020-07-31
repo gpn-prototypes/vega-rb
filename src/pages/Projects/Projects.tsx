@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '@gpn-prototypes/vega-ui'
+import { Button } from '@gpn-prototypes/vega-button'
 import { useHistory } from 'react-router'
 import style from './style.module.css'
 import { gql, useQuery } from '@apollo/client'

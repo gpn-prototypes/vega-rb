@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, Tabs } from '@gpn-prototypes/vega-ui'
+import { Button } from '@gpn-prototypes/vega-button'
+import { Tabs } from '@gpn-prototypes/vega-tabs'
 import ChartForm from './components/ChartForm'
 import style from './style.module.css'
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import DistributionChart from '../DistributionChart'
-import { Form, TextField } from '@gpn-prototypes/vega-ui'
+import { Form } from '@gpn-prototypes/vega-form'
+import { TextField } from '@gpn-prototypes/vega-text-field'
 import { Just } from 'monet'
 import { gql, useQuery } from '@apollo/client'
 import style from './style.module.css'
