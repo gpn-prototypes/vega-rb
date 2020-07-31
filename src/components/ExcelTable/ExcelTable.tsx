@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import ReactDataGrid, {
+    Column,
     HeaderRendererProps,
     RowsUpdateEvent,
     SortDirection,
@@ -114,7 +115,7 @@ export default function ExcelTable({ data }: IProps) {
             setColumns(reorderedColumns)
         }
 
-        function assemblyColumns(column: GridColumn) {
+        function assemblyColumns(column: GridColumn): Column<GridRow> {
             const item = { ...column, cellClass: styles.Cell }
 
             if (item.key === 'id')

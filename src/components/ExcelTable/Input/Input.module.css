@@ -1,9 +1,10 @@
 .Root {
-    padding: 8px 0 8px 0;
+    padding: 8px 0;
     font-size: 12px;
     border: none;
-    background: var(--color-default);
-    color: var(--color-font);
+    color: white;
+    caret-color: white;
+    background-color: #22272b;
 }
 
 .Root:focus {
