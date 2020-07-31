@@ -1,9 +1,8 @@
 import React from 'react'
-import { Button } from '@gpn-prototypes/vega-ui'
+import { Button } from '@gpn-prototypes/vega-button'
 import { useHistory } from 'react-router'
 import style from './style.module.css'
-import { gql } from 'apollo-boost'
-import { useQuery } from '@apollo/react-hooks'
+import { gql, useQuery } from '@apollo/client'
 import { Project } from 'generated/graphql'
 
 const PROJECT_LIST = gql`

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Button, TextField } from '@gpn-prototypes/vega-ui'
+import { Button } from '@gpn-prototypes/vega-button'
+import { TextField } from '@gpn-prototypes/vega-text-field'
 import { useHistory } from 'react-router'
 import style from './style.module.css'
 
