@@ -1,0 +1,33 @@
+{
+    "columns": [
+        {
+            "key": "id",
+            "name": ""
+        },
+        {
+            "key": "area",
+            "name": "Лицензионный участок"
+        },
+        {
+            "key": "deposit",
+            "name": "Месторождение"
+        },
+        {
+            "key": "layer",
+            "name": "Пласт"
+        },
+        {
+            "key": "well",
+            "name": "Скважина"
+        }
+    ],
+    "rows": [{
+        "id": 0,
+        "area": "Надежденский",
+        "deposit": "РА-132",
+        "layer": "Д 5",
+        "well": "23",
+        "category": "Р",
+        "probability": "59"
+    }]
+}

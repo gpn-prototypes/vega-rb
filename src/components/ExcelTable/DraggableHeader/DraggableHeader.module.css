@@ -1,0 +1,19 @@
+.Root {
+    display: flex;
+    padding: 0 8px 0 8px;
+    align-items: center;
+}
+
+.Icon {
+    margin-right: 6px;
+}
+
+.WrapperIcon {
+    display: flex;
+}
+
+.WrapperText {
+    display: flex;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
