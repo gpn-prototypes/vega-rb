@@ -7,12 +7,30 @@ import { gql, useQuery } from '@apollo/client'
 import style from './style.module.css'
 import { Dropdown, Option } from '../Dropdown'
 
+// query normalByMinMax($borderConditionsInput: BorderConditionsInput!) {
+// distribution {
+//  normalByMinMax(borderConditionsInput: $borderConditionsInput) {
+// __typename
+// ... on Distribution {
+// curve {
+// x
+// y
+// }
+// }
+//  }
+// }
+// }
 const GET_CHART_DATA = gql`
-    query dist($dist: DistributionDataInput!) {
-        normalDistribution(distDataInput: $dist) {
-            points {
-                x
-                y
+    query normalByDeviation($deviationInput: DeviationInput!) {
+        distribution {
+            normalByDeviation(deviationInput: $deviationInput) {
+                __typename
+                ... on Distribution {
+                    curve {
+                        x
+                        y
+                    }
+                }
             }
         }
     }
@@ -36,12 +54,12 @@ export default function ChartForm(props: {}) {
 
     const { loading, error, data } = useQuery(GET_CHART_DATA, {
         variables: {
-            dist: {
-                min,
-                max,
-                step,
-                meanDeviation: loc,
-                standartDeviation: standard,
+            deviationInput: {
+                // min,
+                // max,
+                // step,
+                mean: parseFloat(loc),
+                standardDeviation: standard,
             },
         },
     })
@@ -65,7 +83,7 @@ export default function ChartForm(props: {}) {
     return (
         <>
             <DistributionChart
-                data={data ? data?.normalDistribution?.points : []}
+                data={data?.distribution?.normalByDeviation?.curve || []}
             />
             <Form className={style.Form}>
                 <Form.Row>
@@ -86,7 +104,7 @@ export default function ChartForm(props: {}) {
                             <Form.Label>Стандартное</Form.Label>
                             <TextField
                                 width="full"
-                                value={standard}
+                                value={standard || ''}
                                 onChange={handleStandardChange}
                             />
                         </Form.Field>
@@ -94,7 +112,7 @@ export default function ChartForm(props: {}) {
                             <Form.Label> Среднее</Form.Label>
                             <TextField
                                 width="full"
-                                value={loc}
+                                value={loc || ''}
                                 onChange={handleLocChange}
                             />
                         </Form.Field>

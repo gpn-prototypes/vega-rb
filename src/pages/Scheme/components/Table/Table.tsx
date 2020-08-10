@@ -1,26 +1,27 @@
 import React from 'react'
-import { gql, useQuery } from '@apollo/client'
 import ExcelTable from 'components/ExcelTable'
-import { prepareData } from './prepareData'
+import { GridCollection } from 'components/ExcelTable/types'
 
-interface TemplateProjectData {}
+// interface TemplateProjectData {}
 
-const GET_TABLE_DATA = gql`
-    query GetTemplate {
-        templateProjectData {
-            geoObjectTypes {
-                name
-            }
-        }
-    }
-`
+// const GET_TABLE_DATA = gql`
+//     query GetTemplate {
+//         templateProjectData {
+//             geoObjectTypes {
+//                 name
+//             }
+//         }
+//     }
+// `
 
 export default function Table() {
-    const { loading, error, data } = useQuery(GET_TABLE_DATA)
-    const tableData = prepareData(data?.templateProjectData?.geoObjectTypes)
+    // const { loading, error, data } = useQuery(GET_TABLE_DATA)
+    // const tableData = prepareData(data?.templateProjectData?.geoObjectTypes)
 
-    if (loading) return <div>Loading</div>
-    if (error) return <div>Error! {error}</div>
+    // if (loading) return <div>Loading</div>
+    // if (error) return <div>Error! {error}</div>
+
+    const tableData = { columns: [], rows: [] } as GridCollection
 
     return <ExcelTable data={tableData} />
 }
