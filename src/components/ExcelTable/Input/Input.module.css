@@ -1,0 +1,12 @@
+.Root {
+    padding: 8px 0;
+    font-size: 12px;
+    border: none;
+    color: white;
+    caret-color: white;
+    background-color: #22272b;
+}
+
+.Root:focus {
+    outline: none;
+}

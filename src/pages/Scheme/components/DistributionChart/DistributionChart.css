@@ -1,0 +1,11 @@
+.grid line {
+  stroke: #fff;
+  stroke-dasharray:6;
+  stroke-opacity: 0.1;
+  shape-rendering: crispEdges;
+}
+
+.grid path {
+  stroke-width: 0;
+}
+

@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { NavigationList, Button, TextField } from '@gpn-prototypes/vega-ui'
+import { Button } from '@gpn-prototypes/vega-button'
+import { TextField } from '@gpn-prototypes/vega-text-field'
 import { useHistory } from 'react-router'
 import style from './style.module.css'
 
 const CreateProjectPage: React.FC<{}> = () => {
-    const [activeItem, setActiveItem] = useState('1')
     const [inputValue, setValue] = useState<string | null | undefined>(
         undefined
     )
@@ -22,18 +22,6 @@ const CreateProjectPage: React.FC<{}> = () => {
         <div className={style.ProjectsPage}>
             <div className={style.FlexContainer}>
                 <div className={style.FlexContainerIn}>
-                    <div className={style.NavWrapper}>
-                        <NavigationList>
-                            <NavigationList.Item
-                                active={activeItem === '1'}
-                                onClick={(): void => {
-                                    setActiveItem('1')
-                                }}
-                            >
-                                Описание проекта
-                            </NavigationList.Item>
-                        </NavigationList>
-                    </div>
                     <div className={style.TextField}>
                         <TextField
                             value={inputValue}

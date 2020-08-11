@@ -2,23 +2,23 @@
 # yarn lockfile v1
 
 
-"@apollo/react-common@^3.1.4":
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/@apollo/react-common/-/react-common-3.1.4.tgz#ec13c985be23ea8e799c9ea18e696eccc97be345"
-  integrity sha512-X5Kyro73bthWSCBJUC5XYQqMnG0dLWuDZmVkzog9dynovhfiVCV4kPSdgSIkqnb++cwCzOVuQ4rDKVwo2XRzQA==
+"@apollo/client@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.1.1.tgz#7d57d037be8ee93694fbf82579f703e635c836c1"
+  integrity sha512-c5DxrU81p0B5BsyBXm+5uPJqLCX2epnBsd87PXfRwzDLbp/NiqnWp6a6c5vT5EV2LwJuCq1movmKthoy0gFb0w==
   dependencies:
+    "@types/zen-observable" "^0.8.0"
+    "@wry/context" "^0.5.2"
+    "@wry/equality" "^0.2.0"
+    fast-json-stable-stringify "^2.0.0"
+    graphql-tag "^2.11.0"
+    hoist-non-react-statics "^3.3.2"
+    optimism "^0.12.1"
+    prop-types "^15.7.2"
+    symbol-observable "^1.2.0"
     ts-invariant "^0.4.4"
     tslib "^1.10.0"
-
-"@apollo/react-hooks@^3.1.5":
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/@apollo/react-hooks/-/react-hooks-3.1.5.tgz#7e710be52461255ae7fc0b3b9c2ece64299c10e6"
-  integrity sha512-y0CJ393DLxIIkksRup4nt+vSjxalbZBXnnXxYbviq/woj+zKa431zy0yT4LqyRKpFy9ahMIwxBnBwfwIoupqLQ==
-  dependencies:
-    "@apollo/react-common" "^3.1.4"
-    "@wry/equality" "^0.1.9"
-    ts-invariant "^0.4.4"
-    tslib "^1.10.0"
+    zen-observable "^0.8.14"
 
 "@ardatan/aggregate-error@0.0.1":
   version "0.0.1"
@@ -1539,191 +1539,423 @@
     react-transition-group "^4.4.1"
     tslib "^1.11.1"
 
-"@gpn-prototypes/vega-avatar@^0.1.1":
-  version "0.1.4"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-avatar/0.1.4/00411ddd1d79749937a7cff78556dc8371a66962c0ba8b7824e6a5c860f441bd#79092e5f6cbae97df0bb94c9d2d5213d7504c132"
-  integrity sha512-5h8SDI7i2LaGMTFvIgPVp6sdq1mnSWjn+AVM55qNDEnLzGb952AqSyfhLe1/OlMZWOq3SQUoWRiqwZVAFCTcgA==
+"@gpn-design/uikit@^1.5.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@gpn-design/uikit/-/uikit-1.6.0.tgz#314ebeabc3788ae08b4b0ec858fabc80dc7e8a66"
+  integrity sha512-GGjr+d5nrAeFmYeX38l2Bo2nz5yGnUP16/+ZXEFDUw3IGDKwKv4hjYBZFn7ByYaDvY1bqYyldQebHDQ14LR8KQ==
+  dependencies:
+    "@bem-react/classname" "^1.5.8"
+    "@bem-react/classnames" "^1.3.9"
+    bem-cn "^3.0.1"
+    react-textarea-autosize "^7.1.2"
+    react-transition-group "^4.4.1"
+    tslib "^1.13.0"
+
+"@gpn-prototypes/vega-animation@^0.0.3":
+  version "0.0.3"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-animation/0.0.3/cc9e948a2091e203a8145dbec5d9a151c2eaadf82fab42b84dbcf51309e65f47#0e86d0d74bde4a5b6c27566d8a198d4bdf1ee0a7"
+  integrity sha512-eGStIWxSn/J23fn1X0eSfFz1ECjneKRzz61I5rrUYsAa3IfqaHsMmZ6Sn7OTMaq9Tw0ZLKiL2LzVz4IVkL8nkg==
+  dependencies:
+    react-transition-group "^4.4.1"
+
+"@gpn-prototypes/vega-attach@^0.1.3":
+  version "0.1.3"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-attach/0.1.3/b423507122c04823799055dc1b239b132d326b63196c3a6db2372d74f5a9343f#54e2dac39c3996709c371527f0901eb28e8cb2bf"
+  integrity sha512-iVM98i2hxxTMPVDRE5elqSfUIlk12L8oIn4M8KSc17ZoefqEM/hSGvNMURgt8SmdtfoRm/pkrsi80m2Nt8DKhQ==
   dependencies:
     "@gpn-design/uikit" "^1.1.2"
 
-"@gpn-prototypes/vega-badge@^0.1.1":
-  version "0.1.4"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-badge/0.1.4/d5895319d63d0caf580cfc93cb016a31c75a61eddcd259d0e22356778b723dfb#26e352e88b4e92f237e4df9b7a9e88652f047a03"
-  integrity sha512-LBXhvWkgNwWI7btBNTGeNMIfWiWPyxAjtt1S09zAbapcMw4yMCWQ/7nNeu2lQ1yniw7M+6DKzBCUgTLQDiLc6Q==
+"@gpn-prototypes/vega-avatar@^0.1.5":
+  version "0.1.5"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-avatar/0.1.5/a7945edf03995bc064b583b63d85b87fa261506304b183db1fe251c5f092e4e5#0c4677e4c629efd51d056e8d361c26d3e4c3b5e9"
+  integrity sha512-Z56K2bYMUcZhKSh/ti4twzY8juk/Vt7ezq7sFA0ucbD4obC+6yvN6gZjADFBcou2WBEKdTuNGj1f8+EjFRc4Sw==
   dependencies:
     "@gpn-design/uikit" "^1.1.2"
 
-"@gpn-prototypes/vega-button@^0.1.1", "@gpn-prototypes/vega-button@^0.1.4":
+"@gpn-prototypes/vega-badge@^0.1.6":
+  version "0.1.6"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-badge/0.1.6/c0f8d550e7d0bee09d4960852240ad15da9475dcb6f6c3115027ee37b3baa120#12d2a872b9b2cee06fcff89da212cba72e494b3f"
+  integrity sha512-E29/E8K0TD/podY8wPfqBWMfJ1nU5dk0AJY3Dc5VREx0UM6xyBGhHrGDWSaugOgLC6ioxDbI2YWjavD1k4SrCQ==
+  dependencies:
+    "@gpn-design/uikit" "^1.1.2"
+
+"@gpn-prototypes/vega-button@0.0.8":
+  version "0.0.8"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-button/0.0.8/1f951f66bdc7dc222bbd4a3dfd3b6f8b719ceb481f514fdf5fd014a6ae691620#41029c503225cdcee4e334a7803bcc96530b76d5"
+  integrity sha512-xJPFzcbD4v10t3p6SgDjZEHMbbu9O6bB+w6ToOwhvCjKLeN4ahtERpV9xafCsvs1RpAJs0zEK0urhojaoaXMkw==
+  dependencies:
+    "@gpn-design/uikit" "^1.0.2"
+
+"@gpn-prototypes/vega-button@^0.1.4":
   version "0.1.4"
   resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-button/0.1.4/a924473d4ccbcb03b5e076e3d9ff8d2e305808835dbd1dce65bc9e2d2f6650f2#120cc89cbf3f557dfe5548fc5b3873fd993d6e62"
   integrity sha512-xhi5w2mRkKse5AmBqwhrb+KHg1hhBi+gSgkRgvPEfjZ1MvIn/Mb5x+Te+g9TapAibyIJFoWuhZHktZmneRXW1w==
   dependencies:
     "@gpn-design/uikit" "^1.1.2"
 
-"@gpn-prototypes/vega-checkbox@^0.1.1":
-  version "0.1.4"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-checkbox/0.1.4/db39e3cd7bc57590d4c0382d4d6bf9c5aa9a166146cd1c9c0f7e1e9c262736b6#4d0dd8c31c1c77ab4acc6a0f56e8bb217279f89a"
-  integrity sha512-Fk8kR+8e2J1Fi710lFJ2sDuzzQsJ/rQljGTag5HJE/B32Ci74MTn5saam6D6AuupAhUNXpTvGUhEtnAyRnAP4A==
+"@gpn-prototypes/vega-button@^0.2.0":
+  version "0.2.0"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-button/0.2.0/32fe7de8244b635d18ce55f00ae806882e08d736473ffc87b7d382546818e16d#fd390aa8bbc6593842c7ef6b209151bc2aa1504e"
+  integrity sha512-We607Zc00KhmtP9yJ2JHlTfdmWK+bQ02laz/OKKFbe0fQdWwS4+/z9X9Byq1u2fTNV7rgFKCHBsdWhbj1wLxww==
   dependencies:
     "@gpn-design/uikit" "^1.1.2"
 
-"@gpn-prototypes/vega-choice-group@^0.1.1":
-  version "0.1.4"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-choice-group/0.1.4/f2ac7def1bac187fb89fbb0f441f8b42f0188540ea2ad2f34b21283ddbdcc94d#e4607ac67849fffca31105fef4a0cb18ffa74425"
-  integrity sha512-kFf5CNJ9A+kGMSZGv8JUX/hQIEo+XqogTJ+w5Hj6/QSQAz1FtFO6Ffeh01fqt6ewG2WdsM9qBG+ZsU14teKrbw==
+"@gpn-prototypes/vega-carousel@^0.0.7":
+  version "0.0.7"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-carousel/0.0.7/6f262e1e6e2ee48322c10228b4148298b80468d405884dc0d872a12c1822dc09#27dae69165268057fe4818e72ed756ac5ff78350"
+  integrity sha512-jIFFyv2XICd9+V19xBsKKFzG1I0Dq001Ufihcgy0YBmGOSCQ0imH4bOjCZlD4Gc7md/aJP1RT3v2/ph6izeqxw==
   dependencies:
-    "@gpn-design/uikit" "^1.1.2"
-
-"@gpn-prototypes/vega-dropdown@^0.1.3":
-  version "0.1.6"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-dropdown/0.1.6/f2a7424444a8fb2f79db5929143048e8e15c0b6e4cfbaf831ee6ceacde0d0427#529342c8e15a42f1531468306277d3a65662305a"
-  integrity sha512-I9E0LTSID/N+2t22c+cEM8cdeVL+rp26azKFlwK4iunnIlA/LqTNlzYGMYYoMyl+LSIH8F2W6NZR1DeC426KmQ==
-  dependencies:
-    "@gpn-design/uikit" "^1.1.2"
-    "@gpn-prototypes/vega-hooks" "^0.1.3"
+    "@gpn-prototypes/vega-button" "^0.2.0"
+    "@gpn-prototypes/vega-icons" "^0.2.0"
+    "@gpn-prototypes/vega-text" "^0.1.5"
     bem-cn "^3.0.1"
     react-transition-group "^4.3.0"
 
-"@gpn-prototypes/vega-file@^0.1.1":
-  version "0.1.4"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-file/0.1.4/00b740a02d06cbdfce2fbc7ba52e8b6b3fa6a156d45dd89e710056fb66bfb054#6671d7536e943949502c25dea292d20d26c0e6bd"
-  integrity sha512-AIz+tQjN+SHVxuSaalL3DvrC/8M6t0jBpF3rteOH8LCNvqZFIIW/O9aajkWEk3ySKxy6umI7WkxIhOxiDFzHOw==
+"@gpn-prototypes/vega-checkbox@^0.1.5":
+  version "0.1.5"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-checkbox/0.1.5/ca116bd8bd9408abf5026300f382e26fa0f9404a1f844437f3163cc2b1ca170c#5462fd6a0652e166a0fc8239eec4838e06626ecf"
+  integrity sha512-KHKunbvvah8ryHdhKBPiNYB8+nTS6MDwSXL+GDkM33rqIpoSPpvtNfDNk5Wz6+s00NNbCU5FgwFRhgjhpX6Pug==
   dependencies:
     "@gpn-design/uikit" "^1.1.2"
 
-"@gpn-prototypes/vega-form@^0.1.1":
-  version "0.1.4"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-form/0.1.4/22ff2120af068238a88680ae78868384535588d7371fae26a35ee4a538af4bd9#1fa8098baed2bfaba16d48bcef092da3f2dff511"
-  integrity sha512-xqBN5CVfsFdkV84QUHkTNx/ou8+y5IL8enR4Qrf7WpxCUq2RdyWTteo0KEE3LknW2p2J/UrtIhJICiRAmVxX9A==
+"@gpn-prototypes/vega-choice-group@^0.1.6":
+  version "0.1.6"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-choice-group/0.1.6/54dc4f31ce0da6be2958f007f8080e680d89397364305a34d70d151f944fd678#e2654e716d38f0123080287f8a7994be4f1c2d69"
+  integrity sha512-7vS9BUND5t8N60e8YR9E7zDxGM17j6FChIap9C32Fo7v79zygS+f8x608zURnGfKGHpFmRpZQBiTDRr+u4EuOg==
   dependencies:
     "@gpn-design/uikit" "^1.1.2"
+
+"@gpn-prototypes/vega-dropdown@^1.2.3":
+  version "1.2.3"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-dropdown/1.2.3/d6e2ab93843e45ca08a7f3275ebc297e5206cd6b03dd232242b6a3e65048967d#b0ed60fc70fefb0c6da6e3391f1888e00e5e0164"
+  integrity sha512-sXpoJPnlRJYFAwBkNT0mEYMnG9UG1sSAv6tQsEPSRXSkUn47t/fwOiocyZqgLp9/BeA3kl4If7NgiLwlLzD/Bw==
+  dependencies:
+    "@gpn-prototypes/vega-hooks" "^0.5.0"
+    "@gpn-prototypes/vega-root" "^0.2.1"
+    "@popperjs/core" "^2.4.0"
     bem-cn "^3.0.1"
+    react-popper "^2.2.3"
 
-"@gpn-prototypes/vega-hooks@^0.1.2", "@gpn-prototypes/vega-hooks@^0.1.3":
+"@gpn-prototypes/vega-dropzone@^0.1.3":
   version "0.1.3"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-hooks/0.1.3/bd97a4687148becc3acee1a93cb2292cffe115572307e06eb1631a88e3ab06e8#e50e50ff59d61f97b6883d3be07757ee182b48da"
-  integrity sha512-4hBQ7j028jHSRysVV9GFEEFw2A1JnvByqh37YBb/n7I1zhOeAo5eA9daAgr+BzL57jwydlGXUFGQtobAoTRiVw==
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-dropzone/0.1.3/4ded2d7e2689df815272961f30417a8794d26504f80f29acb2d3f9576230eef5#ebcc066cb895d7a36cfaa260ffb476513de4d717"
+  integrity sha512-pKMlRSyQ1TYFZQEb4l+Lb6oN+qtR9FWkzvNpaYugMx025DUEOtPNBzS9XJQDT1qPZqScn2qXvOXMtJq9Ng8wPg==
+  dependencies:
+    "@gpn-prototypes/vega-file-input" "^0.1.2"
+    "@gpn-prototypes/vega-hooks" "0.0.8"
+    bem-cn "^3.0.1"
 
-"@gpn-prototypes/vega-hooks@^0.2.0":
-  version "0.2.0"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-hooks/0.2.0/2d3be3d195ddd911287edb24537c215440dff545d77728e5c908443c206da933#f93f20c0daaedf2824185706befe9bd4860c9032"
-  integrity sha512-SkAeCIqTMWsINgHbAxS5q7zOthuk1sCAfpPyZgUg7tXQQyhjC8YwKte5W+pJXfVfzp+o8Q9qH41d2l3hR1co1g==
+"@gpn-prototypes/vega-file-input@^0.1.2":
+  version "0.1.2"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-file-input/0.1.2/1b452e01898fe45675627267e8d4236005e1f464334617fe20993616b55ecae1#6da2dd63b5d261b3bd1c96fcdbfb3e4f9210d8d6"
+  integrity sha512-4A2+TSnvdUfvJ/2pEPsaMVtqiTJzxcmAQAttZf3J3FDDMqxfBhGl+MpCK/ktkyH6S3yu1FvnG6p7eFhiabsNrA==
+  dependencies:
+    "@gpn-prototypes/vega-button" "0.0.8"
+    bem-cn "^3.0.1"
 
-"@gpn-prototypes/vega-icons@^0.1.0", "@gpn-prototypes/vega-icons@^0.1.1", "@gpn-prototypes/vega-icons@^0.1.4":
-  version "0.1.4"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-icons/0.1.4/8ad0449b1d456a95618679c9909422c88355f63cc434408f3e36e5941642026c#f285d5202d48924846f5143365540a8b9903a536"
-  integrity sha512-L4ajbB9DfziY9VuPtSp3OsHesiGICe6m7tYZ3wEP5uU5HtpGOIlqFu1x7xUDzuXZpArKY/PCM66MeQ7zR3muFg==
+"@gpn-prototypes/vega-file@^0.1.5":
+  version "0.1.5"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-file/0.1.5/1115485bb4f6289f3660f509d8eba16a2c18941520ce1ca27ef5b8c04f4d39a1#9693068ebf84a70c2ca179273fd94684ee3d9613"
+  integrity sha512-fyei4d8JQts/s1b9vOwxvBHs4t9GwJanrppTtQBJk8uAS48KwN0FjkrAcTlIIQ0VBmHl6LFPoFR6J+E/6IqLOg==
   dependencies:
     "@gpn-design/uikit" "^1.1.2"
 
-"@gpn-prototypes/vega-informer@^0.1.1":
-  version "0.1.4"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-informer/0.1.4/5e75276da0fd17258498972431a8f8b419fec0989fa763f6205f0334cbc36099#7502e1d0d74a0e32ce4342ef098416a195cb0aa5"
-  integrity sha512-wYBX/MVg/mk7ghFgkNip1qkF+nAAn3DoXgS+qBJ9ANTGK6BgQiGjKzQiEBs68D9wK982GgrL6IFZ2HO5KOYq1g==
-  dependencies:
-    "@gpn-design/uikit" "^1.1.2"
-
-"@gpn-prototypes/vega-modal@^0.1.3":
+"@gpn-prototypes/vega-form@^0.1.7":
   version "0.1.7"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-modal/0.1.7/533163a0cb16c79800c8f04728bf153177c2be757680dbb36098a45274580f31#9224a1455eeac1dc44c9e8d39f96d445834ffbe2"
-  integrity sha512-00GptWOyh78disUZj6mIx+tzLt6q3hQt9yAcCBPGpXFqs8l5hA/fGCVo4HmxusAUuvHF6GayenrBC+XG1b2meg==
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-form/0.1.7/3cf56693e54d3790ba209cbdf88176645ea8cd1d8bf126fd94121f241775a301#1c019961d21b0d9a0f1f28d7699e5c55fd4cfa1c"
+  integrity sha512-3juWWCJb6Ckn9/p+dgxNILvetngd7eXtLXBsVFI30K1AadgQn78pTlH83AQDZ7WaKrQTkiFF9vwIGRhxHKjMqQ==
   dependencies:
-    "@gpn-design/uikit" "^1.1.2"
+    bem-cn "^3.0.1"
+
+"@gpn-prototypes/vega-header@^0.1.2":
+  version "0.1.2"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-header/0.1.2/97aba3d34f6694c10dd00e8d7973931f3b28f39dd719efa3f32f4c2e2612a184#aec6b2525d11e62886983ff2e2e84b17ef418b63"
+  integrity sha512-0y2oh6D/pfc+CoL4UAb7bmGy5CkT6aZ/0tzw7tR5Tf0XgDsNcaScGq3GqA72qsmTva6DA7K+VW68m+ZOGHaznw==
+  dependencies:
     "@gpn-prototypes/vega-button" "^0.1.4"
-    "@gpn-prototypes/vega-hooks" "^0.2.0"
+    "@gpn-prototypes/vega-dropdown" "^1.2.3"
+    "@gpn-prototypes/vega-icons" "^0.2.0"
+    "@gpn-prototypes/vega-tabs" "^0.0.9"
+    "@gpn-prototypes/vega-text" "^0.1.4"
+    bem-cn "^3.0.1"
+
+"@gpn-prototypes/vega-hooks@0.0.8", "@gpn-prototypes/vega-hooks@^0.0.8":
+  version "0.0.8"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-hooks/0.0.8/6c239dbd1ac43323eeba3134af988ee9fe59118cc3d7557788e268d8ff496abf#066277a69d501123a458a0ce854110ccb3ae6ab6"
+  integrity sha512-3JJHN66PavIx64wkAOAsFSd1dI/P6asKn0KqCi5V0/6YyoWbjzq4fnX5VuMEcG1htfteJtC8Ar3OTbIw4kW5tg==
+
+"@gpn-prototypes/vega-hooks@^0.3.0":
+  version "0.3.0"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-hooks/0.3.0/c2850c2411514dc43d63abc260c90c3da38f0393b63093b0b8df49afbad9fa70#1e84e26e94a0e7c9a58abe040bbd2f4b09a5df29"
+  integrity sha512-Bs6Usv+g9LQMwX9ENhLwS4NQlSzN1C1kdhCJVJIyWrQXiy4zgwLBEqi0kV41IEv6eee40pvfP0TAQEnzB8fI1g==
+
+"@gpn-prototypes/vega-hooks@^0.5.0":
+  version "0.5.0"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-hooks/0.5.0/f0c7f5f4756409779a77813fcc8184f4ebb4fb60b6420cfdd474dedafeb1f4ee#8098a2e56fa1927a12815213d7cac80d79d1cd12"
+  integrity sha512-vIG73kj+5RZ7+DGzlsGOVjeKzK6DoeWR7AzwZnSKBd6UP+Lu8kt0rOrqC2ebO4AB799sI5yRy6ev1lMEbY6lpg==
+
+"@gpn-prototypes/vega-icons@^0.1.4":
+  version "0.1.6"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-icons/0.1.6/0223563ff274b9237bb2f25a227c8be825c42be54b9d6ea3b7d0037d136355ed#488e247188d73e3a00a0c3563b336d487b13140d"
+  integrity sha512-1zDqZawD8J45KJRlsiEV8mrrvKGKAe888uFoj9Huivuwt2feQuZz2UjM3hglgqBoRloIdle41KYAImFOSqfz5g==
+  dependencies:
+    "@gpn-design/uikit" "^1.1.2"
+
+"@gpn-prototypes/vega-icons@^0.1.5":
+  version "0.1.5"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-icons/0.1.5/2ff435763ed666135c82876caac3de941457b78c5f54e3afa42c57a6c4975edc#d5d4e8cef08a98af27f1eefbcae7e6d6b4ad559b"
+  integrity sha512-dL2cXXuBEBXBbMgJtgL6PJ0AhipLFndAxx15eq4QhcEcaXEY1NE/54GlheUE9qagRaPo77MWfg5H6Xw8Aae3Ug==
+  dependencies:
+    "@gpn-design/uikit" "^1.1.2"
+
+"@gpn-prototypes/vega-icons@^0.2.0":
+  version "0.2.0"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-icons/0.2.0/0d7c6d6d59edb36d6356336f977d00977efa962d1cf5d0384d6fd074307f90b9#2289181f7ff7bf7a057f33b4efd7cce819627675"
+  integrity sha512-yMCXs6pRqjv3f6r/YwUFWD0H9iuwWRKfVsIU/sLykw1mDPgmRpNNNXvpf+Zts7ZHhYk6XtN7Zb2S4LQFt3Z+Vg==
+  dependencies:
+    "@gpn-design/uikit" "^1.5.0"
+
+"@gpn-prototypes/vega-informer@^0.1.6":
+  version "0.1.6"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-informer/0.1.6/a47e4fe53c5c0cac5c53ce027621ac13a5532b067e37265eb5caa2f7728e8b08#a584ce3d3f92710bab9447eb00abf1ffcbdfc1fa"
+  integrity sha512-wtk33/VmoHc2iyT3qoVIVnzMq80Ik5NcH7P3f65ZHeqPpIuVTHb7GiL+lBS5xA48c+YlH/myMgcpERiSdB/ojg==
+  dependencies:
+    "@gpn-design/uikit" "^1.1.2"
+
+"@gpn-prototypes/vega-layout@^0.2.0":
+  version "0.2.0"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-layout/0.2.0/9206a2954c677088599fca1758ec86f3e423e5559f694f98b6cbfe4a57c42703#f09ddeab8cc97411f26cd22fffd2b9d6d800bab1"
+  integrity sha512-430b9+4omH5DK4TFEMuCFpk15B85k2slfYx+9PTfNhKto7zs+BMdmVEueZR4bmyuc3zq84WutLoWlpgaM8NAmw==
+  dependencies:
+    "@gpn-prototypes/vega-button" "^0.1.4"
+    "@gpn-prototypes/vega-dropdown" "^1.2.3"
     "@gpn-prototypes/vega-icons" "^0.1.4"
+    "@gpn-prototypes/vega-navigation-list" "^1.0.1"
+    "@gpn-prototypes/vega-root" "^0.1.0"
     bem-cn "^3.0.1"
 
-"@gpn-prototypes/vega-navigation-list@^0.3.1":
-  version "0.3.3"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-navigation-list/0.3.3/cd2610d7afd21e60c5c467ff6c551124223938e1c7ca3f271fa475d35fe7e260#fb3b053b82d1330a37db550bacc0ee920e30defa"
-  integrity sha512-7Nh1B5sz63Nf7dfv0NkDUtcTsTFXOQhfDpmbBdVaJvuWEAMoS5Vz4bexkyiOIJ5OQ5Ksh0qyA1LLN7Jysyy4wg==
-  dependencies:
-    bem-cn "^3.0.1"
-
-"@gpn-prototypes/vega-page-banner@^0.2.1":
-  version "0.2.2"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-page-banner/0.2.2/89ede17f986cc26467c7836a86e2bde986bde08dcfe77e3e96ed750f19d61c30#3f3b905147d3acc838c5b5b921dbe704090b9ca8"
-  integrity sha512-doLpxtv2xZ2v7odEfPUTLh6KCsaH9+5hEkJbt+HYwyg1pQ2WDhdA3/319HZU6bdgQI88Z84aGIDXI4WKCvWksA==
-  dependencies:
-    bem-cn "^3.0.1"
-
-"@gpn-prototypes/vega-page-footer@^0.2.1":
-  version "0.2.5"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-page-footer/0.2.5/6acfb234d4821ce1487a75aab82594d037edbbc2603589595bfdc4c5e2245a00#c66fe5d5c271c5927d1afebe6c8209a199d0f5c0"
-  integrity sha512-oN5fOuL3zMWmq2rmJknwubToR3p+TD8l4/DvMKb9xesJ34OyNcBngoB1x4fgmZKB6k6++RgsNnuAGZDKB2kZTA==
-  dependencies:
-    bem-cn "^3.0.1"
-
-"@gpn-prototypes/vega-radio@^0.1.1":
+"@gpn-prototypes/vega-loader@^0.1.4":
   version "0.1.4"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-radio/0.1.4/a61d365479a3ef8431d27319f07d166c9296f670e02af816afe9106964eecee1#8a63fb163865bf83641fb59c5ec114f3f775c8ea"
-  integrity sha512-rTl07zVckdWS6FukTXPPjL2bJKQFhJM5357KODukLq3FaTZTV747iGnuOMPwOl0bP6TCWfW7Xq0bGKr8B9P2qw==
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-loader/0.1.4/8a68862b2b4fa41e010844bc1e57069151b9587e4fa9aac612a72c06c6fa669a#73fe100ff3054b001a884d33c0963aa53464c8d4"
+  integrity sha512-pUb8AKobEzjsksO1TUIs9ztOOHi0++myT357ELsg4qvuU/BAOw6E0cF38oJt+OGJCjszYzbJls/nNUOCpW1zEA==
   dependencies:
     "@gpn-design/uikit" "^1.1.2"
 
-"@gpn-prototypes/vega-switch@^0.1.1":
-  version "0.1.4"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-switch/0.1.4/929b80d11a5c6f80e4b9e7f2bd1c6706ed45c4bbf38ae9daf1238d5880839226#5a9fd6d0932231fdfeb3012e7416fb505990ed08"
-  integrity sha512-F7KALp8ZGFOmbSq32hasRCPhpVEDUdtDWEPdrZ0/xVSkSdNQgOzCniD2iiCka4wZzBhOKiQw0dOOOeN92JmU6w==
+"@gpn-prototypes/vega-logo@^0.0.4":
+  version "0.0.4"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-logo/0.0.4/efa1a834e0ecb29f6099cb8da8bcfb9e11322ce122d220e7c5913fae25938155#b4b9db41baae82eb41af86a76f9acf3b95214714"
+  integrity sha512-NMsUIZoRTXQBsyskvSMB7TO8MNAXCwxcypJYYVrFqF0a74Jqvdn9MN0uS8ut4iWgEj5CBN0PICHTDL5NKW/l5w==
   dependencies:
     "@gpn-design/uikit" "^1.1.2"
-
-"@gpn-prototypes/vega-tabs@^0.0.2":
-  version "0.0.2"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-tabs/0.0.2/591ac3def1454d57c66b158157c99cf19270201238022e48f95970115e054b0b#5986a78d830832f11179211eeb9428b562c53429"
-  integrity sha512-65AsU4Autz/w+z0nf9z4+3oJQHFvHHf/Ic0zA+lK48Pqmzr2E70DXqsxfSGWQRRXmgiMjO3rlg+BEsuplz838g==
-  dependencies:
-    "@gpn-design/uikit" "^1.0.2"
-    "@gpn-prototypes/vega-hooks" "^0.1.2"
-    "@gpn-prototypes/vega-icons" "^0.1.0"
     bem-cn "^3.0.1"
 
-"@gpn-prototypes/vega-text-field@^0.1.1":
-  version "0.1.4"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-text-field/0.1.4/0d039fb6f5466e57e4cdafa371301164e93df2e68d7ad66c9db1b9287ef56266#3a87b53ce10277b55bb3e759186a41ae4ea039cc"
-  integrity sha512-kuFdMAZZyBJM/Gy2IWqJlwFGLDf9gbfQuJmVRz9QdtBJQbcm8/zBfByTb4UW7i1ETG+bum9RrtDyPk02JrCrXA==
+"@gpn-prototypes/vega-modal@^0.3.4":
+  version "0.3.4"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-modal/0.3.4/6051c6a4c82b29686ac6bc7a57c9284fc4948893f07fb10bffbaa9183dffd072#3040c74db127f2e4d38e072126eddf777b1043ff"
+  integrity sha512-E+ZKDaI/bgXYvfz49m7VSCQw3iAD2wwaXZRPijhg2sG2Su1uGqMn/JIk6I2HApxg6Fw8E1qXJTmqovHB9hJlMQ==
+  dependencies:
+    "@gpn-prototypes/vega-button" "^0.2.0"
+    "@gpn-prototypes/vega-hooks" "^0.5.0"
+    "@gpn-prototypes/vega-icons" "^0.2.0"
+    "@gpn-prototypes/vega-root" "^0.2.1"
+    bem-cn "^3.0.1"
+
+"@gpn-prototypes/vega-navigation-list@^1.0.1", "@gpn-prototypes/vega-navigation-list@^1.0.3":
+  version "1.0.3"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-navigation-list/1.0.3/f2856e541cf9239b3975cb64858c170f4907b0f4605d04e8c6e63e8a1842e147#957e7c3b43e921bd49a9033fbdb16eee23733c75"
+  integrity sha512-DqL7U72uL5ol+vcZd4Xi1C93dSFnJv3Rod7TrNbYmq1EuR9Ah8Dc00uJ0b1eJOcgY2HZlMBO5Wof2z/YPST5Pw==
+  dependencies:
+    bem-cn "^3.0.1"
+
+"@gpn-prototypes/vega-page-banner@^0.2.4":
+  version "0.2.4"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-page-banner/0.2.4/be2e0a03fa9dff3e80bb134b1994ceb1d1a8775f5756606bd2f75237a26785d2#006be5a4664efc04a29a335eba262494c39f27da"
+  integrity sha512-6Joul9eYlAsz+Hf7OzOn9Xzr1PZOX+lEjLHr0cDheHPa+fiAi34mAj4dKyei8zjFAbVudvMov09lSsPJUAX2uA==
+  dependencies:
+    bem-cn "^3.0.1"
+
+"@gpn-prototypes/vega-page-footer@^0.2.7":
+  version "0.2.7"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-page-footer/0.2.7/45f4e9bf26385c9c4ea5ec0f77b635e76c4637f64da9ed4f6811b53064f46af6#1e773db55ce48fd3bb3745f360661157b333c322"
+  integrity sha512-NTEgRKF0Ayppy3bEawi8NxO0bZly5W0WHU/VjupE+5N7ur312tNn7Z6OdgUjqroZ+SeOkH1k+5AvWRIzjvbCyQ==
+  dependencies:
+    bem-cn "^3.0.1"
+
+"@gpn-prototypes/vega-progress-spin@^0.1.3":
+  version "0.1.3"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-progress-spin/0.1.3/7b1bf3f2a89bad65d9b7807954288230944b482d872292553e9ed58a3ada5793#0a54e1eadf80acb42dfb37756c0029e4721b3f0c"
+  integrity sha512-DwRnRPSHeomLfYnCy0IbH1CI03inhwPBiDHGR1hedjVMSxC7PnbVKGAp4AFdOTMfOC9qn9myx0x3g/TklqC5gg==
   dependencies:
     "@gpn-design/uikit" "^1.1.2"
 
-"@gpn-prototypes/vega-text@^0.1.1":
+"@gpn-prototypes/vega-radio@^0.1.5":
+  version "0.1.5"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-radio/0.1.5/6660454d33f73f6006153965a9a32bb8f0756fe2276e634aa5dc93cfc8b0a4da#f1a0772b6e691df599686ae0c145e6d03c7e5142"
+  integrity sha512-ujxFil9q0GaLLk1UOksMgYETWJZQzPKRiXaPP2PaV5X3+CboJv8CuLkGfK+f822dQC309HA1Pgyr9ofgPDkDIQ==
+  dependencies:
+    "@gpn-design/uikit" "^1.1.2"
+
+"@gpn-prototypes/vega-root@^0.1.0":
+  version "0.1.0"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-root/0.1.0/25c3ea059dec28670553664c016fcbe45541482de0c378fdb7ccc845ee032442#6a67bcb9cfc3695b4a5bd68f56031a2d007cf64d"
+  integrity sha512-jz7QdKiZgA6BJC82OkG66UMkHlJG77BpeuRbCTiv1bLIdZ6KzXqwNHHJiIgi3sUrEUuKYQwSixv/N6gr8PzNqQ==
+  dependencies:
+    "@gpn-prototypes/vega-theme" "^0.0.3"
+
+"@gpn-prototypes/vega-root@^0.2.1":
+  version "0.2.1"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-root/0.2.1/a27acaa70d88fa5c75f47ad3415af8b767ca7648136f40011af37676d71d4d0c#32968c532a752104657fb5309c01a79a946cc771"
+  integrity sha512-KVjskHUgioPJd/juw4Mr/BdJjfUihzOFWuPmsYuMDJthFcDzzASHihDpkR4GJyrnLK96m5m6YHNloIU7dX6BHA==
+  dependencies:
+    "@gpn-prototypes/vega-theme" "^0.0.4"
+
+"@gpn-prototypes/vega-scale-panel@^0.1.3":
+  version "0.1.3"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-scale-panel/0.1.3/7864f20c39220c31ec0ce0414b7d1ed5498c322847e6bd2f3643398991a5e5d5#c42b6b578eb2b123c3a6a5976e041928521258f9"
+  integrity sha512-ToShoOeNhOnXMMj2AhXPpHRgA7WSOO5DelE8mtMEhHXd8NRx3F7sv5d2rQP896/D2yvKlkO6RE945eHd7nvmzw==
+  dependencies:
+    "@gpn-prototypes/vega-button" "^0.2.0"
+    "@gpn-prototypes/vega-icons" "^0.2.0"
+    "@gpn-prototypes/vega-text" "^0.1.5"
+    "@gpn-prototypes/vega-text-field" "^0.1.6"
+    bem-cn "^3.0.1"
+
+"@gpn-prototypes/vega-sidebar@^0.2.3":
+  version "0.2.3"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-sidebar/0.2.3/d291f7d1c263d6a4ea7dc4267bcbf1d0770e1625b4cb99bdb75dc4f97e00eb8d#5018f0fa59f17b3f2f7cd54cc59719714647b0aa"
+  integrity sha512-SB8gJrEi9xSUoBT1wGQ+Wd40qq0kznbrPYWOLnau5XdtJ5ARrdjK0cbCY8ZwOtpEkJPjLY5gfsJIJs31dOTYQQ==
+  dependencies:
+    "@gpn-prototypes/vega-button" "^0.2.0"
+    "@gpn-prototypes/vega-hooks" "^0.0.8"
+    "@gpn-prototypes/vega-icons" "^0.2.0"
+    "@gpn-prototypes/vega-root" "^0.2.1"
+    "@gpn-prototypes/vega-text" "^0.1.5"
+    bem-cn "^3.0.1"
+    react-transition-group "^4.3.0"
+
+"@gpn-prototypes/vega-snack-bar@^0.1.3":
+  version "0.1.3"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-snack-bar/0.1.3/7948609f841695a1cf57531cd250e592fd9feea54abd8e7224a3f7ed680b06c6#1e2ecc4c9667696b6c7c2399f42561db667102d8"
+  integrity sha512-KyLkMSQ4vc7xca9TJyeKtSZ3e1rYeajYx6lMwY9uaMo+g7NAPHY9Ndhr0ji1snZ5t9dmgXMg5noIzCgXhj31zQ==
+  dependencies:
+    "@gpn-design/uikit" "^1.1.2"
+
+"@gpn-prototypes/vega-switch@^0.1.5":
+  version "0.1.5"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-switch/0.1.5/9130980b99efa37a820df83a97cc5f1677a257d516a0bd7e16666cef71fa3979#2376a7d25ac127cb0fa23abd8d324183590ee281"
+  integrity sha512-08orpHrWfjEMOC9tnRSL0j+GrDvNeCkMPqofGoE8rf+5NttnmGCx62vZvAUkE/rKNNQBjNjxF1IJTlO9cWgzug==
+  dependencies:
+    "@gpn-design/uikit" "^1.1.2"
+
+"@gpn-prototypes/vega-tabs@^0.0.13":
+  version "0.0.13"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-tabs/0.0.13/0a0cc3a8803913eb824b11afa387084cd292b47485e7d71a3831779a141346d1#5287e9d22589368756ad154b6cda7c42c4e5aef6"
+  integrity sha512-jYT+OGN0pdsHfARB7UaOijc/Y1sFmczd3S7grBehx/L3c8zHUd6iVvhk6QVyCVuoUjIg8KA4PzhoLGO5+o8DjQ==
+  dependencies:
+    "@gpn-design/uikit" "^1.1.2"
+    "@gpn-prototypes/vega-hooks" "^0.5.0"
+    "@gpn-prototypes/vega-icons" "^0.2.0"
+    bem-cn "^3.0.1"
+
+"@gpn-prototypes/vega-tabs@^0.0.9":
+  version "0.0.9"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-tabs/0.0.9/7f6f7e3b6731ad02e36a41c4b89aa855b7b502dc96953d747f38dfd0a1d841ef#47801c3dae043e5cb34209fb1b6dabf0f1950d2b"
+  integrity sha512-P5+Y06VF2+q5h6akoWG0wI7a11EMdQg8Pxw1uUmqmnKh1BBOVj2WE7a4TMZJCRk//E66lS2ZsPzSxaeKWcL96Q==
+  dependencies:
+    "@gpn-design/uikit" "^1.1.2"
+    "@gpn-prototypes/vega-hooks" "^0.3.0"
+    "@gpn-prototypes/vega-icons" "^0.1.5"
+    bem-cn "^3.0.1"
+
+"@gpn-prototypes/vega-text-field@^0.1.6":
+  version "0.1.6"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-text-field/0.1.6/3b589994eba90636fff3a5dfd61e6e219743e57b9443f2441251fc587f7b86e0#5623ec4e5f3f7510cf7d629ba8bde6bca98d7c15"
+  integrity sha512-6hdBIfjZMrLEbpTtkJOwWY5PxKjpuoJt6YnpF7ngXJViOwZlIdoNe6WhHIsnp0v8Eu4+9bQAMVWhAVmRwgtl1g==
+  dependencies:
+    "@gpn-design/uikit" "^1.1.2"
+
+"@gpn-prototypes/vega-text@^0.1.4":
   version "0.1.4"
   resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-text/0.1.4/0441812f9a943a85addb91940ac2347dce45cb35c66b210a71b5f0dbd2adad50#d58113cb5f71d0a53157d99021cd916fac96279c"
   integrity sha512-batRVSLY3kV2qD8QwN4hKfQCJQRvQA5iLVllkokzyIyaj4xPvaJck+67XnpZU4hmpR1/QadPjApU2WOiyxUi8g==
   dependencies:
     "@gpn-design/uikit" "^1.1.2"
 
-"@gpn-prototypes/vega-ui@^0.9.1":
-  version "0.9.3"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-ui/0.9.3/9fbdbad9a590b3938e9e52303cd90bcb9696e67a4d85d27cadfa866f75a1fc09#d6e6741e4a325a04fc5362525e3d22ef32e65f58"
-  integrity sha512-Y6p+MMc/gVfmxuJFFyP5EyCJubJ4pBa2Cjmz0FuM1ZOcVrcBHpVQrE9ef2S154QPV0GP22astNwrMWydlg9+4g==
+"@gpn-prototypes/vega-text@^0.1.5":
+  version "0.1.5"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-text/0.1.5/5e0b8eb6675e7866fbe66e83689f4a250f016771ab64717062d50e806d29e44d#f1bb48a62a6f8738228fcfab1ff8f84f129ded73"
+  integrity sha512-tHUMLtUoe1f9eUx4rV0+TLRdIshFB0lL7cJOYpzQ+ofuQRtYKS3QIAze558Bg8Wl4D4WKRpqhEAlwi2Wu0S5ww==
   dependencies:
-    "@gpn-prototypes/vega-avatar" "^0.1.1"
-    "@gpn-prototypes/vega-badge" "^0.1.1"
-    "@gpn-prototypes/vega-button" "^0.1.1"
-    "@gpn-prototypes/vega-checkbox" "^0.1.1"
-    "@gpn-prototypes/vega-choice-group" "^0.1.1"
-    "@gpn-prototypes/vega-dropdown" "^0.1.3"
-    "@gpn-prototypes/vega-file" "^0.1.1"
-    "@gpn-prototypes/vega-form" "^0.1.1"
-    "@gpn-prototypes/vega-hooks" "^0.1.2"
-    "@gpn-prototypes/vega-icons" "^0.1.1"
-    "@gpn-prototypes/vega-informer" "^0.1.1"
-    "@gpn-prototypes/vega-modal" "^0.1.3"
-    "@gpn-prototypes/vega-navigation-list" "^0.3.1"
-    "@gpn-prototypes/vega-page-banner" "^0.2.1"
-    "@gpn-prototypes/vega-page-footer" "^0.2.1"
-    "@gpn-prototypes/vega-radio" "^0.1.1"
-    "@gpn-prototypes/vega-switch" "^0.1.1"
-    "@gpn-prototypes/vega-tabs" "^0.0.2"
-    "@gpn-prototypes/vega-text" "^0.1.1"
-    "@gpn-prototypes/vega-text-field" "^0.1.1"
-    "@gpn-prototypes/vega-user" "^0.1.1"
+    "@gpn-design/uikit" "^1.1.2"
 
-"@gpn-prototypes/vega-user@^0.1.1":
-  version "0.1.4"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-user/0.1.4/23b58236124d0fb15eacc0e6da344c1fdc2375dd2e8b56928477e5fa0193a1d3#d0ce70a15111e735003bbf469a21125270281f9b"
-  integrity sha512-BHqmYbK+rHPthvlf63rVGS3BaKiz3PVgCHCJ/2yuHbd26+9lOwOJ/du/XpRq4M1YE6gnuTNN3y4QCPQ11At0ag==
+"@gpn-prototypes/vega-theme@^0.0.3":
+  version "0.0.3"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-theme/0.0.3/f05b0844f113c99ca88f83b7e8515c4b2dd6c4c9e86a7864fef8172cfe51529a#e5778fd07e67ca50390cbd46d074de790c37f54b"
+  integrity sha512-wdOWsbvIDq/3zKjHaR9IeCHwHp4qlsCyvaoMqafEIThraXTH93txHpelrlgFFqd12C6Ak/bjpxXREhq/5FKRxg==
+  dependencies:
+    "@gpn-design/uikit" "^1.1.2"
+
+"@gpn-prototypes/vega-theme@^0.0.4":
+  version "0.0.4"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-theme/0.0.4/dd80cba6b8192d3a0077eb67daf7fb191d4324977f917ae92a2671545ae5f86e#2d0d47b8315c074fe9b7786543fe7c02cc6ec097"
+  integrity sha512-t9Yv2C3J6i2I4geegs9KqLj+LzH1fiDRpKrlz+1FjR1onuJJrlRT6Hlr9Wd80+dyJ/GhEI7UhQtMX1aEjqknmA==
+  dependencies:
+    "@gpn-design/uikit" "^1.1.2"
+
+"@gpn-prototypes/vega-timer@^0.1.3":
+  version "0.1.3"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-timer/0.1.3/5ea97aedd3bf98bf74104b747dfae96b1faeaf7648926ac43cbcbb41ae4bfa3d#88df288b0227670817e784a8c9d4d188c2ea6b96"
+  integrity sha512-LB5un8F37rVbuLO4AHfbu+fikeceEYXOI0nv1bITrBEdKfLk7mQAd5mHVaDQ7MexNVnGumh6G9QWaCDtud7lIA==
+  dependencies:
+    "@gpn-design/uikit" "^1.1.2"
+
+"@gpn-prototypes/vega-ui@~2.10.0":
+  version "2.10.0"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-ui/2.10.0/8951ec7ab85e3623db0134f5173bf4aa7d120c66ccfeca561cd069d389bcc919#bd89b1d4d4f4a73589408dd7e151016f391621ad"
+  integrity sha512-GVsHzeg59MnE4ON0Qb+yXCPVlDn6a8Dqc/lAtPXYc87P9TxnHqPILgCSpRryAgefIeanZ2d9FwCrmEYbr50soA==
+  dependencies:
+    "@gpn-prototypes/vega-animation" "^0.0.3"
+    "@gpn-prototypes/vega-attach" "^0.1.3"
+    "@gpn-prototypes/vega-avatar" "^0.1.5"
+    "@gpn-prototypes/vega-badge" "^0.1.6"
+    "@gpn-prototypes/vega-button" "^0.2.0"
+    "@gpn-prototypes/vega-carousel" "^0.0.7"
+    "@gpn-prototypes/vega-checkbox" "^0.1.5"
+    "@gpn-prototypes/vega-choice-group" "^0.1.6"
+    "@gpn-prototypes/vega-dropdown" "^1.2.3"
+    "@gpn-prototypes/vega-dropzone" "^0.1.3"
+    "@gpn-prototypes/vega-file" "^0.1.5"
+    "@gpn-prototypes/vega-file-input" "^0.1.2"
+    "@gpn-prototypes/vega-form" "^0.1.7"
+    "@gpn-prototypes/vega-header" "^0.1.2"
+    "@gpn-prototypes/vega-hooks" "^0.5.0"
+    "@gpn-prototypes/vega-icons" "^0.2.0"
+    "@gpn-prototypes/vega-informer" "^0.1.6"
+    "@gpn-prototypes/vega-layout" "^0.2.0"
+    "@gpn-prototypes/vega-loader" "^0.1.4"
+    "@gpn-prototypes/vega-logo" "^0.0.4"
+    "@gpn-prototypes/vega-modal" "^0.3.4"
+    "@gpn-prototypes/vega-navigation-list" "^1.0.3"
+    "@gpn-prototypes/vega-page-banner" "^0.2.4"
+    "@gpn-prototypes/vega-page-footer" "^0.2.7"
+    "@gpn-prototypes/vega-progress-spin" "^0.1.3"
+    "@gpn-prototypes/vega-radio" "^0.1.5"
+    "@gpn-prototypes/vega-root" "^0.2.1"
+    "@gpn-prototypes/vega-scale-panel" "^0.1.3"
+    "@gpn-prototypes/vega-sidebar" "^0.2.3"
+    "@gpn-prototypes/vega-snack-bar" "^0.1.3"
+    "@gpn-prototypes/vega-switch" "^0.1.5"
+    "@gpn-prototypes/vega-tabs" "^0.0.13"
+    "@gpn-prototypes/vega-text" "^0.1.5"
+    "@gpn-prototypes/vega-text-field" "^0.1.6"
+    "@gpn-prototypes/vega-theme" "^0.0.4"
+    "@gpn-prototypes/vega-timer" "^0.1.3"
+    "@gpn-prototypes/vega-user" "^0.1.5"
+
+"@gpn-prototypes/vega-user@^0.1.5":
+  version "0.1.5"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-user/0.1.5/c71219287982db6da67ae0f5a97df7f661060eba4c9521fa75c734c31ae2766d#5a9cafd48e3bf83c67dc71de37523d2a35ec4f63"
+  integrity sha512-LQnXhIzquWo9OakKToMW1Rv7BQkJ4FJdL6b/Wim9O7AwhUcTMydeHoP/hCvydX9x0fayafWJWrRiGXFXsZ01Ag==
   dependencies:
     "@gpn-design/uikit" "^1.1.2"
 
@@ -2270,6 +2502,11 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
+"@popperjs/core@^2.4.0":
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.4.4.tgz#11d5db19bd178936ec89cd84519c4de439574398"
+  integrity sha512-1oO6+dN5kdIA3sKPZhRGJTfGVP4SWV6KqlMOwry4J3HfyD68sl/3KmG7DeYUzvN+RbhXDnv/D8vNNB8168tAMg==
+
 "@reach/router@^1.2.1":
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/@reach/router/-/router-1.3.3.tgz#58162860dce6c9449d49be86b0561b5ef46d80db"
@@ -2279,6 +2516,21 @@
     invariant "^2.2.3"
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
+
+"@react-dnd/asap@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@react-dnd/asap/-/asap-4.0.0.tgz#b300eeed83e9801f51bd66b0337c9a6f04548651"
+  integrity sha512-0XhqJSc6pPoNnf8DhdsPHtUhRzZALVzYMTzRwV4VI6DJNJ/5xxfL9OQUwb8IH5/2x7lSf7nAZrnzUD+16VyOVQ==
+
+"@react-dnd/invariant@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@react-dnd/invariant/-/invariant-2.0.0.tgz#09d2e81cd39e0e767d7da62df9325860f24e517e"
+  integrity sha512-xL4RCQBCBDJ+GRwKTFhGUW8GXa4yoDfJrPbLblc3U09ciS+9ZJXJ3Qrcs/x2IODOdIE5kQxvMmE2UKyqUictUw==
+
+"@react-dnd/shallowequal@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@react-dnd/shallowequal/-/shallowequal-2.0.0.tgz#a3031eb54129f2c66b2753f8404266ec7bf67f0a"
+  integrity sha512-Pc/AFTdwZwEKJxFJvlxrSmGe/di+aAOBn60sremrpLo6VI/6cmiUYNNwlI5KNYttg7uypzA3ILPMPgxB2GYZEg==
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
@@ -2365,6 +2617,19 @@
     global "^4.3.2"
     util-deprecate "^1.0.2"
 
+"@storybook/addons@5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/addons/-/addons-5.3.19.tgz#3a7010697afd6df9a41b8c8a7351d9a06ff490a4"
+  integrity sha512-Ky/k22p6i6FVNvs1VhuFyGvYJdcp+FgXqFgnPyY/OXJW/vPDapdElpTpHJZLFI9I2FQBDcygBPU5RXkumQ+KUQ==
+  dependencies:
+    "@storybook/api" "5.3.19"
+    "@storybook/channels" "5.3.19"
+    "@storybook/client-logger" "5.3.19"
+    "@storybook/core-events" "5.3.19"
+    core-js "^3.0.1"
+    global "^4.3.2"
+    util-deprecate "^1.0.2"
+
 "@storybook/api@5.3.18":
   version "5.3.18"
   resolved "https://registry.yarnpkg.com/@storybook/api/-/api-5.3.18.tgz#95582ab90d947065e0e34ed603650a3630dcbd16"
@@ -2391,6 +2656,32 @@
     telejson "^3.2.0"
     util-deprecate "^1.0.2"
 
+"@storybook/api@5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/api/-/api-5.3.19.tgz#77f15e9e2eee59fe1ddeaba1ef39bc34713a6297"
+  integrity sha512-U/VzDvhNCPmw2igvJYNNM+uwJCL+3teiL6JmuoL4/cmcqhI6IqqG9dZmMP1egoCd19wXEP7rnAfB/VcYVg41dQ==
+  dependencies:
+    "@reach/router" "^1.2.1"
+    "@storybook/channels" "5.3.19"
+    "@storybook/client-logger" "5.3.19"
+    "@storybook/core-events" "5.3.19"
+    "@storybook/csf" "0.0.1"
+    "@storybook/router" "5.3.19"
+    "@storybook/theming" "5.3.19"
+    "@types/reach__router" "^1.2.3"
+    core-js "^3.0.1"
+    fast-deep-equal "^2.0.1"
+    global "^4.3.2"
+    lodash "^4.17.15"
+    memoizerific "^1.11.3"
+    prop-types "^15.6.2"
+    react "^16.8.3"
+    semver "^6.0.0"
+    shallow-equal "^1.1.0"
+    store2 "^2.7.1"
+    telejson "^3.2.0"
+    util-deprecate "^1.0.2"
+
 "@storybook/channel-postmessage@5.3.18":
   version "5.3.18"
   resolved "https://registry.yarnpkg.com/@storybook/channel-postmessage/-/channel-postmessage-5.3.18.tgz#93d46740b5cc9b36ddd073f0715b54c4959953bf"
@@ -2402,10 +2693,28 @@
     global "^4.3.2"
     telejson "^3.2.0"
 
+"@storybook/channel-postmessage@5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/channel-postmessage/-/channel-postmessage-5.3.19.tgz#ef9fe974c2a529d89ce342ff7acf5cc22805bae9"
+  integrity sha512-Iq0f4NPHR0UVVFCWt0cI7Myadk4/SATXYJPT6sv95KhnLjKEeYw571WBlThfp8a9FM80887xG+eIRe93c8dleA==
+  dependencies:
+    "@storybook/channels" "5.3.19"
+    "@storybook/client-logger" "5.3.19"
+    core-js "^3.0.1"
+    global "^4.3.2"
+    telejson "^3.2.0"
+
 "@storybook/channels@5.3.18":
   version "5.3.18"
   resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-5.3.18.tgz#490c9eaa8292b0571c0f665052b12addf7c35f21"
   integrity sha512-scP/6td/BJSEOgfN+qaYGDf3E793xye7tIw6W+sYqwg+xdMFO39wVXgVZNpQL6sLEwpJZTaPywCjC6p6ksErqQ==
+  dependencies:
+    core-js "^3.0.1"
+
+"@storybook/channels@5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/channels/-/channels-5.3.19.tgz#65ad7cd19d70aa5eabbb2e5e39ceef5e510bcb7f"
+  integrity sha512-38seaeyshRGotTEZJppyYMg/Vx2zRKgFv1L6uGqkJT0LYoNSYtJhsiNFCJ2/KUJu2chAJ/j8h80bpVBVLQ/+WA==
   dependencies:
     core-js "^3.0.1"
 
@@ -2432,10 +2741,40 @@
     ts-dedent "^1.1.0"
     util-deprecate "^1.0.2"
 
+"@storybook/client-api@5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/client-api/-/client-api-5.3.19.tgz#7a5630bb8fffb92742b1773881e9004ee7fdf8e0"
+  integrity sha512-Dh8ZLrLH91j9Fa28Gmp0KFUvvgK348aNMrDNAUdj4m4witz/BWQ2pxz6qq9/xFVErk/GanVC05kazGElqgYCRQ==
+  dependencies:
+    "@storybook/addons" "5.3.19"
+    "@storybook/channel-postmessage" "5.3.19"
+    "@storybook/channels" "5.3.19"
+    "@storybook/client-logger" "5.3.19"
+    "@storybook/core-events" "5.3.19"
+    "@storybook/csf" "0.0.1"
+    "@types/webpack-env" "^1.15.0"
+    core-js "^3.0.1"
+    eventemitter3 "^4.0.0"
+    global "^4.3.2"
+    is-plain-object "^3.0.0"
+    lodash "^4.17.15"
+    memoizerific "^1.11.3"
+    qs "^6.6.0"
+    stable "^0.1.8"
+    ts-dedent "^1.1.0"
+    util-deprecate "^1.0.2"
+
 "@storybook/client-logger@5.3.18":
   version "5.3.18"
   resolved "https://registry.yarnpkg.com/@storybook/client-logger/-/client-logger-5.3.18.tgz#27c9d09d788965db0164be6e168bc3f03adbf88f"
   integrity sha512-RZjxw4uqZX3Yk27IirbB/pQG+wRsQSSRlKqYa8KQ5bSanm4IrcV9VA1OQbuySW9njE+CexAnakQJ/fENdmurNg==
+  dependencies:
+    core-js "^3.0.1"
+
+"@storybook/client-logger@5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/client-logger/-/client-logger-5.3.19.tgz#fbbd186e82102eaca1d6a5cca640271cae862921"
+  integrity sha512-nHftT9Ow71YgAd2/tsu79kwKk30mPuE0sGRRUHZVyCRciGFQweKNOS/6xi2Aq+WwBNNjPKNlbgxwRt1yKe1Vkg==
   dependencies:
     core-js "^3.0.1"
 
@@ -2466,6 +2805,33 @@
     simplebar-react "^1.0.0-alpha.6"
     ts-dedent "^1.1.0"
 
+"@storybook/components@5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/components/-/components-5.3.19.tgz#aac1f9eea1247cc85bd93b10fca803876fb84a6b"
+  integrity sha512-3g23/+ktlocaHLJKISu9Neu3XKa6aYP2ctDYkRtGchSB0Q55hQsUVGO+BEVuT7Pk2D59mVCxboBjxcRoPUY4pw==
+  dependencies:
+    "@storybook/client-logger" "5.3.19"
+    "@storybook/theming" "5.3.19"
+    "@types/react-syntax-highlighter" "11.0.4"
+    "@types/react-textarea-autosize" "^4.3.3"
+    core-js "^3.0.1"
+    global "^4.3.2"
+    lodash "^4.17.15"
+    markdown-to-jsx "^6.11.4"
+    memoizerific "^1.11.3"
+    polished "^3.3.1"
+    popper.js "^1.14.7"
+    prop-types "^15.7.2"
+    react "^16.8.3"
+    react-dom "^16.8.3"
+    react-focus-lock "^2.1.0"
+    react-helmet-async "^1.0.2"
+    react-popper-tooltip "^2.8.3"
+    react-syntax-highlighter "^11.0.2"
+    react-textarea-autosize "^7.1.0"
+    simplebar-react "^1.0.0-alpha.6"
+    ts-dedent "^1.1.0"
+
 "@storybook/core-events@5.3.18":
   version "5.3.18"
   resolved "https://registry.yarnpkg.com/@storybook/core-events/-/core-events-5.3.18.tgz#e5d335f8a2c7dd46502b8f505006f1e111b46d49"
@@ -2473,26 +2839,33 @@
   dependencies:
     core-js "^3.0.1"
 
-"@storybook/core@5.3.18":
-  version "5.3.18"
-  resolved "https://registry.yarnpkg.com/@storybook/core/-/core-5.3.18.tgz#3f3c0498275826c1cc4368aba203ac17a6ae5c9c"
-  integrity sha512-XQb/UQb+Ohuaw0GhKKYzvmuuh5Tit93f2cLZD9QCSWUPvDGmLG5g91Y9NbUr4Ap3mANT3NksMNhkAV0GxExEkg==
+"@storybook/core-events@5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/core-events/-/core-events-5.3.19.tgz#18020cd52e0d8ef0973a8e9622a10d5f99796f79"
+  integrity sha512-lh78ySqMS7pDdMJAQAe35d1I/I4yPTqp09Cq0YIYOxx9BQZhah4DZTV1QIZt22H5p2lPb5MWLkWSxBaexZnz8A==
+  dependencies:
+    core-js "^3.0.1"
+
+"@storybook/core@5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/core/-/core-5.3.19.tgz#1e61f35c5148343a0c580f5d5efb77f3b4243a30"
+  integrity sha512-4EYzglqb1iD6x9gxtAYpRGwGP6qJGiU2UW4GiYrErEmeu6y6tkyaqW5AwGlIo9+6jAfwD0HjaK8afvjKTtmmMQ==
   dependencies:
     "@babel/plugin-proposal-class-properties" "^7.7.0"
     "@babel/plugin-proposal-object-rest-spread" "^7.6.2"
     "@babel/plugin-syntax-dynamic-import" "^7.2.0"
     "@babel/plugin-transform-react-constant-elements" "^7.2.0"
     "@babel/preset-env" "^7.4.5"
-    "@storybook/addons" "5.3.18"
-    "@storybook/channel-postmessage" "5.3.18"
-    "@storybook/client-api" "5.3.18"
-    "@storybook/client-logger" "5.3.18"
-    "@storybook/core-events" "5.3.18"
+    "@storybook/addons" "5.3.19"
+    "@storybook/channel-postmessage" "5.3.19"
+    "@storybook/client-api" "5.3.19"
+    "@storybook/client-logger" "5.3.19"
+    "@storybook/core-events" "5.3.19"
     "@storybook/csf" "0.0.1"
-    "@storybook/node-logger" "5.3.18"
-    "@storybook/router" "5.3.18"
-    "@storybook/theming" "5.3.18"
-    "@storybook/ui" "5.3.18"
+    "@storybook/node-logger" "5.3.19"
+    "@storybook/router" "5.3.19"
+    "@storybook/theming" "5.3.19"
+    "@storybook/ui" "5.3.19"
     airbnb-js-shims "^2.2.1"
     ansi-to-html "^0.6.11"
     autoprefixer "^9.7.2"
@@ -2559,7 +2932,19 @@
   dependencies:
     lodash "^4.17.15"
 
-"@storybook/node-logger@5.3.18", "@storybook/node-logger@^5.3.17":
+"@storybook/node-logger@5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/node-logger/-/node-logger-5.3.19.tgz#c414e4d3781aeb06298715220012f552a36dff29"
+  integrity sha512-hKshig/u5Nj9fWy0OsyU04yqCxr0A9pydOHIassr4fpLAaePIN2YvqCqE2V+TxQHjZUnowSSIhbXrGt0DI5q2A==
+  dependencies:
+    "@types/npmlog" "^4.1.2"
+    chalk "^3.0.0"
+    core-js "^3.0.1"
+    npmlog "^4.1.2"
+    pretty-hrtime "^1.0.3"
+    regenerator-runtime "^0.13.3"
+
+"@storybook/node-logger@^5.3.17":
   version "5.3.18"
   resolved "https://registry.yarnpkg.com/@storybook/node-logger/-/node-logger-5.3.18.tgz#ee278acb8b6f10d456a24c0ff6d59818a0c3ad94"
   integrity sha512-Go/hdtaPTtjgJP+GYk8VXcOmecrdG7cXm0yyTlatd6s8xXI0txHme1/0MOZmEPows1Ec7KAQ20+NnaCGUPZUUg==
@@ -2582,17 +2967,17 @@
     pnp-webpack-plugin "^1.6.4"
     semver "^7.1.3"
 
-"@storybook/react@^5.3.18":
-  version "5.3.18"
-  resolved "https://registry.yarnpkg.com/@storybook/react/-/react-5.3.18.tgz#c057b680924e188d44149c3d67dd31aead88b28a"
-  integrity sha512-6yNg+phcrEqEjC2NOiu0mJuxbTwX7yzbkcusIn0S7N/KTXNO7CGvYjAkdjfw0gTLjfuVDZIjDQfoosslvfsj3w==
+"@storybook/react@^5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/react/-/react-5.3.19.tgz#ad7e7a5538399e2794cdb5a1b844a2b77c10bd09"
+  integrity sha512-OBRUqol3YLQi/qE55x2pWkv4YpaAmmfj6/Km+7agx+og+oNQl0nnlXy7r27X/4j3ERczzURa5pJHtSjwiNaJNw==
   dependencies:
     "@babel/plugin-transform-react-constant-elements" "^7.6.3"
     "@babel/preset-flow" "^7.0.0"
     "@babel/preset-react" "^7.0.0"
-    "@storybook/addons" "5.3.18"
-    "@storybook/core" "5.3.18"
-    "@storybook/node-logger" "5.3.18"
+    "@storybook/addons" "5.3.19"
+    "@storybook/core" "5.3.19"
+    "@storybook/node-logger" "5.3.19"
     "@svgr/webpack" "^4.0.3"
     "@types/webpack-env" "^1.15.0"
     babel-plugin-add-react-displayname "^0.0.5"
@@ -2624,6 +3009,21 @@
     qs "^6.6.0"
     util-deprecate "^1.0.2"
 
+"@storybook/router@5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/router/-/router-5.3.19.tgz#0f783b85658f99e4007f74347ad7ef17dbf7fc3a"
+  integrity sha512-yNClpuP7BXQlBTRf6Ggle3/R349/k6kvI5Aim4jf6X/2cFVg2pzBXDAF41imNm9PcvdxwabQLm6I48p7OvKr/w==
+  dependencies:
+    "@reach/router" "^1.2.1"
+    "@storybook/csf" "0.0.1"
+    "@types/reach__router" "^1.2.3"
+    core-js "^3.0.1"
+    global "^4.3.2"
+    lodash "^4.17.15"
+    memoizerific "^1.11.3"
+    qs "^6.6.0"
+    util-deprecate "^1.0.2"
+
 "@storybook/theming@5.3.18":
   version "5.3.18"
   resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-5.3.18.tgz#35e78de79d9cf8f1248af0dd1c7fa60555761312"
@@ -2642,20 +3042,38 @@
     resolve-from "^5.0.0"
     ts-dedent "^1.1.0"
 
-"@storybook/ui@5.3.18":
-  version "5.3.18"
-  resolved "https://registry.yarnpkg.com/@storybook/ui/-/ui-5.3.18.tgz#c66f6d94a3c50bb706f4d5b1d5592439110f16f0"
-  integrity sha512-xyXK53fNe9lkGPmXf3Nk+n0gz9gOgXI+fDxetyDLpX79k3DIN/jCKEnv45vXof7OQ45mTmyBvUNTKrNLqKTt5Q==
+"@storybook/theming@5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-5.3.19.tgz#177d9819bd64f7a1a6ea2f1920ffa5baf9a5f467"
+  integrity sha512-ecG+Rq3hc1GOzKHamYnD4wZ0PEP9nNg0mXbC3RhbxfHj+pMMCWWmx9B2Uu75SL1PTT8WcfkFO0hU/0IO84Pzlg==
   dependencies:
     "@emotion/core" "^10.0.20"
-    "@storybook/addons" "5.3.18"
-    "@storybook/api" "5.3.18"
-    "@storybook/channels" "5.3.18"
-    "@storybook/client-logger" "5.3.18"
-    "@storybook/components" "5.3.18"
-    "@storybook/core-events" "5.3.18"
-    "@storybook/router" "5.3.18"
-    "@storybook/theming" "5.3.18"
+    "@emotion/styled" "^10.0.17"
+    "@storybook/client-logger" "5.3.19"
+    core-js "^3.0.1"
+    deep-object-diff "^1.1.0"
+    emotion-theming "^10.0.19"
+    global "^4.3.2"
+    memoizerific "^1.11.3"
+    polished "^3.3.1"
+    prop-types "^15.7.2"
+    resolve-from "^5.0.0"
+    ts-dedent "^1.1.0"
+
+"@storybook/ui@5.3.19":
+  version "5.3.19"
+  resolved "https://registry.yarnpkg.com/@storybook/ui/-/ui-5.3.19.tgz#ac03b67320044a3892ee784111d4436b61874332"
+  integrity sha512-r0VxdWab49nm5tzwvveVDnsHIZHMR76veYOu/NHKDUZ5hnQl1LMG1YyMCFFa7KiwD/OrZxRWr6/Ma7ep9kR4Gw==
+  dependencies:
+    "@emotion/core" "^10.0.20"
+    "@storybook/addons" "5.3.19"
+    "@storybook/api" "5.3.19"
+    "@storybook/channels" "5.3.19"
+    "@storybook/client-logger" "5.3.19"
+    "@storybook/components" "5.3.19"
+    "@storybook/core-events" "5.3.19"
+    "@storybook/router" "5.3.19"
+    "@storybook/theming" "5.3.19"
     copy-to-clipboard "^3.0.8"
     core-js "^3.0.1"
     core-js-pure "^3.0.1"
@@ -2664,7 +3082,7 @@
     fuse.js "^3.4.6"
     global "^4.3.2"
     lodash "^4.17.15"
-    markdown-to-jsx "^6.9.3"
+    markdown-to-jsx "^6.11.4"
     memoizerific "^1.11.3"
     polished "^3.3.1"
     prop-types "^15.7.2"
@@ -2890,6 +3308,227 @@
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
   integrity sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
 
+"@types/d3-array@*":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/d3-array/-/d3-array-2.0.0.tgz#a0d63a296a2d8435a9ec59393dcac746c6174a96"
+  integrity sha512-rGqfPVowNDTszSFvwoZIXvrPG7s/qKzm9piCRIH6xwTTRu7pPZ3ootULFnPkTt74B6i5lN0FpLQL24qGOw1uZA==
+
+"@types/d3-array@^1":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@types/d3-array/-/d3-array-1.2.7.tgz#34dc654d34fc058c41c31dbca1ed68071a8fcc17"
+  integrity sha512-51vHWuUyDOi+8XuwPrTw3cFqyh2Slg9y8COYkRfjCPG9TfYqY0hoNPzv/8BrcAy0FeQBzqEo/D/8Nk2caOQJnA==
+
+"@types/d3-axis@*":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@types/d3-axis/-/d3-axis-1.0.12.tgz#8c124edfcc02f3b3a9cdaa2a28b8a20341401799"
+  integrity sha512-BZISgSD5M8TgURyNtcPAmUB9sk490CO1Thb6/gIn0WZTt3Y50IssX+2Z0vTccoqZksUDTep0b+o4ofXslvNbqg==
+  dependencies:
+    "@types/d3-selection" "*"
+
+"@types/d3-brush@*":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@types/d3-brush/-/d3-brush-1.1.1.tgz#906875ce42db22fc9cde6d1fb2808f17ecd2ea93"
+  integrity sha512-Exx14trm/q2cskHyMjCrdDllOQ35r1/pmZXaOIt8bBHwYNk722vWY3VxHvN0jdFFX7p2iL3+gD+cGny/aEmhlw==
+  dependencies:
+    "@types/d3-selection" "*"
+
+"@types/d3-chord@*":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@types/d3-chord/-/d3-chord-1.0.9.tgz#ccc5de03ff079025491b7aa6b750670a140b45ae"
+  integrity sha512-UA6lI9CVW5cT5Ku/RV4hxoFn4mKySHm7HEgodtfRthAj1lt9rKZEPon58vyYfk+HIAm33DtJJgZwMXy2QgyPXw==
+
+"@types/d3-collection@*":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@types/d3-collection/-/d3-collection-1.0.8.tgz#aa9552c570a96e33c132e0fd20e331f64baa9dd5"
+  integrity sha512-y5lGlazdc0HNO0F3UUX2DPE7OmYvd9Kcym4hXwrJcNUkDaypR5pX+apuMikl9LfTxKItJsY9KYvzBulpCKyvuQ==
+
+"@types/d3-color@*":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@types/d3-color/-/d3-color-1.2.2.tgz#80cf7cfff7401587b8f89307ba36fe4a576bc7cf"
+  integrity sha512-6pBxzJ8ZP3dYEQ4YjQ+NVbQaOflfgXq/JbDiS99oLobM2o72uAST4q6yPxHv6FOTCRC/n35ktuo8pvw/S4M7sw==
+
+"@types/d3-contour@*":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@types/d3-contour/-/d3-contour-1.3.0.tgz#1a408b121fa5e341f715e3055303ef3079fc7eb0"
+  integrity sha512-AUCUIjEnC5lCGBM9hS+MryRaFLIrPls4Rbv6ktqbd+TK/RXZPwOy9rtBWmGpbeXcSOYCJTUDwNJuEnmYPJRxHQ==
+  dependencies:
+    "@types/d3-array" "*"
+    "@types/geojson" "*"
+
+"@types/d3-dispatch@*":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@types/d3-dispatch/-/d3-dispatch-1.0.8.tgz#eaeb2ad089d6a0d2685dfa2f2cbbfb7509aae014"
+  integrity sha512-lCDtqoYez0TgFN3FljBXrz2icqeSzD0gufGook6DPBia+NOh2TBfogjHIsmNa/a+ZOewlHtq4cgLY80O1uLymw==
+
+"@types/d3-drag@*":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@types/d3-drag/-/d3-drag-1.2.3.tgz#d8ddccca28e939e9c689bea6f40a937e48c39051"
+  integrity sha512-rWB5SPvkYVxW3sqUxHOJUZwifD0KqvKwvt1bhNqcLpW6Azsd0BJgRNcyVW8GAferaAk5r8dzeZnf9zKlg9+xMQ==
+  dependencies:
+    "@types/d3-selection" "*"
+
+"@types/d3-dsv@*":
+  version "1.0.36"
+  resolved "https://registry.yarnpkg.com/@types/d3-dsv/-/d3-dsv-1.0.36.tgz#e91129d7c02b1b814838d001e921e8b9a67153d0"
+  integrity sha512-jbIWQ27QJcBNMZbQv0NSQMHnBDCmxghAxePxgyiPH1XPCRkOsTBei7jcdi3fDrUCGpCV3lKrSZFSlOkhUQVClA==
+
+"@types/d3-ease@*":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@types/d3-ease/-/d3-ease-1.0.9.tgz#1dd849bd7edef6426e915e220ed9970db5ea4e04"
+  integrity sha512-U5ADevQ+W6fy32FVZZC9EXallcV/Mi12A5Tkd0My5MrC7T8soMQEhlDAg88XUWm0zoCQlB4XV0en/24LvuDB4Q==
+
+"@types/d3-fetch@*":
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/@types/d3-fetch/-/d3-fetch-1.1.5.tgz#51601f79dd4653b5d84e6a3176d78145e065db5e"
+  integrity sha512-o9c0ItT5/Gl3wbNuVpzRnYX1t3RghzeWAjHUVLuyZJudiTxC4f/fC0ZPFWLQ2lVY8pAMmxpV8TJ6ETYCgPeI3A==
+  dependencies:
+    "@types/d3-dsv" "*"
+
+"@types/d3-force@*":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@types/d3-force/-/d3-force-1.2.1.tgz#c28803ea36fe29788db69efa0ad6c2dc09544e83"
+  integrity sha512-jqK+I36uz4kTBjyk39meed5y31Ab+tXYN/x1dn3nZEus9yOHCLc+VrcIYLc/aSQ0Y7tMPRlIhLetulME76EiiA==
+
+"@types/d3-format@*":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@types/d3-format/-/d3-format-1.3.1.tgz#35bf88264bd6bcda39251165bb827f67879c4384"
+  integrity sha512-KAWvReOKMDreaAwOjdfQMm0HjcUMlQG47GwqdVKgmm20vTd2pucj0a70c3gUSHrnsmo6H2AMrkBsZU2UhJLq8A==
+
+"@types/d3-geo@*":
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/@types/d3-geo/-/d3-geo-1.11.1.tgz#e96ec91f16221d87507fec66b2cc889f52d2493e"
+  integrity sha512-Ox8WWOG3igDRoep/dNsGbOiSJYdUG3ew/6z0ETvHyAtXZVBjOE0S96zSSmzgl0gqQ3RdZjn2eeJOj9oRcMZPkQ==
+  dependencies:
+    "@types/geojson" "*"
+
+"@types/d3-hierarchy@*":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@types/d3-hierarchy/-/d3-hierarchy-1.1.6.tgz#4c017521900813ea524c9ecb8d7985ec26a9ad9a"
+  integrity sha512-vvSaIDf/Ov0o3KwMT+1M8+WbnnlRiGjlGD5uvk83a1mPCTd/E5x12bUJ/oP55+wUY/4Kb5kc67rVpVGJ2KUHxg==
+
+"@types/d3-interpolate@*":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@types/d3-interpolate/-/d3-interpolate-1.3.1.tgz#1c280511f622de9b0b47d463fa55f9a4fd6f5fc8"
+  integrity sha512-z8Zmi08XVwe8e62vP6wcA+CNuRhpuUU5XPEfqpG0hRypDE5BWNthQHB1UNWWDB7ojCbGaN4qBdsWp5kWxhT1IQ==
+  dependencies:
+    "@types/d3-color" "*"
+
+"@types/d3-path@*":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@types/d3-path/-/d3-path-1.0.8.tgz#48e6945a8ff43ee0a1ce85c8cfa2337de85c7c79"
+  integrity sha512-AZGHWslq/oApTAHu9+yH/Bnk63y9oFOMROtqPAtxl5uB6qm1x2lueWdVEjsjjV3Qc2+QfuzKIwIR5MvVBakfzA==
+
+"@types/d3-polygon@*":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@types/d3-polygon/-/d3-polygon-1.0.7.tgz#7b3947aa2d48287ff535230d3d396668ab17bfdf"
+  integrity sha512-Xuw0eSjQQKs8jTiNbntWH0S+Xp+JyhqxmQ0YAQ3rDu6c3kKMFfgsaGN7Jv5u3zG6yVX/AsLP/Xs/QRjmi9g43Q==
+
+"@types/d3-quadtree@*":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@types/d3-quadtree/-/d3-quadtree-1.0.7.tgz#8e29464ff5b326f6612c1428d9362b4b35de2b70"
+  integrity sha512-0ajFawWicfjsaCLh6NzxOyVDYhQAmMFbsiI3MPGLInorauHFEh9/Cl6UHNf+kt/J1jfoxKY/ZJaKAoDpbvde5Q==
+
+"@types/d3-random@*":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@types/d3-random/-/d3-random-1.1.2.tgz#6f77e8b7bb64ac393f92d33fe8f71038bc4f3cde"
+  integrity sha512-Jui+Zn28pQw/3EayPKaN4c/PqTvqNbIPjHkgIIFnxne1FdwNjfHtAIsZIBMKlquQNrrMjFzCrlF2gPs3xckqaA==
+
+"@types/d3-scale-chromatic@*":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@types/d3-scale-chromatic/-/d3-scale-chromatic-1.5.0.tgz#315367557d51b823bec848614fac095325613fc3"
+  integrity sha512-9/D7cOBKdZdTCPc6re0HeSUFBM0aFzdNdmYggUWT9SRRiYSOa6Ys2xdTwHKgc1WS3gGfwTMatBOdWCS863REsg==
+
+"@types/d3-scale@*":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@types/d3-scale/-/d3-scale-2.2.0.tgz#e5987a2857365823eb26ed5eb21bc566c4dcf1c0"
+  integrity sha512-oQFanN0/PiR2oySHfj+zAAkK1/p4LD32Nt1TMVmzk+bYHk7vgIg/iTXQWitp1cIkDw4LMdcgvO63wL+mNs47YA==
+  dependencies:
+    "@types/d3-time" "*"
+
+"@types/d3-selection@*":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@types/d3-selection/-/d3-selection-1.4.2.tgz#72dcd61a3aeb9ce3e8d443e3bef7685ffea3413f"
+  integrity sha512-ksY8UxvTXpzD91Dy3D9zZg98yF2ZEPMKJd8ZQJlZt1QH3Xxr08s6fESEdC2l0Kbe6Xd9VhaoJX06cRaMR1lEnA==
+
+"@types/d3-shape@*":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@types/d3-shape/-/d3-shape-1.3.2.tgz#a41d9d6b10d02e221696b240caf0b5d0f5a588ec"
+  integrity sha512-LtD8EaNYCaBRzHzaAiIPrfcL3DdIysc81dkGlQvv7WQP3+YXV7b0JJTtR1U3bzeRieS603KF4wUo+ZkJVenh8w==
+  dependencies:
+    "@types/d3-path" "*"
+
+"@types/d3-time-format@*":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@types/d3-time-format/-/d3-time-format-2.1.1.tgz#dd2c79ec4575f1355484ab6b10407824668eba42"
+  integrity sha512-tJSyXta8ZyJ52wDDHA96JEsvkbL6jl7wowGmuf45+fAkj5Y+SQOnz0N7/H68OWmPshPsAaWMQh+GAws44IzH3g==
+
+"@types/d3-time@*":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@types/d3-time/-/d3-time-1.0.10.tgz#d338c7feac93a98a32aac875d1100f92c7b61f4f"
+  integrity sha512-aKf62rRQafDQmSiv1NylKhIMmznsjRN+MnXRXTqHoqm0U/UZzVpdrtRnSIfdiLS616OuC1soYeX1dBg2n1u8Xw==
+
+"@types/d3-timer@*":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@types/d3-timer/-/d3-timer-1.0.9.tgz#aed1bde0cf18920d33f5d44839d73de393633fd3"
+  integrity sha512-WvfJ3LFxBbWjqRGz9n7GJt08RrTHPJDVsIwwoCMROlqF+iDacYiAFjf9oqnq0mXpb2juA2N/qjKP+MKdal3YNQ==
+
+"@types/d3-transition@*":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@types/d3-transition/-/d3-transition-1.1.6.tgz#7e52da29749d874866cc803fad13925713a372da"
+  integrity sha512-/F+O2r4oz4G9ATIH3cuSCMGphAnl7VDx7SbENEK0NlI/FE8Jx2oiIrv0uTrpg7yF/AmuWbqp7AGdEHAPIh24Gg==
+  dependencies:
+    "@types/d3-selection" "*"
+
+"@types/d3-voronoi@*":
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/@types/d3-voronoi/-/d3-voronoi-1.1.9.tgz#7bbc210818a3a5c5e0bafb051420df206617c9e5"
+  integrity sha512-DExNQkaHd1F3dFPvGA/Aw2NGyjMln6E9QzsiqOcBgnE+VInYnFBHBBySbZQts6z6xD+5jTfKCP7M4OqMyVjdwQ==
+
+"@types/d3-zoom@*":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@types/d3-zoom/-/d3-zoom-1.7.4.tgz#9226ffd2bd3846ec0e4a4e2bff211612d3aafad5"
+  integrity sha512-5jnFo/itYhJeB2khO/lKe730kW/h2EbKMOvY0uNp3+7NdPm4w63DwPEMxifQZ7n902xGYK5DdU67FmToSoy4VA==
+  dependencies:
+    "@types/d3-interpolate" "*"
+    "@types/d3-selection" "*"
+
+"@types/d3@^5.7.2":
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/@types/d3/-/d3-5.7.2.tgz#52235eb71a1d3ca171d6dca52a58f5ccbe0254cc"
+  integrity sha512-7/wClB8ycneWGy3jdvLfXKTd5SoTg9hji7IdJ0RuO9xTY54YpJ8zlcFADcXhY1J3kCBwxp+/1jeN6a5OMwgYOw==
+  dependencies:
+    "@types/d3-array" "^1"
+    "@types/d3-axis" "*"
+    "@types/d3-brush" "*"
+    "@types/d3-chord" "*"
+    "@types/d3-collection" "*"
+    "@types/d3-color" "*"
+    "@types/d3-contour" "*"
+    "@types/d3-dispatch" "*"
+    "@types/d3-drag" "*"
+    "@types/d3-dsv" "*"
+    "@types/d3-ease" "*"
+    "@types/d3-fetch" "*"
+    "@types/d3-force" "*"
+    "@types/d3-format" "*"
+    "@types/d3-geo" "*"
+    "@types/d3-hierarchy" "*"
+    "@types/d3-interpolate" "*"
+    "@types/d3-path" "*"
+    "@types/d3-polygon" "*"
+    "@types/d3-quadtree" "*"
+    "@types/d3-random" "*"
+    "@types/d3-scale" "*"
+    "@types/d3-scale-chromatic" "*"
+    "@types/d3-selection" "*"
+    "@types/d3-shape" "*"
+    "@types/d3-time" "*"
+    "@types/d3-time-format" "*"
+    "@types/d3-timer" "*"
+    "@types/d3-transition" "*"
+    "@types/d3-voronoi" "*"
+    "@types/d3-zoom" "*"
+
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
@@ -2899,6 +3538,16 @@
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
   integrity sha512-EaObqwIvayI5a8dCzhFrjKzVwKLxjoG9T6Ppd5CEo07LRKfQ8Yokw54r5+Wq7FaBQ+yXRvQAYPrHwya1/UFt9g==
+
+"@types/faker@^4.1.12":
+  version "4.1.12"
+  resolved "https://registry.yarnpkg.com/@types/faker/-/faker-4.1.12.tgz#065d37343677df1aa757c622650bd14666c42602"
+  integrity sha512-0MEyzJrLLs1WaOCx9ULK6FzdCSj2EuxdSP9kvuxxdBEGujZYUOZ4vkPXdgu3dhyg/pOdn7VCatelYX7k0YShlA==
+
+"@types/geojson@*":
+  version "7946.0.7"
+  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.7.tgz#c8fa532b60a0042219cdf173ca21a975ef0666ad"
+  integrity sha512-wE2v81i4C4Ol09RtsWFAqg3BUitWbHSpSlIo+bNdsCJijO9sjme+zm+73ZMCa/qMC8UEERxzGbvmr1cffo2SiQ==
 
 "@types/glob@^7.1.1":
   version "7.1.1"
@@ -2914,7 +3563,7 @@
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.5.tgz#527d20ef68571a4af02ed74350164e7a67544860"
   integrity sha512-wLD/Aq2VggCJXSjxEwrMafIP51Z+13H78nXIX0ABEuIGhmB5sNGbR113MOKo+yfw+RDo1ZU3DM6yfnnRF/+ouw==
 
-"@types/hoist-non-react-statics@^3.3.0":
+"@types/hoist-non-react-statics@^3.3.0", "@types/hoist-non-react-statics@^3.3.1":
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz#1124aafe5118cb591977aeb1ceaaed1070eb039f"
   integrity sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==
@@ -2964,6 +3613,11 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.3.tgz#bdfd69d61e464dcc81b25159c270d75a73c1a636"
   integrity sha512-Il2DtDVRGDcqjDtE+rF8iqg1CArehSK84HZJCT7AMITlyXRBpuPhqGLDQMowraqqu1coEaimg4ZOqggt6L6L+A==
 
+"@types/lodash@^4.14.157":
+  version "4.14.157"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.157.tgz#fdac1c52448861dfde1a2e1515dbc46e54926dc8"
+  integrity sha512-Ft5BNFmv2pHDgxV5JDsndOWTRJ+56zte0ZpYLowp03tW+K+t8u8YMOzAnpuqPgzX6WO1XpDIUm7u04M8vdDiVQ==
+
 "@types/minimatch@*":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
@@ -2978,11 +3632,6 @@
   version "12.12.35"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.35.tgz#1e61b226c14380f4384f70cfe49a65c2c553ad2b"
   integrity sha512-ASYsaKecA7TUsDrqIGPNk3JeEox0z/0XR/WsJJ8BIX/9+SkMSImQXKWfU/yBrSyc7ZSE/NPqLu36Nur0miCFfQ==
-
-"@types/node@>=6":
-  version "14.0.19"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.19.tgz#994d99708822bca643a2364f8aeed04a16e0f5a1"
-  integrity sha512-yf3BP/NIXF37BjrK5klu//asUWitOEoUP5xE1mhSUjazotwJ/eJDgEmMQNlOeWOVv72j24QQ+3bqXHE++CFGag==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -3070,6 +3719,21 @@
   resolved "https://registry.yarnpkg.com/@types/react-textarea-autosize/-/react-textarea-autosize-4.3.5.tgz#6c4d2753fa1864c98c0b2b517f67bb1f6e4c46de"
   integrity sha512-PiDL83kPMTolyZAWW3lyzO6ktooTb9tFTntVy7CA83/qFLWKLJ5bLeRboy6J6j3b1e8h2Eec6gBTEOOJRjV14A==
   dependencies:
+    "@types/react" "*"
+
+"@types/react-transition-group@^4.4.0":
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/@types/react-transition-group/-/react-transition-group-4.4.0.tgz#882839db465df1320e4753e6e9f70ca7e9b4d46d"
+  integrity sha512-/QfLHGpu+2fQOqQaXh8MG9q03bFENooTb/it4jr5kKaZlDQfWvjqWZg48AwzPVMBHlRuTRAY7hRHCEOXz5kV6w==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-virtualized@^9.21.9":
+  version "9.21.9"
+  resolved "https://registry.yarnpkg.com/@types/react-virtualized/-/react-virtualized-9.21.9.tgz#10b57fa5979d008bd38633ad62a7461e14327cc0"
+  integrity sha512-W7zTK290hACRANzYllz6hJJkeceYWyofxe5HeZt9gtONErB+y6f1UZNrhWe2wx1vuWQbdyZMKFRv9/nAmiXHew==
+  dependencies:
+    "@types/prop-types" "*"
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^16.9.0":
@@ -3535,18 +4199,17 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
-"@wry/context@^0.4.0":
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.4.4.tgz#e50f5fa1d6cfaabf2977d1fda5ae91717f8815f8"
-  integrity sha512-LrKVLove/zw6h2Md/KZyWxIkFM6AoyKp71OqpH9Hiip1csjPVoD3tPxlbQUNxEnHENks3UGgNpSBCAfq9KWuag==
+"@wry/context@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.5.2.tgz#f2a5d5ab9227343aa74c81e06533c1ef84598ec7"
+  integrity sha512-B/JLuRZ/vbEKHRUiGj6xiMojST1kHhu4WcreLfNN7q9DqQFrb97cWgf/kiYsPSUCAMVN0HzfFc8XjJdzgZzfjw==
   dependencies:
-    "@types/node" ">=6"
     tslib "^1.9.3"
 
-"@wry/equality@^0.1.2", "@wry/equality@^0.1.9":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@wry/equality/-/equality-0.1.11.tgz#35cb156e4a96695aa81a9ecc4d03787bc17f1790"
-  integrity sha512-mwEVBDUVODlsQQ5dfuLUS5/Tf7jqUKyhKYHmVi4fPB6bDMOfWvUPJmKgS1Z7Za/sOI3vzWt4+O7yCiL/70MogA==
+"@wry/equality@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@wry/equality/-/equality-0.2.0.tgz#a312d1b6a682d0909904c2bcd355b02303104fb7"
+  integrity sha512-Y4d+WH6hs+KZJUC8YKLYGarjGekBrhslDbf/R20oV+AakHPINSitHfDRQz3EGcEWc1luXYNUvMhawWtZVWNGvQ==
   dependencies:
     tslib "^1.9.3"
 
@@ -3811,101 +4474,6 @@ anymatch@~3.1.1:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-apollo-boost@^0.4.9:
-  version "0.4.9"
-  resolved "https://registry.yarnpkg.com/apollo-boost/-/apollo-boost-0.4.9.tgz#ab3ba539c2ca944e6fd156583a1b1954b17a6791"
-  integrity sha512-05y5BKcDaa8w47f8d81UVwKqrAjn8uKLv6QM9fNdldoNzQ+rnOHgFlnrySUZRz9QIT3vPftQkEz2UEASp1Mi5g==
-  dependencies:
-    apollo-cache "^1.3.5"
-    apollo-cache-inmemory "^1.6.6"
-    apollo-client "^2.6.10"
-    apollo-link "^1.0.6"
-    apollo-link-error "^1.0.3"
-    apollo-link-http "^1.3.1"
-    graphql-tag "^2.4.2"
-    ts-invariant "^0.4.0"
-    tslib "^1.10.0"
-
-apollo-cache-inmemory@^1.6.6:
-  version "1.6.6"
-  resolved "https://registry.yarnpkg.com/apollo-cache-inmemory/-/apollo-cache-inmemory-1.6.6.tgz#56d1f2a463a6b9db32e9fa990af16d2a008206fd"
-  integrity sha512-L8pToTW/+Xru2FFAhkZ1OA9q4V4nuvfoPecBM34DecAugUZEBhI2Hmpgnzq2hTKZ60LAMrlqiASm0aqAY6F8/A==
-  dependencies:
-    apollo-cache "^1.3.5"
-    apollo-utilities "^1.3.4"
-    optimism "^0.10.0"
-    ts-invariant "^0.4.0"
-    tslib "^1.10.0"
-
-apollo-cache@1.3.5, apollo-cache@^1.3.5:
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/apollo-cache/-/apollo-cache-1.3.5.tgz#9dbebfc8dbe8fe7f97ba568a224bca2c5d81f461"
-  integrity sha512-1XoDy8kJnyWY/i/+gLTEbYLnoiVtS8y7ikBr/IfmML4Qb+CM7dEEbIUOjnY716WqmZ/UpXIxTfJsY7rMcqiCXA==
-  dependencies:
-    apollo-utilities "^1.3.4"
-    tslib "^1.10.0"
-
-apollo-client@^2.6.10:
-  version "2.6.10"
-  resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-2.6.10.tgz#86637047b51d940c8eaa771a4ce1b02df16bea6a"
-  integrity sha512-jiPlMTN6/5CjZpJOkGeUV0mb4zxx33uXWdj/xQCfAMkuNAC3HN7CvYDyMHHEzmcQ5GV12LszWoQ/VlxET24CtA==
-  dependencies:
-    "@types/zen-observable" "^0.8.0"
-    apollo-cache "1.3.5"
-    apollo-link "^1.0.0"
-    apollo-utilities "1.3.4"
-    symbol-observable "^1.0.2"
-    ts-invariant "^0.4.0"
-    tslib "^1.10.0"
-    zen-observable "^0.8.0"
-
-apollo-link-error@^1.0.3:
-  version "1.1.13"
-  resolved "https://registry.yarnpkg.com/apollo-link-error/-/apollo-link-error-1.1.13.tgz#c1a1bb876ffe380802c8df0506a32c33aad284cd"
-  integrity sha512-jAZOOahJU6bwSqb2ZyskEK1XdgUY9nkmeclCrW7Gddh1uasHVqmoYc4CKdb0/H0Y1J9lvaXKle2Wsw/Zx1AyUg==
-  dependencies:
-    apollo-link "^1.2.14"
-    apollo-link-http-common "^0.2.16"
-    tslib "^1.9.3"
-
-apollo-link-http-common@^0.2.16:
-  version "0.2.16"
-  resolved "https://registry.yarnpkg.com/apollo-link-http-common/-/apollo-link-http-common-0.2.16.tgz#756749dafc732792c8ca0923f9a40564b7c59ecc"
-  integrity sha512-2tIhOIrnaF4UbQHf7kjeQA/EmSorB7+HyJIIrUjJOKBgnXwuexi8aMecRlqTIDWcyVXCeqLhUnztMa6bOH/jTg==
-  dependencies:
-    apollo-link "^1.2.14"
-    ts-invariant "^0.4.0"
-    tslib "^1.9.3"
-
-apollo-link-http@^1.3.1:
-  version "1.5.17"
-  resolved "https://registry.yarnpkg.com/apollo-link-http/-/apollo-link-http-1.5.17.tgz#499e9f1711bf694497f02c51af12d82de5d8d8ba"
-  integrity sha512-uWcqAotbwDEU/9+Dm9e1/clO7hTB2kQ/94JYcGouBVLjoKmTeJTUPQKcJGpPwUjZcSqgYicbFqQSoJIW0yrFvg==
-  dependencies:
-    apollo-link "^1.2.14"
-    apollo-link-http-common "^0.2.16"
-    tslib "^1.9.3"
-
-apollo-link@^1.0.0, apollo-link@^1.0.6, apollo-link@^1.2.14:
-  version "1.2.14"
-  resolved "https://registry.yarnpkg.com/apollo-link/-/apollo-link-1.2.14.tgz#3feda4b47f9ebba7f4160bef8b977ba725b684d9"
-  integrity sha512-p67CMEFP7kOG1JZ0ZkYZwRDa369w5PIjtMjvrQd/HnIV8FRsHRqLqK+oAZQnFa1DDdZtOtHTi+aMIW6EatC2jg==
-  dependencies:
-    apollo-utilities "^1.3.0"
-    ts-invariant "^0.4.0"
-    tslib "^1.9.3"
-    zen-observable-ts "^0.8.21"
-
-apollo-utilities@1.3.4, apollo-utilities@^1.3.0, apollo-utilities@^1.3.4:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/apollo-utilities/-/apollo-utilities-1.3.4.tgz#6129e438e8be201b6c55b0f13ce49d2c7175c9cf"
-  integrity sha512-pk2hiWrCXMAy2fRPwEyhvka+mqwzeP60Jr1tRYi5xru+3ko94HI9o6lK0CT33/w4RDlxWchmdhDCrvdr+pHCig==
-  dependencies:
-    "@wry/equality" "^0.1.2"
-    fast-json-stable-stringify "^2.0.0"
-    ts-invariant "^0.4.0"
-    tslib "^1.10.0"
-
 app-root-dir@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/app-root-dir/-/app-root-dir-1.0.2.tgz#38187ec2dea7577fff033ffcb12172692ff6e118"
@@ -4045,7 +4613,7 @@ arrify@^1.0.1:
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
   integrity sha1-iYUI2iIm84DfkEcoRWhJwVAaSw0=
 
-asap@~2.0.3, asap@~2.0.6:
+asap@^2.0.6, asap@~2.0.3, asap@~2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha1-5QNHYR1+aQlDIIu9r+vLwvuGbUY=
@@ -5238,7 +5806,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@2.x, classnames@^2.2.5, classnames@^2.2.6:
+classnames@2.x, classnames@^2.2.4, classnames@^2.2.5, classnames@^2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
   integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
@@ -5365,6 +5933,11 @@ clone-regexp@^2.1.0:
   dependencies:
     is-regexp "^2.0.0"
 
+clsx@^1.0.1:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.0.tgz#62937c6adfea771247c34b54d320fb99624f5702"
+  integrity sha512-3avwM37fSK5oP6M5rQ9CNe99lwxhXDOeSWVPAOYF6OazUTgZCMb0yWlJpmdD74REy1gkEaFiub2ULv4fq9GUhA==
+
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
@@ -5454,7 +6027,7 @@ comma-separated-tokens@^1.0.0:
   resolved "https://registry.yarnpkg.com/comma-separated-tokens/-/comma-separated-tokens-1.0.8.tgz#632b80b6117867a158f1080ad498b2fbe7e3f5ea"
   integrity sha512-GHuDRO12Sypu2cV70d1dkA2EUmXHgntrzbpvOB+Qy+49ypNfGgFQIC2fhhXbnyrJRynDCAARsT7Ou0M6hirpfw==
 
-commander@^2.11.0, commander@^2.19.0, commander@^2.20.0, commander@~2.20.3:
+commander@2, commander@^2.11.0, commander@^2.19.0, commander@^2.20.0, commander@~2.20.3:
   version "2.20.3"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
@@ -6043,6 +6616,254 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
+d3-array@1, d3-array@^1.1.1, d3-array@^1.2.0:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.4.tgz#635ce4d5eea759f6f605863dbcfc30edc737f71f"
+  integrity sha512-KHW6M86R+FUPYGb3R5XiYjXPq7VzwxZ22buHhAEVG5ztoEcZZMLov530mmccaqA1GghZArjQV46fuc8kUqhhHw==
+
+d3-axis@1:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/d3-axis/-/d3-axis-1.0.12.tgz#cdf20ba210cfbb43795af33756886fb3638daac9"
+  integrity sha512-ejINPfPSNdGFKEOAtnBtdkpr24c4d4jsei6Lg98mxf424ivoDP2956/5HDpIAtmHo85lqT4pruy+zEgvRUBqaQ==
+
+d3-brush@1:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/d3-brush/-/d3-brush-1.1.5.tgz#066b8e84d17b192986030446c97c0fba7e1bacdc"
+  integrity sha512-rEaJ5gHlgLxXugWjIkolTA0OyMvw8UWU1imYXy1v642XyyswmI1ybKOv05Ft+ewq+TFmdliD3VuK0pRp1VT/5A==
+  dependencies:
+    d3-dispatch "1"
+    d3-drag "1"
+    d3-interpolate "1"
+    d3-selection "1"
+    d3-transition "1"
+
+d3-chord@1:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/d3-chord/-/d3-chord-1.0.6.tgz#309157e3f2db2c752f0280fedd35f2067ccbb15f"
+  integrity sha512-JXA2Dro1Fxw9rJe33Uv+Ckr5IrAa74TlfDEhE/jfLOaXegMQFQTAgAw9WnZL8+HxVBRXaRGCkrNU7pJeylRIuA==
+  dependencies:
+    d3-array "1"
+    d3-path "1"
+
+d3-collection@1:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/d3-collection/-/d3-collection-1.0.7.tgz#349bd2aa9977db071091c13144d5e4f16b5b310e"
+  integrity sha512-ii0/r5f4sjKNTfh84Di+DpztYwqKhEyUlKoPrzUFfeSkWxjW49xU2QzO9qrPrNkpdI0XJkfzvmTu8V2Zylln6A==
+
+d3-color@1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/d3-color/-/d3-color-1.4.1.tgz#c52002bf8846ada4424d55d97982fef26eb3bc8a"
+  integrity sha512-p2sTHSLCJI2QKunbGb7ocOh7DgTAn8IrLx21QRc/BSnodXM4sv6aLQlnfpvehFMLZEfBc6g9pH9SWQccFYfJ9Q==
+
+d3-contour@1:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/d3-contour/-/d3-contour-1.3.2.tgz#652aacd500d2264cb3423cee10db69f6f59bead3"
+  integrity sha512-hoPp4K/rJCu0ladiH6zmJUEz6+u3lgR+GSm/QdM2BBvDraU39Vr7YdDCicJcxP1z8i9B/2dJLgDC1NcvlF8WCg==
+  dependencies:
+    d3-array "^1.1.1"
+
+d3-dispatch@1:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/d3-dispatch/-/d3-dispatch-1.0.6.tgz#00d37bcee4dd8cd97729dd893a0ac29caaba5d58"
+  integrity sha512-fVjoElzjhCEy+Hbn8KygnmMS7Or0a9sI2UzGwoB7cCtvI1XpVN9GpoYlnb3xt2YV66oXYb1fLJ8GMvP4hdU1RA==
+
+d3-drag@1:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/d3-drag/-/d3-drag-1.2.5.tgz#2537f451acd39d31406677b7dc77c82f7d988f70"
+  integrity sha512-rD1ohlkKQwMZYkQlYVCrSFxsWPzI97+W+PaEIBNTMxRuxz9RF0Hi5nJWHGVJ3Om9d2fRTe1yOBINJyy/ahV95w==
+  dependencies:
+    d3-dispatch "1"
+    d3-selection "1"
+
+d3-dsv@1:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/d3-dsv/-/d3-dsv-1.2.0.tgz#9d5f75c3a5f8abd611f74d3f5847b0d4338b885c"
+  integrity sha512-9yVlqvZcSOMhCYzniHE7EVUws7Fa1zgw+/EAV2BxJoG3ME19V6BQFBwI855XQDsxyOuG7NibqRMTtiF/Qup46g==
+  dependencies:
+    commander "2"
+    iconv-lite "0.4"
+    rw "1"
+
+d3-ease@1:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/d3-ease/-/d3-ease-1.0.6.tgz#ebdb6da22dfac0a22222f2d4da06f66c416a0ec0"
+  integrity sha512-SZ/lVU7LRXafqp7XtIcBdxnWl8yyLpgOmzAk0mWBI9gXNzLDx5ybZgnRbH9dN/yY5tzVBqCQ9avltSnqVwessQ==
+
+d3-fetch@1:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/d3-fetch/-/d3-fetch-1.2.0.tgz#15ce2ecfc41b092b1db50abd2c552c2316cf7fc7"
+  integrity sha512-yC78NBVcd2zFAyR/HnUiBS7Lf6inSCoWcSxFfw8FYL7ydiqe80SazNwoffcqOfs95XaLo7yebsmQqDKSsXUtvA==
+  dependencies:
+    d3-dsv "1"
+
+d3-force@1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/d3-force/-/d3-force-1.2.1.tgz#fd29a5d1ff181c9e7f0669e4bd72bdb0e914ec0b"
+  integrity sha512-HHvehyaiUlVo5CxBJ0yF/xny4xoaxFxDnBXNvNcfW9adORGZfyNF1dj6DGLKyk4Yh3brP/1h3rnDzdIAwL08zg==
+  dependencies:
+    d3-collection "1"
+    d3-dispatch "1"
+    d3-quadtree "1"
+    d3-timer "1"
+
+d3-format@1:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-1.4.4.tgz#356925f28d0fd7c7983bfad593726fce46844030"
+  integrity sha512-TWks25e7t8/cqctxCmxpUuzZN11QxIA7YrMbram94zMQ0PXjE4LVIMe/f6a4+xxL8HQ3OsAFULOINQi1pE62Aw==
+
+d3-geo@1:
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/d3-geo/-/d3-geo-1.12.1.tgz#7fc2ab7414b72e59fbcbd603e80d9adc029b035f"
+  integrity sha512-XG4d1c/UJSEX9NfU02KwBL6BYPj8YKHxgBEw5om2ZnTRSbIcego6dhHwcxuSR3clxh0EpE38os1DVPOmnYtTPg==
+  dependencies:
+    d3-array "1"
+
+d3-hierarchy@1:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/d3-hierarchy/-/d3-hierarchy-1.1.9.tgz#2f6bee24caaea43f8dc37545fa01628559647a83"
+  integrity sha512-j8tPxlqh1srJHAtxfvOUwKNYJkQuBFdM1+JAUfq6xqH5eAqf93L7oG1NVqDa4CpFZNvnNKtCYEUC8KY9yEn9lQ==
+
+d3-interpolate@1:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/d3-interpolate/-/d3-interpolate-1.4.0.tgz#526e79e2d80daa383f9e0c1c1c7dcc0f0583e987"
+  integrity sha512-V9znK0zc3jOPV4VD2zZn0sDhZU3WAE2bmlxdIwwQPPzPjvyLkd8B3JUVdS1IDUFDkWZ72c9qnv1GK2ZagTZ8EA==
+  dependencies:
+    d3-color "1"
+
+d3-path@1:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-1.0.9.tgz#48c050bb1fe8c262493a8caf5524e3e9591701cf"
+  integrity sha512-VLaYcn81dtHVTjEHd8B+pbe9yHWpXKZUC87PzoFmsFrJqgFwDe/qxfp5MlfsfM1V5E/iVt0MmEbWQ7FVIXh/bg==
+
+d3-polygon@1:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/d3-polygon/-/d3-polygon-1.0.6.tgz#0bf8cb8180a6dc107f518ddf7975e12abbfbd38e"
+  integrity sha512-k+RF7WvI08PC8reEoXa/w2nSg5AUMTi+peBD9cmFc+0ixHfbs4QmxxkarVal1IkVkgxVuk9JSHhJURHiyHKAuQ==
+
+d3-quadtree@1:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/d3-quadtree/-/d3-quadtree-1.0.7.tgz#ca8b84df7bb53763fe3c2f24bd435137f4e53135"
+  integrity sha512-RKPAeXnkC59IDGD0Wu5mANy0Q2V28L+fNe65pOCXVdVuTJS3WPKaJlFHer32Rbh9gIo9qMuJXio8ra4+YmIymA==
+
+d3-random@1:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/d3-random/-/d3-random-1.1.2.tgz#2833be7c124360bf9e2d3fd4f33847cfe6cab291"
+  integrity sha512-6AK5BNpIFqP+cx/sreKzNjWbwZQCSUatxq+pPRmFIQaWuoD+NrbVWw7YWpHiXpCQ/NanKdtGDuB+VQcZDaEmYQ==
+
+d3-scale-chromatic@1:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/d3-scale-chromatic/-/d3-scale-chromatic-1.5.0.tgz#54e333fc78212f439b14641fb55801dd81135a98"
+  integrity sha512-ACcL46DYImpRFMBcpk9HhtIyC7bTBR4fNOPxwVSl0LfulDAwyiHyPOTqcDG1+t5d4P9W7t/2NAuWu59aKko/cg==
+  dependencies:
+    d3-color "1"
+    d3-interpolate "1"
+
+d3-scale@2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/d3-scale/-/d3-scale-2.2.2.tgz#4e880e0b2745acaaddd3ede26a9e908a9e17b81f"
+  integrity sha512-LbeEvGgIb8UMcAa0EATLNX0lelKWGYDQiPdHj+gLblGVhGLyNbaCn3EvrJf0A3Y/uOOU5aD6MTh5ZFCdEwGiCw==
+  dependencies:
+    d3-array "^1.2.0"
+    d3-collection "1"
+    d3-format "1"
+    d3-interpolate "1"
+    d3-time "1"
+    d3-time-format "2"
+
+d3-selection@1, d3-selection@^1.1.0:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/d3-selection/-/d3-selection-1.4.1.tgz#98eedbbe085fbda5bafa2f9e3f3a2f4d7d622a98"
+  integrity sha512-BTIbRjv/m5rcVTfBs4AMBLKs4x8XaaLkwm28KWu9S2vKNqXkXt2AH2Qf0sdPZHjFxcWg/YL53zcqAz+3g4/7PA==
+
+d3-shape@1:
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/d3-shape/-/d3-shape-1.3.7.tgz#df63801be07bc986bc54f63789b4fe502992b5d7"
+  integrity sha512-EUkvKjqPFUAZyOlhY5gzCxCeI0Aep04LwIRpsZ/mLFelJiUfnK56jo5JMDSE7yyP2kLSb6LtF+S5chMk7uqPqw==
+  dependencies:
+    d3-path "1"
+
+d3-time-format@2:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/d3-time-format/-/d3-time-format-2.2.3.tgz#0c9a12ee28342b2037e5ea1cf0b9eb4dd75f29cb"
+  integrity sha512-RAHNnD8+XvC4Zc4d2A56Uw0yJoM7bsvOlJR33bclxq399Rak/b9bhvu/InjxdWhPtkgU53JJcleJTGkNRnN6IA==
+  dependencies:
+    d3-time "1"
+
+d3-time@1:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/d3-time/-/d3-time-1.1.0.tgz#b1e19d307dae9c900b7e5b25ffc5dcc249a8a0f1"
+  integrity sha512-Xh0isrZ5rPYYdqhAVk8VLnMEidhz5aP7htAADH6MfzgmmicPkTo8LhkLxci61/lCB7n7UmE3bN0leRt+qvkLxA==
+
+d3-timer@1:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/d3-timer/-/d3-timer-1.0.10.tgz#dfe76b8a91748831b13b6d9c793ffbd508dd9de5"
+  integrity sha512-B1JDm0XDaQC+uvo4DT79H0XmBskgS3l6Ve+1SBCfxgmtIb1AVrPIoqd+nPSv+loMX8szQ0sVUhGngL7D5QPiXw==
+
+d3-transition@1:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/d3-transition/-/d3-transition-1.3.2.tgz#a98ef2151be8d8600543434c1ca80140ae23b398"
+  integrity sha512-sc0gRU4PFqZ47lPVHloMn9tlPcv8jxgOQg+0zjhfZXMQuvppjG6YuwdMBE0TuqCZjeJkLecku/l9R0JPcRhaDA==
+  dependencies:
+    d3-color "1"
+    d3-dispatch "1"
+    d3-ease "1"
+    d3-interpolate "1"
+    d3-selection "^1.1.0"
+    d3-timer "1"
+
+d3-voronoi@1:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/d3-voronoi/-/d3-voronoi-1.1.4.tgz#dd3c78d7653d2bb359284ae478645d95944c8297"
+  integrity sha512-dArJ32hchFsrQ8uMiTBLq256MpnZjeuBtdHpaDlYuQyjU0CVzCJl/BVW+SkszaAeH95D/8gxqAhgx0ouAWAfRg==
+
+d3-zoom@1:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/d3-zoom/-/d3-zoom-1.8.3.tgz#b6a3dbe738c7763121cd05b8a7795ffe17f4fc0a"
+  integrity sha512-VoLXTK4wvy1a0JpH2Il+F2CiOhVu7VRXWF5M/LroMIh3/zBAC3WAt7QoIvPibOavVo20hN6/37vwAsdBejLyKQ==
+  dependencies:
+    d3-dispatch "1"
+    d3-drag "1"
+    d3-interpolate "1"
+    d3-selection "1"
+    d3-transition "1"
+
+d3@^5.16.0:
+  version "5.16.0"
+  resolved "https://registry.yarnpkg.com/d3/-/d3-5.16.0.tgz#9c5e8d3b56403c79d4ed42fbd62f6113f199c877"
+  integrity sha512-4PL5hHaHwX4m7Zr1UapXW23apo6pexCgdetdJ5kTmADpG/7T9Gkxw0M0tf/pjoB63ezCCm0u5UaFYy2aMt0Mcw==
+  dependencies:
+    d3-array "1"
+    d3-axis "1"
+    d3-brush "1"
+    d3-chord "1"
+    d3-collection "1"
+    d3-color "1"
+    d3-contour "1"
+    d3-dispatch "1"
+    d3-drag "1"
+    d3-dsv "1"
+    d3-ease "1"
+    d3-fetch "1"
+    d3-force "1"
+    d3-format "1"
+    d3-geo "1"
+    d3-hierarchy "1"
+    d3-interpolate "1"
+    d3-path "1"
+    d3-polygon "1"
+    d3-quadtree "1"
+    d3-random "1"
+    d3-scale "2"
+    d3-scale-chromatic "1"
+    d3-selection "1"
+    d3-shape "1"
+    d3-time "1"
+    d3-time-format "2"
+    d3-timer "1"
+    d3-transition "1"
+    d3-voronoi "1"
+    d3-zoom "1"
+
 d@1, d@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/d/-/d-1.0.1.tgz#8698095372d58dbee346ffd0c7093f99f8f9eb5a"
@@ -6325,6 +7146,30 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
+disposables@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/disposables/-/disposables-1.0.2.tgz#36c6a674475f55a2d6913567a601444e487b4b6e"
+  integrity sha1-NsamdEdfVaLWkTVnpgFETkh7S24=
+
+dnd-core@^11.1.3:
+  version "11.1.3"
+  resolved "https://registry.yarnpkg.com/dnd-core/-/dnd-core-11.1.3.tgz#f92099ba7245e49729d2433157031a6267afcc98"
+  integrity sha512-QugF55dNW+h+vzxVJ/LSJeTeUw9MCJ2cllhmVThVPEtF16ooBkxj0WBE5RB+AceFxMFo1rO6bJKXtqKl+JNnyA==
+  dependencies:
+    "@react-dnd/asap" "^4.0.0"
+    "@react-dnd/invariant" "^2.0.0"
+    redux "^4.0.4"
+
+dnd-core@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/dnd-core/-/dnd-core-2.6.0.tgz#12bad66d58742c6e5f7cf2943fb6859440f809c4"
+  integrity sha1-ErrWbVh0LG5ffPKUP7aFlED4CcQ=
+  dependencies:
+    asap "^2.0.6"
+    invariant "^2.0.0"
+    lodash "^4.2.0"
+    redux "^3.7.1"
+
 dns-equal@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/dns-equal/-/dns-equal-1.0.0.tgz#b39e7f1da6eb0a75ba9c17324b34753c47e0654d"
@@ -6379,7 +7224,7 @@ dom-converter@^0.2:
   dependencies:
     utila "~0.4"
 
-dom-helpers@^5.0.1:
+dom-helpers@^5.0.0, dom-helpers@^5.0.1:
   version "5.1.4"
   resolved "https://registry.yarnpkg.com/dom-helpers/-/dom-helpers-5.1.4.tgz#4609680ab5c79a45f2531441f1949b79d6587f4b"
   integrity sha512-TjMyeVUvNEnOnhzs6uAn9Ya47GmMo3qq7m+Lr/3ON0Rs5kHvb8I+SQYjLUSYn7qhEm0QjW0yrBkvz9yOrwwz1A==
@@ -7175,6 +8020,11 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
+faker@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/faker/-/faker-4.1.0.tgz#1e45bbbecc6774b3c195fad2835109c6d748cc3f"
+  integrity sha1-HkW7vsxndLPBlfrSg1EJxtdIzD8=
+
 fast-deep-equal@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-1.1.0.tgz#c053477817c86b51daa853c81e059b733d023614"
@@ -7938,10 +8788,15 @@ graphql-request@^1.5.0:
   dependencies:
     cross-fetch "2.2.2"
 
-graphql-tag@2.10.3, graphql-tag@^2.4.2:
+graphql-tag@2.10.3:
   version "2.10.3"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.3.tgz#ea1baba5eb8fc6339e4c4cf049dabe522b0edf03"
   integrity sha512-4FOv3ZKfA4WdOKJeHdz6B3F/vxBLSgmBcGeAFPf4n1F64ltJUvOOerNj0rsJxONQGdhUMynQIvd6LzB+1J5oKA==
+
+graphql-tag@^2.11.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.11.0.tgz#1deb53a01c46a7eb401d6cb59dec86fa1cccbffd"
+  integrity sha512-VmsD5pJqWJnQZMUeRwrDhfgoyqcfwEkvtpANqcoUG8/tOLkwNgU9mzub/Mc78OJMhHjx7gfAMTxzdG43VGg3bA==
 
 graphql@^15.3.0:
   version "15.3.0"
@@ -8137,7 +8992,12 @@ hmac-drbg@^1.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.1"
 
-hoist-non-react-statics@^3.1.0, hoist-non-react-statics@^3.3.0:
+hoist-non-react-statics@^2.1.0:
+  version "2.5.5"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
+  integrity sha512-rqcy4pJo55FTTLWt+bU8ukscqHeE/e9KWvsOW2b/a3afxQZhwkQdT1rPPCJ0rYXdj4vNcasY8zHTH+jF/qStxw==
+
+hoist-non-react-statics@^3.1.0, hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
   integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
@@ -8350,7 +9210,7 @@ husky@^4.2.5:
     slash "^3.0.0"
     which-pm-runs "^1.0.0"
 
-iconv-lite@0.4.24, iconv-lite@^0.4.24, iconv-lite@^0.4.4, iconv-lite@~0.4.13:
+iconv-lite@0.4, iconv-lite@0.4.24, iconv-lite@^0.4.24, iconv-lite@^0.4.4, iconv-lite@~0.4.13:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
   integrity sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==
@@ -8600,7 +9460,7 @@ interpret@^2.0.0:
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-2.0.0.tgz#b783ffac0b8371503e9ab39561df223286aa5433"
   integrity sha512-e0/LknJ8wpMMhTiWcjivB+ESwIuvHnBSlBbmP/pSb8CQJldoj1p2qv7xGZ/+BtbTziYRFSz8OsvdbiX45LtYQA==
 
-invariant@^2.2.2, invariant@^2.2.3, invariant@^2.2.4:
+invariant@^2.0.0, invariant@^2.1.0, invariant@^2.2.2, invariant@^2.2.3, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -10151,10 +11011,15 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-"lodash@>=3.5 <5", lodash@^4.0.1, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.5, lodash@^4.2.1:
+"lodash@>=3.5 <5", lodash@^4.0.1, lodash@^4.17.11, lodash@^4.17.12, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+
+lodash@^4.17.19:
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
 lodash@^4.17.4:
   version "4.17.17"
@@ -10208,7 +11073,7 @@ longest-streak@^2.0.1:
   resolved "https://registry.yarnpkg.com/longest-streak/-/longest-streak-2.0.4.tgz#b8599957da5b5dab64dee3fe316fa774597d90e4"
   integrity sha512-vM6rUVCVUJJt33bnmHiZEvr7wPT78ztX7rojL+LW51bHtLh6HTjx84LA5W4+oa6aKEJA7jJu5LR6vQRBpA5DVg==
 
-loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.2.0, loose-envify@^1.3.1, loose-envify@^1.4.0:
+loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.2.0, loose-envify@^1.3.0, loose-envify@^1.3.1, loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -10310,7 +11175,15 @@ markdown-table@^2.0.0:
   dependencies:
     repeat-string "^1.0.0"
 
-markdown-to-jsx@^6.9.1, markdown-to-jsx@^6.9.3:
+markdown-to-jsx@^6.11.4:
+  version "6.11.4"
+  resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-6.11.4.tgz#b4528b1ab668aef7fe61c1535c27e837819392c5"
+  integrity sha512-3lRCD5Sh+tfA52iGgfs/XZiw33f7fFX9Bn55aNnVNUd2GzLDkOWyKYYD8Yju2B1Vn+feiEdgJs8T6Tg0xNokPw==
+  dependencies:
+    prop-types "^15.6.2"
+    unquote "^1.1.0"
+
+markdown-to-jsx@^6.9.1:
   version "6.11.1"
   resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-6.11.1.tgz#3931612cfffaa5fd6610ecf2a4055eccccb98fa8"
   integrity sha512-FdtDAv8d9/tjyHxdCvWZxxOgK2icwzBkTq/dPk+XlQ2B+DYDcwE89FWGzT92erXQ0CQR/bQbpNK3loNYhYL70g==
@@ -10683,6 +11556,11 @@ mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@^0.5.3, mkdirp@~0.5.1:
   integrity sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==
   dependencies:
     minimist "^1.2.5"
+
+monet@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/monet/-/monet-0.9.1.tgz#89686a22d9dd8a6228fcde5265fcd86aa63981a7"
+  integrity sha512-GaZw308g6t0WD+U2mGujwJckGp2b8AGGVuB6PiIwkXbq6rJeiqddre2mdbO4PxjyILPi+7GgtRkkfr6dBYXWtA==
 
 move-concurrently@^1.0.1:
   version "1.0.1"
@@ -11187,12 +12065,12 @@ opn@^5.5.0:
   dependencies:
     is-wsl "^1.1.0"
 
-optimism@^0.10.0:
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/optimism/-/optimism-0.10.3.tgz#163268fdc741dea2fb50f300bedda80356445fd7"
-  integrity sha512-9A5pqGoQk49H6Vhjb9kPgAeeECfUDF6aIICbMDL23kDLStBn1MWk3YvcZ4xWF9CsSf6XEgvRLkXy4xof/56vVw==
+optimism@^0.12.1:
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/optimism/-/optimism-0.12.1.tgz#933f9467b9aef0e601655adb9638f893e486ad02"
+  integrity sha512-t8I7HM1dw0SECitBYAqFOVHoBAHEQBTeKjIL9y9ImHzAVkdyPK4ifTgM4VJRDtTUY4r/u5Eqxs4XcGPHaoPkeQ==
   dependencies:
-    "@wry/context" "^0.4.0"
+    "@wry/context" "^0.5.2"
 
 optimist@^0.6.1:
   version "0.6.1"
@@ -12913,6 +13791,44 @@ react-color@^2.17.0:
     reactcss "^1.2.0"
     tinycolor2 "^1.4.1"
 
+react-contextmenu@^2.13.0:
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/react-contextmenu/-/react-contextmenu-2.13.0.tgz#dabaea63124e30c85f1b4245c095b7045d013459"
+  integrity sha512-hhFuJX4di0zGV7H7pXPn42U70OZbGpQD+PxcdmKStNT5mebSjI+inhOuFESDmDbqVsN/f99hI5/nw95oXTVRXQ==
+  dependencies:
+    classnames "^2.2.5"
+    object-assign "^4.1.0"
+
+react-contextmenu@^2.14.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/react-contextmenu/-/react-contextmenu-2.14.0.tgz#d8966f30614b9b780b928be4c8d92bd740d55cdd"
+  integrity sha512-ktqMOuad6sCFNJs/ltEwppN8F0YeXmqoZfwycgtZR/MxOXMYx1xgYC44SzWH259HdGyshk1/7sXGuIRwj9hzbw==
+  dependencies:
+    classnames "^2.2.5"
+    object-assign "^4.1.0"
+
+react-data-grid-addons@^7.0.0-alpha.24:
+  version "7.0.0-alpha.24"
+  resolved "https://registry.yarnpkg.com/react-data-grid-addons/-/react-data-grid-addons-7.0.0-alpha.24.tgz#6ca2b80e96b3408cd806db141950ddc452ef5c9e"
+  integrity sha512-j/cZIPFhthJF7BUEYoio+M55pL5zuYWvrMS3kMesxI7Vrabn0Oh1K0pZB4RxTTvEwseiWd2xoZa4E25pZxm3CQ==
+  dependencies:
+    lodash "^4.17.15"
+    prop-types "^15.7.2"
+    react-contextmenu "^2.13.0"
+    react-data-grid "^7.0.0-alpha.24"
+    react-dnd "^2.6.0"
+    react-dnd-html5-backend "^2.6.0"
+    react-select "^1.3.0"
+    reselect "^4.0.0"
+    tslib "^1.10.0"
+
+react-data-grid@7.0.0-canary.16, react-data-grid@^7.0.0-alpha.24:
+  version "7.0.0-canary.16"
+  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-canary.16.tgz#bc7e76c8d0dea41c1e019089a376d5f5dca0be83"
+  integrity sha512-xH0lJBwrusMJaW1HqJ5q0WKy/ePYNPN+fnKwB0TTg+tQ2xbW3loRF5RfPkOxSZnS61rUGAnatAQyrMVrsmpNMg==
+  dependencies:
+    classnames "^2.2.6"
+
 react-dev-utils@^10.2.1:
   version "10.2.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-10.2.1.tgz#f6de325ae25fa4d546d09df4bb1befdc6dd19c19"
@@ -12973,6 +13889,42 @@ react-dev-utils@^9.0.0:
     sockjs-client "1.4.0"
     strip-ansi "5.2.0"
     text-table "0.2.0"
+
+react-dnd-html5-backend@^11.1.3:
+  version "11.1.3"
+  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-11.1.3.tgz#2749f04f416ec230ea193f5c1fbea2de7dffb8f7"
+  integrity sha512-/1FjNlJbW/ivkUxlxQd7o3trA5DE33QiRZgxent3zKme8DwF4Nbw3OFVhTRFGaYhHFNL1rZt6Rdj1D78BjnNLw==
+  dependencies:
+    dnd-core "^11.1.3"
+
+react-dnd-html5-backend@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-2.6.0.tgz#590cd1cca78441bb274edd571fef4c0b16ddcf8e"
+  integrity sha1-WQzRzKeEQbsnTt1XH+9MCxbdz44=
+  dependencies:
+    lodash "^4.2.0"
+
+react-dnd@^11.1.3:
+  version "11.1.3"
+  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-11.1.3.tgz#f9844f5699ccc55dfc81462c2c19f726e670c1af"
+  integrity sha512-8rtzzT8iwHgdSC89VktwhqdKKtfXaAyC4wiqp0SywpHG12TTLvfOoL6xNEIUWXwIEWu+CFfDn4GZJyynCEuHIQ==
+  dependencies:
+    "@react-dnd/shallowequal" "^2.0.0"
+    "@types/hoist-non-react-statics" "^3.3.1"
+    dnd-core "^11.1.3"
+    hoist-non-react-statics "^3.3.0"
+
+react-dnd@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-2.6.0.tgz#7fa25676cf827d58a891293e3c1ab59da002545a"
+  integrity sha1-f6JWds+CfViokSk+PBq1naACVFo=
+  dependencies:
+    disposables "^1.0.1"
+    dnd-core "^2.6.0"
+    hoist-non-react-statics "^2.1.0"
+    invariant "^2.1.0"
+    lodash "^4.2.0"
+    prop-types "^15.5.10"
 
 react-docgen@^5.0.0:
   version "5.3.0"
@@ -13046,7 +13998,7 @@ react-hotkeys@2.0.0:
   dependencies:
     prop-types "^15.6.1"
 
-react-input-autosize@^2.2.2:
+react-input-autosize@^2.1.2, react-input-autosize@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-2.2.2.tgz#fcaa7020568ec206bc04be36f4eb68e647c4d8c2"
   integrity sha512-jQJgYCA3S0j+cuOwzuCd1OjmBmnZLdqQdiLKRYrsMMzbjUrVDS5RvJUDwJqA7sKuksDuzFtm6hZGKFu7Mjk5aw==
@@ -13091,6 +14043,14 @@ react-popper@^1.3.7:
     popper.js "^1.14.4"
     prop-types "^15.6.1"
     typed-styles "^0.0.7"
+    warning "^4.0.2"
+
+react-popper@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-2.2.3.tgz#33d425fa6975d4bd54d9acd64897a89d904b9d97"
+  integrity sha512-mOEiMNT1249js0jJvkrOjyHsGvqcJd3aGW/agkiMoZk3bZ1fXN1wQszIQSjHIai48fE67+zwF8Cs+C4fWqlfjw==
+  dependencies:
+    react-fast-compare "^3.0.1"
     warning "^4.0.2"
 
 react-redux@^7.2.0:
@@ -13193,6 +14153,15 @@ react-scripts@3.4.1:
   optionalDependencies:
     fsevents "2.1.2"
 
+react-select@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-select/-/react-select-1.3.0.tgz#1828ad5bf7f3e42a835c7e2d8cb13b5c20714876"
+  integrity sha512-g/QAU1HZrzSfxkwMAo/wzi6/ezdWye302RGZevsATec07hI/iSxcpB1hejFIp7V63DJ8mwuign6KmB3VjdlinQ==
+  dependencies:
+    classnames "^2.2.4"
+    prop-types "^15.5.8"
+    react-input-autosize "^2.1.2"
+
 react-select@^3.0.8:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/react-select/-/react-select-3.1.0.tgz#ab098720b2e9fe275047c993f0d0caf5ded17c27"
@@ -13255,6 +14224,18 @@ react-transition-group@^4.4.1:
     dom-helpers "^5.0.1"
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
+
+react-virtualized@^9.21.2:
+  version "9.21.2"
+  resolved "https://registry.yarnpkg.com/react-virtualized/-/react-virtualized-9.21.2.tgz#02e6df65c1e020c8dbf574ec4ce971652afca84e"
+  integrity sha512-oX7I7KYiUM7lVXQzmhtF4Xg/4UA5duSA+/ZcAvdWlTLFCoFYq1SbauJT5gZK9cZS/wdYR6TPGpX/dqzvTqQeBA==
+  dependencies:
+    babel-runtime "^6.26.0"
+    clsx "^1.0.1"
+    dom-helpers "^5.0.0"
+    loose-envify "^1.3.0"
+    prop-types "^15.6.0"
+    react-lifecycles-compat "^3.0.4"
 
 react@^16.13.1, react@^16.8.3:
   version "16.13.1"
@@ -13421,7 +14402,7 @@ redux-observable@^1.2.0:
   resolved "https://registry.yarnpkg.com/redux-observable/-/redux-observable-1.2.0.tgz#ff51b6c6be2598e9b5e89fc36639186bb0e669c7"
   integrity sha512-yeR90RP2WzZzCxxnQPlh2uFzyfFLsfXu8ROh53jGDPXVqj71uNDMmvi/YKQkd9ofiVoO4OYb1snbowO49tCEMg==
 
-redux@*, redux@^4.0.0, redux@^4.0.5:
+redux@*, redux@^4.0.0, redux@^4.0.4, redux@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.5.tgz#4db5de5816e17891de8a80c424232d06f051d93f"
   integrity sha512-VSz1uMAH24DM6MF72vcojpYPtrTUu3ByVWfPL1nPfVRb5mZVTve5GnNCUV53QM/BZ66xfWrm0CTWoM+Xlz8V1w==
@@ -13429,7 +14410,7 @@ redux@*, redux@^4.0.0, redux@^4.0.5:
     loose-envify "^1.4.0"
     symbol-observable "^1.2.0"
 
-redux@^3.6.0:
+redux@^3.6.0, redux@^3.7.1:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/redux/-/redux-3.7.2.tgz#06b73123215901d25d065be342eb026bc1c8537b"
   integrity sha512-pNqnf9q1hI5HHZRBkj3bAngGZW/JMCmexDlOxw4XagXY2o1327nHH54LoTjiPJ0gizoqPDRqWyX/00g0hD6w+A==
@@ -13753,6 +14734,11 @@ requires-port@^1.0.0:
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
   integrity sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=
 
+reselect@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/reselect/-/reselect-4.0.0.tgz#f2529830e5d3d0e021408b246a206ef4ea4437f7"
+  integrity sha512-qUgANli03jjAyGlnbYVAV5vvnOmJnODyABz51RdBN7M4WaVu8mecZWgyQNkG8Yqe3KRGRt0l4K4B3XVEULC4CA==
+
 resize-observer-polyfill@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz#0e9020dd3d21024458d4ebd27e23e40269810464"
@@ -13929,6 +14915,11 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   integrity sha1-6Eg5bwV9Ij8kOGkkYY4laUFh7Ec=
   dependencies:
     aproba "^1.1.1"
+
+rw@1:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/rw/-/rw-1.3.3.tgz#3f862dfa91ab766b14885ef4d01124bfda074fb4"
+  integrity sha1-P4Yt+pGrdmsUiF700BEkv9oHT7Q=
 
 rxjs@^6.3.3, rxjs@^6.6.0:
   version "6.6.0"
@@ -15005,7 +15996,7 @@ svgo@^1.0.0, svgo@^1.2.2:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
-symbol-observable@^1.0.2, symbol-observable@^1.0.3, symbol-observable@^1.0.4, symbol-observable@^1.1.0, symbol-observable@^1.2.0:
+symbol-observable@^1.0.3, symbol-observable@^1.0.4, symbol-observable@^1.1.0, symbol-observable@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
   integrity sha512-e900nM8RRtGhlV36KGEU9k65K3mPb1WV70OdjfxlG2EAuM1noi/E/BaW/uMhL7bPEssK8QV57vN3esixjUvcXQ==
@@ -15296,7 +16287,7 @@ ts-dedent@^1.1.0:
   resolved "https://registry.yarnpkg.com/ts-dedent/-/ts-dedent-1.1.1.tgz#68fad040d7dbd53a90f545b450702340e17d18f3"
   integrity sha512-UGTRZu1evMw4uTPyYF66/KFd22XiU+jMaIuHrkIHQ2GivAXVlLV0v/vHrpOuTRf9BmpNHi/SO7Vd0rLu0y57jg==
 
-ts-invariant@^0.4.0, ts-invariant@^0.4.4:
+ts-invariant@^0.4.4:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/ts-invariant/-/ts-invariant-0.4.4.tgz#97a523518688f93aafad01b0e80eb803eb2abd86"
   integrity sha512-uEtWkFM/sdZvRNNDL3Ehu4WVpwaulhwQszV8mrtcdeE8nN00BV9mAmQ88RkrBhFgl9gMgvjJLAQcZbnPXI9mlA==
@@ -15323,7 +16314,7 @@ tslib@^1.10.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.11.1.tgz#eb15d128827fbee2841549e171f45ed338ac7e35"
   integrity sha512-aZW88SY8kQbU7gpV19lN24LtXh/yD4ZZg6qieAJDDg+YBsJcSmLGK9QpnUjAKVG/xefmvJGd1WUmfpT/g6AJGA==
 
-tslib@^1.11.1:
+tslib@^1.11.1, tslib@^1.13.0:
   version "1.13.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
   integrity sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==
@@ -16511,15 +17502,7 @@ yargs@^14.2.0:
     y18n "^4.0.0"
     yargs-parser "^15.0.1"
 
-zen-observable-ts@^0.8.21:
-  version "0.8.21"
-  resolved "https://registry.yarnpkg.com/zen-observable-ts/-/zen-observable-ts-0.8.21.tgz#85d0031fbbde1eba3cd07d3ba90da241215f421d"
-  integrity sha512-Yj3yXweRc8LdRMrCC8nIc4kkjWecPAUVh0TI0OUrWXx6aX790vLcDlWca6I4vsyCGH3LpWxq0dJRcMOFoVqmeg==
-  dependencies:
-    tslib "^1.9.3"
-    zen-observable "^0.8.0"
-
-zen-observable@^0.8.0:
+zen-observable@^0.8.14:
   version "0.8.15"
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
