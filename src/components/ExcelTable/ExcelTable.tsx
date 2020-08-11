@@ -20,13 +20,19 @@ import './react-data-grid.css'
 
 interface IProps {
     data: GridCollection
+    setColumns?: (data: any) => void
+    setRows?: (data: any) => void
 }
 
 const HEADER_CONTEXT_ID = 'header-context-menu'
 
-export default function ExcelTable({ data }: IProps) {
-    const [rows, setRows] = useState(data.rows)
-    const [columns, setColumns] = useState(data.columns)
+export default function ExcelTable({
+    data = { columns: [], rows: [] },
+    setColumns = () => {},
+    setRows = () => {},
+}: IProps) {
+    const { columns, rows } = data
+    // eslint-disable-next-line no-unused-vars
     const [[sortColumn, sortDirection], setSort] = useState<
         [string, SortDirection]
     >(['id', 'NONE'])
@@ -55,14 +61,12 @@ export default function ExcelTable({ data }: IProps) {
                                 }
                             }}
                             onBlur={() => {
-                                setColumns((prevState) => {
-                                    const state = [...prevState]
-                                    const column = state[props.column.idx]
-                                    if (!column.name.trim().length)
-                                        column.name = 'Новый столбец'
-                                    column.isRenaming = false
-                                    return state
-                                })
+                                const nextColumns = [...columns]
+                                const column = nextColumns[props.column.idx]
+                                if (!column.name.trim().length)
+                                    column.name = 'Новый столбец'
+                                column.isRenaming = false
+                                setColumns(nextColumns)
                             }}
                             onChange={(event) => {
                                 const value = event.target.value
@@ -86,15 +90,14 @@ export default function ExcelTable({ data }: IProps) {
 
         function setColumnProps(
             idx: number,
-            propertyName: any,
+            propertyName: string,
             propertyValue: any
         ) {
-            setColumns((prevState) => {
-                const state = [...prevState]
-                // @ts-ignore
-                state[idx][propertyName] = propertyValue
-                return state
-            })
+            const nextColumns = [...columns]
+            // @ts-ignore
+            nextColumns[idx][propertyName] = propertyValue
+
+            setColumns(nextColumns)
         }
 
         function handleColumnsReorder(sourceKey: string, targetKey: string) {
@@ -105,7 +108,6 @@ export default function ExcelTable({ data }: IProps) {
                 (c) => c.key === targetKey
             )
             const reorderedColumns = [...columns]
-
             reorderedColumns.splice(
                 targetColumnIndex,
                 0,
@@ -140,7 +142,7 @@ export default function ExcelTable({ data }: IProps) {
         }
 
         return columns.map(assemblyColumns)
-    }, [columns])
+    }, [columns, setColumns])
 
     const handleSort = useCallback(
         (columnKey: string, direction: SortDirection) => {
@@ -159,7 +161,7 @@ export default function ExcelTable({ data }: IProps) {
 
             setRows(newRows)
         },
-        [rows]
+        [rows, setRows]
     )
 
     const onColumnDelete = (
