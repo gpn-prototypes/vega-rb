@@ -87,8 +87,8 @@ pipeline {
                         --wait \
                         --namespace vega-$STAND \
                         --set image.tag="$GIT_COMMIT_SHORT" \
-                        --set ingress.hostName="vg1-front-$STAND" \
-                        --set service.backHost="vg1-back-$STAND" \
+                        --set ingress.hostName="vega1-front-$STAND" \
+                        --set service.backHost="http://vega1-back-$STAND:8080" \
                         chartmuseum/vega1-front
                     """
                 }
