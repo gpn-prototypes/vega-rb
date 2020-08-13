@@ -102,10 +102,33 @@ pipeline {
             script {
                 currentBuild.result = currentBuild.result ?: 'SUCCESS'
                 notifyBitbucket()
+                generateHTMLReport()
             }
+            // Publish HTML Report
+            publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: 'html-report',
+                reportFiles: 'index.html',
+                reportName: "Build Report"
+            ])
             // Workspace Cleanup after build
             cleanWs()
         }
     }
 
+}
+
+final void generateHTMLReport() {
+    script {
+        sh '''
+        mkdir html-report
+        cat <<EOF > html-report/index.html
+        <p>BRACH: ${BRANCH_NAME}</p>
+        <p>STAND: <a href="http://vg1-front-${STAND}.k8s17.gpn.cloud.nexign.com">http://vg1-front-${STAND}.k8s17.gpn.cloud.nexign.com</a></p>
+        <p>DATE: $(date +"%d-%m-%Y %T")</p>
+        <p>COMMIT: ${GIT_COMMIT}</p>
+        '''
+    }
 }
