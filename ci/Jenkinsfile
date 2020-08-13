@@ -102,6 +102,7 @@ pipeline {
             script {
                 currentBuild.result = currentBuild.result ?: 'SUCCESS'
                 notifyBitbucket()
+                generateHTMLReport()
             }
             // Publish HTML Report
             publishHTML (target: [
