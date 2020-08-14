@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react'
+import classNames from 'classnames'
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd'
 import { HeaderRendererProps } from 'react-data-grid'
 import { ResourceIcon } from '../Icons'
@@ -59,12 +60,11 @@ export function DraggableHeader<R>({
     return (
         <div
             ref={wrapRefs(drag, drop)}
-            className={styles.Root}
-            style={{
-                opacity: isDragging ? 0.5 : 1,
-                backgroundColor: isOver ? 'rgba(0, 150, 235, 0.4)' : 'inherit',
-                cursor: 'move',
-            }}
+            className={classNames(
+                styles.Root,
+                isDragging && styles.IsDragging,
+                isOver && styles.IsOver
+            )}
         >
             <div className={styles.WrapperIcon}>
                 <ResourceIcon color={'#00eeaa'} className={styles.Icon} />

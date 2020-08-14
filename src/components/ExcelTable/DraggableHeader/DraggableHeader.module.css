@@ -1,7 +1,10 @@
 .Root {
     display: flex;
-    padding: 0 8px 0 8px;
+    padding: 0 8px;
     align-items: center;
+    background-color: inherit;
+    opacity: 1;
+    /*cursor: move;*/
 }
 
 .Icon {
@@ -16,4 +19,12 @@
     display: flex;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.IsDragging {
+    opacity: 0.5;
+}
+
+.IsOver {
+    background-color: rgba(0, 150, 235, 0.4);
 }
