@@ -11,8 +11,6 @@ import { Provider } from 'react-redux'
 import store from 'store/initStore'
 import HomePage from 'pages/Home/HomePage'
 import LoginPage from 'pages/Login/LoginPage'
-import ProjectsPage from 'pages/Projects/Projects'
-import CreateProject from 'pages/Projects/CreateProject'
 import SchemePage from 'pages/Scheme/Scheme'
 import classNames from 'classnames'
 import { ReactComponent as IconLogo } from 'icons/logo.svg'
@@ -64,13 +62,8 @@ function App() {
                         <Switch>
                             <PrivateRoute path="/home" component={HomePage} />
                             <Route exact path="/login" component={LoginPage} />
-                            <Route exact path="/p/:id" component={SchemePage} />
-                            <Route
-                                path="/projects/create"
-                                component={CreateProject}
-                            />
-                            <Route path="/projects" component={ProjectsPage} />
-                            <Redirect to="/projects" />
+                            <Route exact path="/" component={SchemePage} />
+                            <Redirect to="/" />
                         </Switch>
                     </BrowserRouter>
                 </div>
