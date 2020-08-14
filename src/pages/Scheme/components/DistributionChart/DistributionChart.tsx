@@ -6,27 +6,10 @@ import './DistributionChart.css'
 const height = 188
 const width = 400
 
-function Random_normal_Dist(mean: number, sd: number) {
-    const data = [] as { q: number; p: number }[]
-    for (let i = mean - 4 * sd; i < mean + 4 * sd; i += 1) {
-        const q = i
-        //@ts-ignore
-        const p = jStat.normal.pdf(i, mean, sd) as number
-        const arr = {
-            q,
-            p,
-        }
-        data.push(arr)
-    }
-    return data
-}
-
 interface Data {
     x: number
     y: number
 }
-// const array1 = Random_normal_Dist(30, 15) as Data[]
-// const array2 = Random_normal_Dist(-16, 22) as Data[]
 
 interface Props {
     data: Data[]
