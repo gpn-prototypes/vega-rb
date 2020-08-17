@@ -10,11 +10,10 @@ pipeline {
 
     options {
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
-        skipDefaultCheckout()
     }
 
     parameters {
-        gitParameter branchFilter: 'origin/(.*)', defaultValue: 'jenkins-deploy', name: 'BRANCH_APP', type: 'PT_BRANCH', selectedValue: 'DEFAULT', listSize: '10', useRepository: '${scm.userRemoteConfigs[0].url}'
+        gitParameter branchFilter: 'origin/(.*)', tagFilter: '*', defaultValue: 'develop', name: 'BRANCH', type: 'PT_BRANCH_TAG', selectedValue: 'NONE', listSize: '10'
         choice(
             name: 'STAND',
             choices: ['dev','qa','demo','1','2','3','4','5','6','7','8','9','10'],
@@ -29,29 +28,23 @@ pipeline {
 
     stages {
 
-        stage("GIT checkout") {
-            steps {
-                echo "================== GIT checkout =================="
-                git branch: "${params.BRANCH_APP}", credentialsId: "ARTIFACTORY", url: "${scm.userRemoteConfigs[0].url}"
-            }
-        }
-
         stage("Set build name") {
             steps {
                 echo "================== Set Build name =================="
-                wrap([$class: 'BuildUser']){
-                    script {
-                        notifyBitbucket()
-                        env.GIT_COMMIT_SHORT = sh (
-                            script: "printf \$(git rev-parse --short HEAD)",
-                            returnStdout: true
-                        )
-                        buildName "#$BUILD_NUMBER-${params.BRANCH_APP}"
-                        buildDescription "Executed @ ${NODE_NAME}. Build started by ${BUILD_USER}"
-                    }
+                script {
+                    notifyBitbucket()
+                    buildName "#$BUILD_NUMBER-${env.GIT_BRANCH}"
+                    GIT_COMMIT_SHORT = sh(
+                        script: "printf \$(git rev-parse --short ${GIT_COMMIT})",
+                        returnStdout: true
+                    )
+                }
+                wrap([$class: 'BuildUser']) {
+                    buildDescription "Executed @ ${NODE_NAME}. Build started by ${env.BUILD_USER ?: 'Jenkins'}"
                 }
             }
         }
+
 
         stage("Build docker image") {
             steps {
@@ -92,7 +85,6 @@ pipeline {
                         chartmuseum/vega1-front
                     """
                 }
-
             }
         }
     }
