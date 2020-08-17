@@ -1,24 +1,16 @@
 withFolderProperties{
     MASTER = "${env.K8S_MASTER}"
     TECH_USER = "${env.TECH_USER}"
+    STAND = "${env.K8S_DEPLOY_STAND}"
+    AUTO_DEPLOY_BRANCH = "${env.K8S_DEPLOY_BRANCH_FRONT}"
 }
 
 pipeline {
 
     agent any
 
-
     options {
         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
-    }
-
-    parameters {
-        gitParameter branchFilter: 'origin/(.*)', tagFilter: '*', defaultValue: 'develop', name: 'BRANCH', type: 'PT_BRANCH_TAG', selectedValue: 'NONE', listSize: '10'
-        choice(
-            name: 'STAND',
-            choices: ['dev','qa','demo','1','2','3','4','5','6','7','8','9','10'],
-            description: "Choose STAND for deploy"
-        )
     }
 
     environment {
@@ -45,7 +37,6 @@ pipeline {
             }
         }
 
-
         stage("Build docker image") {
             steps {
                 echo "================== Build Docker image =================="
@@ -60,6 +51,11 @@ pipeline {
         }
 
         stage("Push docker image") {
+            when {
+                expression {
+                    env.GIT_BRANCH == AUTO_DEPLOY_BRANCH
+                }
+            }
             steps {
                 echo "================== Push Docker image =================="
                 script {
@@ -71,6 +67,11 @@ pipeline {
         }
 
         stage("Helm install app (front)") {
+            when {
+                expression {
+                    env.GIT_BRANCH == AUTO_DEPLOY_BRANCH
+                }
+            }
             steps {
                 echo "================== Deploy to K8S =================="
                 sshagent(credentials: ["K8SHelmSSHKey"]) {
@@ -105,6 +106,7 @@ pipeline {
                 reportFiles: 'index.html',
                 reportName: "Build Report"
             ])
+
             // Workspace Cleanup after build
             cleanWs()
         }
