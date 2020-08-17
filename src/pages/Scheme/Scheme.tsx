@@ -1,36 +1,37 @@
 import React from 'react'
 import { Button } from '@gpn-prototypes/vega-button'
-import { Tabs } from '@gpn-prototypes/vega-tabs'
+// import { Tabs } from '@gpn-prototypes/vega-tabs'
 import ChartForm from './components/ChartForm'
 import style from './style.module.css'
 import Table from './components/Table'
 
-const tabItems = [
-    {
-        name: 'Пайплайн',
-    },
-    {
-        name: 'Ресурсная база',
-    },
-    {
-        name: 'Геологические риски',
-    },
-]
+// const tabItems = [
+//     {
+//         name: 'Пайплайн',
+//     },
+//     {
+//         name: 'Ресурсная база',
+//     },
+//     {
+//         name: 'Геологические риски',
+//     },
+// ]
 
 const SchemePage: React.FC<{}> = () => {
     return (
         <div className={style.SchemePage}>
             <div className={style.Tabs}>
-                <Tabs
-                    value={[{ name: 'Ресурсная база' }]}
-                    items={tabItems}
-                    getItemKey={(item): string => item.name}
-                    getItemLabel={(item): any => (
-                        <>
-                            <span>{item.name}</span>
-                        </>
-                    )}
-                ></Tabs>
+                {/* <Tabs */}
+                {/*     value={{ name: 'Ресурсная база' }} */}
+                {/*     onChange={noop} */}
+                {/*     items={tabItems} */}
+
+                {/*     getLabel={(item): any => ( */}
+                {/*         <> */}
+                {/*             <span>{item.name}</span> */}
+                {/*         </> */}
+                {/*     )} */}
+                {/* ></Tabs> */}
             </div>
             <div className={style.Header}>
                 <Button
