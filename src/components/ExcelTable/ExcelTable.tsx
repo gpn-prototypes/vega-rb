@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react'
-import ReactDataGrid, { RowsUpdateEvent, SortDirection } from 'react-data-grid'
+import React, { useCallback, useMemo } from 'react'
+import ReactDataGrid, { RowsUpdateEvent } from 'react-data-grid'
 import 'react-data-grid/dist/react-data-grid.css'
 import { GridCollection, GridRow, HEADER_CONTEXT_ID } from './types'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -25,16 +25,16 @@ export default function ExcelTable({
 }: IProps) {
     const { columns, rows } = data
     // eslint-disable-next-line no-unused-vars
-    const [[sortColumn, sortDirection], setSort] = useState<
-        [string, SortDirection]
-    >(['id', 'NONE'])
+    // const [[sortColumn, sortDirection], setSort] = useState<
+    //     [string, SortDirection]
+    // >(['id', 'NONE'])
 
-    const handleSort = useCallback(
-        (columnKey: string, direction: SortDirection) => {
-            setSort([columnKey, direction])
-        },
-        []
-    )
+    // const handleSort = useCallback(
+    //     (columnKey: string, direction: SortDirection) => {
+    //         setSort([columnKey, direction])
+    //     },
+    //     []
+    // )
 
     const handleRowsUpdate = useCallback(
         ({ fromRow, toRow, updated }: RowsUpdateEvent<Partial<GridRow>>) => {
@@ -74,10 +74,9 @@ export default function ExcelTable({
         ])
     }
 
-    const columnsList = useMemo(() => renderColumns(columns, setColumns), [
-        columns,
-        setColumns,
-    ])
+    const columnsList = useMemo(() => {
+        return renderColumns(columns, setColumns)
+    }, [columns, setColumns])
 
     return (
         <>
@@ -90,8 +89,8 @@ export default function ExcelTable({
                             width={width}
                             height={height}
                             rowHeight={32}
-                            sortColumn={sortColumn}
-                            onSort={handleSort}
+                            // sortColumn={sortColumn}
+                            // onSort={handleSort}
                             onRowsUpdate={handleRowsUpdate}
                             rowRenderer={StyledRow}
                             enableCellCopyPaste

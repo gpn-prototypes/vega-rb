@@ -1,86 +1,100 @@
 import React from 'react'
-import { GridColumn, GridRow, HEADER_CONTEXT_ID } from '../types'
+import {
+    IGridColumn,
+    GridRow,
+    HEADER_CONTEXT_ID,
+    TableEntities,
+} from '../types'
+import classNames from 'classnames'
 import { HeaderRendererProps } from 'react-data-grid'
+import { curry } from 'lodash'
 import { withContextMenu } from '../ContextMenu'
 import DraggableHeader from '../DraggableHeader'
-import Input from '../Input'
-import { assemblyColumns } from '../helpers'
+import {
+    columnsFactory,
+    columnsReorder,
+    onBlurCell,
+    setColumnAttributes,
+} from '../helpers'
+import { ResourceIcon } from '../Icons'
+import { InputEditor } from '../Editors'
+import styles from '../DraggableHeader/DraggableHeader.module.css'
+
+function HeaderRenderer(
+    props: HeaderRendererProps<GridRow> & {
+        column: IGridColumn
+        setColumnProps: Function
+        handleColumnsReorder: (sourceKey: string, targetKey: string) => void
+        onBlurHandler: Function
+    }
+) {
+    const {
+        column,
+        setColumnProps,
+        handleColumnsReorder,
+        onBlurHandler,
+    } = props
+    const { name, idx, type, headerId } = column
+
+    return withContextMenu(
+        <DraggableHeader
+            {...props}
+            className={classNames(
+                type === TableEntities.CALC_PARAM && styles.CalcParamHeader
+            )}
+            onColumnsReorder={handleColumnsReorder}
+            onDoubleClick={() => {
+                setColumnProps(props.column.idx, 'isRenaming', true)
+            }}
+            editor={
+                <InputEditor
+                    name={name}
+                    idx={idx}
+                    setColumnProps={setColumnProps}
+                    onBlurHandler={onBlurHandler}
+                />
+            }
+            beforeContent={
+                <>
+                    {type === TableEntities.GEO_CATEGORY && (
+                        <div className={styles.WrapperIcon}>
+                            <ResourceIcon
+                                color={'#00eeaa'}
+                                className={styles.Icon}
+                            />
+                        </div>
+                    )}
+                    {type === TableEntities.CALC_PARAM && (
+                        <div className={styles.HeaderId}>{headerId}</div>
+                    )}
+                </>
+            }
+        />,
+        {
+            id: HEADER_CONTEXT_ID,
+            collect: () => ({ idx: props.column.idx }),
+        }
+    )
+}
 
 const renderColumns = (
-    columns: GridColumn[],
+    columns: IGridColumn[],
     setColumns: (data: any) => void
 ) => {
-    function HeaderRenderer(
-        props: HeaderRendererProps<GridRow> & { column: GridColumn }
-    ) {
-        return withContextMenu(
-            <DraggableHeader
+    const setColumnProps = curry(setColumnAttributes)(columns, setColumns)
+    const handleColumnsReorder = curry(columnsReorder)(columns, setColumns)
+    const onBlurHandler = curry(onBlurCell)(columns, setColumns)
+
+    return columns.map((column) =>
+        columnsFactory(column, (props) => (
+            <HeaderRenderer
                 {...props}
-                onColumnsReorder={handleColumnsReorder}
-                onDoubleClick={() => {
-                    setColumnProps(props.column.idx, 'isRenaming', true)
-                }}
-                editor={
-                    <Input
-                        value={props.column.name}
-                        onKeyPress={(event) => {
-                            if (event.key === 'Enter') {
-                                setColumnProps(
-                                    props.column.idx,
-                                    'isRenaming',
-                                    false
-                                )
-                            }
-                        }}
-                        onBlur={() => {
-                            const nextColumns = [...columns]
-                            const column = nextColumns[props.column.idx]
-                            if (!column.name.trim().length)
-                                column.name = 'Новый столбец'
-                            column.isRenaming = false
-                            setColumns(nextColumns)
-                        }}
-                        onChange={(event) => {
-                            const value = event.target.value
-                            if (value) {
-                                setColumnProps(props.column.idx, 'name', value)
-                            }
-                        }}
-                    />
-                }
-            />,
-            {
-                id: HEADER_CONTEXT_ID,
-                collect: () => ({ idx: props.column.idx }),
-            }
-        )
-    }
-
-    function setColumnProps(
-        idx: number,
-        propertyName: string,
-        propertyValue: any
-    ) {
-        const nextColumns = [...columns]
-        // @ts-ignore
-        nextColumns[idx][propertyName] = propertyValue
-        setColumns(nextColumns)
-    }
-
-    function handleColumnsReorder(sourceKey: string, targetKey: string) {
-        const sourceColumnIndex = columns.findIndex((c) => c.key === sourceKey)
-        const targetColumnIndex = columns.findIndex((c) => c.key === targetKey)
-        const reorderedColumns = [...columns]
-        reorderedColumns.splice(
-            targetColumnIndex,
-            0,
-            reorderedColumns.splice(sourceColumnIndex, 1)[0]
-        )
-
-        setColumns(reorderedColumns)
-    }
-
-    return columns.map((column) => assemblyColumns(column, HeaderRenderer))
+                onBlurHandler={onBlurHandler}
+                setColumnProps={setColumnProps}
+                handleColumnsReorder={handleColumnsReorder}
+            />
+        ))
+    )
 }
 
 export default renderColumns

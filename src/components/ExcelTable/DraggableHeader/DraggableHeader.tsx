@@ -2,19 +2,21 @@ import React, { ReactElement } from 'react'
 import classNames from 'classnames'
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd'
 import { HeaderRendererProps } from 'react-data-grid'
-import { ResourceIcon } from '../Icons'
-import { GridColumn } from '../types'
+import { IGridColumn, TableEntities } from '../types'
 import styles from './DraggableHeader.module.css'
 
 interface IProps {
-    column: GridColumn
+    column: IGridColumn
     onColumnsReorder: (sourceKey: string, targetKey: string) => void
     onDoubleClick: () => void
     editor: ReactElement
+    className?: string
+    beforeContent?: ReactElement
 }
 
 interface ColumnDragObject extends DragObjectWithType {
     key: string
+    name: any
 }
 
 function wrapRefs<T>(...refs: React.Ref<T>[]) {
@@ -33,23 +35,25 @@ export function DraggableHeader<R>({
     onColumnsReorder,
     onDoubleClick,
     editor,
+    beforeContent,
+    className,
     ...props
 }: IProps & HeaderRendererProps<R>) {
     const { isRenaming, name } = props.column
+    const columnType = props.column?.type || TableEntities.NONE
 
     const [{ isDragging }, drag] = useDrag({
-        item: { key: props.column.key, type: 'COLUMN_DRAG' },
+        item: { key: props.column.key, type: columnType, name },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
     })
 
     const [{ isOver }, drop] = useDrop({
-        accept: 'COLUMN_DRAG',
-        drop({ key, type }: ColumnDragObject) {
-            if (type === 'COLUMN_DRAG') {
-                onColumnsReorder(key, props.column.key)
-            }
+        accept: [TableEntities.GEO_CATEGORY, TableEntities.CALC_PARAM],
+        canDrop: (item, monitor) => item.type === columnType,
+        drop: ({ key, type, name }: ColumnDragObject) => {
+            onColumnsReorder(key, props.column.key)
         },
         collect: (monitor) => ({
             isOver: monitor.isOver(),
@@ -61,14 +65,13 @@ export function DraggableHeader<R>({
         <div
             ref={wrapRefs(drag, drop)}
             className={classNames(
+                className,
                 styles.Root,
                 isDragging && styles.IsDragging,
                 isOver && styles.IsOver
             )}
         >
-            <div className={styles.WrapperIcon}>
-                <ResourceIcon color={'#00eeaa'} className={styles.Icon} />
-            </div>
+            {beforeContent}
             <div className={styles.WrapperText} onDoubleClick={onDoubleClick}>
                 {isRenaming ? editor : <span>{name}</span>}
             </div>

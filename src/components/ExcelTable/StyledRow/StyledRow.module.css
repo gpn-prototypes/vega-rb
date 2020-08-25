@@ -1,6 +1,5 @@
 .Row {
     color: var(--color-font);
-    overflow: hidden;
     text-overflow: ellipsis;
 }
 
