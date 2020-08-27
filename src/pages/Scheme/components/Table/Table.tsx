@@ -7,34 +7,15 @@ import tableDuck from 'store/tableDuck'
 import { ITemplateStructure } from 'types'
 import { unpackData } from 'utils/tableDataConverters'
 import { mockTableRows } from 'utils/fakerGenerators'
+import { GET_TABLE_TEMPLATE } from './queries'
 
-interface TemplateProjectData {
+export interface TemplateProjectData {
     project: {
         template: {
             structure: ITemplateStructure
         }
     }
 }
-
-const GET_TABLE_TEMPLATE = gql`
-    query GetTemplate {
-        project {
-            template {
-                structure {
-                    geoObjectCategories {
-                        name
-                    }
-                    calculationParameters {
-                        code
-                        name
-                        shortName
-                        units
-                    }
-                }
-            }
-        }
-    }
-`
 
 export default function Table() {
     const { loading, error, data } = useQuery<TemplateProjectData>(
@@ -54,9 +35,8 @@ export default function Table() {
             dispatch(tableDuck.actions.updateRows(mockTableRows))
         }
     }, [data, dispatch, reduxTableData, templateStructure])
-
     if (loading) return <div>Loading</div>
-    if (error) return <div>Error! {error}</div>
+    if (error) return <div>Error! {error.message}</div>
 
     return (
         <ExcelTable

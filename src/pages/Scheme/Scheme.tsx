@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { ChangeEvent, ChangeEventHandler } from 'react'
 import { Button } from '@gpn-prototypes/vega-button'
 // import { Tabs } from '@gpn-prototypes/vega-tabs'
+import { FileInput } from '@gpn-prototypes/vega-file-input'
+import { IconAttach } from '@gpn-prototypes/vega-icons'
 import ChartForm from './components/ChartForm'
 import style from './style.module.css'
 import Table from './components/Table'
@@ -9,7 +11,11 @@ import { RootState } from '../../store/reducers'
 import { packData, unpackData } from '../../utils/tableDataConverters'
 import tableDuck from '../../store/tableDuck'
 import { mockTableRows } from '../../utils/fakerGenerators'
-import { TemplateStructure } from '../../types'
+import { useApolloClient, useQuery } from '@apollo/client'
+import { TemplateProjectData } from './components/Table/Table'
+import { GET_TABLE_TEMPLATE } from './components/Table/queries'
+import { GeoCategory, ITemplateStructure } from '../../types'
+import { VALIDATE_BEFORE_LOAD } from './queries'
 
 // const tabItems = [
 //     {
@@ -22,29 +28,87 @@ import { TemplateStructure } from '../../types'
 //         name: 'Геологические риски',
 //     },
 // ]
+interface ValidateBeforeLoadResponse {
+    project: {
+        validateBeforeLoad: {
+            code: string
+            message: string
+            details: string
+        } | null
+    }
+}
 
 const SchemePage: React.FC<{}> = () => {
     const tableData = useSelector((state: RootState) => state.table)
+    const client = useApolloClient()
     const dispatch = useDispatch()
+    const importData = (e: DragEvent | ChangeEvent) => {
+        const { value: fileName, files } = e.target as HTMLInputElement
+        let file = files?.[0]
 
-    // const importData = () => {
-    //     const data: TemplateStructure = { geoObjectCategories: [] }
-    //     const { columns, rows = mockTableRows } = unpackData(data)
-    //     if (columns.length) {
-    //         dispatch(tableDuck.actions.updateColumns(columns))
-    //     }
-    //     if (rows.length) {
-    //         dispatch(tableDuck.actions.updateRows(rows))
-    //     }
-    // }
+        if (file) {
+            let reader = new FileReader()
 
-    const exportData = () => {
-        const data = packData(tableData)
+            reader.readAsText(file)
+
+            reader.onload = async function () {
+                const { geoObjectCategories, rows } = JSON.parse(
+                    reader.result as string
+                ) as ITemplateStructure
+                const { data } = await client.query<ValidateBeforeLoadResponse>(
+                    {
+                        query: VALIDATE_BEFORE_LOAD,
+                        variables: {
+                            project: {
+                                version: '0.1.0',
+                                structure: {
+                                    geoObjectCategories: geoObjectCategories.map(
+                                        ({ __typename, ...value }) => value
+                                    ),
+                                    rows,
+                                },
+                            },
+                        },
+                    }
+                )
+                const { data: structure } = await client.query<
+                    TemplateProjectData
+                >({
+                    query: GET_TABLE_TEMPLATE,
+                })
+
+                if (
+                    data?.project.validateBeforeLoad === null &&
+                    structure?.project.template.structure.calculationParameters
+                ) {
+                    const {
+                        columns,
+                        rows: gridRows = mockTableRows,
+                    } = unpackData({
+                        geoObjectCategories,
+                        rows,
+                        calculationParameters:
+                            structure.project.template.structure
+                                .calculationParameters,
+                    })
+                    dispatch(tableDuck.actions.updateColumns(columns))
+                    dispatch(tableDuck.actions.updateRows(gridRows))
+                }
+            }
+
+            reader.onerror = function () {
+                console.log(reader.error)
+            }
+        }
+    }
+
+    const exportData = async () => {
+        const fileData = packData(tableData)
         let filename = 'export.json'
         let contentType = 'application/json;charset=utf-8;'
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             const blob = new Blob(
-                [decodeURIComponent(encodeURI(JSON.stringify(data)))],
+                [decodeURIComponent(encodeURI(JSON.stringify(fileData)))],
                 { type: contentType }
             )
             navigator.msSaveOrOpenBlob(blob, filename)
@@ -55,7 +119,7 @@ const SchemePage: React.FC<{}> = () => {
                 'data:' +
                 contentType +
                 ',' +
-                encodeURIComponent(JSON.stringify(data))
+                encodeURIComponent(JSON.stringify(fileData))
             a.target = '_blank'
             document.body.appendChild(a)
             a.click()
@@ -95,12 +159,17 @@ const SchemePage: React.FC<{}> = () => {
                     className={style.ButtonData}
                     onClick={exportData}
                 />
-                {/*<Button*/}
-                {/*    label="Импорт"*/}
-                {/*    view="ghost"*/}
-                {/*    className={style.ButtonData}*/}
-                {/*    onClick={importData}*/}
-                {/*/>*/}
+                <FileInput id="import" accept="json" onChange={importData}>
+                    {(props) => (
+                        <Button
+                            {...props}
+                            label="Импорт"
+                            view="ghost"
+                            className={style.ButtonData}
+                            iconLeft={IconAttach}
+                        />
+                    )}
+                </FileInput>
             </div>
             <div className={style.Content}>
                 <div className={style.LeftPanel}>

@@ -21,11 +21,11 @@ export interface GridCollection {
 }
 
 export enum CategoryIcon {
-    LICENSING_ROUND_ICON,
-    FIELD_ICON,
-    FORMATION_ICON,
-    OIL_POOL_ICON,
-    WELL_ICON,
+    LICENSING_ROUND_ICON = 'LICENSING_ROUND_ICON',
+    FIELD_ICON = 'FIELD_ICON',
+    FORMATION_ICON = 'FORMATION_ICON',
+    OIL_POOL_ICON = 'OIL_POOL_ICON',
+    WELL_ICON = 'WELL_ICON',
 }
 
 export enum TableEntities {

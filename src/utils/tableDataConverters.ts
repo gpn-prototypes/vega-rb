@@ -1,5 +1,7 @@
 import {
+    CategoryIcon,
     GridCollection,
+    GridRow,
     IGridColumn,
     TableEntities,
 } from 'components/ExcelTable/types'
@@ -26,6 +28,7 @@ function structureParamsReducer<T extends CalculationParam | GeoCategory>(
                 ]
             case TableEntities.GEO_CATEGORY:
                 const { name } = curr as GeoCategory
+
                 if (CATEGORIES_TYPES.has(curr.name)) {
                     return [
                         ...prev,
@@ -42,9 +45,25 @@ function structureParamsReducer<T extends CalculationParam | GeoCategory>(
     }, [])
 }
 
+function convertCellsDataToGridRow<T extends CalculationParam | GeoCategory>(
+    cells: string[],
+    geoObjectCategories: GeoCategory[]
+) {
+    return geoObjectCategories
+        .map(({ name }) => CATEGORIES_TYPES.get(name)!)
+        .reduce(
+            (prev, name, idx) => ({
+                ...prev,
+                [name]: cells[idx],
+            }),
+            {}
+        ) as GridRow
+}
+
 export function unpackData({
     geoObjectCategories = [],
     calculationParameters = [],
+    rows: cellsData = [],
 }: ITemplateStructure): GridCollection {
     const columns: IGridColumn[] = [
         new GridColumn(SPECIAL_COLUMNS.ID),
@@ -52,31 +71,34 @@ export function unpackData({
         new GridColumn(SPECIAL_COLUMNS.SPLITTER),
         ...structureParamsReducer<CalculationParam>(calculationParameters),
     ]
+    const rows = cellsData.map(({ cells }, idx) => ({
+        id: idx,
+        ...convertCellsDataToGridRow(cells, geoObjectCategories),
+    }))
 
     return {
         columns,
-        rows: [],
+        rows,
     }
 }
 
-// export function packData(data: GridCollection): ITemplateStructure {
-//     // const keys = data.columns.map((val) => val.key)
-//     // const rows = {
-//     //     cells: data.rows.reduce((prev: string[], curr) => {
-//     //         keys.forEach((key) => {
-//     //             prev.push(!![key] ? '' : curr[key])
-//     //         })
-//     //         return prev
-//     //     }, []),
-//     // }
-//
-//     const columns = data.columns.map((val) => ({
-//         name: val.name,
-//         icon: CategoryIcon.FIELD_ICON,
-//     }))
-//
-//     return {
-//         geoObjectCategories: columns,
-//         calculationParameters: [],
-//     }
-// }
+export function packData(data: GridCollection): ITemplateStructure {
+    const keys = data.columns.filter(
+        (col) => col.type === TableEntities.GEO_CATEGORY
+    )
+    const rows = data.rows
+        .filter(({ id, ...row }) => Object.values(row).length)
+        .map((row) => ({
+            cells: keys.map(({ key }) => row[key]),
+        }))
+    const geoObjectCategories = keys.map(({ name, type }) => ({
+        name,
+        icon: CategoryIcon.FORMATION_ICON,
+        __typename: type,
+    }))
+    return {
+        geoObjectCategories,
+        calculationParameters: [],
+        rows,
+    }
+}
