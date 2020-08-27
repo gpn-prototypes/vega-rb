@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from '@gpn-prototypes/vega-button'
 // import { Tabs } from '@gpn-prototypes/vega-tabs'
 import ChartForm from './components/ChartForm'
@@ -18,6 +18,8 @@ import Table from './components/Table'
 // ]
 
 const SchemePage: React.FC<{}> = () => {
+    const [showGraph, setShowGraph] = useState<boolean>(true)
+
     return (
         <div className={style.SchemePage}>
             <div className={style.Tabs}>
@@ -47,9 +49,9 @@ const SchemePage: React.FC<{}> = () => {
             </div>
             <div className={style.Content}>
                 <div className={style.LeftPanel}>
-                    <Table />
+                    <Table onSelect={setShowGraph} />
                 </div>
-                <div className={style.RightPanel}>
+                <div className={style.RightPanel} hidden={showGraph}>
                     <ChartForm />
                 </div>
             </div>

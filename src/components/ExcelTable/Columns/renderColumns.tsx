@@ -80,7 +80,7 @@ function HeaderRenderer(
 const renderColumns = (
     columns: IGridColumn[],
     setColumns: (data: any) => void
-) => {
+): IGridColumn[] => {
     const setColumnProps = curry(setColumnAttributes)(columns, setColumns)
     const handleColumnsReorder = curry(columnsReorder)(columns, setColumns)
     const onBlurHandler = curry(onBlurCell)(columns, setColumns)

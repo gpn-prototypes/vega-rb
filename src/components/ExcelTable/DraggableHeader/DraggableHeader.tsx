@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ComponentType, ReactElement } from 'react'
 import classNames from 'classnames'
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd'
 import { HeaderRendererProps } from 'react-data-grid'
@@ -9,9 +9,9 @@ interface IProps {
     column: IGridColumn
     onColumnsReorder: (sourceKey: string, targetKey: string) => void
     onDoubleClick: () => void
-    editor: ReactElement
+    editor: ComponentType | ReactElement
     className?: string
-    beforeContent?: ReactElement
+    beforeContent?: ComponentType | ReactElement
 }
 
 interface ColumnDragObject extends DragObjectWithType {
