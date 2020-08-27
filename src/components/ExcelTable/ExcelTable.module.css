@@ -16,6 +16,10 @@
     border-color: var(--color-bg-border);
 }
 
+.Header:hover {
+    opacity: 0.8;
+}
+
 .Renaming {
     margin: -1px -1px 0 0;
     border: 2px solid #0091e6;
@@ -29,4 +33,18 @@
     border-top-color: var(--color-bg-border);
     border-right: none;
     border-left: none;
+}
+
+.Splitter {
+    background-color: #161a1d;
+    border-right: solid 3px rgba(255, 255, 255, 0.2);
+}
+
+.CellID {
+    text-align: end;
+    border-right: solid 3px rgba(255, 255, 255, 0.2);
+}
+
+.HeaderBefore {
+    opacity: 0.7;
 }

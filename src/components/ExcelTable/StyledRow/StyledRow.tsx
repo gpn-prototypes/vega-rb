@@ -1,8 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
-import { RowRendererProps } from 'react-data-grid/lib/common/types'
+import { Row, RowRendererProps } from 'react-data-grid'
 import { GridRow } from '../types'
-import { Row } from 'react-data-grid'
 import { withContextMenu } from '../ContextMenu'
 import styles from './StyledRow.module.css'
 

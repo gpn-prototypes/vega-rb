@@ -4,7 +4,7 @@ import actionCreatorFactory, { AnyAction } from 'typescript-fsa'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import {
     GridCollection,
-    GridColumn,
+    IGridColumn,
     GridRow,
 } from 'components/ExcelTable/types'
 import { ofAction } from 'operators/ofAction'
@@ -15,7 +15,7 @@ export interface TableState extends GridCollection {}
 const factory = actionCreatorFactory('table')
 
 const actions = {
-    updateColumns: factory<GridColumn[]>('UPDATE_COLUMNS'),
+    updateColumns: factory<IGridColumn[]>('UPDATE_COLUMNS'),
     updateRows: factory<GridRow[]>('UPDATE_ROWS'),
 }
 

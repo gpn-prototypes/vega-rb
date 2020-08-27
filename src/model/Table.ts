@@ -5,3 +5,8 @@ export const CATEGORIES_TYPES = new Map<string, string>([
     ['Скважина', 'well'],
     ['Залежь', 'mine'],
 ])
+
+export enum SPECIAL_COLUMNS {
+    ID = 'id',
+    SPLITTER = 'splitter',
+}
