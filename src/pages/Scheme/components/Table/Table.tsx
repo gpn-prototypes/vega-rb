@@ -7,6 +7,7 @@ import tableDuck from 'store/tableDuck'
 import { ITemplateStructure } from 'types'
 import { unpackData } from 'utils/tableDataConverters'
 import { mockTableRows } from 'utils/fakerGenerators'
+import { TableEntities } from 'components/ExcelTable/types'
 import { GET_TABLE_TEMPLATE } from './queries'
 
 export interface TemplateProjectData {
@@ -17,7 +18,7 @@ export interface TemplateProjectData {
     }
 }
 
-export default function Table() {
+export default function Table({ onSelect }: { onSelect?: any }) {
     const { loading, error, data } = useQuery<TemplateProjectData>(
         GET_TABLE_TEMPLATE
     )
@@ -45,6 +46,10 @@ export default function Table() {
                 dispatch(tableDuck.actions.updateColumns(data))
             }
             setRows={(data) => dispatch(tableDuck.actions.updateRows(data))}
+            onRowClick={(column) => {
+                if (column.type === TableEntities.CALC_PARAM) onSelect(false)
+                else onSelect(true)
+            }}
         />
     )
 }

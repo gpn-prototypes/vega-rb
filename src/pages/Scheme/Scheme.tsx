@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ChangeEventHandler } from 'react'
+import React, { useState, ChangeEvent } from 'react'
 import { Button } from '@gpn-prototypes/vega-button'
 // import { Tabs } from '@gpn-prototypes/vega-tabs'
 import { FileInput } from '@gpn-prototypes/vega-file-input'
@@ -126,6 +126,7 @@ const SchemePage: React.FC<{}> = () => {
             document.body.removeChild(a)
         }
     }
+    const [showGraph, setShowGraph] = useState<boolean>(true)
 
     return (
         <div className={style.SchemePage}>
@@ -173,9 +174,9 @@ const SchemePage: React.FC<{}> = () => {
             </div>
             <div className={style.Content}>
                 <div className={style.LeftPanel}>
-                    <Table />
+                    <Table onSelect={setShowGraph} />
                 </div>
-                <div className={style.RightPanel}>
+                <div className={style.RightPanel} hidden={showGraph}>
                     <ChartForm />
                 </div>
             </div>
