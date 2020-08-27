@@ -4,22 +4,32 @@ import ExcelTable from 'components/ExcelTable'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'store/reducers'
 import tableDuck from 'store/tableDuck'
-import { TemplateStructure } from 'types'
+import { ITemplateStructure } from 'types'
 import { unpackData } from 'utils/tableDataConverters'
 import { mockTableRows } from 'utils/fakerGenerators'
 
 interface TemplateProjectData {
-    projectStructure: {
-        template: TemplateStructure
+    project: {
+        template: {
+            structure: ITemplateStructure
+        }
     }
 }
 
 const GET_TABLE_TEMPLATE = gql`
     query GetTemplate {
-        projectStructure {
+        project {
             template {
-                geoObjectCategories {
-                    name
+                structure {
+                    geoObjectCategories {
+                        name
+                    }
+                    calculationParameters {
+                        code
+                        name
+                        shortName
+                        units
+                    }
                 }
             }
         }
@@ -30,23 +40,20 @@ export default function Table() {
     const { loading, error, data } = useQuery<TemplateProjectData>(
         GET_TABLE_TEMPLATE
     )
-    const reduxTableData = useSelector((state: RootState) => state.table)
+    const reduxTableData = useSelector(({ table }: RootState) => table)
     const dispatch = useDispatch()
+    const templateStructure = data?.project.template.structure
 
     useEffect(() => {
-        if (
-            !reduxTableData?.columns.length &&
-            data?.projectStructure.template.geoObjectCategories
-        ) {
-            const { columns } = unpackData(
-                data?.projectStructure.template || { geoObjectCategories: [] }
-            )
+        if (!reduxTableData?.columns.length && templateStructure) {
+            const { columns } = unpackData(templateStructure)
             dispatch(tableDuck.actions.updateColumns(columns))
         }
+
         if (!reduxTableData?.rows.length) {
             dispatch(tableDuck.actions.updateRows(mockTableRows))
         }
-    }, [data, dispatch, reduxTableData])
+    }, [data, dispatch, reduxTableData, templateStructure])
 
     if (loading) return <div>Loading</div>
     if (error) return <div>Error! {error}</div>

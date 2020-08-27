@@ -1,0 +1,275 @@
+"""
+Способ задания распределения через минимум и максимум.
+
+Args:
+    min: The starting value of the sequence
+    max: The end value of the sequence
+Raises:
+    FormErrorsException
+"""
+input BorderConditionsInput {
+  """Минимальное"""
+  min: Float!
+
+  """Максимальное"""
+  max: Float!
+}
+
+"""Подсчетный параметр проекта."""
+type CalculationParameter {
+  """Кодовое обозначение подсчетного параметра"""
+  code: String!
+
+  """Имя подсчетного параметра"""
+  name: String!
+
+  """Сокращенное имя или обозначение подсчетного парметра"""
+  shortName: String!
+
+  """Единицы измерения подсчетного параметра"""
+  units: String!
+}
+
+"""Ошибка с дополнительной информацией."""
+type DetailError implements ErrorInterface {
+  """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
+  code: ErrorCodes!
+
+  """
+  Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
+  """
+  message: String!
+
+  """Детальная информация об ошибке"""
+  details: String
+}
+
+"""
+Способ задания распределения через среднее, стандартное отклонение.
+
+Attributes:
+    mean: Mean or expectation
+            -inf < mean < inf
+    standard_deviation: Standard deviation
+            standard_deviation > 0
+Raises:
+    FormErrorsException
+"""
+input DeviationInput {
+  """Среднее значение"""
+  mean: Float!
+
+  """Стандартное отклонение"""
+  standardDeviation: Float!
+}
+
+"""Распределение вероятностной величины."""
+type Distribution {
+  """График распределения"""
+  curve: [Point!]!
+
+  """Точки процентилей"""
+  percentiles: [PercentilePoint!]!
+}
+
+union DistributionOrErrors = Distribution | FormErrors
+
+"""Пространство имен для работы со распределениями."""
+type DistributionQueries {
+  """
+  Нормальное распределение, заданное через среднее, стандартное отклонение
+  """
+  normalByDeviation(deviationInput: DeviationInput!): DistributionOrErrors
+
+  """Нормальное распределение, заданное через минимум и максимум"""
+  normalByMinMax(borderConditionsInput: BorderConditionsInput!): DistributionOrErrors
+}
+
+"""Список кодов ошибок приложения."""
+enum ErrorCodes {
+  """Шаг не может быть отрицательным"""
+  STEP_IS_NEGATIVE
+
+  """Минимальное значение не должно быть больше максимального"""
+  MIN_GREATER_THAN_MAX
+
+  """Ошибка в загружаемой структуре"""
+  INCORRECT_PROJECT_STRUCTURE
+
+  """В строке данных таблицы не может быть пустых ячеек"""
+  EMPTY_CELL_IN_TABLE_DATA
+
+  """В таблице не может быть одинаковых строк"""
+  IDENTICAL_ROW_IN_TABLE_DATA
+
+  """Версия импортируемого файла не соответствует версии приложения"""
+  INCORRECT_FILE_VERSION
+
+  """Стандартное отклонение должно быть положительным"""
+  STANDARD_DEVIATION_MUST_BE_POSITIVE
+}
+
+"""Интерфейс ошибок, отображаемых пользователю."""
+interface ErrorInterface {
+  """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
+  code: ErrorCodes!
+
+  """
+  Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
+  """
+  message: String!
+}
+
+"""Ошибка при заполнении формы."""
+type FormError implements ErrorInterface {
+  """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
+  code: ErrorCodes!
+
+  """
+  Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
+  """
+  message: String!
+
+  """Список полей формы, к которым относится ошибка"""
+  fields: [String!]!
+}
+
+"""Ошибки формы, отображаемые пользователю."""
+type FormErrors {
+  errors: [FormError!]!
+}
+
+"""Категория геологического объекта."""
+type GeoObjectCategory {
+  """Имя категории геологического объекта"""
+  name: String!
+
+  """Иконка категории геологического объекта"""
+  icon: GeoObjectCategoryIcons!
+}
+
+"""Список иконок категории геологического объекта."""
+enum GeoObjectCategoryIcons {
+  LICENSING_ROUND_ICON
+  FIELD_ICON
+  FORMATION_ICON
+  OIL_POOL_ICON
+  WELL_ICON
+}
+
+"""Категория геологического объекта."""
+input GeoObjectCategoryInput {
+  """Имя категории геологического объекта"""
+  name: String!
+
+  """Иконка категории геологического объекта"""
+  icon: GeoObjectCategoryIcons!
+}
+
+"""Точка процентиля на графике."""
+type PercentilePoint {
+  point: Point!
+
+  """Процентный ранг"""
+  percentRank: Int!
+}
+
+"""Точка на графике."""
+type Point {
+  x: Float!
+  y: Float!
+}
+
+"""Представление проекта."""
+type Project {
+  """Версия шаблона структуры проекта"""
+  version: String!
+
+  """Структуры проекта"""
+  structure: ProjectStructure!
+}
+
+"""Представление проекта."""
+input ProjectInput {
+  """Версия шаблона структуры проекта"""
+  version: String!
+
+  """Структура проекта"""
+  structure: ProjectStructureInput!
+}
+
+"""Пространство имен для работы с проектом."""
+type ProjectQueries {
+  """Шаблон структуры проекта"""
+  template: Project
+
+  """Валидация структуры проекта перед импортом/экспортом"""
+  validateBeforeLoad(project: ProjectInput!): DetailError
+
+  """Валидация данных структуры проекта перед вычислениями"""
+  validateBeforeCalculate(projectStructure: ProjectStructureInput!): [TableError]
+}
+
+"""Структура проекта."""
+type ProjectStructure {
+  """Список категорий геологических объектов"""
+  geoObjectCategories: [GeoObjectCategory!]!
+
+  """Список подсчетных параметров"""
+  calculationParameters: [CalculationParameter!]!
+
+  """Список рисков геологических объектов"""
+  risks: [Risk!]!
+}
+
+"""Структура проекта."""
+input ProjectStructureInput {
+  """Список категорий геологического объекта"""
+  geoObjectCategories: [GeoObjectCategoryInput!]!
+
+  """Список строк в таблице структуры проекта"""
+  rows: [RowInput!]!
+}
+
+type Query {
+  """Пространство имен для работы с проектом."""
+  project: ProjectQueries
+
+  """Пространство имен для работы со распределениями."""
+  distribution: DistributionQueries
+}
+
+"""Риск геологического объекта."""
+type Risk {
+  """Кодовое обозначение риска"""
+  code: String!
+
+  """Наименование риска"""
+  name: String!
+}
+
+"""Строка в таблице структуры проекта."""
+input RowInput {
+  """Список ячеек в строке таблицы"""
+  cells: [String!]!
+}
+
+"""
+Ошибка данных таблицы с информацией о расположении строк или ячеек повлекших ошибку.
+"""
+type TableError implements ErrorInterface {
+  """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
+  code: ErrorCodes!
+
+  """
+  Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
+  """
+  message: String!
+
+  """Индекс ячейки в строке таблицы, повлекшей ошибку"""
+  column: Int
+
+  """Индекс строки таблицы, повлекшей ошибку"""
+  row: Int
+}
+

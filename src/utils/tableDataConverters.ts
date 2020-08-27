@@ -1,48 +1,57 @@
-import { GridCollection, GridColumn } from 'components/ExcelTable/types'
-import { TemplateCategory, TemplateStructure } from '../types'
-import { CATEGORIES_TYPES } from '../model/Table'
+import {
+    GridCollection,
+    IGridColumn,
+    TableEntities,
+} from 'components/ExcelTable/types'
+import { CalculationParam, GeoCategory, ITemplateStructure } from '../types'
+import { CATEGORIES_TYPES, SPECIAL_COLUMNS } from '../model/Table'
+import GridColumn from '../components/ExcelTable/Models/GridColumn'
 
-function categoriesReducer(categoriesList: TemplateCategory[]) {
-    return categoriesList.reduce((prev: GridColumn[], curr) => {
-        if (CATEGORIES_TYPES.has(curr.name)) {
-            return [
-                ...prev,
-                {
-                    key: CATEGORIES_TYPES.get(curr.name),
-                    name: curr.name,
-                } as GridColumn,
-            ]
+function structureParamsReducer<T extends CalculationParam | GeoCategory>(
+    list: T[]
+): IGridColumn[] {
+    if (!list.length) return []
+
+    return list.reduce((prev: IGridColumn[], curr: T) => {
+        switch (curr.__typename) {
+            case TableEntities.CALC_PARAM:
+                const { code, shortName, units } = curr as CalculationParam
+                return [
+                    ...prev,
+                    {
+                        key: code,
+                        name: `${shortName}, ${units}`,
+                        type: TableEntities.CALC_PARAM,
+                    } as IGridColumn,
+                ]
+            case TableEntities.GEO_CATEGORY:
+                const { name } = curr as GeoCategory
+                if (CATEGORIES_TYPES.has(curr.name)) {
+                    return [
+                        ...prev,
+                        {
+                            key: CATEGORIES_TYPES.get(name)!,
+                            name: name,
+                            type: TableEntities.GEO_CATEGORY,
+                        } as IGridColumn,
+                    ]
+                }
+            default:
+                return prev
         }
-        return prev
     }, [])
 }
 
 export function unpackData({
     geoObjectCategories = [],
-    rows = [],
-}: TemplateStructure): GridCollection {
-    const columns: GridColumn[] = [
-        {
-            key: 'id',
-            name: '',
-        },
+    calculationParameters = [],
+}: ITemplateStructure): GridCollection {
+    const columns: IGridColumn[] = [
+        new GridColumn(SPECIAL_COLUMNS.ID),
+        ...structureParamsReducer<GeoCategory>(geoObjectCategories),
+        new GridColumn(SPECIAL_COLUMNS.SPLITTER),
+        ...structureParamsReducer<CalculationParam>(calculationParameters),
     ]
-
-    if (geoObjectCategories) {
-        const categoriesList = categoriesReducer(geoObjectCategories)
-        columns.push(...categoriesList)
-    }
-
-    // const keysList = geoObjectCategories
-    //     .map((val) => CATEGORIES_TYPES.get(val.name))
-    //     .filter(Boolean)
-
-    // const tableRows = rows.map(
-    //     (row) =>
-    //         Object.fromEntries(
-    //             new Map(row.cells.map((cell, index) => [keysList[index], cell]))
-    //         ) as GridRow
-    // )
 
     return {
         columns,
@@ -50,20 +59,24 @@ export function unpackData({
     }
 }
 
-export function packData(data: GridCollection): TemplateStructure {
-    const keys = data.columns.map((val) => val.key)
-    const rows = data.rows.map((el: { [index: string]: any }) => {
-        let cells: string[] = []
-        keys.forEach((key) => {
-            const val = el[key] === undefined ? '' : el[key]
-            cells.push(val)
-        })
-        return { cells }
-    })
-    const columns = data.columns.map((val) => ({ name: val.name }))
-
-    return {
-        geoObjectCategories: columns,
-        rows,
-    }
-}
+// export function packData(data: GridCollection): ITemplateStructure {
+//     // const keys = data.columns.map((val) => val.key)
+//     // const rows = {
+//     //     cells: data.rows.reduce((prev: string[], curr) => {
+//     //         keys.forEach((key) => {
+//     //             prev.push(!![key] ? '' : curr[key])
+//     //         })
+//     //         return prev
+//     //     }, []),
+//     // }
+//
+//     const columns = data.columns.map((val) => ({
+//         name: val.name,
+//         icon: CategoryIcon.FIELD_ICON,
+//     }))
+//
+//     return {
+//         geoObjectCategories: columns,
+//         calculationParameters: [],
+//     }
+// }
