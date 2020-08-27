@@ -36,6 +36,7 @@ function structureParamsReducer<T extends CalculationParam | GeoCategory>(
                         } as IGridColumn,
                     ]
                 }
+                return prev
             default:
                 return prev
         }
