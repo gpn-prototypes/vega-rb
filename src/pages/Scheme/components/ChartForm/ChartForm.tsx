@@ -58,19 +58,18 @@ export default function ChartForm() {
     })
 
     const handleStandardChange = (args: any) => {
-        setStandard(args.value)
+        setStandard(args.value ?? 0)
     }
     const handleLocChange = (args: any) => {
-        setLoc(args.value)
+        setLoc(args.value ?? 0)
     }
 
-    if (loading) return <div>Loading</div>
     if (error) return <div>Error! {error}</div>
 
     return (
         <>
             <DistributionChart
-                data={data?.distribution?.normalByDeviation?.curve || []}
+                data={data?.distribution.normalByDeviation.curve || []}
             />
             <Form className={style.Form}>
                 <Form.Row>

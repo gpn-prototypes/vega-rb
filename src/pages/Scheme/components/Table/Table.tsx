@@ -18,6 +18,8 @@ export interface TemplateProjectData {
     }
 }
 
+
+
 export default function Table({ onSelect }: { onSelect?: any }) {
     const { loading, error, data } = useQuery<TemplateProjectData>(
         GET_TABLE_TEMPLATE
@@ -35,7 +37,8 @@ export default function Table({ onSelect }: { onSelect?: any }) {
         if (!reduxTableData?.rows.length) {
             dispatch(tableDuck.actions.updateRows(mockTableRows))
         }
-    }, [data, dispatch, reduxTableData, templateStructure])
+    }, [dispatch, reduxTableData, templateStructure])
+
     if (loading) return <div>Loading</div>
     if (error) return <div>Error! {error.message}</div>
 
