@@ -1,6 +1,6 @@
-import { packData } from '../../../../utils/tableDataConverters'
+import { packData } from 'utils/tableDataConverters'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../../../store/reducers'
+import { RootState } from 'store/reducers'
 import { Button } from '@gpn-prototypes/vega-button'
 import React from 'react'
 import styles from './style.module.css'
