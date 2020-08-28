@@ -104,5 +104,5 @@
             "last 1 safari version"
         ]
     },
-    "proxy": "http://vg1-back-8.k8s17.gpn.cloud.nexign.com/"
+    "proxy": "http://localhost:8000"
 }

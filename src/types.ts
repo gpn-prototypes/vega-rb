@@ -14,12 +14,17 @@ export interface CalculationParam {
     units: string
 }
 
-export interface TemplateCell {
+export interface IProjectCell {
     cells: string[]
+}
+
+export interface IProjectStructure {
+    geoObjectCategories: GeoCategory[]
+    calculationParameters: CalculationParam[]
+    rows?: IProjectCell[]
 }
 
 export interface ITemplateStructure {
     geoObjectCategories: GeoCategory[]
     calculationParameters: CalculationParam[]
-    rows?: TemplateCell[]
 }

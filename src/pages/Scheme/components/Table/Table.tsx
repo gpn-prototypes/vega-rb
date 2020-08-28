@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import ExcelTable from 'components/ExcelTable'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'store/reducers'
@@ -17,8 +17,6 @@ export interface TemplateProjectData {
         }
     }
 }
-
-
 
 export default function Table({ onSelect }: { onSelect?: any }) {
     const { loading, error, data } = useQuery<TemplateProjectData>(
