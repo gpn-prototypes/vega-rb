@@ -58,7 +58,7 @@ export const ImportButton: React.FC = () => {
                     query: VALIDATE_BEFORE_LOAD,
                     variables: {
                         project: {
-                            version: '0.1.01',
+                            version: '0.1.0',
                             structure: {
                                 geoObjectCategories: geoObjectCategories.map(
                                     ({ __typename, ...value }) => value
