@@ -1,7 +1,15 @@
 import React, { useCallback, useMemo } from 'react'
-import ReactDataGrid, { RowsUpdateEvent } from 'react-data-grid'
+import ReactDataGrid, {
+    CalculatedColumn,
+    RowsUpdateEvent,
+} from 'react-data-grid'
 import 'react-data-grid/dist/react-data-grid.css'
-import { GridCollection, GridRow, HEADER_CONTEXT_ID } from './types'
+import {
+    GridCollection,
+    GridRow,
+    HEADER_CONTEXT_ID,
+    IGridColumn,
+} from './types'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import StyledRow from './StyledRow'
 import { HeaderContextMenu } from './ContextMenu'
@@ -16,12 +24,14 @@ interface IProps {
     data: GridCollection
     setColumns?: (data: any) => void
     setRows?: (data: any) => void
+    onRowClick?: (column: IGridColumn) => void
 }
 
 export default function ExcelTable({
     data = { columns: [], rows: [] },
     setColumns = () => {},
     setRows = () => {},
+    onRowClick = (column: IGridColumn) => {},
 }: IProps) {
     const { columns, rows } = data
     // eslint-disable-next-line no-unused-vars
@@ -35,6 +45,17 @@ export default function ExcelTable({
     //     },
     //     []
     // )
+
+    const handleRowClick = useCallback(
+        (
+            rowIdx: number,
+            row: GridRow,
+            column: IGridColumn & CalculatedColumn<GridRow>
+        ) => {
+            onRowClick(column)
+        },
+        [onRowClick]
+    )
 
     const handleRowsUpdate = useCallback(
         ({ fromRow, toRow, updated }: RowsUpdateEvent<Partial<GridRow>>) => {
@@ -91,6 +112,7 @@ export default function ExcelTable({
                             rowHeight={32}
                             // sortColumn={sortColumn}
                             // onSort={handleSort}
+                            onRowClick={handleRowClick}
                             onRowsUpdate={handleRowsUpdate}
                             rowRenderer={StyledRow}
                             enableCellCopyPaste

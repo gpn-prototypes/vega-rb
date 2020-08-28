@@ -39,51 +39,37 @@ const options = [{ value: 'norm', label: 'Нормальное' }]
 
 type Value = 'lognorm' | 'norm' | 'rav' | 'const'
 
-export default function ChartForm(props: {}) {
+export default function ChartForm() {
     const [value, setValue] = useState<Value>('norm')
     const [standard, setStandard] = useState('1')
     const [loc, setLoc] = useState('0')
-    const [min, setMin] = useState('-4')
-    const [max, setMax] = useState('4')
-    const [step, setStep] = useState('0.01')
 
     const handleValueChange = (o: Option<string>) => {
-        //@ts-ignore
-        setValue(o.value)
+        setValue(o.value as Value)
     }
 
     const { loading, error, data } = useQuery(GET_CHART_DATA, {
         variables: {
             deviationInput: {
-                // min,
-                // max,
-                // step,
                 mean: parseFloat(loc),
                 standardDeviation: standard,
             },
         },
     })
 
-    const handleMinChange = (args: any) => {
-        setMin(args.value)
-    }
-    const handleMaxChange = (args: any) => {
-        setMax(args.value)
-    }
-    const handleStepChange = (args: any) => {
-        setStep(args.value)
-    }
     const handleStandardChange = (args: any) => {
-        setStandard(args.value)
+        setStandard(args.value ?? 0)
     }
     const handleLocChange = (args: any) => {
-        setLoc(args.value)
+        setLoc(args.value ?? 0)
     }
+
+    if (error) return <div>Error! {error}</div>
 
     return (
         <>
             <DistributionChart
-                data={data?.distribution?.normalByDeviation?.curve || []}
+                data={data?.distribution.normalByDeviation.curve || []}
             />
             <Form className={style.Form}>
                 <Form.Row>
@@ -114,34 +100,6 @@ export default function ChartForm(props: {}) {
                                 width="full"
                                 value={loc || ''}
                                 onChange={handleLocChange}
-                            />
-                        </Form.Field>
-                        <Form.Field>
-                            <Form.Label>Шаг</Form.Label>
-                            <TextField
-                                width="full"
-                                value={step}
-                                onChange={handleStepChange}
-                            />
-                        </Form.Field>
-                    </div>
-                </Form.Row>
-                <Form.Row>
-                    <div className={style.Flex}>
-                        <Form.Field>
-                            <Form.Label>Min</Form.Label>
-                            <TextField
-                                width="full"
-                                value={min}
-                                onChange={handleMinChange}
-                            />
-                        </Form.Field>
-                        <Form.Field>
-                            <Form.Label>Max</Form.Label>
-                            <TextField
-                                width="full"
-                                value={max}
-                                onChange={handleMaxChange}
                             />
                         </Form.Field>
                     </div>

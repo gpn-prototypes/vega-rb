@@ -1,9 +1,16 @@
 import {
+    CategoryIcon,
     GridCollection,
+    GridRow,
     IGridColumn,
     TableEntities,
 } from 'components/ExcelTable/types'
-import { CalculationParam, GeoCategory, ITemplateStructure } from '../types'
+import {
+    CalculationParam,
+    GeoCategory,
+    IProjectStructure,
+    ITemplateStructure,
+} from '../types'
 import { CATEGORIES_TYPES, SPECIAL_COLUMNS } from '../model/Table'
 import GridColumn from '../components/ExcelTable/Models/GridColumn'
 
@@ -26,6 +33,7 @@ function structureParamsReducer<T extends CalculationParam | GeoCategory>(
                 ]
             case TableEntities.GEO_CATEGORY:
                 const { name } = curr as GeoCategory
+
                 if (CATEGORIES_TYPES.has(curr.name)) {
                     return [
                         ...prev,
@@ -36,47 +44,86 @@ function structureParamsReducer<T extends CalculationParam | GeoCategory>(
                         } as IGridColumn,
                     ]
                 }
+                return prev
             default:
                 return prev
         }
     }, [])
 }
 
+function convertCellsDataToGridRow<T extends CalculationParam | GeoCategory>(
+    cells: string[],
+    geoObjectCategories: GeoCategory[]
+) {
+    return geoObjectCategories
+        .map(({ name }) => CATEGORIES_TYPES.get(name)!)
+        .reduce(
+            (prev, name, idx) => ({
+                ...prev,
+                [name]: cells[idx],
+            }),
+            {}
+        ) as GridRow
+}
+
 export function unpackData({
     geoObjectCategories = [],
     calculationParameters = [],
-}: ITemplateStructure): GridCollection {
+    rows: cellsData = [],
+}: IProjectStructure): GridCollection {
     const columns: IGridColumn[] = [
         new GridColumn(SPECIAL_COLUMNS.ID),
         ...structureParamsReducer<GeoCategory>(geoObjectCategories),
         new GridColumn(SPECIAL_COLUMNS.SPLITTER),
         ...structureParamsReducer<CalculationParam>(calculationParameters),
     ]
+    const rows = [
+        ...cellsData.map(({ cells }, idx) => ({
+            id: idx,
+            ...convertCellsDataToGridRow(cells, geoObjectCategories),
+        })),
+        ...[...Array(1000 - cellsData.length)].map((_, index) => ({
+            id: index,
+        })),
+    ]
 
     return {
         columns,
-        rows: [],
+        rows,
     }
 }
 
-// export function packData(data: GridCollection): ITemplateStructure {
-//     // const keys = data.columns.map((val) => val.key)
-//     // const rows = {
-//     //     cells: data.rows.reduce((prev: string[], curr) => {
-//     //         keys.forEach((key) => {
-//     //             prev.push(!![key] ? '' : curr[key])
-//     //         })
-//     //         return prev
-//     //     }, []),
-//     // }
-//
-//     const columns = data.columns.map((val) => ({
-//         name: val.name,
-//         icon: CategoryIcon.FIELD_ICON,
-//     }))
-//
-//     return {
-//         geoObjectCategories: columns,
-//         calculationParameters: [],
-//     }
-// }
+export function packData(
+    data: GridCollection,
+    template: ITemplateStructure
+): IProjectStructure {
+    const geoObjectCategoriesKeys = data.columns.filter(
+        (col) => col.type === TableEntities.GEO_CATEGORY
+    )
+    const calculationParametersKeys = data.columns.filter(
+        (col) => col.type === TableEntities.CALC_PARAM
+    )
+    const rows = data.rows.map((row) => ({
+        cells: geoObjectCategoriesKeys.map(({ key }) => row[key]),
+    }))
+    const geoObjectCategories = geoObjectCategoriesKeys.map(
+        ({ name, type }) => ({
+            name,
+            icon: CategoryIcon.FORMATION_ICON,
+            __typename: type,
+        })
+    )
+    const calculationParameters = calculationParametersKeys.map(
+        ({ key }) =>
+            ({
+                ...template.calculationParameters.find(
+                    ({ code }) => code === key
+                ),
+            } as CalculationParam)
+    )
+    return {
+        geoObjectCategories,
+        calculationParameters,
+        rows,
+    }
+}

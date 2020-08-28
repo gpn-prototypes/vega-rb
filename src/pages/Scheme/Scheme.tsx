@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState, ChangeEvent } from 'react'
 import { Button } from '@gpn-prototypes/vega-button'
 // import { Tabs } from '@gpn-prototypes/vega-tabs'
 import ChartForm from './components/ChartForm'
 import style from './style.module.css'
 import Table from './components/Table'
+import { ExportButton } from './components/ExportButton/ExportButton'
+import { ImportButton } from './components/ImportButton/ImportButton'
 
 // const tabItems = [
 //     {
@@ -18,6 +20,8 @@ import Table from './components/Table'
 // ]
 
 const SchemePage: React.FC<{}> = () => {
+    const [showGraph, setShowGraph] = useState<boolean>(true)
+
     return (
         <div className={style.SchemePage}>
             <div className={style.Tabs}>
@@ -44,12 +48,14 @@ const SchemePage: React.FC<{}> = () => {
                     view="ghost"
                     className={style.ButtonData}
                 />
+                <ExportButton />
+                <ImportButton />
             </div>
             <div className={style.Content}>
                 <div className={style.LeftPanel}>
-                    <Table />
+                    <Table onSelect={setShowGraph} />
                 </div>
-                <div className={style.RightPanel}>
+                <div className={style.RightPanel} hidden={showGraph}>
                     <ChartForm />
                 </div>
             </div>

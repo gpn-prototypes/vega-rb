@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import ExcelTable from 'components/ExcelTable'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'store/reducers'
@@ -7,8 +7,10 @@ import tableDuck from 'store/tableDuck'
 import { ITemplateStructure } from 'types'
 import { unpackData } from 'utils/tableDataConverters'
 import { mockTableRows } from 'utils/fakerGenerators'
+import { TableEntities } from 'components/ExcelTable/types'
+import { GET_TABLE_TEMPLATE } from './queries'
 
-interface TemplateProjectData {
+export interface TemplateProjectData {
     project: {
         template: {
             structure: ITemplateStructure
@@ -16,27 +18,7 @@ interface TemplateProjectData {
     }
 }
 
-const GET_TABLE_TEMPLATE = gql`
-    query GetTemplate {
-        project {
-            template {
-                structure {
-                    geoObjectCategories {
-                        name
-                    }
-                    calculationParameters {
-                        code
-                        name
-                        shortName
-                        units
-                    }
-                }
-            }
-        }
-    }
-`
-
-export default function Table() {
+export default function Table({ onSelect }: { onSelect?: any }) {
     const { loading, error, data } = useQuery<TemplateProjectData>(
         GET_TABLE_TEMPLATE
     )
@@ -53,10 +35,10 @@ export default function Table() {
         if (!reduxTableData?.rows.length) {
             dispatch(tableDuck.actions.updateRows(mockTableRows))
         }
-    }, [data, dispatch, reduxTableData, templateStructure])
+    }, [dispatch, reduxTableData, templateStructure])
 
     if (loading) return <div>Loading</div>
-    if (error) return <div>Error! {error}</div>
+    if (error) return <div>Error! {error.message}</div>
 
     return (
         <ExcelTable
@@ -65,6 +47,10 @@ export default function Table() {
                 dispatch(tableDuck.actions.updateColumns(data))
             }
             setRows={(data) => dispatch(tableDuck.actions.updateRows(data))}
+            onRowClick={(column) => {
+                if (column.type === TableEntities.CALC_PARAM) onSelect(false)
+                else onSelect(true)
+            }}
         />
     )
 }
