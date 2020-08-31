@@ -53,9 +53,9 @@ function structureParamsReducer<T extends CalculationParam | GeoCategory>(
 
 function convertCellsDataToGridRow<T extends CalculationParam | GeoCategory>(
     cells: string[],
-    geoObjectCategories: GeoCategory[]
+    domainEntities: GeoCategory[]
 ) {
-    return geoObjectCategories
+    return domainEntities
         .map(({ name }) => CATEGORIES_TYPES.get(name)!)
         .reduce(
             (prev, name, idx) => ({
@@ -67,22 +67,22 @@ function convertCellsDataToGridRow<T extends CalculationParam | GeoCategory>(
 }
 
 export function unpackData({
-    geoObjectCategories = [],
+    domainEntities = [],
     calculationParameters = [],
-    rows: cellsData = [],
+    domainObjects: cellsData = [],
 }: IProjectStructure): GridCollection {
     const columns: IGridColumn[] = [
         new GridColumn(SPECIAL_COLUMNS.ID),
-        ...structureParamsReducer<GeoCategory>(geoObjectCategories),
+        ...structureParamsReducer<GeoCategory>(domainEntities),
         new GridColumn(SPECIAL_COLUMNS.SPLITTER),
         ...structureParamsReducer<CalculationParam>(calculationParameters),
     ]
     const rows = [
         ...cellsData.map(({ cells }, idx) => ({
             id: idx,
-            ...convertCellsDataToGridRow(cells, geoObjectCategories),
+            ...convertCellsDataToGridRow(cells, domainEntities),
         })),
-        ...[...Array(1000 - cellsData.length)].map((_, index) => ({
+        ...Array.from({ length: 1000 - cellsData.length }, (_, index) => ({
             id: index,
         })),
     ]
@@ -97,22 +97,22 @@ export function packData(
     data: GridCollection,
     template: ITemplateStructure
 ): IProjectStructure {
-    const geoObjectCategoriesKeys = data.columns.filter(
+    const domainEntitiesKeys = data.columns.filter(
         (col) => col.type === TableEntities.GEO_CATEGORY
     )
     const calculationParametersKeys = data.columns.filter(
         (col) => col.type === TableEntities.CALC_PARAM
     )
-    const rows = data.rows.map((row) => ({
-        cells: geoObjectCategoriesKeys.map(({ key }) => row[key]),
+    const domainObjects = data.rows
+        .filter((row) => domainEntitiesKeys.every(({ key }) => row[key]))
+        .map((row) => ({
+            cells: domainEntitiesKeys.map(({ key }) => row[key]),
+        }))
+    const domainEntities = domainEntitiesKeys.map(({ name, type }) => ({
+        name,
+        icon: CategoryIcon.FORMATION_ICON,
+        __typename: type,
     }))
-    const geoObjectCategories = geoObjectCategoriesKeys.map(
-        ({ name, type }) => ({
-            name,
-            icon: CategoryIcon.FORMATION_ICON,
-            __typename: type,
-        })
-    )
     const calculationParameters = calculationParametersKeys.map(
         ({ key }) =>
             ({
@@ -122,8 +122,8 @@ export function packData(
             } as CalculationParam)
     )
     return {
-        geoObjectCategories,
+        domainEntities,
         calculationParameters,
-        rows,
+        domainObjects,
     }
 }

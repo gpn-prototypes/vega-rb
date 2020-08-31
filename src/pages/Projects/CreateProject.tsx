@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button } from '@gpn-prototypes/vega-button'
 import { TextField } from '@gpn-prototypes/vega-text-field'
 import { useHistory } from 'react-router'
-import style from './style.module.css'
+import style from './Projects.module.css'
 
 const CreateProjectPage: React.FC<{}> = () => {
     const [inputValue, setValue] = useState<string | null | undefined>(

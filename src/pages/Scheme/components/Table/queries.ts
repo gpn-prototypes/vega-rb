@@ -5,7 +5,7 @@ export const GET_TABLE_TEMPLATE = gql`
         project {
             template {
                 structure {
-                    geoObjectCategories {
+                    domainEntities {
                         name
                     }
                     calculationParameters {

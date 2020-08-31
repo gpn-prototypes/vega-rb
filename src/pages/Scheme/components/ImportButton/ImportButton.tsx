@@ -10,7 +10,7 @@ import { VALIDATE_BEFORE_LOAD } from '../../queries'
 import { mockTableRows } from 'utils/fakerGenerators'
 import { unpackData } from 'utils/tableDataConverters'
 import tableDuck from 'store/tableDuck'
-import styles from './style.module.css'
+import styles from './ImportButton.module.css'
 import { IconAlert } from '@gpn-prototypes/vega-icons'
 
 interface IValidateBeforeLoadResponse {
@@ -48,8 +48,8 @@ export const ImportButton: React.FC = () => {
 
             reader.onload = async function () {
                 const {
-                    geoObjectCategories,
-                    rows,
+                    domainEntities,
+                    domainObjects,
                     calculationParameters,
                 } = JSON.parse(reader.result as string) as IProjectStructure
                 const { data } = await client.query<
@@ -60,21 +60,22 @@ export const ImportButton: React.FC = () => {
                         project: {
                             version: '0.1.0',
                             structure: {
-                                geoObjectCategories: geoObjectCategories.map(
+                                domainEntities: domainEntities.map(
                                     ({ __typename, ...value }) => value
                                 ),
-                                rows,
+                                domainObjects,
                             },
                         },
                     },
                 })
+
                 if (data?.project.validateBeforeLoad === null) {
                     const {
                         columns,
                         rows: gridRows = mockTableRows,
                     } = unpackData({
-                        geoObjectCategories,
-                        rows,
+                        domainEntities,
+                        domainObjects,
                         calculationParameters,
                     })
                     dispatch(tableDuck.actions.updateColumns(columns))

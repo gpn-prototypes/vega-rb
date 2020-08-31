@@ -139,31 +139,41 @@ type FormErrors {
   errors: [FormError!]!
 }
 
-"""Категория геологического объекта."""
-type GeoObjectCategory {
-  """Имя категории геологического объекта"""
-  name: String!
+enum GeoObjectCategories {
+    RESERVES
+    RESOURCES
+}
 
-  """Иконка категории геологического объекта"""
-  icon: GeoObjectCategoryIcons!
+"""Категория геологического объекта."""
+type DomainEntity {
+    """Имя категории геологического объекта"""
+    name: String!
+    """Иконка категории геологического объекта"""
+    icon: DomainEntityIcons!
 }
 
 """Список иконок категории геологического объекта."""
-enum GeoObjectCategoryIcons {
-  LICENSING_ROUND_ICON
-  FIELD_ICON
-  FORMATION_ICON
-  OIL_POOL_ICON
-  WELL_ICON
+enum DomainEntityIcons {
+    LICENSING_ROUND_ICON
+    FIELD_ICON
+    FORMATION_ICON
+    OIL_POOL_ICON
+    WELL_ICON
 }
 
 """Категория геологического объекта."""
-input GeoObjectCategoryInput {
-  """Имя категории геологического объекта"""
-  name: String!
+input DomainEntityInput {
+    """Имя категории геологического объекта"""
+    name: String!
+    """Иконка категории геологического объекта"""
+    icon: DomainEntityIcons!
+}
 
-  """Иконка категории геологического объекта"""
-  icon: GeoObjectCategoryIcons!
+"""Строка в таблице структуры проекта."""
+input DomainObjectInput {
+    """Список ячеек в строке таблицы"""
+    cells: [String!]!
+    geoObjectCategory: GeoObjectCategories!
 }
 
 """Точка процентиля на графике."""
@@ -213,7 +223,7 @@ type ProjectQueries {
 """Структура проекта."""
 type ProjectStructure {
   """Список категорий геологических объектов"""
-  geoObjectCategories: [GeoObjectCategory!]!
+  domainEntities: [DomainEntity!]!
 
   """Список подсчетных параметров"""
   calculationParameters: [CalculationParameter!]!
@@ -225,10 +235,9 @@ type ProjectStructure {
 """Структура проекта."""
 input ProjectStructureInput {
   """Список категорий геологического объекта"""
-  geoObjectCategories: [GeoObjectCategoryInput!]!
-
+  domainEntities: [DomainEntityInput!]!
   """Список строк в таблице структуры проекта"""
-  rows: [RowInput!]!
+  domainObjects: [DomainObjectInput!]!
 }
 
 type Query {
@@ -248,11 +257,6 @@ type Risk {
   name: String!
 }
 
-"""Строка в таблице структуры проекта."""
-input RowInput {
-  """Список ячеек в строке таблицы"""
-  cells: [String!]!
-}
 
 """
 Ошибка данных таблицы с информацией о расположении строк или ячеек повлекших ошибку.

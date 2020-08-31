@@ -4,7 +4,7 @@ import { Form } from '@gpn-prototypes/vega-form'
 import { TextField } from '@gpn-prototypes/vega-text-field'
 import { Just } from 'monet'
 import { gql, useQuery } from '@apollo/client'
-import style from './style.module.css'
+import style from './ChartForm.module.css'
 import { Dropdown, Option } from '../Dropdown'
 
 // query normalByMinMax($borderConditionsInput: BorderConditionsInput!) {
@@ -63,8 +63,6 @@ export default function ChartForm() {
     const handleLocChange = (args: any) => {
         setLoc(args.value ?? 0)
     }
-
-    if (error) return <div>Error! {error}</div>
 
     return (
         <>

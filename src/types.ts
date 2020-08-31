@@ -19,12 +19,12 @@ export interface IProjectCell {
 }
 
 export interface IProjectStructure {
-    geoObjectCategories: GeoCategory[]
+    domainEntities: GeoCategory[]
+    domainObjects?: IProjectCell[]
     calculationParameters: CalculationParam[]
-    rows?: IProjectCell[]
 }
 
 export interface ITemplateStructure {
-    geoObjectCategories: GeoCategory[]
+    domainEntities: GeoCategory[]
     calculationParameters: CalculationParam[]
 }

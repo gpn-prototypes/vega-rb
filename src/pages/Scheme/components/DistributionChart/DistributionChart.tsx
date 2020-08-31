@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import * as d3 from 'd3'
-import style from './style.module.css'
+import style from './DistributionChart.module.css'
 import './DistributionChart.css'
 
 const height = 188

@@ -29,7 +29,7 @@ export enum CategoryIcon {
 }
 
 export enum TableEntities {
-    GEO_CATEGORY = 'GeoObjectCategory',
+    GEO_CATEGORY = 'DomainEntity',
     CALC_PARAM = 'CalculationParameter',
     NONE = 'None',
 }

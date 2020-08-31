@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import style from './style.module.css'
+import style from './HomePage.module.css'
 import { useDispatch } from 'react-redux'
 import projectDuck from 'store/projectDuck'
 

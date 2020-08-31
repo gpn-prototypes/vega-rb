@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from '@gpn-prototypes/vega-button'
 import { useHistory } from 'react-router'
-import style from './style.module.css'
+import style from './Projects.module.css'
 
 const ProjectsPage: React.FC<{}> = () => {
     const history = useHistory()

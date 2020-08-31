@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { ReactNode } from 'react'
 import CSSTransition from 'react-transition-group/CSSTransition'
 import { Maybe } from 'monet'
-import style from './style.module.css'
+import style from './Dropdown.module.css'
 
 export interface DropdownProps<T> {
     label?: string
