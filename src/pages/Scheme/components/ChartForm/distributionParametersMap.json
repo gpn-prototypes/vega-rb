@@ -1,0 +1,52 @@
+{
+    "normal": {
+        "params": [
+            {
+                "value": "deviation",
+                "label": "Среднее, станд. отклонение"
+            },
+            {
+                "value": "minmax",
+                "label": "Минимум, максимум"
+            }
+        ],
+        "fields": {
+            "deviation": [
+                {
+                    "key": "loc",
+                    "title": "Среднее",
+                    "defaultValue": ""
+                },
+                {
+                    "key": "standard",
+                    "title": "Стандартное",
+                    "defaultValue": ""
+                }
+            ],
+            "minmax": [
+                {
+                    "key": "min",
+                    "title": "Min",
+                    "defaultValue": ""
+                },
+                {
+                    "key": "max",
+                    "title": "Max",
+                    "defaultValue": ""
+                }
+            ]
+        }
+    },
+    "lognorm": {
+        "params": [],
+        "fields": {}
+    },
+    "rav": {
+        "params": [],
+        "fields": {}
+    },
+    "const": {
+        "params": [],
+        "fields": {}
+    }
+}
