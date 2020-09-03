@@ -1,3 +1,3 @@
-import { InputEditor } from './InputEditor'
+import { InputEditor } from './InputEditor';
 
-export { InputEditor }
+export { InputEditor };

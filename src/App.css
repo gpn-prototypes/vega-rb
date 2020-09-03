@@ -1,27 +1,34 @@
 .App {
-    background-color: #22272b;
-    height: 100vh;
-    width: 100vw;
-    color: #fafafa;
+  width: 100vw;
+  height: 100vh;
+
+  color: #fafafa;
+  background-color: #22272b;
 }
+
 .Header {
-    display: flex;
-    align-items: center;
-    background: #16191c;
-    padding: 9px 16px;
+  padding: 9px 16px;
+
+  display: flex;
+  align-items: center;
+
+  background: #16191c;
 }
+
 .Header a {
-    display: inline-block;
-    margin-right: 6px;
-    width: 16px;
-    height: 16px;
+  margin-right: 6px;
+
+  display: inline-block;
+
+  width: 16px;
+  height: 16px;
 }
+
 .Header span {
-    font-family: Arial;
-    font-size: 14px;
-    line-height: 16px;
-    color: #fafafa;
-    text-transform: uppercase;
-}
-.AppBody {
+  font-family: Arial, serif;
+  font-size: 14px;
+  line-height: 16px;
+  text-transform: uppercase;
+
+  color: #fafafa;
 }

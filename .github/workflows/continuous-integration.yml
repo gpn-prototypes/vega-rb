@@ -1,0 +1,31 @@
+name: CI
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  checks:
+    name: Проверки кода
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Скачивание репозитория
+        uses: actions/checkout@v2
+
+      - name: Установка ноды
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Установка зависимостей
+        run: yarn install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: yarn test
+        if: always()
+
+      - run: yarn lint
+        if: always()

@@ -1,44 +1,40 @@
-import React, { useState } from 'react'
-import { Button } from '@gpn-prototypes/vega-button'
-import { TextField } from '@gpn-prototypes/vega-text-field'
-import { useHistory } from 'react-router'
-import style from './Projects.module.css'
+import React, { useState } from 'react';
+import { useHistory } from 'react-router';
+import { Button } from '@gpn-prototypes/vega-button';
+import { TextField } from '@gpn-prototypes/vega-text-field';
 
-const CreateProjectPage: React.FC<{}> = () => {
-    const [inputValue, setValue] = useState<string | null | undefined>(
-        undefined
-    )
-    const history = useHistory()
+import style from './Projects.module.css';
 
-    const handleChange = ({ value }: { value: string | null }): void => {
-        setValue(value)
-    }
+const CreateProjectPage: React.FC = () => {
+  const [inputValue, setValue] = useState<string | null | undefined>(undefined);
+  const history = useHistory();
 
-    const handleCreateProjectButtonClick = () => {
-        history.push('/p/1')
-    }
+  const handleChange = ({ value }: { value: string | null }): void => {
+    setValue(value);
+  };
 
-    return (
-        <div className={style.ProjectsPage}>
-            <div className={style.FlexContainer}>
-                <div className={style.FlexContainerIn}>
-                    <div className={style.TextField}>
-                        <TextField
-                            value={inputValue}
-                            size="m"
-                            type="text"
-                            placeholder="Название проекта"
-                            onChange={handleChange}
-                        />
-                    </div>
-                </div>
-                <Button
-                    label="Создать проект"
-                    onClick={handleCreateProjectButtonClick}
-                />
-            </div>
+  const handleCreateProjectButtonClick = (): void => {
+    history.push('/p/1');
+  };
+
+  return (
+    <div className={style.ProjectsPage}>
+      <div className={style.FlexContainer}>
+        <div className={style.FlexContainerIn}>
+          <div className={style.TextField}>
+            <TextField
+              value={inputValue}
+              size="m"
+              type="text"
+              placeholder="Название проекта"
+              onChange={handleChange}
+            />
+          </div>
         </div>
-    )
-}
+        <Button label="Создать проект" onClick={handleCreateProjectButtonClick} />
+      </div>
+    </div>
+  );
+};
 
-export default CreateProjectPage
+export default CreateProjectPage;

@@ -1,14 +1,10 @@
-import React, { InputHTMLAttributes } from 'react'
-import classNames from 'classnames'
-import styles from './Input.module.css'
+import React, { InputHTMLAttributes } from 'react';
+import classNames from 'classnames';
 
-interface IProps extends InputHTMLAttributes<any> {}
+import styles from './Input.module.css';
 
-export const Input = ({ className, ...props }: IProps) => (
-    <input
-        autoFocus
-        type="text"
-        className={classNames(styles.Root, className)}
-        {...props}
-    />
-)
+type IProps = InputHTMLAttributes<unknown>;
+
+export const Input: React.FC<IProps> = ({ className, ...props }) => (
+  <input type="text" className={classNames(styles.Root, className)} {...props} />
+);

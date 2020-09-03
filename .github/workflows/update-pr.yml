@@ -1,0 +1,25 @@
+name: Добавление описания в Pull Request
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  update_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: tzkhan/pr-update-action@v1.1.1
+        with:
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'
+          branch-regex: 'VEGA-\d+'
+          title-template: ' '
+          replace-title: false
+          uppercase-title: true
+          body-template: |
+            ## Задача
+            Задача в Jira: https://jira.csssr.io/browse/%branch%
+            Ссылка на стенд: https://%branch%.vega-2.csssr.cloud
+
+          replace-body: false
+          body-prefix-newline-count: 1
+          uppercase-body: true

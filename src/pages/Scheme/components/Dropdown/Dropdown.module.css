@@ -1,107 +1,147 @@
 .Dropdown {
-    position: relative;
-    width: 100%;
-    border: 1px solid rgba(246, 251, 253, 0.28);
-    border-radius: 4px;
+  position: relative;
+
+  width: 100%;
+
+  border: 1px solid rgba(246, 251, 253, 0.28);
+  border-radius: 4px;
 }
 
 .DropdownOptionsContainer {
-    position: absolute;
-    width: 100%;
-    z-index: 100;
-    top: 42px;
-    left: 0;
-    border-radius: 4px;
-    box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.35);
-    overflow: auto;
+  position: absolute;
+  z-index: 100;
+  top: 42px;
+  left: 0;
+
+  overflow: auto;
+
+  width: 100%;
+
+  border-radius: 4px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
 }
+
 .DropdownOptions {
-    list-style: none;
-    margin: 0;
-    max-height: 120px;
-    border-radius: 4px;
-    overflow: auto;
-    background-color: #2c343a;
-    padding: 5px 0;
-    border-radius: 4px;
-    box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.13);
+  margin: 0;
+  padding: 5px 0;
+
+  overflow: auto;
+
+  max-height: 120px;
+
+  list-style: none;
+
+  background-color: #2c343a;
+  border-radius: 4px;
+  box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.13);
 }
+
 .DropdownOption {
-    display: block;
-    padding: 3px 15px;
-    line-height: 18px;
-    font-size: 13px;
-    color: #fff;
-    white-space: nowrap;
-    min-width: 80px;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    cursor: pointer;
+  padding: 3px 15px;
+
+  display: block;
+  overflow-x: hidden;
+
+  min-width: 80px;
+
+  font-size: 13px;
+  line-height: 18px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  cursor: pointer;
+
+  color: #fff;
 }
+
 .DropdownOption:hover {
-    text-decoration: none;
-    color: #fff;
-    background-color: #0081cc;
-    transition: background-color 0.1s ease, color 0.1s ease;
+  text-decoration: none;
+
+  color: #fff;
+  background-color: #0081cc;
+
+  transition: background-color 0.1s ease, color 0.1s ease;
 }
+
 .DropdownSelected {
-    display: inline-flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    box-sizing: border-box;
-    height: 40px;
-    padding-left: 12px;
-    padding-right: 10px;
-    /* background: #2c343a; */
-    border-color: transparent;
-    border-style: solid;
-    border-width: 1px;
-    border-radius: 4px;
-    cursor: pointer;
-    color: #fff;
+  padding-right: 10px;
+  padding-left: 12px;
+
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+
+  cursor: pointer;
+
+  color: #fff;
+  border-width: 1px;
+  border-style: solid;
+
+  /* background: #2c343a; */
+  border-color: transparent;
+  border-radius: 4px;
 }
+
 .DropdownSelected.open {
-    border: 1px solid #0081cc;
+  border: 1px solid #0081cc;
 }
+
 .DropdownSelected.open.Small {
-    background: #16191c;
-    border: none;
+  background: #16191c;
+  border: none;
 }
+
 .DropdownOptionsAnimationEnter {
-    opacity: 0;
+  opacity: 0;
 }
+
 .DropdownOptionsAnimationEnterActive {
-    opacity: 1;
-    transition: opacity 0.1s ease;
+  opacity: 1;
+
+  transition: opacity 0.1s ease;
 }
+
 .DropdownOptionsAnimationExit {
-    opacity: 1;
+  opacity: 1;
 }
+
 .DropdownOptionsAnimationExitActive {
-    opacity: 0;
-    transition: height 0.1s ease;
+  opacity: 0;
+
+  transition: height 0.1s ease;
 }
+
 .Rotate {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }
+
 .Icon {
-    width: 7px;
-    min-width: 7px;
-    height: 20px;
-    background-image: url(/assets/icons/chevron.svg);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    transition: all 0.3s ease;
+  width: 7px;
+  min-width: 7px;
+  height: 20px;
+
+  background-image: url(/assets/icons/chevron.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+
+  transition: all 0.3s ease;
 }
+
 .Icon.Rotate {
-    transform: rotateZ(180deg);
+  transform: rotateZ(180deg);
 }
+
 .Delimeter {
-    margin: 8px 0;
-    height: 1px;
-    width: 100%;
-    background: #ffffff;
-    opacity: 0.1;
+  margin: 8px 0;
+
+  width: 100%;
+  height: 1px;
+
+  background: #fff;
+  opacity: 0.1;
 }

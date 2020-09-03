@@ -1,3 +1,3 @@
-import SchemePage from './Scheme'
+import SchemePage from './Scheme';
 
-export default SchemePage
+export default SchemePage;

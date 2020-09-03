@@ -1,133 +1,115 @@
-import React, { useCallback, useMemo } from 'react'
-import ReactDataGrid, {
-    CalculatedColumn,
-    RowsUpdateEvent,
-} from 'react-data-grid'
-import 'react-data-grid/dist/react-data-grid.css'
-import {
-    GridCollection,
-    GridRow,
-    HEADER_CONTEXT_ID,
-    IGridColumn,
-} from './types'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import StyledRow from './StyledRow'
-import { HeaderContextMenu } from './ContextMenu'
-import { DndProvider } from 'react-dnd'
-import { AutoSizer } from 'react-virtualized'
-import styles from './ExcelTable.module.css'
-import './react-data-grid.css'
-import { generateColumn } from './helpers'
-import renderColumns from './Columns/renderColumns'
+import React, { useCallback, useMemo } from 'react';
+import ReactDataGrid, { CalculatedColumn, RowsUpdateEvent } from 'react-data-grid';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { AutoSizer } from 'react-virtualized';
+
+import renderColumns from './Columns/renderColumns';
+import { HeaderContextMenu } from './ContextMenu';
+import { generateColumn } from './helpers';
+import StyledRow from './StyledRow';
+import { GridCollection, GridRow, HEADER_CONTEXT_ID, IGridColumn } from './types';
+
+import 'react-data-grid/dist/react-data-grid.css';
+import './react-data-grid.css';
+import styles from './ExcelTable.module.css';
 
 interface IProps {
-    data: GridCollection
-    setColumns?: (data: any) => void
-    setRows?: (data: any) => void
-    onRowClick?: (column: IGridColumn) => void
+  data: GridCollection;
+  setColumns?: (data: IGridColumn[]) => void;
+  setRows?: (data: GridRow[]) => void;
+  onRowClick?: (column: IGridColumn) => void;
 }
 
-export default function ExcelTable({
-    data = { columns: [], rows: [] },
-    setColumns = () => {},
-    setRows = () => {},
-    onRowClick = (column: IGridColumn) => {},
-}: IProps) {
-    const { columns, rows } = data
-    // eslint-disable-next-line no-unused-vars
-    // const [[sortColumn, sortDirection], setSort] = useState<
-    //     [string, SortDirection]
-    // >(['id', 'NONE'])
+export const ExcelTable: React.FC<IProps> = ({
+  data = { columns: [], rows: [] },
+  setColumns = (): void => {},
+  setRows = (): void => {},
+  onRowClick = (): void => {},
+}) => {
+  const { columns, rows } = data;
+  // eslint-disable-next-line no-unused-vars
+  // const [[sortColumn, sortDirection], setSort] = useState<
+  //     [string, SortDirection]
+  // >(['id', 'NONE'])
 
-    // const handleSort = useCallback(
-    //     (columnKey: string, direction: SortDirection) => {
-    //         setSort([columnKey, direction])
-    //     },
-    //     []
-    // )
+  // const handleSort = useCallback(
+  //     (columnKey: string, direction: SortDirection) => {
+  //         setSort([columnKey, direction])
+  //     },
+  //     []
+  // )
 
-    const handleRowClick = useCallback(
-        (
-            rowIdx: number,
-            row: GridRow,
-            column: IGridColumn & CalculatedColumn<GridRow>
-        ) => {
-            onRowClick(column)
-        },
-        [onRowClick]
-    )
+  const handleRowClick = useCallback(
+    (rowIdx: number, row: GridRow, column: IGridColumn & CalculatedColumn<GridRow>) => {
+      onRowClick(column);
+    },
+    [onRowClick],
+  );
 
-    const handleRowsUpdate = useCallback(
-        ({ fromRow, toRow, updated }: RowsUpdateEvent<Partial<GridRow>>) => {
-            const newRows = [...rows]
+  const handleRowsUpdate = useCallback(
+    ({ fromRow, toRow, updated }: RowsUpdateEvent<Partial<GridRow>>) => {
+      const newRows = [...rows];
 
-            for (let i = fromRow; i <= toRow; i++) {
-                newRows[i] = { ...newRows[i], ...updated }
-            }
+      for (let i = fromRow; i <= toRow; i += 1) {
+        newRows[i] = { ...newRows[i], ...updated };
+      }
 
-            setRows(newRows)
-        },
-        [rows, setRows]
-    )
+      setRows(newRows);
+    },
+    [rows, setRows],
+  );
 
-    const onColumnDelete = (
-        e: React.MouseEvent<HTMLDivElement>,
-        { idx }: { idx: number }
-    ) => {
-        setColumns([...columns.slice(0, idx), ...columns.slice(idx + 1)])
-    }
+  const onColumnDelete = (e: React.MouseEvent<HTMLDivElement>, { idx }: { idx: number }): void => {
+    setColumns([...columns.slice(0, idx), ...columns.slice(idx + 1)]);
+  };
 
-    const onColumnInsertLeft = (
-        e: React.MouseEvent<HTMLDivElement>,
-        { idx }: { idx: number }
-    ) => pushColumn(idx)
+  const pushColumn = (insertIdx: number): void => {
+    setColumns([...columns.slice(0, insertIdx), generateColumn(), ...columns.slice(insertIdx)]);
+  };
 
-    const onColumnInsertRight = (
-        e: React.MouseEvent<HTMLDivElement>,
-        { idx }: { idx: number }
-    ) => pushColumn(idx + 1)
+  const onColumnInsertLeft = (
+    e: React.MouseEvent<HTMLDivElement>,
+    { idx }: { idx: number },
+  ): void => pushColumn(idx);
 
-    const pushColumn = (insertIdx: number) => {
-        setColumns([
-            ...columns.slice(0, insertIdx),
-            generateColumn(),
-            ...columns.slice(insertIdx),
-        ])
-    }
+  const onColumnInsertRight = (
+    e: React.MouseEvent<HTMLDivElement>,
+    { idx }: { idx: number },
+  ): void => pushColumn(idx + 1);
 
-    const columnsList = useMemo(() => {
-        return renderColumns(columns, setColumns)
-    }, [columns, setColumns])
+  const columnsList = useMemo(() => {
+    return renderColumns(columns, setColumns);
+  }, [columns, setColumns]);
 
-    return (
-        <>
-            <DndProvider backend={HTML5Backend}>
-                <AutoSizer className={styles.Root}>
-                    {({ height, width }) => (
-                        <ReactDataGrid
-                            columns={columnsList}
-                            rows={rows}
-                            width={width}
-                            height={height}
-                            rowHeight={32}
-                            // sortColumn={sortColumn}
-                            // onSort={handleSort}
-                            onRowClick={handleRowClick}
-                            onRowsUpdate={handleRowsUpdate}
-                            rowRenderer={StyledRow}
-                            enableCellCopyPaste
-                            enableCellDragAndDrop
-                        />
-                    )}
-                </AutoSizer>
-            </DndProvider>
-            <HeaderContextMenu
-                id={HEADER_CONTEXT_ID}
-                title={'Insert StyledColumn'}
-                onDelete={onColumnDelete}
-                onInsertLeft={onColumnInsertLeft}
-                onInsertRight={onColumnInsertRight}
+  return (
+    <>
+      <DndProvider backend={HTML5Backend}>
+        <AutoSizer className={styles.Root}>
+          {({ height, width }): JSX.Element => (
+            <ReactDataGrid
+              columns={columnsList}
+              rows={rows}
+              width={width}
+              height={height}
+              rowHeight={32}
+              // sortColumn={sortColumn}
+              // onSort={handleSort}
+              onRowClick={handleRowClick}
+              onRowsUpdate={handleRowsUpdate}
+              rowRenderer={StyledRow}
+              enableCellCopyPaste
+              enableCellDragAndDrop
             />
-        </>
-    )
-}
+          )}
+        </AutoSizer>
+      </DndProvider>
+      <HeaderContextMenu
+        id={HEADER_CONTEXT_ID}
+        onDelete={onColumnDelete}
+        onInsertLeft={onColumnInsertLeft}
+        onInsertRight={onColumnInsertRight}
+      />
+    </>
+  );
+};

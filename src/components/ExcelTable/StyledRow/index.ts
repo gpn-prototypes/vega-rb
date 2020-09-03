@@ -1,3 +1,3 @@
-import StyledRow from './StyledRow'
+import StyledRow from './StyledRow';
 
-export default StyledRow
+export default StyledRow;

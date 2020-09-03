@@ -1,1 +1,3 @@
-export * from './ExportButton'
+import { ExportButton } from './ExportButton';
+
+export default ExportButton;

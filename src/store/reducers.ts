@@ -1,16 +1,12 @@
-import { combineReducers } from 'redux'
-import alertDuck, { AlertState } from 'store/alertDuck'
-import projectDuck, { ProjectState } from 'store/projectDuck'
-import tableDuck, { TableState } from 'store/tableDuck'
+import { combineReducers } from 'redux';
+import alertDuck from 'store/alertDuck';
+import projectDuck from 'store/projectDuck';
+import tableDuck from 'store/tableDuck';
 
-export interface RootState {
-    alert: AlertState
-    project: ProjectState
-    table: TableState
-}
+import { RootState } from './types';
 
 export default combineReducers<RootState>({
-    alert: alertDuck.reducer,
-    project: projectDuck.reducer,
-    table: tableDuck.reducer,
-})
+  alert: alertDuck.reducer,
+  project: projectDuck.reducer,
+  table: tableDuck.reducer,
+});

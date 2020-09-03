@@ -1,30 +1,27 @@
-import { CategoryIcon } from './components/ExcelTable/types'
+import { CategoryIcon } from './components/ExcelTable/types';
 
-export interface GeoCategory {
-    __typename?: string
-    name: string
-    icon: CategoryIcon
+interface Structure {
+  __typename?: string;
 }
 
-export interface CalculationParam {
-    __typename?: string
-    code: string
-    name: string
-    shortName: string
-    units: string
+export interface GeoCategory extends Structure {
+  name: string;
+  icon: CategoryIcon;
+}
+
+export interface CalculationParam extends Structure {
+  code: string;
+  name: string;
+  shortName: string;
+  units: string;
 }
 
 export interface IProjectCell {
-    cells: string[]
+  cells: string[];
 }
 
 export interface IProjectStructure {
-    domainEntities: GeoCategory[]
-    domainObjects?: IProjectCell[]
-    calculationParameters: CalculationParam[]
-}
-
-export interface ITemplateStructure {
-    domainEntities: GeoCategory[]
-    calculationParameters: CalculationParam[]
+  domainEntities: GeoCategory[];
+  calculationParameters: CalculationParam[];
+  domainObjects?: IProjectCell[];
 }

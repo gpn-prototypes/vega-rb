@@ -1,3 +1,3 @@
-import ExcelTable from './ExcelTable'
+import { ExcelTable } from './ExcelTable';
 
-export default ExcelTable
+export default ExcelTable;

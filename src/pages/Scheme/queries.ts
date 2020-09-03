@@ -1,13 +1,13 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const VALIDATE_BEFORE_LOAD = gql`
-    query ValidateBeforeLoad($project: ProjectInput!) {
-        project {
-            validateBeforeLoad(project: $project) {
-                code
-                message
-                details
-            }
-        }
+  query ValidateBeforeLoad($project: ProjectInput!) {
+    project {
+      validateBeforeLoad(project: $project) {
+        code
+        message
+        details
+      }
     }
-`
+  }
+`;

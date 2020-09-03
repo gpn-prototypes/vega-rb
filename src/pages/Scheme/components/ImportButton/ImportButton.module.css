@@ -1,9 +1,9 @@
 .FileInput {
-    display: inline-grid;
+  display: inline-grid;
 }
 
 .SnackBar {
-    position: absolute;
-    z-index: 100;
-    right: 0;
+  position: absolute;
+  z-index: 100;
+  right: 0;
 }

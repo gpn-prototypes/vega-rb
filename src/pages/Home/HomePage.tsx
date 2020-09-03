@@ -1,20 +1,21 @@
-import React, { useEffect } from 'react'
-import style from './HomePage.module.css'
-import { useDispatch } from 'react-redux'
-import projectDuck from 'store/projectDuck'
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import projectDuck from 'store/projectDuck';
 
-const HomePage: React.FC<{}> = () => {
-    const dispatch = useDispatch()
+import style from './HomePage.module.css';
 
-    useEffect(() => {
-        dispatch(projectDuck.actions.fetchParams.started('id'))
-    }, [dispatch])
+const HomePage: React.FC = () => {
+  const dispatch = useDispatch();
 
-    return (
-        <>
-            <div className={style.HomePage}>Home Page</div>
-        </>
-    )
-}
+  useEffect(() => {
+    dispatch(projectDuck.actions.fetchParams.started('id'));
+  }, [dispatch]);
 
-export default HomePage
+  return (
+    <>
+      <div className={style.HomePage}>Home Page</div>
+    </>
+  );
+};
+
+export default HomePage;

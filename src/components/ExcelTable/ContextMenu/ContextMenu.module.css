@@ -1,19 +1,21 @@
 .MenuItem {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .Splitter {
-    margin: 12px;
-    border-top: solid 1px rgba(246, 251, 253, 0.1);
+  margin: 12px;
+
+  border-top: solid 1px rgba(246, 251, 253, 0.1);
 }
 
 .Icon {
-    position: absolute;
-    padding: 0 8px;
+  position: absolute;
+
+  padding: 0 8px;
 }
 
 .Title {
-    padding: 10px 32px;
+  padding: 10px 32px;
 }

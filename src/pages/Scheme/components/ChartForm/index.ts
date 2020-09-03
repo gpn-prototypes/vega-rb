@@ -1,3 +1,3 @@
-import ChartForm from './ChartForm'
+import ChartForm from './ChartForm';
 
-export default ChartForm
+export default ChartForm;

@@ -1,41 +1,49 @@
 .Root {
-    display: flex;
-    padding: 0 8px;
-    align-items: center;
-    background-color: inherit;
-    opacity: 1;
-    /*cursor: move;*/
+  padding: 0 8px;
+
+  display: flex;
+  align-items: center;
+
+  background-color: inherit;
+  opacity: 1;
+  /*
+  stylelint-disable-next-line
+  cursor: move;
+  */
 }
 
 .Icon {
-    margin-right: 6px;
+  margin-right: 6px;
 }
 
 .WrapperIcon {
-    display: flex;
+  display: flex;
 }
 
 .HeaderId {
-    display: flex;
-    color: rgba(255, 255, 255, 0.3);
-    opacity: 0.8;
-    padding-right: 8px;
+  padding-right: 8px;
+
+  display: flex;
+
+  color: rgba(255, 255, 255, 0.3);
+  opacity: 0.8;
 }
 
 .CalcParamHeader {
-    justify-content: space-between;
+  justify-content: space-between;
 }
 
 .WrapperText {
-    display: flex;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  display: flex;
+  overflow: hidden;
+
+  text-overflow: ellipsis;
 }
 
 .IsDragging {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
 .IsOver {
-    background-color: rgba(0, 150, 235, 0.4);
+  background-color: rgba(0, 150, 235, 0.4);
 }

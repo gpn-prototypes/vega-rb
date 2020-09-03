@@ -1,26 +1,24 @@
-import React from 'react'
-import { Button } from '@gpn-prototypes/vega-button'
-import { useHistory } from 'react-router'
-import style from './Projects.module.css'
+import React from 'react';
+import { useHistory } from 'react-router';
+import { Button } from '@gpn-prototypes/vega-button';
 
-const ProjectsPage: React.FC<{}> = () => {
-    const history = useHistory()
+import style from './Projects.module.css';
 
-    const handleCreateProjectButtonClick = () => {
-        history.push('/projects/create')
-    }
+const ProjectsPage: React.FC = () => {
+  const history = useHistory();
 
-    return (
-        <div className={style.ProjectsPage}>
-            <p className={style.Headtext}>Проекты</p>
-            <div className={style.FlexContainer}>
-                <Button
-                    label="Создать новый проект"
-                    onClick={handleCreateProjectButtonClick}
-                />
-            </div>
-        </div>
-    )
-}
+  const handleCreateProjectButtonClick = (): void => {
+    history.push('/projects/create');
+  };
 
-export default ProjectsPage
+  return (
+    <div className={style.ProjectsPage}>
+      <p className={style.Headtext}>Проекты</p>
+      <div className={style.FlexContainer}>
+        <Button label="Создать новый проект" onClick={handleCreateProjectButtonClick} />
+      </div>
+    </div>
+  );
+};
+
+export default ProjectsPage;

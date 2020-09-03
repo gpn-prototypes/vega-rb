@@ -1,2 +1,3 @@
-import DistributionChart from './DistributionChart'
-export default DistributionChart
+import DistributionChart from './DistributionChart';
+
+export default DistributionChart;

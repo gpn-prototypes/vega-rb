@@ -1,1 +1,1 @@
-export type ProjectID = string
+export type ProjectID = string;
