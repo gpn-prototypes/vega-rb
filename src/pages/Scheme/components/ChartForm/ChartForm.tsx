@@ -46,10 +46,9 @@ const ChartForm: React.FC = () => {
         setType(o.value)
     }
 
-    const [
-        getNormalByDistribution,
-        { data: normalByDistributionData },
-    ] = useLazyQuery(GET_CHART_DATA)
+    const [getNormalByDistribution, { data: normalByDeviation }] = useLazyQuery(
+        GET_CHART_DATA
+    )
     const [getNormalByMinMax, { data: normalByMinMaxData }] = useLazyQuery(
         GET_NORMAL_BY_MIN_MAX
     )
@@ -62,17 +61,27 @@ const ChartForm: React.FC = () => {
         const getData = () => {
             switch (parameters) {
                 case 'deviation':
-                    return normalByDistributionData?.distribution
-                        .normalByDistribution.curve
+                    return normalByDeviation?.distribution.normalByDeviation
                 case 'minmax':
-                    return normalByMinMaxData?.distribution.normalByMinMax.curve
+                    return normalByMinMaxData?.distribution.normalByMinMax
                 default:
-                    return normalByDistributionData?.distribution
-                        .normalByDistribution.curve
+                    return normalByDeviation?.distribution.normalByDeviation
             }
         }
-        return <DistributionChart data={getData() || []} />
-    }, [normalByDistributionData, normalByMinMaxData, parameters])
+        const { probabilityDensity, cumulative, percentPoints } = getData() || {
+            probabilityDensity: [],
+            cumulative: [],
+            percentPoints: [],
+        }
+
+        return (
+            <DistributionChart
+                probabilityDensity={probabilityDensity}
+                cumulative={cumulative}
+                percentPoints={percentPoints}
+            />
+        )
+    }, [normalByDeviation, normalByMinMaxData, parameters])
 
     const renderFields = useMemo(() => {
         const handleChangeParams = (o: Option<string>) => {
@@ -129,7 +138,7 @@ const ChartForm: React.FC = () => {
                 variables: {
                     deviationInput: {
                         mean: parseFloat(formData.loc),
-                        standardDistribution: parseFloat(formData.standard),
+                        standardDeviation: parseFloat(formData.standard),
                     },
                 },
             })

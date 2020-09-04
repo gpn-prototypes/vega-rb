@@ -65,11 +65,12 @@ input DeviationInput {
 
 """Распределение вероятностной величины."""
 type Distribution {
-  """График распределения"""
-  curve: [Point!]!
-
-  """Точки процентилей"""
-  percentiles: [PercentilePoint!]!
+  """График функции кумулятивного распределения"""
+  cumulative: [Point!]!
+  """График функции плотности распределения"""
+  probabilityDensity: [Point!]!
+  """График функции процентной точки"""
+  percentPoints: [Point!]!
 }
 
 union DistributionOrErrors = Distribution | FormErrors

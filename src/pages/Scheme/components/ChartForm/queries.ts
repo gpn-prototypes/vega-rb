@@ -6,7 +6,15 @@ export const GET_CHART_DATA = gql`
             normalByDeviation(deviationInput: $deviationInput) {
                 __typename
                 ... on Distribution {
-                    curve {
+                    probabilityDensity {
+                        x
+                        y
+                    }
+                    cumulative {
+                        x
+                        y
+                    }
+                    percentPoints {
                         x
                         y
                     }
@@ -21,7 +29,15 @@ export const GET_NORMAL_BY_MIN_MAX = gql`
             normalByMinMax(borderConditionsInput: $borderConditionsInput) {
                 __typename
                 ... on Distribution {
-                    curve {
+                    probabilityDensity {
+                        x
+                        y
+                    }
+                    cumulative {
+                        x
+                        y
+                    }
+                    percentPoints {
                         x
                         y
                     }

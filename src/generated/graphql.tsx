@@ -212,10 +212,12 @@ export type DistributionOrErrors = Distribution | FormErrors
 /** Распределение вероятностной величины. */
 export type Distribution = {
     __typename?: 'Distribution'
-    /** График распределения */
-    curve: Array<Point>
-    /** Точки процентилей */
-    percentiles: Array<PercentilePoint>
+    /** График функции плотности распределения */
+    probabilityDensity: Array<Point>
+    /** График функции кумулятивного распределения */
+    cumulative: Array<Point>
+    /** График функции процентной точки */
+    percentPoints: Array<Point>
 }
 
 /** Точка на графике. */
@@ -223,14 +225,6 @@ export type Point = {
     __typename?: 'Point'
     x: Scalars['Float']
     y: Scalars['Float']
-}
-
-/** Точка процентиля на графике. */
-export type PercentilePoint = {
-    __typename?: 'PercentilePoint'
-    point: Point
-    /** Процентный ранг */
-    percentRank: Scalars['Int']
 }
 
 /** Ошибки формы, отображаемые пользователю. */
