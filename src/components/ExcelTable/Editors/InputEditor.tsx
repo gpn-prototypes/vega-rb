@@ -14,15 +14,13 @@ export const InputEditor: React.FC<IProps> = ({ name, idx, setColumnProps, onBlu
     value={name}
     onKeyPress={(event: KeyboardEvent): void => {
       if (event.key === 'Enter') {
+        if (!name.trim().length) setColumnProps(idx, 'name', 'Новая колонка');
         setColumnProps(idx, 'isRenaming', false);
       }
     }}
     onBlur={(): void => onBlurHandler(idx)}
     onChange={({ target }: React.ChangeEvent<HTMLInputElement>): void => {
-      const { value } = target;
-      if (value) {
-        setColumnProps(idx, 'name', value);
-      }
+      setColumnProps(idx, 'name', target.value);
     }}
   />
 );
