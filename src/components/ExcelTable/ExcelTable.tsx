@@ -8,7 +8,7 @@ import renderColumns from './Columns/renderColumns';
 import { HeaderContextMenu } from './ContextMenu';
 import { generateColumn } from './helpers';
 import StyledRow from './StyledRow';
-import { GridCollection, GridRow, HEADER_CONTEXT_ID, IGridColumn } from './types';
+import { GridCollection, GridRow, HEADER_CONTEXT_ID, IGridColumn, TableEntities } from './types';
 
 import 'react-data-grid/dist/react-data-grid.css';
 import './react-data-grid.css';
@@ -65,7 +65,9 @@ export const ExcelTable: React.FC<IProps> = ({
   };
 
   const pushColumn = (insertIdx: number): void => {
-    setColumns([...columns.slice(0, insertIdx), generateColumn(), ...columns.slice(insertIdx)]);
+    const prevIdx = columns[insertIdx].type !== TableEntities.NONE ? insertIdx : insertIdx - 1;
+    const { type } = columns[prevIdx];
+    setColumns([...columns.slice(0, insertIdx), generateColumn(type), ...columns.slice(insertIdx)]);
   };
 
   const onColumnInsertLeft = (
@@ -78,9 +80,7 @@ export const ExcelTable: React.FC<IProps> = ({
     { idx }: { idx: number },
   ): void => pushColumn(idx + 1);
 
-  const columnsList = useMemo(() => {
-    return renderColumns(columns, setColumns);
-  }, [columns, setColumns]);
+  const columnsList = useMemo(() => renderColumns(columns, setColumns), [columns, setColumns]);
 
   return (
     <>

@@ -3,20 +3,24 @@ import { HeaderRendererProps } from 'react-data-grid';
 import classNames from 'classnames';
 import { SpecialColumns } from 'model/Table';
 
-import { GridRow, IGridColumn } from './types';
+import { GridRow, IGridColumn, TableEntities } from './types';
 
 import styles from './ExcelTable.module.css';
 
-export const generateColumn = (): IGridColumn => ({
-  key: Math.random().toString(),
-  name: '',
-  editable: true,
-  resizable: true,
-  sortable: true,
-  cellClass: styles.Cell,
-  headerCellClass: styles.Header,
-  isRenaming: true,
-});
+export const generateColumn = (genType: TableEntities = TableEntities.NONE): IGridColumn => {
+  return {
+    key: Math.random().toString(),
+    name: '',
+    editable: true,
+    resizable: true,
+    sortable: true,
+    cellClass: styles.Cell,
+    headerCellClass: styles.Header,
+    type: genType,
+    hasIcon: genType === TableEntities.GEO_CATEGORY,
+    isRenaming: true,
+  };
+};
 
 export const columnsFactory = (
   column: IGridColumn,
