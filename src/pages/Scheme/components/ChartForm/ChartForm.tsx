@@ -1,88 +1,197 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useLazyQuery } from '@apollo/client';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { DocumentNode, useApolloClient } from '@apollo/client';
 import { Form } from '@gpn-prototypes/vega-form';
 import { TextField } from '@gpn-prototypes/vega-text-field';
+import {
+  DistributionDefinitionError,
+  DistributionDefinitionErrors,
+  DistributionDefinitionTypes,
+  DistributionParameterTypes,
+  DistributionTypes,
+  DistributionValue,
+  Percentile,
+  Query,
+} from 'generated/graphql';
 import { Just } from 'monet';
+import tableDuck from 'store/tableDuck';
+import { RootState } from 'store/types';
 
 import DistributionChart from '../DistributionChart';
-import { Data } from '../DistributionChart/types';
 import { Dropdown, Option } from '../Dropdown';
+import { SelectedRow } from '../Table/Table';
 
-import distributionParametersMap from './distributionParametersMap.json';
-import { GET_CHART_DATA, GET_NORMAL_BY_MIN_MAX } from './queries';
+import { GET_NORMAL_BY_DEVIATION, GET_NORMAL_BY_MIN_MAX } from './queries';
 
 import style from './ChartForm.module.css';
 
-export enum DistributionType {
-  normal = 'normal',
-  lognorm = 'lognorm',
-  rav = 'rav',
-  const = 'const',
-}
+type Parameter = {
+  type: DistributionDefinitionTypes;
+  title: string;
+  query: DocumentNode;
+};
 
-const options = [
-  { value: DistributionType.normal, label: 'Нормальное' },
-  { value: DistributionType.lognorm, label: 'Логнормальное' },
-  { value: DistributionType.rav, label: 'Равномерное' },
-];
+const distributionParametersMap: {
+  [key in DistributionTypes]: {
+    fields: { [key in DistributionDefinitionTypes]: Field[] };
+    parameters: Parameter[];
+  };
+} = {
+  [DistributionTypes.Normal]: {
+    parameters: [
+      {
+        type: DistributionDefinitionTypes.MeanSd,
+        title: 'Среднее, станд. отклонение',
+        query: GET_NORMAL_BY_DEVIATION,
+      },
+      {
+        type: DistributionDefinitionTypes.MinMax,
+        title: 'Минимум, максимум',
+        query: GET_NORMAL_BY_MIN_MAX,
+      },
+    ],
+    fields: {
+      [DistributionDefinitionTypes.MeanSd]: [
+        {
+          key: DistributionParameterTypes.Mean,
+          title: 'Среднее',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.StandardDeviation,
+          title: 'Стандартное',
+          defaultValue: '',
+        },
+      ],
+      [DistributionDefinitionTypes.MinMax]: [
+        {
+          key: DistributionParameterTypes.Min,
+          title: 'Min',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Max,
+          title: 'Max',
+          defaultValue: '',
+        },
+      ],
+    },
+  },
+};
+
+const options = [{ value: DistributionTypes.Normal, label: 'Нормальное' }];
+const defaultDistributionValue: DistributionValue = { sf: [], pdf: [], percentiles: [] };
 
 type Field = {
-  key: string;
+  key: DistributionParameterTypes;
   defaultValue: string;
   title: string;
 };
 
-interface FormData {
-  [key: string]: string;
-}
+type FormData = {
+  [key in DistributionParameterTypes]: string;
+};
 
-const ChartForm: React.FC = () => {
-  const [type, setType] = useState<DistributionType>(DistributionType.normal);
-  const config: {
-    fields: { [key: string]: Field[] };
-    params: Option<string>[];
-  } = distributionParametersMap[type];
-  const { fields, params = [] } = config;
-  const [parameters, setParameters] = useState<string>(params[0].value);
-  const [formData, setFormData] = useState<FormData>({});
+const ChartForm: React.FC<{ selectedRow: SelectedRow }> = ({ selectedRow }) => {
+  const dispatch = useDispatch();
+  const client = useApolloClient();
+  const tableRows = useSelector(({ table }: RootState) => table.rows);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const [errors, setErrors] = useState<DistributionDefinitionError[]>([]);
+  const [type, setType] = useState<DistributionTypes>(DistributionTypes.Normal);
 
-  const handleTypeChange = (o: Option<DistributionType>): void => {
+  const config = distributionParametersMap[type];
+  const { fields, parameters } = config;
+  const distributionDefinitionOptions = parameters.map((param) => ({
+    label: param.title,
+    value: param.type,
+  }));
+  const [distributionDefinition, setDistributionDefinition] = useState<DistributionDefinitionTypes>(
+    DistributionDefinitionTypes.MeanSd,
+  );
+  const [formData, setFormData] = useState<FormData>({} as FormData);
+  const [data, setData] = useState(defaultDistributionValue);
+
+  const handleTypeChange = (o: Option<DistributionTypes>): void => {
     setType(o.value);
   };
-
-  const [
-    getNormalByDistribution,
-    { data: normalByDistributionData },
-  ] = useLazyQuery(GET_CHART_DATA);
-  const [getNormalByMinMax, { data: normalByMinMaxData }] = useLazyQuery(
-    GET_NORMAL_BY_MIN_MAX,
+  const updateTable = useCallback(
+    (percentiles: Percentile[]) => {
+      const newRows = [...tableRows];
+      if (Number.isInteger(selectedRow?.rowIdx) && selectedRow) {
+        newRows.splice(selectedRow.rowIdx, 1, {
+          ...newRows[selectedRow.rowIdx],
+          [selectedRow.column.key]: {
+            ...newRows[selectedRow.rowIdx][selectedRow.column.key],
+            args: {
+              parameters: Object.entries(formData).map(([parameterType, value]) => ({
+                type: parameterType,
+                value,
+              })),
+              type,
+              definition: distributionDefinition,
+            },
+            value: percentiles[1].point.x,
+          },
+        });
+        dispatch(tableDuck.actions.updateRows(newRows));
+      }
+    },
+    [dispatch, distributionDefinition, formData, selectedRow, tableRows, type],
   );
+
+  const getDistributionValue = useCallback(() => {
+    const query = parameters.find((param) => param.type === distributionDefinition)?.query;
+    const isValid = fields[distributionDefinition].every((param) =>
+      Number.isInteger(Number.parseFloat(formData[param.key])),
+    );
+    if (isValid && query) {
+      client
+        .query<Query>({
+          query,
+          variables: {
+            distribution: {
+              parameters: Object.entries(formData).map(([parameterType, value]) => ({
+                type: parameterType,
+                value,
+              })),
+              type,
+              definition: distributionDefinition,
+            },
+          },
+        })
+        .then((result) => {
+          if (
+            (result?.data?.distribution?.distributionValue as DistributionDefinitionErrors)?.errors
+          ) {
+            setErrors(
+              (result?.data?.distribution?.distributionValue as DistributionDefinitionErrors)
+                ?.errors,
+            );
+          } else if (result?.data?.distribution?.distributionValue) {
+            setData(result.data.distribution.distributionValue as DistributionValue);
+            setErrors([]);
+            updateTable(
+              (result.data.distribution.distributionValue as DistributionValue).percentiles,
+            );
+          }
+        });
+    }
+  }, [client, distributionDefinition, fields, formData, parameters, type, updateTable]);
 
   // TODO: args has type TextFieldOnChangeArguments, but we cannot import it from ui-kit
   // eslint-disable-next-line
-  const handleChange = (key: keyof FormData) => (args: any) => {
+  const handleChange = (key: DistributionParameterTypes) => (args: any) => {
     setFormData((prevFormData) => ({ ...prevFormData, [key]: args.value }));
   };
 
-  const renderChart = useMemo(() => {
-    const getData = (): Data[] => {
-      switch (parameters) {
-        case 'deviation':
-          return normalByDistributionData?.distribution.normalByDistribution
-            .curve;
-        case 'minmax':
-          return normalByMinMaxData?.distribution.normalByMinMax.curve;
-        default:
-          return normalByDistributionData?.distribution.normalByDistribution
-            .curve;
-      }
-    };
-    return <DistributionChart data={getData() || []} />;
-  }, [normalByDistributionData, normalByMinMaxData, parameters]);
-
   const renderFields = useMemo(() => {
-    const handleChangeParams = (o: Option<string>): void => {
-      setParameters(o.value);
+    const handleChangeParams = (o: Option<DistributionDefinitionTypes>): void => {
+      setDistributionDefinition(o.value);
+      setFormData({} as FormData);
+      setData(defaultDistributionValue);
+      setErrors([]);
     };
     return (
       <>
@@ -91,8 +200,10 @@ const ChartForm: React.FC = () => {
             <Form.Field>
               <Form.Label>Параметры</Form.Label>
               <Dropdown
-                value={Just(params.find((o) => o.value === parameters)!)}
-                options={params}
+                value={Just(
+                  distributionDefinitionOptions.find((o) => o.value === distributionDefinition)!,
+                )}
+                options={distributionDefinitionOptions}
                 onChange={handleChangeParams}
               />
             </Form.Field>
@@ -100,13 +211,14 @@ const ChartForm: React.FC = () => {
         </Form.Row>
         <Form.Row>
           <div className={style.Flex}>
-            {fields[parameters].map(({ key, defaultValue, title }) => (
+            {fields[distributionDefinition].map(({ key, defaultValue, title }) => (
               <Form.Field key={key}>
                 <Form.Label>{title}</Form.Label>
                 <TextField
                   width="full"
-                  value={formData[key]}
+                  value={formData[key] ?? defaultValue}
                   onChange={handleChange(key)}
+                  className={errors?.[0]?.fields.includes(key) ? style.TextField__error : ''}
                 />
               </Form.Field>
             ))}
@@ -114,43 +226,41 @@ const ChartForm: React.FC = () => {
         </Form.Row>
       </>
     );
-  }, [fields, formData, parameters, params]);
+  }, [errors, distributionDefinition, distributionDefinitionOptions, fields, formData]);
 
   useEffect(() => {
-    const configParams =
-      distributionParametersMap[DistributionType.normal].params[0];
-    setParameters(configParams.value);
-  }, [setParameters, type]);
+    setDistributionDefinition(distributionParametersMap[type].parameters[0].type);
+    setFormData({} as FormData);
+    setData(defaultDistributionValue);
+    setErrors([]);
+  }, [type]);
 
   useEffect(() => {
-    setFormData({});
-  }, [parameters]);
+    getDistributionValue();
+    // eslint-disable-next-line
+  }, [formData]);
 
   useEffect(() => {
-    if (formData.loc && formData.standard) {
-      getNormalByDistribution({
-        variables: {
-          deviationInput: {
-            mean: parseFloat(formData.loc),
-            standardDistribution: parseFloat(formData.standard),
-          },
-        },
-      });
+    if (selectedRow) {
+      const { row, column } = selectedRow;
+      if (row[column.key]?.args?.parameters) {
+        setDistributionDefinition(
+          (row[column.key]?.args?.definition as DistributionDefinitionTypes) ||
+            DistributionDefinitionTypes.MeanSd,
+        );
+        setFormData(
+          row[column.key]?.args?.parameters.reduce(
+            (prev, { type: t, value }) => ({ ...prev, [t]: value }),
+            {},
+          ) as FormData,
+        );
+      } else {
+        setFormData({} as FormData);
+        setData(defaultDistributionValue);
+        setErrors([]);
+      }
     }
-  }, [formData.loc, formData.standard, getNormalByDistribution]);
-
-  useEffect(() => {
-    if (formData.min && formData.max) {
-      getNormalByMinMax({
-        variables: {
-          borderConditionsInput: {
-            min: formData.min,
-            max: formData.max,
-          },
-        },
-      });
-    }
-  }, [formData.min, formData.max, getNormalByMinMax]);
+  }, [selectedRow]);
 
   return (
     <>
@@ -167,7 +277,7 @@ const ChartForm: React.FC = () => {
         </Form.Row>
         {renderFields}
       </Form>
-      {renderChart}
+      <DistributionChart data={data} />
     </>
   );
 };

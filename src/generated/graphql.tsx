@@ -1,7 +1,5 @@
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -15,7 +13,7 @@ export type Query = {
   __typename?: 'Query';
   /** Пространство имен для работы с проектом. */
   project?: Maybe<ProjectQueries>;
-  /** Пространство имен для работы со распределениями. */
+  /** Пространство имен для работы с распределениями. */
   distribution?: Maybe<DistributionQueries>;
 };
 
@@ -26,8 +24,6 @@ export type ProjectQueries = {
   template?: Maybe<Project>;
   /** Валидация структуры проекта перед импортом/экспортом */
   validateBeforeLoad?: Maybe<DetailError>;
-  /** Валидация данных структуры проекта перед вычислениями */
-  validateBeforeCalculate?: Maybe<Array<Maybe<TableError>>>;
 };
 
 /** Пространство имен для работы с проектом. */
@@ -35,12 +31,6 @@ export type ProjectQueriesValidateBeforeLoadArgs = {
   project: ProjectInput;
 };
 
-/** Пространство имен для работы с проектом. */
-export type ProjectQueriesValidateBeforeCalculateArgs = {
-  projectStructure: ProjectStructureInput;
-};
-
-/** Представление проекта. */
 export type Project = {
   __typename?: 'Project';
   /** Версия шаблона структуры проекта */
@@ -49,18 +39,16 @@ export type Project = {
   structure: ProjectStructure;
 };
 
-/** Структура проекта. */
 export type ProjectStructure = {
   __typename?: 'ProjectStructure';
   /** Список доменных сущностей геологических объектов */
   domainEntities: Array<DomainEntity>;
   /** Список подсчетных параметров */
-  calculationParameters: Array<CalculationParameter>;
+  attributes: Array<Attribute>;
   /** Список рисков геологических объектов */
   risks: Array<Risk>;
 };
 
-/** Доменная сущность геологического объекта. */
 export type DomainEntity = {
   __typename?: 'DomainEntity';
   /** Имя доменной сущности геологического объекта */
@@ -78,16 +66,15 @@ export enum DomainEntityIcons {
   WellIcon = 'WELL_ICON',
 }
 
-/** Подсчетный параметр проекта. */
-export type CalculationParameter = {
-  __typename?: 'CalculationParameter';
-  /** Кодовое обозначение подсчетного параметра */
+export type Attribute = {
+  __typename?: 'Attribute';
+  /** Кодовое обозначение подсчётного параметра */
   code: Scalars['String'];
-  /** Имя подсчетного параметра */
+  /** Имя подсчётного параметра */
   name: Scalars['String'];
-  /** Сокращенное имя или обозначение подсчетного парметра */
+  /** Сокращенное имя или обозначение подсчётного параметра */
   shortName: Scalars['String'];
-  /** Единицы измерения подсчетного параметра */
+  /** Единицы измерения подсчётного параметра */
   units: Scalars['String'];
 };
 
@@ -121,10 +108,6 @@ export type ErrorInterface = {
 
 /** Список кодов ошибок приложения. */
 export enum ErrorCodes {
-  /** Шаг не может быть отрицательным */
-  StepIsNegative = 'STEP_IS_NEGATIVE',
-  /** Минимальное значение не должно быть больше максимального */
-  MinGreaterThanMax = 'MIN_GREATER_THAN_MAX',
   /** Ошибка в загружаемой структуре */
   IncorrectProjectStructure = 'INCORRECT_PROJECT_STRUCTURE',
   /** В строке данных таблицы не может быть пустых ячеек */
@@ -133,27 +116,28 @@ export enum ErrorCodes {
   IdenticalRowInTableData = 'IDENTICAL_ROW_IN_TABLE_DATA',
   /** Версия импортируемого файла не соответствует версии приложения */
   IncorrectFileVersion = 'INCORRECT_FILE_VERSION',
-  /** Стандартное отклонение должно быть положительным */
-  StandardDeviationMustBePositive = 'STANDARD_DEVIATION_MUST_BE_POSITIVE',
+  /** Некорректная зависимость параметров распределения */
+  DistributionParametersIncorrectRelation = 'DISTRIBUTION_PARAMETERS_INCORRECT_RELATION',
+  /** Параметр распределения выходит за границы допустимых значений */
+  DistributionParameterOutOfRange = 'DISTRIBUTION_PARAMETER_OUT_OF_RANGE',
 }
 
-/** Представление проекта. */
 export type ProjectInput = {
   /** Версия шаблона структуры проекта */
   version: Scalars['String'];
-  /** Структура проекта */
+  /** Структуры проекта */
   structure: ProjectStructureInput;
 };
 
-/** Структура проекта. */
 export type ProjectStructureInput = {
-  /** Список доменных сущностей геологического объекта */
+  /** Список доменных сущностей геологических объектов */
   domainEntities: Array<DomainEntityInput>;
+  /** Список подсчетных параметров */
+  attributes: Array<AttributeInput>;
   /** Список геологических объектов структуры проекта */
   domainObjects: Array<DomainObjectInput>;
 };
 
-/** Доменная сущность геологического объекта. */
 export type DomainEntityInput = {
   /** Имя доменной сущности геологического объекта */
   name: Scalars['String'];
@@ -161,12 +145,24 @@ export type DomainEntityInput = {
   icon: DomainEntityIcons;
 };
 
+export type AttributeInput = {
+  /** Кодовое обозначение подсчётного параметра */
+  code: Scalars['String'];
+  /** Имя подсчётного параметра */
+  name: Scalars['String'];
+  /** Сокращенное имя или обозначение подсчётного параметра */
+  shortName: Scalars['String'];
+  /** Единицы измерения подсчётного параметра */
+  units: Scalars['String'];
+};
+
 /** Геологический объект структуры проекта. */
 export type DomainObjectInput = {
-  /** Список ячеек данных геологического объекта */
+  /** Список геологических объектов в строке */
   cells: Array<Scalars['String']>;
   /** Категория геологического объекта */
   geoObjectCategory: GeoObjectCategories;
+  attributeValues: Array<DistributionInput>;
 };
 
 /** Список категроий геологического объекта. */
@@ -174,6 +170,122 @@ export enum GeoObjectCategories {
   Reserves = 'RESERVES',
   Resources = 'RESOURCES',
 }
+
+/** Параметры распределения. */
+export type DistributionInput = {
+  /** Тип распределения */
+  type: DistributionTypes;
+  /** Способ задания распределения */
+  definition: DistributionDefinitionTypes;
+  /** Параметры распределения */
+  parameters: Array<Maybe<DistributionParameterInput>>;
+};
+
+/** Типы распределений. */
+export enum DistributionTypes {
+  /** Нормальное распределение */
+  Normal = 'NORMAL',
+}
+
+/** Способы задания распределений. */
+export enum DistributionDefinitionTypes {
+  /** Через среднее и стандартное отклонение */
+  MeanSd = 'MEAN_SD',
+  /** Через минимум и максимум */
+  MinMax = 'MIN_MAX',
+}
+
+/** Параметр способа задания распределения. */
+export type DistributionParameterInput = {
+  /** Тип параметра распределения */
+  type: DistributionParameterTypes;
+  value: Scalars['Float'];
+};
+
+/** Тип параметра задания распределения. */
+export enum DistributionParameterTypes {
+  /** Среднее */
+  Mean = 'MEAN',
+  /** Стандартное отклонение */
+  StandardDeviation = 'STANDARD_DEVIATION',
+  /** Мин. */
+  Min = 'MIN',
+  /** Макс. */
+  Max = 'MAX',
+}
+
+/** Пространство имен для работы с распределениями. */
+export type DistributionQueries = {
+  __typename?: 'DistributionQueries';
+  /** Результат вычисления значения распределения */
+  distributionValue?: Maybe<DistributionValueResult>;
+};
+
+/** Пространство имен для работы с распределениями. */
+export type DistributionQueriesDistributionValueArgs = {
+  distribution: DistributionInput;
+};
+
+export type DistributionValueResult = DistributionValue | DistributionDefinitionErrors;
+
+/** Результаты вычисления заданного распределения. */
+export type DistributionValue = {
+  __typename?: 'DistributionValue';
+  /** График функции плотности распределения */
+  pdf: Array<Point>;
+  /** Функция надежности (1 - cdf) */
+  sf: Array<Point>;
+  /** Точки процентилей */
+  percentiles: Array<Percentile>;
+};
+
+/** Точка на графике. */
+export type Point = {
+  __typename?: 'Point';
+  x: Scalars['Float'];
+  y: Scalars['Float'];
+};
+
+/** Точка на графике. */
+export type Percentile = {
+  __typename?: 'Percentile';
+  point: Point;
+  /** Процентильный ранг (1-99) */
+  rank: Scalars['Int'];
+};
+
+/** Список ошибок задания распределения. */
+export type DistributionDefinitionErrors = {
+  __typename?: 'DistributionDefinitionErrors';
+  errors: Array<DistributionDefinitionError>;
+};
+
+/** Ошибка задания распределения. */
+export type DistributionDefinitionError = ErrorInterface & {
+  __typename?: 'DistributionDefinitionError';
+  /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
+  code: ErrorCodes;
+  /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
+  message: Scalars['String'];
+  /** Список параметров задания распределения, к которым относится ошибка */
+  fields: Array<Scalars['String']>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  calculateProject?: Maybe<CalculationResult>;
+};
+
+export type MutationCalculateProjectArgs = {
+  projectStructureInput: ProjectStructureInput;
+};
+
+export type CalculationResult = TableErrors | CalculationOk | DistributionDefinitionErrors;
+
+export type TableErrors = {
+  __typename?: 'TableErrors';
+  errors: Array<TableError>;
+};
 
 /** Ошибка данных таблицы с информацией о расположении строк или ячеек повлекших ошибку. */
 export type TableError = ErrorInterface & {
@@ -188,98 +300,8 @@ export type TableError = ErrorInterface & {
   row?: Maybe<Scalars['Int']>;
 };
 
-/** Пространство имен для работы со распределениями. */
-export type DistributionQueries = {
-  __typename?: 'DistributionQueries';
-  /** Нормальное распределение, заданное через среднее, стандартное отклонение */
-  normalByDeviation?: Maybe<DistributionOrErrors>;
-  /** Нормальное распределение, заданное через минимум и максимум */
-  normalByMinMax?: Maybe<DistributionOrErrors>;
-};
-
-/** Пространство имен для работы со распределениями. */
-export type DistributionQueriesNormalByDeviationArgs = {
-  deviationInput: DeviationInput;
-};
-
-/** Пространство имен для работы со распределениями. */
-export type DistributionQueriesNormalByMinMaxArgs = {
-  borderConditionsInput: BorderConditionsInput;
-};
-
-export type DistributionOrErrors = Distribution | FormErrors;
-
-/** Распределение вероятностной величины. */
-export type Distribution = {
-  __typename?: 'Distribution';
-  /** График распределения */
-  curve: Array<Point>;
-  /** Точки процентилей */
-  percentiles: Array<PercentilePoint>;
-};
-
-/** Точка на графике. */
-export type Point = {
-  __typename?: 'Point';
-  x: Scalars['Float'];
-  y: Scalars['Float'];
-};
-
-/** Точка процентиля на графике. */
-export type PercentilePoint = {
-  __typename?: 'PercentilePoint';
-  point: Point;
-  /** Процентный ранг */
-  percentRank: Scalars['Int'];
-};
-
-/** Ошибки формы, отображаемые пользователю. */
-export type FormErrors = {
-  __typename?: 'FormErrors';
-  errors: Array<FormError>;
-};
-
-/** Ошибка при заполнении формы. */
-export type FormError = ErrorInterface & {
-  __typename?: 'FormError';
-  /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
-  code: ErrorCodes;
-  /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
-  message: Scalars['String'];
-  /** Список полей формы, к которым относится ошибка */
-  fields: Array<Scalars['String']>;
-};
-
-/**
- * Способ задания распределения через среднее, стандартное отклонение.
- *
- * Attributes:
- *     mean: Mean or expectation
- *             -inf < mean < inf
- *     standard_deviation: Standard deviation
- *             standard_deviation > 0
- * Raises:
- *     FormErrorsException
- */
-export type DeviationInput = {
-  /** Среднее значение */
-  mean: Scalars['Float'];
-  /** Стандартное отклонение */
-  standardDeviation: Scalars['Float'];
-};
-
-/**
- * Способ задания распределения через минимум и максимум.
- *
- * Args:
- *     min: The starting value of the sequence
- *     max: The end value of the sequence
- * Raises:
- *     FormErrorsException
- */
-export type BorderConditionsInput = {
-  /** Минимальное */
-  min: Scalars['Float'];
-  /** Максимальное */
-  max: Scalars['Float'];
+export type CalculationOk = {
+  __typename?: 'CalculationOk';
+  /** Архив с результатом вычислений. Доступен по url /calculation_result/<resultId> */
+  resultId?: Maybe<Scalars['ID']>;
 };

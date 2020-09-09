@@ -8,12 +8,7 @@ import {
 } from 'components/ExcelTable/types';
 import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
 
-import {
-  CalculationParam,
-  GeoCategory,
-  IProjectCell,
-  IProjectStructure,
-} from '../types';
+import { CalculationParam, GeoCategory, IProjectCell, IProjectStructure } from '../types';
 
 const getCalculationColumn = (
   prev: IGridColumn[],
@@ -27,10 +22,7 @@ const getCalculationColumn = (
   } as IGridColumn,
 ];
 
-const getCategoryColumn = (
-  prev: IGridColumn[],
-  { name }: GeoCategory,
-): IGridColumn[] => [
+const getCategoryColumn = (prev: IGridColumn[], { name }: GeoCategory): IGridColumn[] => [
   ...prev,
   {
     key: CATEGORIES_TYPES.get(name),
@@ -61,45 +53,38 @@ function structureParamsReducer<T extends CalculationParam | GeoCategory>(
   }, []);
 }
 
-function convertCellsDataToGridRow(
-  cells: string[],
-  domainEntities: GeoCategory[],
-): GridRow {
-  return (
-    domainEntities
-      // eslint-disable-next-line
-      .map(({ name }) => CATEGORIES_TYPES.get(name)!)
-      .reduce(
-        (prev, name, idx) => ({
-          ...prev,
-          [name]: cells[idx],
-        }),
-        {},
-      ) as GridRow
-  );
+function convertCellsDataToGridRow(cells: string[], domainEntities: GeoCategory[]): GridRow {
+  return domainEntities
+    .map(({ name }) => CATEGORIES_TYPES.get(name)!)
+    .reduce(
+      (prev, name, idx) => ({
+        ...prev,
+        [name]: {
+          value: cells[idx],
+        },
+      }),
+      {},
+    ) as GridRow;
 }
 
 export function unpackData({
   domainEntities = [],
-  calculationParameters = [],
+  attributes = [],
   domainObjects: cellsData = [],
 }: IProjectStructure): GridCollection {
   const columns: IGridColumn[] = [
     new GridColumn(SpecialColumns.ID),
     ...structureParamsReducer<GeoCategory>(domainEntities),
     new GridColumn(SpecialColumns.SPLITTER),
-    ...structureParamsReducer<CalculationParam>(calculationParameters),
+    ...structureParamsReducer<CalculationParam>(attributes),
   ];
   const rows = [
     ...cellsData.map(({ cells }, idx) => ({
-      // TODO: Fix it
-      // eslint-disable-next-line
-      // @ts-ignore
-      id: idx,
       ...convertCellsDataToGridRow(cells, domainEntities),
+      id: { value: idx },
     })),
     ...Array.from({ length: 1000 - cellsData.length }, (_, index) => ({
-      id: index,
+      id: { value: index },
     })),
   ];
 
@@ -109,40 +94,36 @@ export function unpackData({
   };
 }
 
-export function packData(
-  data: GridCollection,
-  template: IProjectStructure,
-): IProjectStructure {
-  const domainEntitiesKeys = data.columns.filter(
-    (col) => col.type === TableEntities.GEO_CATEGORY,
-  );
-
+export function packData(data: GridCollection, template: IProjectStructure): IProjectStructure {
+  const domainEntitiesKeys = data.columns.filter((col) => col.type === TableEntities.GEO_CATEGORY);
   const calculationParametersKeys = data.columns.filter(
     (col) => col.type === TableEntities.CALC_PARAM,
   );
+  const rows = data.rows.filter((row) => domainEntitiesKeys.every(({ key }) => row[key]));
 
-  const domainObjects = data.rows
-    .filter((row) => domainEntitiesKeys.every(({ key }) => row[key]))
-    .map<IProjectCell>((row) => ({
-      cells: domainEntitiesKeys.map<string>(({ key }) => String(row[key])),
-    }));
+  const domainObjects = rows.map<IProjectCell>((row) => ({
+    cells: domainEntitiesKeys.map<string>(({ key }) => String(row[key]?.value)),
+    geoObjectCategory: 'RESERVES',
+    attributeValues: calculationParametersKeys
+      .filter(({ key }) => row[key])
+      .map(({ key }) => row[key]?.args),
+  }));
 
   const domainEntities = domainEntitiesKeys.map(({ name, type }) => ({
     name,
     icon: CategoryIcon.FORMATION_ICON,
     __typename: type,
   }));
-
-  const calculationParameters = calculationParametersKeys.map(
+  const attributes = calculationParametersKeys.map(
     ({ key }) =>
       ({
-        ...template.calculationParameters.find(({ code }) => code === key),
+        ...template.attributes.find(({ code }) => code === key),
       } as CalculationParam),
   );
 
   return {
     domainEntities,
-    calculationParameters,
+    attributes,
     domainObjects,
   };
 }

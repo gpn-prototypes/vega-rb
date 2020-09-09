@@ -1,5 +1,5 @@
 import { ComponentType, ReactText } from 'react';
-import { HeaderRendererProps } from 'react-data-grid';
+import { FormatterProps, HeaderRendererProps } from 'react-data-grid';
 import classNames from 'classnames';
 import { SpecialColumns } from 'model/Table';
 
@@ -57,10 +57,12 @@ export const generateColumn = (
 
 export const columnsFactory = (
   column: IGridColumn,
+  formatter: ComponentType<FormatterProps<GridRow> & { value?: string }>,
   HeaderRenderer: ComponentType<HeaderRendererProps<GridRow>>,
 ): IGridColumn => {
   const item = {
     ...column,
+    formatter,
     editable: true,
     resizable: true,
     sortable: true,

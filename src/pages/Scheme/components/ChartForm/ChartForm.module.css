@@ -6,3 +6,7 @@
 .Form {
   margin: 20px 0;
 }
+
+.TextField__error {
+  border-color: #cd3939 !important;
+}

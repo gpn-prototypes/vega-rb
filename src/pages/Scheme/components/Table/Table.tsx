@@ -24,8 +24,14 @@ export interface TemplateProjectData {
 }
 
 interface IProps {
-  onSelect?: (status: boolean) => void;
+  onSelect?: (row: SelectedRow) => void;
 }
+
+export type SelectedRow = {
+  rowIdx: number;
+  row: GridRow;
+  column: IGridColumn;
+} | null;
 
 export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   const { loading, data: respData } = useQuery<TemplateProjectData>(
@@ -36,17 +42,19 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   const templateStructure = respData?.project.template.structure;
 
   useEffect(() => {
-    if (!reduxTableData?.columns.length && templateStructure) {
-      const { columns } = unpackData(templateStructure);
-      dispatch(tableDuck.actions.updateColumns(columns));
-    }
-
-    if (!reduxTableData?.rows.length) {
-      dispatch(tableDuck.actions.updateRows(mockTableRows));
+    if (templateStructure) {
+      if (!reduxTableData?.columns.length) {
+        const { columns } = unpackData(templateStructure);
+        dispatch(tableDuck.actions.updateColumns(columns));
+      }
+      if (!reduxTableData?.rows.length) {
+        dispatch(tableDuck.actions.updateRows(mockTableRows));
+      }
     }
   }, [dispatch, reduxTableData, templateStructure]);
 
   if (loading) return <div>Loading</div>;
+  if (error) return <div>Error! {error.message}</div>;
 
   return (
     <ExcelTable
@@ -58,8 +66,8 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
         dispatch(tableDuck.actions.updateRows(data))
       }
       onRowClick={(column): void => {
-        if (column.type === TableEntities.CALC_PARAM) onSelect(false);
-        else onSelect(true);
+        if (column.type === TableEntities.CALC_PARAM) onSelect({ rowIdx, row, column });
+        else onSelect(null);
       }}
     />
   );

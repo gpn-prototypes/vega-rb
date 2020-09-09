@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactText } from 'react';
 import { Column } from 'react-data-grid';
 
 export const HEADER_CONTEXT_ID = 'header-context-menu';
@@ -13,14 +13,27 @@ export enum CategoryIcon {
 
 export enum TableEntities {
   GEO_CATEGORY = 'DomainEntity',
-  CALC_PARAM = 'CalculationParameter',
+  CALC_PARAM = 'Attribute',
   NONE = 'None',
 }
 
 export interface GridRow {
+  [key: string]:
+    | {
+        value: ReactText;
+        args?: {
+          definition: string;
+          type: string;
+          parameters: {
+            type: string;
+            value: string;
+          }[];
+        };
+      }
+    | undefined;
+}
+export interface GridCell {
   id: number;
-
-  [index: string]: unknown;
 }
 
 export interface IGridColumn extends Column<GridRow> {

@@ -9,7 +9,7 @@ export const GET_TABLE_TEMPLATE = gql`
           domainEntities {
             name
           }
-          calculationParameters {
+          attributes {
             code
             name
             shortName

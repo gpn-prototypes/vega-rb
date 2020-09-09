@@ -1,14 +1,32 @@
 import { gql } from '@apollo/client';
 
-export const GET_CHART_DATA = gql`
-  query normalByDeviation($deviationInput: DeviationInput!) {
+export const GET_NORMAL_BY_DEVIATION = gql`
+  query normalByDeviation($distribution: DistributionInput!) {
     distribution {
-      normalByDeviation(deviationInput: $deviationInput) {
+      distributionValue(distribution: $distribution) {
         __typename
-        ... on Distribution {
-          curve {
+        ... on DistributionDefinitionErrors {
+          errors {
+            code
+            message
+            fields
+          }
+        }
+        ... on DistributionValue {
+          pdf {
             x
             y
+          }
+          sf {
+            x
+            y
+          }
+          percentiles {
+            rank
+            point {
+              x
+              y
+            }
           }
         }
       }
@@ -16,14 +34,32 @@ export const GET_CHART_DATA = gql`
   }
 `;
 export const GET_NORMAL_BY_MIN_MAX = gql`
-  query normalByMinMax($borderConditionsInput: BorderConditionsInput!) {
+  query normalByMinMax($distribution: DistributionInput!) {
     distribution {
-      normalByMinMax(borderConditionsInput: $borderConditionsInput) {
+      distributionValue(distribution: $distribution) {
         __typename
-        ... on Distribution {
-          curve {
+        ... on DistributionDefinitionErrors {
+          errors {
+            code
+            message
+            fields
+          }
+        }
+        ... on DistributionValue {
+          pdf {
             x
             y
+          }
+          sf {
+            x
+            y
+          }
+          percentiles {
+            rank
+            point {
+              x
+              y
+            }
           }
         }
       }

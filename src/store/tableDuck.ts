@@ -1,8 +1,4 @@
-import {
-  GridCollection,
-  GridRow,
-  IGridColumn,
-} from 'components/ExcelTable/types';
+import { GridCell, GridCollection, GridRow, IGridColumn } from 'components/ExcelTable/types';
 import { ofAction } from 'operators/ofAction';
 import { Epic } from 'redux-observable';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
@@ -16,6 +12,7 @@ const factory = actionCreatorFactory('table');
 const actions = {
   updateColumns: factory<IGridColumn[]>('UPDATE_COLUMNS'),
   updateRows: factory<GridRow[]>('UPDATE_ROWS'),
+  updateCell: factory<GridCell>('UPDATE_CELL'),
 };
 
 const loadState = (): TableState | undefined => {

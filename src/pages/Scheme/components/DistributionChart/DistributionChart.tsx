@@ -1,86 +1,99 @@
-/* eslint-disable */
-// @ts-nocheck
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
 import './DistributionChart.css';
 import style from './DistributionChart.module.css';
-import { Data } from './types';
 
 const height = 188;
 const width = 400;
 
-interface IProps {
-  data: Data[];
+interface Point {
+  x: number;
+  y: number;
 }
 
-const DistributionChart: React.FC<IProps> = ({ data }) => {
+interface DistributionChartProps {
+  data: {
+    sf: Point[];
+    pdf: Point[];
+    percentiles: {
+      rank: number;
+      point: Point;
+    }[];
+  };
+}
+
+const DistributionChart: React.FC<DistributionChartProps> = ({
+  data: { pdf, sf, percentiles },
+}) => {
+  const margin = { top: 10, right: 10, bottom: 10, left: 10 };
+
+  const getX = (d: Point) => d.x;
+  const getY = (d: Point) => d.y;
+
   const d3Container = useRef(null);
+  const createXScale = useCallback(
+    (domain: Array<number | { valueOf(): number }>) =>
+      d3
+        .scaleLinear()
+        .domain(domain)
+        .range([margin.left, width - margin.right]),
+    [margin.left, margin.right],
+  );
+  const createYScale = useCallback(
+    (domain: Array<number | { valueOf(): number }>) =>
+      d3
+        .scaleLinear()
+        .domain(domain)
+        .range([height - margin.bottom, margin.top]),
+    [margin.bottom, margin.top],
+  );
 
-  const draw = () => {
-    const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+  const draw = useCallback(() => {
     const svg = d3.select(d3Container.current);
-
     svg.selectAll('*').remove();
 
-    const getX = (d: Data) => d.x;
-    const getY = (d: Data) => d.y;
+    const cumulativeXScale = createXScale([d3.min(sf, getX) as number, d3.max(sf, getX) as number]);
+    const cumulativeYScale = createYScale([d3.min(sf, getY) as number, d3.max(sf, getY) as number]);
+    const probabilityDensityXScale = createXScale([
+      d3.min(pdf, getX) as number,
+      d3.max(pdf, getX) as number,
+    ]);
+    const probabilityDensityYScale = createYScale([
+      d3.min(pdf, getY) as number,
+      d3.max(pdf, getY) as number,
+    ]);
 
-    const x = d3
-      .scaleLinear()
-      .domain([d3.min(data, getX) as number, d3.max(data, getX) as number])
-      .range([margin.left, width - margin.right]);
-
-    const y = d3
-      .scaleLinear()
-      .domain([d3.min(data, getY) as number, d3.max(data, getY) as number])
-      .range([height - margin.bottom, margin.top]);
-
-    svg.append('svg').attr('width', 1440).attr('height', 30);
-
-    const xAxis = (g: any) =>
+    svg.append('g').call((g) =>
       g
         .attr('transform', `translate(0,${height - margin.bottom})`)
         .attr('class', 'grid')
         .call(
           d3
-            .axisBottom(x)
+            .axisBottom(probabilityDensityXScale)
             .ticks(width / 50)
             .tickSize(-height)
-            .tickSizeOuter(0)
-            .tickFormat(() => ''),
-        );
-    const yAxis = (g: any) =>
+            .tickSizeOuter(0),
+        ),
+    );
+    svg.append('g').call((g) =>
       g
         .attr('transform', `translate(${margin.left},0)`)
         .attr('class', 'grid')
         .call(
           d3
-            .axisLeft(y)
+            .axisLeft(probabilityDensityYScale)
             .ticks(height / 70)
             .tickSize(-width)
             .tickFormat(() => ''),
-        )
-        .call((g: any) => g.select('.domain').remove());
-
-    svg.append('g').call(xAxis);
-    svg.append('g').call(yAxis);
+        ),
+    );
 
     const area = d3
-      .area()
-      //@ts-ignore
-      // .defined((d) => !isNaN(d.upper))
-      .x((d: Data) => x(getX(d)))
+      .area<Point>()
+      .x((d) => probabilityDensityXScale(getX(d)))
       .y0(height)
-      .y1((d: Data) => y(getY(d)));
-
-    // eslint-disable-next-line
-    const line = d3
-      .line()
-      //@ts-ignore
-      // .defined((d) => !isNaN(d.upper))
-      .x((d: Data) => x(getX(d)))
-      .y((d: Data) => y(getY(d)));
+      .y1((d) => probabilityDensityYScale(getY(d)));
 
     const graphArea = svg.append('g');
     const defs = svg.append('defs');
@@ -103,7 +116,7 @@ const DistributionChart: React.FC<IProps> = ({ data }) => {
       .append('clipPath')
       .attr('id', `main-content-clip-line-path`)
       .append('path')
-      .attr('d', area(data))
+      .attr('d', area(pdf) as string)
       .attr('class', 'value-line');
 
     const clipPath = graphArea
@@ -120,7 +133,7 @@ const DistributionChart: React.FC<IProps> = ({ data }) => {
 
     graphArea
       .append('path')
-      .datum(data)
+      .datum(pdf)
       .attr('fill', 'none')
       .attr('stroke', '#56B9F2')
       .call((g) =>
@@ -133,28 +146,40 @@ const DistributionChart: React.FC<IProps> = ({ data }) => {
       .attr(
         'd',
         d3
-          .line()
-          //@ts-ignore
-          .x((d: Data) => x(getX(d)))
-          .y((d: Data) => y(getY(d))),
+          .line<Point>()
+          .x((d) => probabilityDensityXScale(getX(d)))
+          .y((d) => probabilityDensityYScale(getY(d))),
       );
-
-    // svg.append('path')
-    //    .datum(data2)
-    //    .attr('fill', 'none')
-    //    .attr('stroke', '#fff')
-    //    .attr('stroke-width', 1.5)
-    //    .attr('stroke-linejoin', 'round')
-    //    .attr('stroke-linecap', 'round')
-    //    //@ts-ignore
-    //    .attr('d', line)
-  };
+    graphArea
+      .append('path')
+      .datum(sf)
+      .attr('fill', 'none')
+      .attr('stroke', '#56B9F2')
+      .attr('stroke-width', 2)
+      .attr(
+        'd',
+        d3
+          .line<Point>()
+          .x((d) => cumulativeXScale(getX(d)))
+          .y((d) => cumulativeYScale(getY(d))),
+      );
+    svg
+      .selectAll('points')
+      .data(percentiles.map(({ point }) => point))
+      .enter()
+      .append('circle')
+      .attr('fill', '#fff')
+      .attr('stroke', 'none')
+      .attr('cx', (d) => cumulativeXScale(getX(d)))
+      .attr('cy', (d) => cumulativeYScale(getY(d)))
+      .attr('r', 3);
+  }, [createXScale, sf, createYScale, pdf, percentiles, margin.bottom, margin.left]);
 
   useEffect(() => {
     if (d3Container.current) {
       draw();
     }
-  }, [data, draw]);
+  }, [pdf, draw]);
 
   return (
     <div className={style.Chart}>
@@ -162,5 +187,5 @@ const DistributionChart: React.FC<IProps> = ({ data }) => {
     </div>
   );
 };
-/* eslint-enable */
+
 export default DistributionChart;

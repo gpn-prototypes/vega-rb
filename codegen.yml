@@ -1,5 +1,5 @@
 overwrite: true
-schema: "http://localhost:8000/graphql"
+schema: "http://vg1-back-8.k8s17.gpn.cloud.nexign.com/graphql"
 # documents: "src/**/*.graphql"
 generates:
   src/generated/graphql.tsx:

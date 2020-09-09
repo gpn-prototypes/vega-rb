@@ -22,6 +22,6 @@ export interface IProjectCell {
 
 export interface IProjectStructure {
   domainEntities: GeoCategory[];
-  calculationParameters: CalculationParam[];
+  attributes: CalculationParam[];
   domainObjects?: IProjectCell[];
 }

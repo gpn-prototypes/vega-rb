@@ -1,33 +1,31 @@
-"""
-Способ задания распределения через минимум и максимум.
-
-Args:
-    min: The starting value of the sequence
-    max: The end value of the sequence
-Raises:
-    FormErrorsException
-"""
-input BorderConditionsInput {
-  """Минимальное"""
-  min: Float!
-
-  """Максимальное"""
-  max: Float!
-}
 
 """Подсчетный параметр проекта."""
-type CalculationParameter {
+type Attribute {
   """Кодовое обозначение подсчетного параметра"""
   code: String!
-
   """Имя подсчетного параметра"""
   name: String!
-
   """Сокращенное имя или обозначение подсчетного парметра"""
   shortName: String!
-
   """Единицы измерения подсчетного параметра"""
   units: String!
+}
+
+input AttributeInput {
+  code: String!
+  name: String!
+  shortName: String!
+  units: String!
+}
+
+type CalculationOk {
+  resultId: ID
+}
+
+union CalculationResult = TableErrors | CalculationOk | DistributionDefinitionErrors
+
+type TableErrors {
+  errors: [TableError!]!
 }
 
 """Ошибка с дополнительной информацией."""
@@ -73,17 +71,61 @@ type Distribution {
   percentPoints: [Point!]!
 }
 
-union DistributionOrErrors = Distribution | FormErrors
+union DistributionValueResult = DistributionValue | DistributionDefinitionErrors
+
+type DistributionDefinitionError implements ErrorInterface {
+  code: ErrorCodes!
+  message: String!
+  fields: [String!]!
+}
+
+type DistributionDefinitionErrors {
+  errors: [DistributionDefinitionError!]!
+}
+
+enum DistributionTypes {
+  NORMAL
+}
+
+enum DistributionDefinitionTypes {
+  MEAN_SD
+  MIN_MAX
+}
+
+enum DistributionParameterTypes {
+  MEAN
+  STANDARD_DEVIATION
+  MIN
+  MAX
+}
+
+
+type DistributionValue {
+  pdf: [Point!]!
+  sf: [Point!]!
+  percentiles: [Percentile!]!
+}
+
+type Percentile {
+  point: Point!
+  rank: Int!
+}
+
+input DistributionInput {
+  type: DistributionTypes!
+  definition: DistributionDefinitionTypes!
+  parameters: [DistributionParameterInput]!
+}
+
+input DistributionParameterInput {
+  type: DistributionParameterTypes!
+  value: Float!
+}
 
 """Пространство имен для работы со распределениями."""
 type DistributionQueries {
-  """
-  Нормальное распределение, заданное через среднее, стандартное отклонение
-  """
-  normalByDeviation(deviationInput: DeviationInput!): DistributionOrErrors
-
-  """Нормальное распределение, заданное через минимум и максимум"""
-  normalByMinMax(borderConditionsInput: BorderConditionsInput!): DistributionOrErrors
+  """Результат вычисления значения распределения"""
+  distributionValue(distribution: DistributionInput!): DistributionValueResult
 }
 
 """Список кодов ошибок приложения."""
@@ -143,6 +185,10 @@ type FormErrors {
 enum GeoObjectCategories {
     RESERVES
     RESOURCES
+}
+
+type Mutation {
+  calculateProject(projectStructureInput: ProjectStructureInput!): CalculationResult
 }
 
 """Категория геологического объекта."""
@@ -227,7 +273,7 @@ type ProjectStructure {
   domainEntities: [DomainEntity!]!
 
   """Список подсчетных параметров"""
-  calculationParameters: [CalculationParameter!]!
+  attributes: [Attribute!]!
 
   """Список рисков геологических объектов"""
   risks: [Risk!]!
@@ -239,6 +285,10 @@ input ProjectStructureInput {
   domainEntities: [DomainEntityInput!]!
   """Список строк в таблице структуры проекта"""
   domainObjects: [DomainObjectInput!]!
+
+  """Список подсчетных параметров"""
+  attributes: [AttributeInput!]!
+
 }
 
 type Query {

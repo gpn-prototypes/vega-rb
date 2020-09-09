@@ -39,9 +39,7 @@ export const ImportButton: React.FC = () => {
   const dispatch = useDispatch();
   const [snacks, setSnacks] = useState<ISnackItem[]>([] as ISnackItem[]);
   const importData = (e: DragEvent | ChangeEvent): void => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    const { value: fileName, files } = e.target as HTMLInputElement;
+    const { files } = e.target as HTMLInputElement;
     const file = files?.[0];
 
     if (file) {
@@ -50,11 +48,9 @@ export const ImportButton: React.FC = () => {
       reader.readAsText(file);
 
       reader.onload = async function onLoad(): Promise<void> {
-        const {
-          domainEntities,
-          domainObjects,
-          calculationParameters,
-        } = JSON.parse(reader.result as string) as IProjectStructure;
+        const { domainEntities, domainObjects, attributes } = JSON.parse(
+          reader.result as string,
+        ) as IProjectStructure;
 
         const { data } = await client.query<IValidateBeforeLoadResponse>({
           query: VALIDATE_BEFORE_LOAD,
@@ -62,8 +58,9 @@ export const ImportButton: React.FC = () => {
             project: {
               version: '0.1.0',
               structure: {
-                domainEntities: domainEntities.map(({ ...value }) => value),
+                domainEntities: domainEntities.map(({ __typename, ...value }) => value),
                 domainObjects,
+                attributes: attributes.map(({ __typename, ...value }) => value),
               },
             },
           },
@@ -72,7 +69,7 @@ export const ImportButton: React.FC = () => {
           const { columns, rows: gridRows = mockTableRows } = unpackData({
             domainEntities,
             domainObjects,
-            calculationParameters,
+            attributes,
           });
           dispatch(tableDuck.actions.updateColumns(columns));
           dispatch(tableDuck.actions.updateRows(gridRows));

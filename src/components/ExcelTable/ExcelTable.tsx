@@ -34,7 +34,7 @@ interface IProps {
   data: GridCollection;
   setColumns?: (data: IGridColumn[]) => void;
   setRows?: (data: GridRow[]) => void;
-  onRowClick?: (column: IGridColumn) => void;
+  onRowClick?: (column: IGridColumn, rowIdx: number, row: GridRow) => void;
 }
 
 export const ExcelTable: React.FC<IProps> = ({
@@ -57,11 +57,7 @@ export const ExcelTable: React.FC<IProps> = ({
   // )
 
   const handleRowClick = useCallback(
-    (
-      rowIdx: number,
-      row: GridRow,
-      column: IGridColumn & CalculatedColumn<GridRow>,
-    ) => {
+    (rowIdx: number, row: GridRow, column: IGridColumn & CalculatedColumn<GridRow>) => {
       onRowClick(column);
     },
     [onRowClick],
@@ -72,7 +68,13 @@ export const ExcelTable: React.FC<IProps> = ({
       const newRows = [...rows];
 
       for (let i = fromRow; i <= toRow; i += 1) {
-        newRows[i] = { ...newRows[i], ...updated };
+        newRows[i] = {
+          ...newRows[i],
+          ...Object.entries(updated).reduce(
+            (prev, [key, value]) => ({ ...prev, [key]: { value } }),
+            {},
+          ),
+        };
       }
 
       setRows(newRows);
