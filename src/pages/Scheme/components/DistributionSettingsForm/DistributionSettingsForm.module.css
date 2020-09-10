@@ -1,0 +1,19 @@
+.Flex {
+  display: flex;
+  align-items: stretch;
+}
+
+.Grid {
+  display: grid;
+  grid-template: 100px 1fr / 1fr 1fr;
+  grid-row-gap: 10px;
+  grid-column-gap: 10px;
+}
+
+.Form {
+  margin: 20px 0;
+}
+
+.TextField__error {
+  border-color: #cd3939;
+}

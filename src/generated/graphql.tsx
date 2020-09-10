@@ -1,5 +1,7 @@
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -185,6 +187,12 @@ export type DistributionInput = {
 export enum DistributionTypes {
   /** Нормальное распределение */
   Normal = 'NORMAL',
+  /** Логнормальное распределение */
+  Lognormal = 'LOGNORMAL',
+  /** Треугольное распределение */
+  Triangular = 'TRIANGULAR',
+  /** Равномерное распределение */
+  Uniform = 'UNIFORM',
 }
 
 /** Способы задания распределений. */
@@ -193,6 +201,10 @@ export enum DistributionDefinitionTypes {
   MeanSd = 'MEAN_SD',
   /** Через минимум и максимум */
   MinMax = 'MIN_MAX',
+  /** Через расположение, логарифмическое среднее и логарифмическое стандартное отклонение */
+  LocationMeanlogSdlog = 'LOCATION_MEANLOG_SDLOG',
+  /** Через расположение, минимум и максимум */
+  ModeMinMax = 'MODE_MIN_MAX',
 }
 
 /** Параметр способа задания распределения. */
@@ -212,6 +224,14 @@ export enum DistributionParameterTypes {
   Min = 'MIN',
   /** Макс. */
   Max = 'MAX',
+  /** Расположение */
+  Location = 'LOCATION',
+  /** Пик */
+  Mode = 'MODE',
+  /** Логарифмическое среднее */
+  Meanlog = 'MEANLOG',
+  /** Логарифмическое стандартное отклонение */
+  Sdlog = 'SDLOG',
 }
 
 /** Пространство имен для работы с распределениями. */
@@ -226,7 +246,9 @@ export type DistributionQueriesDistributionValueArgs = {
   distribution: DistributionInput;
 };
 
-export type DistributionValueResult = DistributionValue | DistributionDefinitionErrors;
+export type DistributionValueResult =
+  | DistributionValue
+  | DistributionDefinitionErrors;
 
 /** Результаты вычисления заданного распределения. */
 export type DistributionValue = {
@@ -280,7 +302,10 @@ export type MutationCalculateProjectArgs = {
   projectStructureInput: ProjectStructureInput;
 };
 
-export type CalculationResult = TableErrors | CalculationOk | DistributionDefinitionErrors;
+export type CalculationResult =
+  | TableErrors
+  | CalculationOk
+  | DistributionDefinitionErrors;
 
 export type TableErrors = {
   __typename?: 'TableErrors';

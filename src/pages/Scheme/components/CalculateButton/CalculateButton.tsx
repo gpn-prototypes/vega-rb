@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 import { useApolloClient, useQuery } from '@apollo/client';
 import { Button } from '@gpn-prototypes/vega-button';
 import { RootState } from 'store/types';
+import { packData } from 'utils';
 
-import { packData } from '../../../../utils';
 import { CALCULATION_PROJECT } from '../../mutations';
 import { GET_TABLE_TEMPLATE } from '../Table/queries';
 import { TemplateProjectData } from '../Table/Table';
@@ -16,7 +16,7 @@ export const CalculateButton: React.FC = () => {
 
   const handleClick = () => {
     if (data) {
-      const { domainEntities, attributes, domainObjects } = packData(
+      const { domainEntities, calculationParameters, domainObjects } = packData(
         tableRows,
         data?.project.template.structure,
       );
@@ -26,19 +26,22 @@ export const CalculateButton: React.FC = () => {
           mutation: CALCULATION_PROJECT,
           variables: {
             projectStructureInput: {
-              domainEntities: domainEntities.map(({ __typename, ...entity }) => entity),
-              attributes: attributes.map(({ __typename, ...attribute }) => attribute),
+              domainEntities: domainEntities.map(
+                ({ __typename, ...entity }) => entity,
+              ),
+              attributes: calculationParameters.map(
+                ({ __typename, ...attribute }) => attribute,
+              ),
               domainObjects,
             },
           },
         })
         .then((res) => {
           if (res.data.calculateProject.resultId) {
-            const fileName = `${res.data.calculateProject.resultId}.zip`;
             const a = document.createElement('a');
             a.target = '_blank';
-            a.href = `/calculation_result/${fileName}`;
-            a.download = fileName;
+            a.href = `http://vg1-back-5.k8s17.gpn.cloud.nexign.com/calculation_result/${res.data.calculateProject.resultId}`;
+            a.download = 'result.zip';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

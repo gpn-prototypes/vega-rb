@@ -1,4 +1,10 @@
-import { GridCell, GridCollection, GridRow, IGridColumn } from 'components/ExcelTable/types';
+import {
+  GridCellProperties,
+  GridCollection,
+  GridRow,
+  IGridColumn,
+  SelectedCell,
+} from 'components/ExcelTable/types';
 import { ofAction } from 'operators/ofAction';
 import { Epic } from 'redux-observable';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
@@ -12,7 +18,10 @@ const factory = actionCreatorFactory('table');
 const actions = {
   updateColumns: factory<IGridColumn[]>('UPDATE_COLUMNS'),
   updateRows: factory<GridRow[]>('UPDATE_ROWS'),
-  updateCell: factory<GridCell>('UPDATE_CELL'),
+  updateCell: factory<{
+    selectedCell: SelectedCell;
+    cellData: GridCellProperties;
+  }>('UPDATE_CELL'),
 };
 
 const loadState = (): TableState | undefined => {
@@ -44,7 +53,25 @@ const reducer = reducerWithInitialState<GridCollection>(initialState)
   .case(actions.updateRows, (state, payload) => ({
     ...state,
     rows: payload,
-  }));
+  }))
+  .case(actions.updateCell, (state, payload) => {
+    const rows = [...state.rows];
+    const { selectedCell, cellData } = payload;
+
+    if (selectedCell && Number.isInteger(selectedCell.rowIdx)) {
+      rows.splice(selectedCell.rowIdx, 1, {
+        ...rows[selectedCell.rowIdx],
+        [selectedCell.column.key]: {
+          ...rows[selectedCell.rowIdx][selectedCell.column.key],
+          ...cellData,
+        },
+      } as GridRow);
+    }
+    return {
+      ...state,
+      rows,
+    };
+  });
 
 const saveToLocalStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
   action$,

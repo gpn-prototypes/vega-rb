@@ -48,9 +48,11 @@ export const ImportButton: React.FC = () => {
       reader.readAsText(file);
 
       reader.onload = async function onLoad(): Promise<void> {
-        const { domainEntities, domainObjects, attributes } = JSON.parse(
-          reader.result as string,
-        ) as IProjectStructure;
+        const {
+          domainEntities,
+          domainObjects,
+          calculationParameters,
+        } = JSON.parse(reader.result as string) as IProjectStructure;
 
         const { data } = await client.query<IValidateBeforeLoadResponse>({
           query: VALIDATE_BEFORE_LOAD,
@@ -58,9 +60,13 @@ export const ImportButton: React.FC = () => {
             project: {
               version: '0.1.0',
               structure: {
-                domainEntities: domainEntities.map(({ __typename, ...value }) => value),
+                domainEntities: domainEntities.map(
+                  ({ __typename, ...value }) => value,
+                ),
                 domainObjects,
-                attributes: attributes.map(({ __typename, ...value }) => value),
+                attributes: calculationParameters.map(
+                  ({ __typename, ...value }) => value,
+                ),
               },
             },
           },
@@ -69,7 +75,7 @@ export const ImportButton: React.FC = () => {
           const { columns, rows: gridRows = mockTableRows } = unpackData({
             domainEntities,
             domainObjects,
-            attributes,
+            attributes: calculationParameters,
           });
           dispatch(tableDuck.actions.updateColumns(columns));
           dispatch(tableDuck.actions.updateRows(gridRows));

@@ -8,7 +8,13 @@ import {
 } from 'components/ExcelTable/types';
 import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
 
-import { CalculationParam, GeoCategory, IProjectCell, IProjectStructure } from '../types';
+import {
+  CalculationParam,
+  GeoCategory,
+  IProjectCell,
+  IProjectStructure,
+  IProjectStructureTemplate,
+} from '../types';
 
 const getCalculationColumn = (
   prev: IGridColumn[],
@@ -22,7 +28,10 @@ const getCalculationColumn = (
   } as IGridColumn,
 ];
 
-const getCategoryColumn = (prev: IGridColumn[], { name }: GeoCategory): IGridColumn[] => [
+const getCategoryColumn = (
+  prev: IGridColumn[],
+  { name }: GeoCategory,
+): IGridColumn[] => [
   ...prev,
   {
     key: CATEGORIES_TYPES.get(name),
@@ -53,7 +62,10 @@ function structureParamsReducer<T extends CalculationParam | GeoCategory>(
   }, []);
 }
 
-function convertCellsDataToGridRow(cells: string[], domainEntities: GeoCategory[]): GridRow {
+function convertCellsDataToGridRow(
+  cells: string[],
+  domainEntities: GeoCategory[],
+): GridRow {
   return domainEntities
     .map(({ name }) => CATEGORIES_TYPES.get(name)!)
     .reduce(
@@ -71,7 +83,7 @@ export function unpackData({
   domainEntities = [],
   attributes = [],
   domainObjects: cellsData = [],
-}: IProjectStructure): GridCollection {
+}: IProjectStructureTemplate): GridCollection {
   const columns: IGridColumn[] = [
     new GridColumn(SpecialColumns.ID),
     ...structureParamsReducer<GeoCategory>(domainEntities),
@@ -94,12 +106,19 @@ export function unpackData({
   };
 }
 
-export function packData(data: GridCollection, template: IProjectStructure): IProjectStructure {
-  const domainEntitiesKeys = data.columns.filter((col) => col.type === TableEntities.GEO_CATEGORY);
+export function packData(
+  data: GridCollection,
+  template: IProjectStructureTemplate,
+): IProjectStructure {
+  const domainEntitiesKeys = data.columns.filter(
+    (col) => col.type === TableEntities.GEO_CATEGORY,
+  );
   const calculationParametersKeys = data.columns.filter(
     (col) => col.type === TableEntities.CALC_PARAM,
   );
-  const rows = data.rows.filter((row) => domainEntitiesKeys.every(({ key }) => row[key]));
+  const rows = data.rows.filter((row) =>
+    domainEntitiesKeys.every(({ key }) => row[key]),
+  );
 
   const domainObjects = rows.map<IProjectCell>((row) => ({
     cells: domainEntitiesKeys.map<string>(({ key }) => String(row[key]?.value)),
@@ -114,7 +133,7 @@ export function packData(data: GridCollection, template: IProjectStructure): IPr
     icon: CategoryIcon.FORMATION_ICON,
     __typename: type,
   }));
-  const attributes = calculationParametersKeys.map(
+  const calculationParameters = calculationParametersKeys.map(
     ({ key }) =>
       ({
         ...template.attributes.find(({ code }) => code === key),
@@ -123,7 +142,7 @@ export function packData(data: GridCollection, template: IProjectStructure): IPr
 
   return {
     domainEntities,
-    attributes,
+    calculationParameters,
     domainObjects,
   };
 }

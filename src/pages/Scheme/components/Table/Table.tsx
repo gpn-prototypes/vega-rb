@@ -1,15 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useQuery } from '@apollo/client';
 import ExcelTable from 'components/ExcelTable';
 import {
   GridRow,
   IGridColumn,
+  SelectedCell,
   TableEntities,
 } from 'components/ExcelTable/types';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
-import { IProjectStructure } from 'types';
+import { IProjectStructureTemplate } from 'types';
 import { Action } from 'typescript-fsa';
 import { mockTableRows, unpackData } from 'utils';
 
@@ -18,20 +19,14 @@ import { GET_TABLE_TEMPLATE } from './queries';
 export interface TemplateProjectData {
   project: {
     template: {
-      structure: IProjectStructure;
+      structure: IProjectStructureTemplate;
     };
   };
 }
 
 interface IProps {
-  onSelect?: (row: SelectedRow) => void;
+  onSelect?: Dispatch<SetStateAction<SelectedCell | null>>;
 }
-
-export type SelectedRow = {
-  rowIdx: number;
-  row: GridRow;
-  column: IGridColumn;
-} | null;
 
 export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   const { loading, data: respData } = useQuery<TemplateProjectData>(
@@ -54,7 +49,6 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   }, [dispatch, reduxTableData, templateStructure]);
 
   if (loading) return <div>Loading</div>;
-  if (error) return <div>Error! {error.message}</div>;
 
   return (
     <ExcelTable
@@ -65,8 +59,9 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
       setRows={(data): Action<GridRow[]> =>
         dispatch(tableDuck.actions.updateRows(data))
       }
-      onRowClick={(column): void => {
-        if (column.type === TableEntities.CALC_PARAM) onSelect({ rowIdx, row, column });
+      onRowClick={(rowIdx, row, column): void => {
+        if (column.type === TableEntities.CALC_PARAM)
+          onSelect({ rowIdx, row, column });
         else onSelect(null);
       }}
     />

@@ -53,8 +53,14 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     const svg = d3.select(d3Container.current);
     svg.selectAll('*').remove();
 
-    const cumulativeXScale = createXScale([d3.min(sf, getX) as number, d3.max(sf, getX) as number]);
-    const cumulativeYScale = createYScale([d3.min(sf, getY) as number, d3.max(sf, getY) as number]);
+    const cumulativeXScale = createXScale([
+      d3.min(sf, getX) as number,
+      d3.max(sf, getX) as number,
+    ]);
+    const cumulativeYScale = createYScale([
+      d3.min(sf, getY) as number,
+      d3.max(sf, getY) as number,
+    ]);
     const probabilityDensityXScale = createXScale([
       d3.min(pdf, getX) as number,
       d3.max(pdf, getX) as number,
@@ -173,7 +179,15 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
       .attr('cx', (d) => cumulativeXScale(getX(d)))
       .attr('cy', (d) => cumulativeYScale(getY(d)))
       .attr('r', 3);
-  }, [createXScale, sf, createYScale, pdf, percentiles, margin.bottom, margin.left]);
+  }, [
+    createXScale,
+    sf,
+    createYScale,
+    pdf,
+    percentiles,
+    margin.bottom,
+    margin.left,
+  ]);
 
   useEffect(() => {
     if (d3Container.current) {

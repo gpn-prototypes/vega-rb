@@ -8,8 +8,11 @@ const renderColumns = (
   Component: JSX.Element,
 ): IGridColumn[] =>
   columns.map((column) =>
-    columnsFactory(column, ({ row, column: col }) => <>{row[col.key]?.value ?? ''}</>, (props) => React.cloneElement(Component, props)),
+    columnsFactory(
+      column,
+      ({ row, column: col }) => <>{row[col.key]?.value ?? ''}</>,
+      (props) => React.cloneElement(Component, props),
+    ),
   );
-};
 
 export default renderColumns;

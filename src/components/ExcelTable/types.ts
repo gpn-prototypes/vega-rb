@@ -1,6 +1,12 @@
 import React, { ReactText } from 'react';
 import { Column } from 'react-data-grid';
 
+import {
+  DistributionDefinitionTypes,
+  DistributionParameterTypes,
+  DistributionTypes,
+} from '../../generated/graphql';
+
 export const HEADER_CONTEXT_ID = 'header-context-menu';
 
 export enum CategoryIcon {
@@ -11,29 +17,30 @@ export enum CategoryIcon {
   WELL_ICON = 'WELL_ICON',
 }
 
+export type SelectedCell = {
+  rowIdx: number;
+  row: GridRow;
+  column: IGridColumn;
+};
+
 export enum TableEntities {
   GEO_CATEGORY = 'DomainEntity',
   CALC_PARAM = 'Attribute',
   NONE = 'None',
 }
-
-export interface GridRow {
-  [key: string]:
-    | {
-        value: ReactText;
-        args?: {
-          definition: string;
-          type: string;
-          parameters: {
-            type: string;
-            value: string;
-          }[];
-        };
-      }
-    | undefined;
+export interface GridCellProperties {
+  value: ReactText;
+  args?: {
+    definition: DistributionDefinitionTypes;
+    type: DistributionTypes;
+    parameters: {
+      type: DistributionParameterTypes;
+      value: string;
+    }[];
+  };
 }
-export interface GridCell {
-  id: number;
+export interface GridRow {
+  [key: string]: GridCellProperties | undefined;
 }
 
 export interface IGridColumn extends Column<GridRow> {
