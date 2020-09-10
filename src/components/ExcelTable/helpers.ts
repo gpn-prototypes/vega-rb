@@ -3,21 +3,54 @@ import { HeaderRendererProps } from 'react-data-grid';
 import classNames from 'classnames';
 import { SpecialColumns } from 'model/Table';
 
+import { cnCell, cnCellId, cnCellSplitter, cnHeader } from './cn-excel-table';
 import { GridRow, IGridColumn, TableEntities } from './types';
 
-import styles from './ExcelTable.module.css';
+import './ExcelTable.css';
 
-export const generateColumn = (genType: TableEntities = TableEntities.NONE): IGridColumn => {
+const cnHeaderClass = cnHeader.toString();
+const cnCellClass = cnCell.toString();
+const cnCellIdClass = cnCellId.toString();
+const cnSplitterClass = cnCellSplitter.toString();
+
+const setupSpecialColumnProps = (item: IGridColumn): IGridColumn => {
+  switch (item.key) {
+    case SpecialColumns.ID:
+      return {
+        ...item,
+        frozen: true,
+        minWidth: 40,
+        maxWidth: 55,
+        headerCellClass: classNames(item.headerCellClass, cnCellIdClass),
+        cellClass: classNames(item.cellClass, cnCellIdClass),
+      };
+    case SpecialColumns.SPLITTER:
+      return {
+        ...item,
+        maxWidth: 40,
+        headerCellClass: classNames(item.headerCellClass, cnSplitterClass),
+        cellClass: classNames(item.cellClass, cnSplitterClass),
+      };
+    default:
+      return item;
+  }
+};
+
+export const generateColumn = (
+  genType: TableEntities = TableEntities.NONE,
+): IGridColumn => {
+  const hasIcon = genType === TableEntities.GEO_CATEGORY;
+
   return {
     key: Math.random().toString(),
     name: '',
     editable: true,
     resizable: true,
     sortable: true,
-    cellClass: styles.Cell,
-    headerCellClass: styles.Header,
+    cellClass: cnCellClass,
+    headerCellClass: cnHeaderClass,
     type: genType,
-    hasIcon: genType === TableEntities.GEO_CATEGORY,
+    hasIcon,
     isRenaming: true,
   };
 };
@@ -32,28 +65,21 @@ export const columnsFactory = (
     resizable: true,
     sortable: true,
     minWidth: 112,
-    headerCellClass: classNames(styles.Header, column.isRenaming ? styles.Renaming : null),
-    cellClass: classNames(column.cellClass, styles.Cell),
+    headerCellClass: classNames(
+      cnHeader.state({ renaming: !!column.isRenaming }).toString(),
+    ),
+    cellClass: classNames(column.cellClass, cnCellClass),
     headerRenderer: HeaderRenderer,
   };
 
-  switch (item.key) {
-    case SpecialColumns.ID:
+  switch (item.type) {
+    case TableEntities.CALC_PARAM:
       return {
         ...item,
-        frozen: true,
-        minWidth: 40,
-        maxWidth: 55,
-        headerCellClass: classNames(item.headerCellClass, styles.CellID),
-        cellClass: classNames(item.cellClass, styles.CellID),
+        editable: false,
       };
-    case SpecialColumns.SPLITTER:
-      return {
-        ...item,
-        maxWidth: 40,
-        headerCellClass: classNames(item.headerCellClass, styles.Splitter),
-        cellClass: classNames(item.cellClass, styles.Splitter),
-      };
+    case TableEntities.NONE:
+      return setupSpecialColumnProps(item);
     default:
       return item;
   }
@@ -82,7 +108,11 @@ export function columnsReorder(
   const sourceColumnIndex = columns.findIndex((c) => c.key === sourceKey);
   const targetColumnIndex = columns.findIndex((c) => c.key === targetKey);
   const reorderedColumns = [...columns];
-  reorderedColumns.splice(targetColumnIndex, 0, reorderedColumns.splice(sourceColumnIndex, 1)[0]);
+  reorderedColumns.splice(
+    targetColumnIndex,
+    0,
+    reorderedColumns.splice(sourceColumnIndex, 1)[0],
+  );
   setColumns(reorderedColumns);
 }
 

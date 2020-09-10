@@ -3,19 +3,44 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
-    "storybook": "start-storybook -p 9009 -s public --quiet",
     "build-storybook": "build-storybook -s public --quiet",
     "format": "prettier --write '{src,types,scripts}/**/*.{json,{j,t}s{,x},css,}'",
+    "gen": "graphql-codegen --config codegen.yml",
     "lint": "npm-run-all lint:* --color",
     "lint-fix": "npm-run-all format lint-fix:*",
-    "lint:ts": "eslint '{src,types}/**/*.ts{,x}' --color",
+    "lint-fix:css": "stylelint 'src/**/*.css' --color --fix",
     "lint-fix:ts": "eslint '{src,types}/**/*.ts{,x}' --color --fix",
     "lint:css": "stylelint 'src/**/*.css' --color",
-    "lint-fix:css": "stylelint 'src/**/*.css' --color --fix",
-    "gen": "graphql-codegen --config codegen.yml"
+    "lint:ts": "eslint '{src,types}/**/*.ts{,x}' --color",
+    "start": "node scripts/start.js",
+    "storybook": "start-storybook -p 9009 -s public --quiet",
+    "test": "node scripts/test.js"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "./node_modules/@gpn-prototypes/frontend-configs/git/commitizen.js"
+    }
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "dependencies": {
     "@apollo/client": "^3.1.1",
@@ -30,6 +55,8 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/classnames": "^2.2.10",
+    "@types/d3": "^5.7.2",
+    "@types/faker": "^4.1.12",
     "@types/jest": "^24.0.0",
     "@types/lodash": "^4.14.157",
     "@types/node": "^12.0.0",
@@ -44,6 +71,7 @@
     "@types/redux-logger": "^3.0.7",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
+    "autoprefixer": "^9.8.6",
     "babel-eslint": "10.1.0",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.1.0",
@@ -84,12 +112,18 @@
     "monet": "^0.9.1",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "pnp-webpack-plugin": "1.6.4",
+    "postcss-color-function": "^4.1.0",
     "postcss-flexbugs-fixes": "4.1.0",
+    "postcss-import": "^12.0.1",
+    "postcss-initial": "^3.0.2",
     "postcss-loader": "3.0.0",
+    "postcss-math": "^0.0.10",
+    "postcss-mixins": "^6.2.3",
+    "postcss-nested": "^4.2.3",
     "postcss-normalize": "8.0.1",
     "postcss-preset-env": "6.7.0",
     "postcss-safe-parser": "4.0.1",
-    "rc-tree": "^3.1.5",
+    "postcss-simple-vars": "^5.0.2",
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.6",
     "react-contextmenu": "^2.14.0",
@@ -138,8 +172,6 @@
     "@storybook/preset-create-react-app": "^3.1.4",
     "@storybook/react": "^6.0.1",
     "@storybook/theming": "^6.0.1",
-    "@types/d3": "^5.7.2",
-    "@types/faker": "^4.1.12",
     "cz-customizable": "^6.3.0",
     "http-proxy-middleware": "^1.0.5",
     "husky": "^4.2.5",
@@ -149,31 +181,6 @@
     "stylelint": "^13.7.0",
     "stylelint-order": "^4.1.0",
     "stylelint-prettier": "^1.1.2"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-customizable"
-    },
-    "cz-customizable": {
-      "config": "./node_modules/@gpn-prototypes/frontend-configs/git/commitizen.js"
-    }
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ]
   },
   "proxy": "http://localhost:8000"
 }

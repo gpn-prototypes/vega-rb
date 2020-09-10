@@ -1,3 +1,5 @@
+@import url('~react-data-grid/dist/react-data-grid.css');
+
 .rdg {
   background: inherit;
   border-color: transparent;
@@ -17,12 +19,4 @@
   border: 2px solid #0091e6;
   outline: none;
   caret-color: #fff;
-}
-
-.rdg-row {
-  background-color: inherit;
-}
-
-.rdg-cell {
-  background-color: #22272b;
 }

@@ -1,6 +1,13 @@
+const localePrettierConfig = require('./.prettierrc.js');
+
 module.exports = {
   extends: [require.resolve('@gpn-prototypes/frontend-configs/.eslintrc')],
-  rules: { 'comma-dangle': 'off' },
+  rules: {
+    'comma-dangle': 'off',
+    'simple-import-sort/sort': 'warn',
+    'no-unused-vars': 'warn',
+    'prettier/prettier': ['error', localePrettierConfig],
+  },
   overrides: [
     {
       files: ['./src/**/*.{ts,tsx}'],

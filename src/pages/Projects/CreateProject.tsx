@@ -31,7 +31,10 @@ const CreateProjectPage: React.FC = () => {
             />
           </div>
         </div>
-        <Button label="Создать проект" onClick={handleCreateProjectButtonClick} />
+        <Button
+          label="Создать проект"
+          onClick={handleCreateProjectButtonClick}
+        />
       </div>
     </div>
   );

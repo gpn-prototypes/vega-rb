@@ -34,7 +34,9 @@ const fetchParamsEpic: Epic<AnyAction, AnyAction, RootState> = (action$) =>
       from(new Promise((resolve) => resolve(paramsResponse))).pipe(
         mergeMap((response) => {
           const decodeResult = ParamArray.decode(response);
-          const params = E.getOrElse(() => [] as Param[])(ParamArray.decode(response));
+          const params = E.getOrElse(() => [] as Param[])(
+            ParamArray.decode(response),
+          );
 
           if (E.isRight(decodeResult)) {
             return of(

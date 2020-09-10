@@ -15,7 +15,10 @@ const ProjectsPage: React.FC = () => {
     <div className={style.ProjectsPage}>
       <p className={style.Headtext}>Проекты</p>
       <div className={style.FlexContainer}>
-        <Button label="Создать новый проект" onClick={handleCreateProjectButtonClick} />
+        <Button
+          label="Создать новый проект"
+          onClick={handleCreateProjectButtonClick}
+        />
       </div>
     </div>
   );

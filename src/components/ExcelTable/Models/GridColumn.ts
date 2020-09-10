@@ -7,7 +7,11 @@ export default class GridColumn implements IGridColumn {
 
   type: TableEntities;
 
-  constructor(key: string, name = '', type: TableEntities = TableEntities.NONE) {
+  constructor(
+    key: string,
+    name = '',
+    type: TableEntities = TableEntities.NONE,
+  ) {
     this.key = key;
     this.name = name;
     this.type = type;

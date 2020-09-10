@@ -3,7 +3,9 @@ import { Observable, OperatorFunction } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Action, ActionCreator, AnyAction } from 'typescript-fsa';
 
-export function ofAction<A>(ac1: ActionCreator<A>): OperatorFunction<AnyAction, Action<A>>;
+export function ofAction<A>(
+  ac1: ActionCreator<A>,
+): OperatorFunction<AnyAction, Action<A>>;
 
 export function ofAction<A, B>(
   ac1: ActionCreator<A>,
@@ -76,6 +78,8 @@ export function ofAction<A, B, C, D, E, F, G, H, I>(
 export function ofAction(...actionCreators: Array<ActionCreator<any>>) {
   return (actions$: Observable<AnyAction>) =>
     actions$.pipe(
-      filter((action) => actionCreators.some((actionCreator) => actionCreator.match(action))),
+      filter((action) =>
+        actionCreators.some((actionCreator) => actionCreator.match(action)),
+      ),
     );
 }

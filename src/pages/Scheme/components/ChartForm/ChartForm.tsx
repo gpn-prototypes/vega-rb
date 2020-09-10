@@ -50,10 +50,13 @@ const ChartForm: React.FC = () => {
     setType(o.value);
   };
 
-  const [getNormalByDistribution, { data: normalByDistributionData }] = useLazyQuery(
-    GET_CHART_DATA,
+  const [
+    getNormalByDistribution,
+    { data: normalByDistributionData },
+  ] = useLazyQuery(GET_CHART_DATA);
+  const [getNormalByMinMax, { data: normalByMinMaxData }] = useLazyQuery(
+    GET_NORMAL_BY_MIN_MAX,
   );
-  const [getNormalByMinMax, { data: normalByMinMaxData }] = useLazyQuery(GET_NORMAL_BY_MIN_MAX);
 
   // TODO: args has type TextFieldOnChangeArguments, but we cannot import it from ui-kit
   // eslint-disable-next-line
@@ -65,11 +68,13 @@ const ChartForm: React.FC = () => {
     const getData = (): Data[] => {
       switch (parameters) {
         case 'deviation':
-          return normalByDistributionData?.distribution.normalByDistribution.curve;
+          return normalByDistributionData?.distribution.normalByDistribution
+            .curve;
         case 'minmax':
           return normalByMinMaxData?.distribution.normalByMinMax.curve;
         default:
-          return normalByDistributionData?.distribution.normalByDistribution.curve;
+          return normalByDistributionData?.distribution.normalByDistribution
+            .curve;
       }
     };
     return <DistributionChart data={getData() || []} />;
@@ -98,7 +103,11 @@ const ChartForm: React.FC = () => {
             {fields[parameters].map(({ key, defaultValue, title }) => (
               <Form.Field key={key}>
                 <Form.Label>{title}</Form.Label>
-                <TextField width="full" value={formData[key]} onChange={handleChange(key)} />
+                <TextField
+                  width="full"
+                  value={formData[key]}
+                  onChange={handleChange(key)}
+                />
               </Form.Field>
             ))}
           </div>
@@ -108,7 +117,8 @@ const ChartForm: React.FC = () => {
   }, [fields, formData, parameters, params]);
 
   useEffect(() => {
-    const configParams = distributionParametersMap[DistributionType.normal].params[0];
+    const configParams =
+      distributionParametersMap[DistributionType.normal].params[0];
     setParameters(configParams.value);
   }, [setParameters, type]);
 

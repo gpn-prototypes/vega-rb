@@ -1,4 +1,8 @@
-import { GridCollection, GridRow, IGridColumn } from 'components/ExcelTable/types';
+import {
+  GridCollection,
+  GridRow,
+  IGridColumn,
+} from 'components/ExcelTable/types';
 import { ofAction } from 'operators/ofAction';
 import { Epic } from 'redux-observable';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
@@ -45,7 +49,10 @@ const reducer = reducerWithInitialState<GridCollection>(initialState)
     rows: payload,
   }));
 
-const saveToLocalStorageEpic: Epic<AnyAction, AnyAction, RootState> = (action$, state$) =>
+const saveToLocalStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
+  action$,
+  state$,
+) =>
   action$.pipe(
     ofAction(actions.updateColumns, actions.updateRows),
     distinctUntilChanged(),

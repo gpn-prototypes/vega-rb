@@ -8,7 +8,12 @@ import {
 } from 'components/ExcelTable/types';
 import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
 
-import { CalculationParam, GeoCategory, IProjectCell, IProjectStructure } from '../types';
+import {
+  CalculationParam,
+  GeoCategory,
+  IProjectCell,
+  IProjectStructure,
+} from '../types';
 
 const getCalculationColumn = (
   prev: IGridColumn[],
@@ -22,7 +27,10 @@ const getCalculationColumn = (
   } as IGridColumn,
 ];
 
-const getCategoryColumn = (prev: IGridColumn[], { name }: GeoCategory): IGridColumn[] => [
+const getCategoryColumn = (
+  prev: IGridColumn[],
+  { name }: GeoCategory,
+): IGridColumn[] => [
   ...prev,
   {
     key: CATEGORIES_TYPES.get(name),
@@ -53,7 +61,10 @@ function structureParamsReducer<T extends CalculationParam | GeoCategory>(
   }, []);
 }
 
-function convertCellsDataToGridRow(cells: string[], domainEntities: GeoCategory[]): GridRow {
+function convertCellsDataToGridRow(
+  cells: string[],
+  domainEntities: GeoCategory[],
+): GridRow {
   return (
     domainEntities
       // eslint-disable-next-line
@@ -98,8 +109,13 @@ export function unpackData({
   };
 }
 
-export function packData(data: GridCollection, template: IProjectStructure): IProjectStructure {
-  const domainEntitiesKeys = data.columns.filter((col) => col.type === TableEntities.GEO_CATEGORY);
+export function packData(
+  data: GridCollection,
+  template: IProjectStructure,
+): IProjectStructure {
+  const domainEntitiesKeys = data.columns.filter(
+    (col) => col.type === TableEntities.GEO_CATEGORY,
+  );
 
   const calculationParametersKeys = data.columns.filter(
     (col) => col.type === TableEntities.CALC_PARAM,

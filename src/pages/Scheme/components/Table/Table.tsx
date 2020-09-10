@@ -2,7 +2,11 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useQuery } from '@apollo/client';
 import ExcelTable from 'components/ExcelTable';
-import { GridRow, IGridColumn, TableEntities } from 'components/ExcelTable/types';
+import {
+  GridRow,
+  IGridColumn,
+  TableEntities,
+} from 'components/ExcelTable/types';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { IProjectStructure } from 'types';
@@ -24,7 +28,9 @@ interface IProps {
 }
 
 export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
-  const { loading, error, data: respData } = useQuery<TemplateProjectData>(GET_TABLE_TEMPLATE);
+  const { loading, error, data: respData } = useQuery<TemplateProjectData>(
+    GET_TABLE_TEMPLATE,
+  );
   const reduxTableData = useSelector(({ table }: RootState) => table);
   const dispatch = useDispatch();
   const templateStructure = respData?.project.template.structure;
@@ -46,8 +52,12 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   return (
     <ExcelTable
       data={reduxTableData}
-      setColumns={(data): Action<IGridColumn[]> => dispatch(tableDuck.actions.updateColumns(data))}
-      setRows={(data): Action<GridRow[]> => dispatch(tableDuck.actions.updateRows(data))}
+      setColumns={(data): Action<IGridColumn[]> =>
+        dispatch(tableDuck.actions.updateColumns(data))
+      }
+      setRows={(data): Action<GridRow[]> =>
+        dispatch(tableDuck.actions.updateRows(data))
+      }
       onRowClick={(column): void => {
         if (column.type === TableEntities.CALC_PARAM) onSelect(false);
         else onSelect(true);

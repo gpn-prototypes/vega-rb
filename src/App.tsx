@@ -1,6 +1,12 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Redirect, Route, RouteProps, Switch } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Redirect,
+  Route,
+  RouteProps,
+  Switch,
+} from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 import { cnTheme } from '@gpn-design/uikit/Theme';
 import classNames from 'classnames';
@@ -33,7 +39,11 @@ function PrivateRoute(props: RouteProps): JSX.Element {
   const hasToken = true;
   const { component, ...rest } = props;
 
-  return hasToken ? <Route {...rest} component={component} /> : <Redirect to="/login" />;
+  return hasToken ? (
+    <Route {...rest} component={component} />
+  ) : (
+    <Redirect to="/login" />
+  );
 }
 
 const App: React.FC = () => {

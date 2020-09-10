@@ -19,14 +19,19 @@ export const ExportButton: React.FC = () => {
       const filename = 'export.json';
       const contentType = 'application/json;charset=utf-8;';
       if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-        const blob = new Blob([decodeURIComponent(encodeURI(JSON.stringify(fileData)))], {
-          type: contentType,
-        });
+        const blob = new Blob(
+          [decodeURIComponent(encodeURI(JSON.stringify(fileData)))],
+          {
+            type: contentType,
+          },
+        );
         navigator.msSaveOrOpenBlob(blob, filename);
       } else {
         const a = document.createElement('a');
         a.download = filename;
-        a.href = `data:${contentType},${encodeURIComponent(JSON.stringify(fileData))}`;
+        a.href = `data:${contentType},${encodeURIComponent(
+          JSON.stringify(fileData),
+        )}`;
         a.target = '_blank';
         document.body.appendChild(a);
         a.click();
@@ -34,5 +39,12 @@ export const ExportButton: React.FC = () => {
       }
     }
   };
-  return <Button label="Экспорт" view="ghost" onClick={onClick} className={styles.ExportButton} />;
+  return (
+    <Button
+      label="Экспорт"
+      view="ghost"
+      onClick={onClick}
+      className={styles.ExportButton}
+    />
+  );
 };

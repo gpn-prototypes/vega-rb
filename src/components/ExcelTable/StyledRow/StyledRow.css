@@ -1,0 +1,17 @@
+.StyledRow {
+  text-overflow: ellipsis;
+
+  color: #fff;
+
+  &__Even {
+    background-color: #22272b;
+  }
+
+  &__Odd {
+    background-color: #2f3438;
+  }
+}
+
+.StyledRow:hover {
+  background-color: #54585b;
+}

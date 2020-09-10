@@ -21,7 +21,10 @@ const ParamRequired = io.interface({
   screen_name: io.string,
 });
 
-export const ParamIntersection = io.intersection([OptionalParam, ParamRequired]);
+export const ParamIntersection = io.intersection([
+  OptionalParam,
+  ParamRequired,
+]);
 
 export const ParamArray = io.array(ParamIntersection);
 

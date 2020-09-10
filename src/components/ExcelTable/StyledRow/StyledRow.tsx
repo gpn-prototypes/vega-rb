@@ -1,11 +1,13 @@
 import React from 'react';
 import { Row, RowRendererProps } from 'react-data-grid';
-import classNames from 'classnames';
+import { classnames } from '@bem-react/classnames';
 
 import { withContextMenu } from '../ContextMenu';
 import { GridRow } from '../types';
 
-import styles from './StyledRow.module.css';
+import { cnRow } from './cn-row';
+
+import './StyledRow.css';
 
 export default React.memo<RowRendererProps<GridRow>>(function StyledRow(props) {
   const collect = (): { rowIdx: number } => ({ rowIdx: props.rowIdx });
@@ -13,7 +15,7 @@ export default React.memo<RowRendererProps<GridRow>>(function StyledRow(props) {
   return withContextMenu(
     <Row
       {...props}
-      className={classNames(styles.Row, props.rowIdx % 2 ? styles.RowEven : styles.RowOdd)}
+      className={classnames(cnRow(), cnRow(props.rowIdx % 2 ? 'Even' : 'Odd'))}
     />,
     { id: 'row-context-menu', collect },
   );

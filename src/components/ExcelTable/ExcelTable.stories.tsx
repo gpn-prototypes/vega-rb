@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import faker from 'faker';
 import { SpecialColumns } from 'model/Table';
 
+import { cnCell, cnCellId, cnCellSplitter, cnHeader } from './cn-excel-table';
 import { ExcelTable } from './ExcelTable';
 import { GridCollection, TableEntities } from './types';
 
-import styles from './ExcelTable.module.css';
+import './ExcelTable.css';
 
 export default {
   title: 'ExcelTable',
@@ -17,8 +18,8 @@ const mockData: GridCollection = {
     {
       key: SpecialColumns.ID,
       name: '',
-      cellClass: styles.CellID,
-      headerCellClass: styles.CellID,
+      cellClass: cnCellId,
+      headerCellClass: cnCellId,
       type: TableEntities.GEO_CATEGORY,
     },
     {
@@ -62,8 +63,8 @@ const mockData: GridCollection = {
       maxWidth: 32,
       minWidth: 32,
       type: TableEntities.NONE,
-      headerCellClass: styles.Splitter,
-      cellClass: styles.Splitter,
+      headerCellClass: cnCellSplitter,
+      cellClass: cnCellSplitter,
     },
     {
       key: 'test',
@@ -86,24 +87,24 @@ const mockData: GridCollection = {
     {
       key: 'square',
       name: 'Площадь',
-      cellClass: styles.Cell,
+      cellClass: cnCell,
       editable: true,
       resizable: true,
       sortable: true,
       headerId: 'E',
       type: TableEntities.CALC_PARAM,
-      headerCellClass: styles.Header,
+      headerCellClass: cnHeader,
     },
     {
       key: 'square2',
       name: 'Площадь2',
-      cellClass: styles.Cell,
+      cellClass: cnCell,
       editable: true,
       resizable: true,
       sortable: true,
       headerId: 'F',
       type: TableEntities.CALC_PARAM,
-      headerCellClass: styles.Header,
+      headerCellClass: cnHeader,
     },
   ],
   rows: [...Array(10000)].map((_, i) => ({
@@ -123,7 +124,11 @@ export const Default: React.FC = () => {
 
   return (
     <div style={{ height: '100vh' }}>
-      <ExcelTable data={{ columns, rows }} setColumns={setColumns} setRows={setRows} />
+      <ExcelTable
+        data={{ columns, rows }}
+        setColumns={setColumns}
+        setRows={setRows}
+      />
     </div>
   );
 };

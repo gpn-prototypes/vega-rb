@@ -4,8 +4,9 @@
 
   min-width: 160px;
 
-  font-family: Segoe UI, -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu',
-    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: Segoe UI, -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
   font-size: 14px;
   font-weight: 400;
   font-style: normal;
@@ -78,7 +79,8 @@
   padding: 0;
 }
 
-.react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item::after {
+.react-contextmenu-item.react-contextmenu-submenu
+  > .react-contextmenu-item::after {
   content: '▶';
 
   position: absolute;

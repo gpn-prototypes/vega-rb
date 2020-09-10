@@ -50,9 +50,11 @@ export const ImportButton: React.FC = () => {
       reader.readAsText(file);
 
       reader.onload = async function onLoad(): Promise<void> {
-        const { domainEntities, domainObjects, calculationParameters } = JSON.parse(
-          reader.result as string,
-        ) as IProjectStructure;
+        const {
+          domainEntities,
+          domainObjects,
+          calculationParameters,
+        } = JSON.parse(reader.result as string) as IProjectStructure;
 
         const { data } = await client.query<IValidateBeforeLoadResponse>({
           query: VALIDATE_BEFORE_LOAD,
@@ -97,9 +99,19 @@ export const ImportButton: React.FC = () => {
   };
   return (
     <>
-      <FileInput id="import" accept="json" onChange={importData} className={styles.FileInput}>
+      <FileInput
+        id="import"
+        accept="json"
+        onChange={importData}
+        className={styles.FileInput}
+      >
         {(props): JSX.Element => (
-          <Button {...props} label="Импорт" view="ghost" iconLeft={IconAttach} />
+          <Button
+            {...props}
+            label="Импорт"
+            view="ghost"
+            iconLeft={IconAttach}
+          />
         )}
       </FileInput>
       <SnackBar items={snacks} className={styles.SnackBar} />

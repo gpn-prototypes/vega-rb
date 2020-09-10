@@ -14,7 +14,11 @@ const SchemePage: React.FC = () => {
   return (
     <div className={style.SchemePage}>
       <div className={style.Header}>
-        <Button label="Структура проекта" view="ghost" className={style.ButtonStructure} />
+        <Button
+          label="Структура проекта"
+          view="ghost"
+          className={style.ButtonStructure}
+        />
         <Button label="Данные" view="ghost" className={style.ButtonData} />
         <ExportButton />
         <ImportButton />

@@ -90,8 +90,14 @@ const DistributionChart: React.FC<IProps> = ({ data }) => {
       .attr('id', `main-content-bg-gradient`)
       .attr('gradientTransform', 'rotate(90)');
 
-    bgGradient.append('stop').attr('stop-color', 'rgba(41, 176, 255, 0.4)').attr('offset', '0%');
-    bgGradient.append('stop').attr('stop-color', 'rgba(41, 176, 255, 0)').attr('offset', '100%');
+    bgGradient
+      .append('stop')
+      .attr('stop-color', 'rgba(41, 176, 255, 0.4)')
+      .attr('offset', '0%');
+    bgGradient
+      .append('stop')
+      .attr('stop-color', 'rgba(41, 176, 255, 0)')
+      .attr('offset', '100%');
 
     defs
       .append('clipPath')
@@ -100,7 +106,9 @@ const DistributionChart: React.FC<IProps> = ({ data }) => {
       .attr('d', area(data))
       .attr('class', 'value-line');
 
-    const clipPath = graphArea.append('g').attr('clip-path', `url(#main-content-clip-line-path)`);
+    const clipPath = graphArea
+      .append('g')
+      .attr('clip-path', `url(#main-content-clip-line-path)`);
 
     clipPath
       .append('rect')

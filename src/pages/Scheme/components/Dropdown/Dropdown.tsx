@@ -69,7 +69,12 @@ export class Dropdown<T extends string | number> extends React.PureComponent<
     const { optionRenderer = Option.labelAccessor } = this.props;
 
     if (option.value === 'delimeter') {
-      return <li className={style.Delimeter} key={option.value.toString() + option.label} />;
+      return (
+        <li
+          className={style.Delimeter}
+          key={option.value.toString() + option.label}
+        />
+      );
     }
 
     return (
@@ -139,7 +144,9 @@ export class Dropdown<T extends string | number> extends React.PureComponent<
             className={classNames(style.DropdownOptionsContainer)}
             style={{ width: optionsWidth }}
           >
-            <ul className={style.DropdownOptions}>{options.map(this.renderOption)}</ul>
+            <ul className={style.DropdownOptions}>
+              {options.map(this.renderOption)}
+            </ul>
           </div>
         </CSSTransition>
       </div>
