@@ -1,6 +1,7 @@
 {
   "extends": "@gpn-prototypes/frontend-configs/tsconfig",
   "compilerOptions": {
+    "jsx": "react",
     "target": "es5",
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
