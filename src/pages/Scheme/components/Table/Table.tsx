@@ -28,7 +28,7 @@ interface IProps {
 }
 
 export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
-  const { loading, error, data: respData } = useQuery<TemplateProjectData>(
+  const { loading, data: respData } = useQuery<TemplateProjectData>(
     GET_TABLE_TEMPLATE,
   );
   const reduxTableData = useSelector(({ table }: RootState) => table);
@@ -47,7 +47,6 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   }, [dispatch, reduxTableData, templateStructure]);
 
   if (loading) return <div>Loading</div>;
-  if (error) return <div>Error! {error.message}</div>;
 
   return (
     <ExcelTable
