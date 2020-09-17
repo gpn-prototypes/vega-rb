@@ -1,15 +1,20 @@
+.SchemePage {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .Tabs {
   padding: 8px;
 }
 
 .Header {
-  padding: 0 16px;
+  padding: 8px 16px;
 }
 
 .Content {
-  padding: 8px 16px 0;
-
   display: flex;
+  flex: 1;
 
   justify-content: space-between;
 }
@@ -23,16 +28,14 @@
 }
 
 .LeftPanel {
-  padding-right: 8px;
-
   display: flex;
 
-  height: 100vh;
-
   border: none;
-  flex: 1 1;
+  flex: 1;
 }
 
 .RightPanel {
+  padding: 16px;
+
   max-width: 400px;
 }
