@@ -14,9 +14,9 @@ const configureStore = (): Store<CombinedState<RootState>, AnyAction> => {
   });
 
   const middleware =
-    process.env.NODE_ENV === 'production'
-      ? [epicMiddleware]
-      : [epicMiddleware, logger.createLogger()];
+    process.env.NODE_ENV === 'development'
+      ? [epicMiddleware, logger.createLogger()]
+      : [epicMiddleware];
 
   const store = createStore(rootReducer, applyMiddleware(...middleware));
 
