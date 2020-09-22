@@ -38,6 +38,7 @@
     line-height: 17px;
   }
 
+<<<<<<< HEAD
   &_left text {
     color: #e68200;
   }
@@ -49,6 +50,18 @@
   }
 
   &_right path {
+=======
+  &__left text {
+    color: #e68200;
+  }
+
+  &__right text {
+    transform: translateX(5px);
+    color: #33b4ff;
+  }
+
+  &__right path {
+>>>>>>> feature(chart): update chart styles
     stroke-width: 0;
   }
 }
