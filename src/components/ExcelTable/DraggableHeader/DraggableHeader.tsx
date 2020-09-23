@@ -2,6 +2,7 @@ import React, { ComponentType, ReactElement, ReactText } from 'react';
 import { HeaderRendererProps } from 'react-data-grid';
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
 import classNames from 'classnames';
+import { Nullable } from 'types';
 
 import { IGridColumn, TableEntities } from '../types';
 
@@ -22,13 +23,13 @@ interface ColumnDragObject extends DragObjectWithType {
 }
 
 function wrapRefs<T>(...refs: React.Ref<T>[]) {
-  return (handle: T | null): void => {
+  return (handle: Nullable<T>): void => {
     refs.forEach((ref) => {
       if (typeof ref === 'function') {
         ref(handle);
       } else if (ref !== null) {
         // eslint-disable-next-line no-param-reassign
-        (ref as React.MutableRefObject<T | null>).current = handle;
+        (ref as React.MutableRefObject<Nullable<T>>).current = handle;
       }
     });
   };

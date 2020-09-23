@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@gpn-prototypes/vega-button';
 import { SelectedCell } from 'components/ExcelTable/types';
+import { Nullable } from 'types';
 
 import CalculateButton from './components/CalculateButton';
 import DistributionSettings from './components/DistributionSettings';
@@ -11,7 +12,9 @@ import Table from './components/Table';
 import style from './Scheme.module.css';
 
 const SchemePage: React.FC = () => {
-  const [selectedCell, setSelectedCell] = useState<SelectedCell | null>(null);
+  const [selectedCell, setSelectedCell] = useState<Nullable<SelectedCell>>(
+    null,
+  );
   return (
     <div className={style.SchemePage}>
       <div className={style.Header}>

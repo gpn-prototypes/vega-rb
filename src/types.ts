@@ -25,3 +25,5 @@ export interface IProjectStructure {
   calculationParameters: CalculationParam[];
   domainObjects?: IProjectCell[];
 }
+
+export type Nullable<T> = T | null;

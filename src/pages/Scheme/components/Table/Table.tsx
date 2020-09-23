@@ -5,7 +5,7 @@ import ExcelTable from 'components/ExcelTable';
 import { SelectedCell, TableEntities } from 'components/ExcelTable/types';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
-import { IProjectStructure } from 'types';
+import { IProjectStructure, Nullable } from 'types';
 import { mockTableRows, unpackData } from 'utils';
 
 import { GET_TABLE_TEMPLATE } from './queries';
@@ -19,7 +19,7 @@ export interface TemplateProjectData {
 }
 
 interface IProps {
-  onSelect?: (data: SelectedCell | null) => void;
+  onSelect?: (data: Nullable<SelectedCell>) => void;
 }
 
 export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
