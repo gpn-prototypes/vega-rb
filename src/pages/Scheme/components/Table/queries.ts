@@ -5,11 +5,10 @@ export const GET_TABLE_TEMPLATE = gql`
     project {
       template {
         structure {
-          __typename
           domainEntities {
             name
           }
-          calculationParameters {
+          calculationParameters: attributes {
             code
             name
             shortName

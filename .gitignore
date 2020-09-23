@@ -3,6 +3,8 @@
 .idea
 .vscode
 
+gen:schema.sh
+
 # dependencies
 /node_modules
 /.pnp

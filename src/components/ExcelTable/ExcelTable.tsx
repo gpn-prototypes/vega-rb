@@ -1,24 +1,16 @@
 import React, { useCallback, useMemo } from 'react';
 import ReactDataGrid, {
   CalculatedColumn,
-  HeaderRendererProps,
   RowsUpdateEvent,
 } from 'react-data-grid';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { AutoSizer } from 'react-virtualized';
-import { curry } from 'lodash';
 
 import renderColumns from './Columns/renderColumns';
 import { cnExcelTable } from './cn-excel-table';
 import { HeaderContextMenu } from './ContextMenu';
-import Header from './Header';
-import {
-  columnsReorder,
-  generateColumn,
-  onBlurCell,
-  setColumnAttributes,
-} from './helpers';
+import { generateColumn } from './helpers';
 import StyledRow from './StyledRow';
 import {
   GridCollection,
@@ -30,11 +22,13 @@ import {
 
 import './ExcelTable.css';
 
+const cnExcelTableClass = cnExcelTable();
+
 interface IProps {
   data: GridCollection;
   setColumns?: (data: IGridColumn[]) => void;
   setRows?: (data: GridRow[]) => void;
-  onRowClick?: (column: IGridColumn) => void;
+  onRowClick?: (rowIdx: number, row: GridRow, column: IGridColumn) => void;
 }
 
 export const ExcelTable: React.FC<IProps> = ({
@@ -62,7 +56,7 @@ export const ExcelTable: React.FC<IProps> = ({
       row: GridRow,
       column: IGridColumn & CalculatedColumn<GridRow>,
     ) => {
-      onRowClick(column);
+      onRowClick(rowIdx, row, column);
     },
     [onRowClick],
   );
@@ -72,7 +66,13 @@ export const ExcelTable: React.FC<IProps> = ({
       const newRows = [...rows];
 
       for (let i = fromRow; i <= toRow; i += 1) {
-        newRows[i] = { ...newRows[i], ...updated };
+        newRows[i] = {
+          ...newRows[i],
+          ...Object.entries(updated).reduce(
+            (prev, [key, value]) => ({ ...prev, [key]: { value } }),
+            {},
+          ),
+        };
       }
 
       setRows(newRows);
@@ -110,28 +110,15 @@ export const ExcelTable: React.FC<IProps> = ({
     { idx }: { idx: number },
   ): void => pushColumn(idx + 1);
 
-  const setColumnProps = curry(setColumnAttributes)(columns, setColumns);
-  const handleColumnsReorder = curry(columnsReorder)(columns, setColumns);
-  const onBlurHandler = curry(onBlurCell)(columns, setColumns);
-
-  const columnsList = useMemo(
-    () =>
-      renderColumns(
-        columns,
-        React.createElement(Header, {
-          ...({} as HeaderRendererProps<GridRow>),
-          onBlurHandler,
-          setColumnProps,
-          handleColumnsReorder,
-        }),
-      ),
-    [columns, handleColumnsReorder, onBlurHandler, setColumnProps],
-  );
+  const columnsList = useMemo(() => renderColumns(columns, setColumns), [
+    columns,
+    setColumns,
+  ]);
 
   return (
     <>
       <DndProvider backend={HTML5Backend}>
-        <AutoSizer className={cnExcelTable()}>
+        <AutoSizer className={cnExcelTableClass}>
           {({ height, width }): JSX.Element => (
             <ReactDataGrid
               columns={columnsList}

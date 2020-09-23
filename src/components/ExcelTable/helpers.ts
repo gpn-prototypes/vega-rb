@@ -1,5 +1,5 @@
 import { ComponentType, ReactText } from 'react';
-import { HeaderRendererProps } from 'react-data-grid';
+import { FormatterProps, HeaderRendererProps } from 'react-data-grid';
 import classNames from 'classnames';
 import { SpecialColumns } from 'model/Table';
 
@@ -12,29 +12,6 @@ const cnHeaderClass = cnHeader.toString();
 const cnCellClass = cnCell.toString();
 const cnCellIdClass = cnCellId.toString();
 const cnSplitterClass = cnCellSplitter.toString();
-
-const setupSpecialColumnProps = (item: IGridColumn): IGridColumn => {
-  switch (item.key) {
-    case SpecialColumns.ID:
-      return {
-        ...item,
-        frozen: true,
-        minWidth: 40,
-        maxWidth: 55,
-        headerCellClass: classNames(item.headerCellClass, cnCellIdClass),
-        cellClass: classNames(item.cellClass, cnCellIdClass),
-      };
-    case SpecialColumns.SPLITTER:
-      return {
-        ...item,
-        maxWidth: 40,
-        headerCellClass: classNames(item.headerCellClass, cnSplitterClass),
-        cellClass: classNames(item.cellClass, cnSplitterClass),
-      };
-    default:
-      return item;
-  }
-};
 
 export const generateColumn = (
   genType: TableEntities = TableEntities.NONE,
@@ -55,12 +32,45 @@ export const generateColumn = (
   };
 };
 
+const setupSpecialColumnProps = (item: IGridColumn): IGridColumn => {
+  const commonParams = {
+    editable: false,
+    resizable: false,
+    sortable: false,
+  };
+
+  switch (item.key) {
+    case SpecialColumns.ID:
+      return {
+        ...item,
+        ...commonParams,
+        frozen: true,
+        minWidth: 40,
+        maxWidth: 55,
+        headerCellClass: classNames(item.headerCellClass, cnCellIdClass),
+        cellClass: classNames(item.cellClass, cnCellIdClass),
+      };
+    case SpecialColumns.SPLITTER:
+      return {
+        ...item,
+        ...commonParams,
+        maxWidth: 40,
+        headerCellClass: classNames(item.headerCellClass, cnSplitterClass),
+        cellClass: classNames(item.cellClass, cnSplitterClass),
+      };
+    default:
+      return item;
+  }
+};
+
 export const columnsFactory = (
   column: IGridColumn,
+  formatter: ComponentType<FormatterProps<GridRow> & { value?: string }>,
   HeaderRenderer: ComponentType<HeaderRendererProps<GridRow>>,
 ): IGridColumn => {
   const item = {
     ...column,
+    formatter,
     editable: true,
     resizable: true,
     sortable: true,

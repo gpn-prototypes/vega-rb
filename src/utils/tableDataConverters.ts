@@ -6,6 +6,7 @@ import {
   IGridColumn,
   TableEntities,
 } from 'components/ExcelTable/types';
+import _ from 'lodash';
 import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
 
 import {
@@ -65,18 +66,17 @@ function convertCellsDataToGridRow(
   cells: string[],
   domainEntities: GeoCategory[],
 ): GridRow {
-  return (
-    domainEntities
-      // eslint-disable-next-line
-      .map(({ name }) => CATEGORIES_TYPES.get(name)!)
-      .reduce(
-        (prev, name, idx) => ({
-          ...prev,
-          [name]: cells[idx],
-        }),
-        {},
-      ) as GridRow
-  );
+  return domainEntities
+    .map(({ name }) => CATEGORIES_TYPES.get(name)!)
+    .reduce(
+      (prev, name, idx) => ({
+        ...prev,
+        [name]: {
+          value: cells[idx],
+        },
+      }),
+      {},
+    ) as GridRow;
 }
 
 export function unpackData({
@@ -92,14 +92,11 @@ export function unpackData({
   ];
   const rows = [
     ...cellsData.map(({ cells }, idx) => ({
-      // TODO: Fix it
-      // eslint-disable-next-line
-      // @ts-ignore
-      id: idx,
       ...convertCellsDataToGridRow(cells, domainEntities),
+      id: { value: idx },
     })),
-    ...Array.from({ length: 1000 - cellsData.length }, (_, index) => ({
-      id: index,
+    ...Array.from({ length: 1000 - cellsData.length }, (val, index) => ({
+      id: { value: index },
     })),
   ];
 
@@ -116,23 +113,26 @@ export function packData(
   const domainEntitiesKeys = data.columns.filter(
     (col) => col.type === TableEntities.GEO_CATEGORY,
   );
-
   const calculationParametersKeys = data.columns.filter(
     (col) => col.type === TableEntities.CALC_PARAM,
   );
+  const rows = data.rows.filter((row) =>
+    domainEntitiesKeys.every(({ key }) => row[key]),
+  );
 
-  const domainObjects = data.rows
-    .filter((row) => domainEntitiesKeys.every(({ key }) => row[key]))
-    .map<IProjectCell>((row) => ({
-      cells: domainEntitiesKeys.map<string>(({ key }) => String(row[key])),
-    }));
+  const domainObjects = rows.map<IProjectCell>((row) => ({
+    cells: domainEntitiesKeys.map<string>(({ key }) => String(row[key]?.value)),
+    geoObjectCategory: 'RESERVES',
+    attributeValues: calculationParametersKeys
+      .filter(({ key }) => row[key])
+      .map(({ key }) => row[key]?.args),
+  }));
 
   const domainEntities = domainEntitiesKeys.map(({ name, type }) => ({
     name,
     icon: CategoryIcon.FORMATION_ICON,
     __typename: type,
   }));
-
   const calculationParameters = calculationParametersKeys.map(
     ({ key }) =>
       ({

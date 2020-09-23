@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from '@gpn-prototypes/vega-button';
+import { SelectedCell } from 'components/ExcelTable/types';
 
-import ChartForm from './components/ChartForm';
+import CalculateButton from './components/CalculateButton';
+import DistributionSettings from './components/DistributionSettings';
 import ExportButton from './components/ExportButton';
 import ImportButton from './components/ImportButton';
 import Table from './components/Table';
@@ -9,8 +11,7 @@ import Table from './components/Table';
 import style from './Scheme.module.css';
 
 const SchemePage: React.FC = () => {
-  const [showGraph, setShowGraph] = useState<boolean>(true);
-
+  const [selectedCell, setSelectedCell] = useState<SelectedCell | null>(null);
   return (
     <div className={style.SchemePage}>
       <div className={style.Header}>
@@ -22,13 +23,14 @@ const SchemePage: React.FC = () => {
         <Button label="Данные" view="ghost" className={style.ButtonData} />
         <ExportButton />
         <ImportButton />
+        <CalculateButton />
       </div>
       <div className={style.Content}>
         <div className={style.LeftPanel}>
-          <Table onSelect={setShowGraph} />
+          <Table onSelect={setSelectedCell} />
         </div>
-        <div className={style.RightPanel} hidden={showGraph}>
-          <ChartForm />
+        <div className={style.RightPanel} hidden={!selectedCell}>
+          {selectedCell && <DistributionSettings selectedCell={selectedCell} />}
         </div>
       </div>
     </div>

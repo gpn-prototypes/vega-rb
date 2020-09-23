@@ -5,6 +5,7 @@ import { Button } from '@gpn-prototypes/vega-button';
 import { FileInput } from '@gpn-prototypes/vega-file-input';
 import { IconAlert, IconAttach, IconProps } from '@gpn-prototypes/vega-icons';
 import { SnackBar } from '@gpn-prototypes/vega-snack-bar';
+import useAsyncError from 'hooks/useAsyncError';
 import tableDuck from 'store/tableDuck';
 import { IProjectStructure } from 'types';
 import { mockTableRows } from 'utils/fakerGenerators';
@@ -24,10 +25,18 @@ interface IValidateBeforeLoadResponse {
   };
 }
 
+type StatusType =
+  | 'alert'
+  | 'success'
+  | 'warning'
+  | 'system'
+  | 'normal'
+  | undefined;
+
 interface ISnackItem {
   key: string | number;
   message?: string | number;
-  status?: 'alert' | 'success' | 'warning' | 'system' | 'normal' | undefined;
+  status?: StatusType;
   autoClose?: boolean | number;
   icon?: React.FC<IconProps>;
   onClose?: (item: ISnackItem) => void;
@@ -37,11 +46,10 @@ interface ISnackItem {
 export const ImportButton: React.FC = () => {
   const client = useApolloClient();
   const dispatch = useDispatch();
+  const throwError = useAsyncError();
   const [snacks, setSnacks] = useState<ISnackItem[]>([] as ISnackItem[]);
   const importData = (e: DragEvent | ChangeEvent): void => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    const { value: fileName, files } = e.target as HTMLInputElement;
+    const { files } = e.target as HTMLInputElement;
     const file = files?.[0];
 
     if (file) {
@@ -50,30 +58,37 @@ export const ImportButton: React.FC = () => {
       reader.readAsText(file);
 
       reader.onload = async function onLoad(): Promise<void> {
+        const readerResult = JSON.parse(
+          reader.result as string,
+        ) as IProjectStructure;
         const {
           domainEntities,
-          domainObjects,
           calculationParameters,
-        } = JSON.parse(reader.result as string) as IProjectStructure;
+          domainObjects,
+        } = readerResult;
 
-        const { data } = await client.query<IValidateBeforeLoadResponse>({
-          query: VALIDATE_BEFORE_LOAD,
-          variables: {
-            project: {
-              version: '0.1.0',
-              structure: {
-                domainEntities: domainEntities.map(({ ...value }) => value),
-                domainObjects,
+        const { data } = await client
+          .query<IValidateBeforeLoadResponse>({
+            query: VALIDATE_BEFORE_LOAD,
+            variables: {
+              project: {
+                version: '0.1.0',
+                structure: {
+                  domainEntities,
+                  domainObjects,
+                  attributes: calculationParameters,
+                },
               },
             },
-          },
-        });
-        if (data?.project.validateBeforeLoad === null) {
-          const { columns, rows: gridRows = mockTableRows } = unpackData({
-            domainEntities,
-            domainObjects,
-            calculationParameters,
+          })
+          .catch((error) => {
+            throw throwError(error);
           });
+
+        if (data?.project.validateBeforeLoad === null) {
+          const { columns, rows: gridRows = mockTableRows } = unpackData(
+            readerResult,
+          );
           dispatch(tableDuck.actions.updateColumns(columns));
           dispatch(tableDuck.actions.updateRows(gridRows));
         } else if (data) {
@@ -97,6 +112,7 @@ export const ImportButton: React.FC = () => {
       };
     }
   };
+
   return (
     <>
       <FileInput

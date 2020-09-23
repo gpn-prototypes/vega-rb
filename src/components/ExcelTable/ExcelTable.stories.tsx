@@ -108,13 +108,25 @@ const mockData: GridCollection = {
     },
   ],
   rows: [...Array(10000)].map((_, i) => ({
-    id: i,
-    area: faker.random.arrayElement(['Надежденский', 'Угловой_Сц-4_base']),
-    deposit: faker.random.arrayElement(['РА-132', 'Незалёжное', 'Д122-УЩ']),
-    layer: faker.random.arrayElement(['Д 5', 'P50', 'Т1 + Т2']),
-    well: faker.random.number(50).toString(),
-    category: faker.random.arrayElement(['Р', 'З']),
-    probability: faker.random.number(100).toString(),
+    id: { value: i },
+    area: {
+      value: faker.random.arrayElement(['Надежденский', 'Угловой_Сц-4_base']),
+    },
+    deposit: {
+      value: faker.random.arrayElement(['РА-132', 'Незалёжное', 'Д122-УЩ']),
+    },
+    layer: {
+      value: faker.random.arrayElement(['Д 5', 'P50', 'Т1 + Т2']),
+    },
+    well: {
+      value: faker.random.number(50).toString(),
+    },
+    category: {
+      value: faker.random.arrayElement(['Р', 'З']),
+    },
+    probability: {
+      value: faker.random.number(100).toString(),
+    },
   })),
 };
 

@@ -1,6 +1,8 @@
+/* eslint-disable */
+// @ts-nocheck
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useQuery } from '@apollo/client';
+import { useApolloClient, useLazyQuery, useQuery } from '@apollo/client';
 import { Button } from '@gpn-prototypes/vega-button';
 import { RootState } from 'store/types';
 import { packData } from 'utils/tableDataConverters';
@@ -9,16 +11,26 @@ import { GET_TABLE_TEMPLATE } from '../Table/queries';
 import { TemplateProjectData } from '../Table/Table';
 
 import styles from './ExportButton.module.css';
+import { tap } from 'rxjs/operators';
 
 export const ExportButton: React.FC = () => {
+  const client = useApolloClient();
   const tableData = useSelector((state: RootState) => state.table);
-  const { data } = useQuery<TemplateProjectData>(GET_TABLE_TEMPLATE);
+
   const onClick = async (): Promise<void> => {
+    const { data } = await client
+      .query<TemplateProjectData>({
+        query: GET_TABLE_TEMPLATE,
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
     if (data) {
       const fileData = packData(tableData, data.project.template.structure);
       const filename = 'export.json';
       const contentType = 'application/json;charset=utf-8;';
-      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      if (window?.navigator?.msSaveOrOpenBlob) {
         const blob = new Blob(
           [decodeURIComponent(encodeURI(JSON.stringify(fileData)))],
           {
@@ -39,6 +51,7 @@ export const ExportButton: React.FC = () => {
       }
     }
   };
+
   return (
     <Button
       label="Экспорт"
