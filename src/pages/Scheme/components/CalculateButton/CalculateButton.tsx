@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useApolloClient, useQuery } from '@apollo/client';
+import { useApolloClient } from '@apollo/client';
 import { Button } from '@gpn-prototypes/vega-button';
 import { RootState } from 'store/types';
 import { packData } from 'utils';
@@ -12,9 +12,12 @@ import { TemplateProjectData } from '../Table/Table';
 export const CalculateButton: React.FC = () => {
   const client = useApolloClient();
   const tableRows = useSelector(({ table }: RootState) => table);
-  const { data } = useQuery<TemplateProjectData>(GET_TABLE_TEMPLATE);
 
-  const handleClick = () => {
+  const handleClick = async () => {
+    const { data } = await client.query<TemplateProjectData>({
+      query: GET_TABLE_TEMPLATE,
+    });
+
     if (data) {
       const { domainEntities, calculationParameters, domainObjects } = packData(
         tableRows,

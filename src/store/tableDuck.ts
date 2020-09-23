@@ -54,9 +54,8 @@ const reducer = reducerWithInitialState<GridCollection>(initialState)
     ...state,
     rows: payload,
   }))
-  .case(actions.updateCell, (state, payload) => {
+  .case(actions.updateCell, (state, { selectedCell, cellData }) => {
     const rows = [...state.rows];
-    const { selectedCell, cellData } = payload;
 
     if (selectedCell && Number.isInteger(selectedCell.rowIdx)) {
       rows.splice(selectedCell.rowIdx, 1, {

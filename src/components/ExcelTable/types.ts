@@ -28,17 +28,21 @@ export enum TableEntities {
   CALC_PARAM = 'Attribute',
   NONE = 'None',
 }
+
+interface GridCellArguments {
+  definition: DistributionDefinitionTypes;
+  type: DistributionTypes;
+  parameters: {
+    type: DistributionParameterTypes;
+    value: string;
+  }[];
+}
+
 export interface GridCellProperties {
   value: ReactText;
-  args?: {
-    definition: DistributionDefinitionTypes;
-    type: DistributionTypes;
-    parameters: {
-      type: DistributionParameterTypes;
-      value: string;
-    }[];
-  };
+  args?: GridCellArguments;
 }
+
 export interface GridRow {
   [key: string]: GridCellProperties | undefined;
 }

@@ -1,17 +1,11 @@
-import React, { Dispatch, SetStateAction, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useQuery } from '@apollo/client';
 import ExcelTable from 'components/ExcelTable';
-import {
-  GridRow,
-  IGridColumn,
-  SelectedCell,
-  TableEntities,
-} from 'components/ExcelTable/types';
+import { SelectedCell, TableEntities } from 'components/ExcelTable/types';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
-import { IProjectStructureTemplate } from 'types';
-import { Action } from 'typescript-fsa';
+import { IProjectStructure } from 'types';
 import { mockTableRows, unpackData } from 'utils';
 
 import { GET_TABLE_TEMPLATE } from './queries';
@@ -19,13 +13,13 @@ import { GET_TABLE_TEMPLATE } from './queries';
 export interface TemplateProjectData {
   project: {
     template: {
-      structure: IProjectStructureTemplate;
+      structure: IProjectStructure;
     };
   };
 }
 
 interface IProps {
-  onSelect?: Dispatch<SetStateAction<SelectedCell | null>>;
+  onSelect?: (data: SelectedCell | null) => void;
 }
 
 export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
@@ -53,16 +47,25 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   return (
     <ExcelTable
       data={reduxTableData}
-      setColumns={(data): Action<IGridColumn[]> =>
-        dispatch(tableDuck.actions.updateColumns(data))
-      }
-      setRows={(data): Action<GridRow[]> =>
-        dispatch(tableDuck.actions.updateRows(data))
-      }
+      setColumns={(data): void => {
+        dispatch(tableDuck.actions.updateColumns(data));
+      }}
+      setRows={(data): void => {
+        dispatch(tableDuck.actions.updateRows(data));
+      }}
       onRowClick={(rowIdx, row, column): void => {
-        if (column.type === TableEntities.CALC_PARAM)
+        if (column.type === TableEntities.CALC_PARAM) {
+          // TODO: to remove pass column objet
+          // onSelect(
+          //   row[column.key] || {
+          //     value: '',
+          //     args: undefined,
+          //   },
+          // );
           onSelect({ rowIdx, row, column });
-        else onSelect(null);
+        } else {
+          onSelect(null);
+        }
       }}
     />
   );

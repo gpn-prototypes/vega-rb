@@ -1,32 +1,39 @@
-
-"""Подсчетный параметр проекта."""
 type Attribute {
-  """Кодовое обозначение подсчетного параметра"""
+  """Кодовое обозначение подсчётного параметра"""
   code: String!
-  """Имя подсчетного параметра"""
+
+  """Имя подсчётного параметра"""
   name: String!
-  """Сокращенное имя или обозначение подсчетного парметра"""
+
+  """Сокращенное имя или обозначение подсчётного параметра"""
   shortName: String!
-  """Единицы измерения подсчетного параметра"""
+
+  """Единицы измерения подсчётного параметра"""
   units: String!
 }
 
 input AttributeInput {
+  """Кодовое обозначение подсчётного параметра"""
   code: String!
+
+  """Имя подсчётного параметра"""
   name: String!
+
+  """Сокращенное имя или обозначение подсчётного параметра"""
   shortName: String!
+
+  """Единицы измерения подсчётного параметра"""
   units: String!
 }
 
 type CalculationOk {
+  """
+  Архив с результатом вычислений. Доступен по url /calculation_result/<resultId>
+  """
   resultId: ID
 }
 
 union CalculationResult = TableErrors | CalculationOk | DistributionDefinitionErrors
-
-type TableErrors {
-  errors: [TableError!]!
-}
 
 """Ошибка с дополнительной информацией."""
 type DetailError implements ErrorInterface {
@@ -42,114 +49,188 @@ type DetailError implements ErrorInterface {
   details: String
 }
 
-"""
-Способ задания распределения через среднее, стандартное отклонение.
-
-Attributes:
-    mean: Mean or expectation
-            -inf < mean < inf
-    standard_deviation: Standard deviation
-            standard_deviation > 0
-Raises:
-    FormErrorsException
-"""
-input DeviationInput {
-  """Среднее значение"""
-  mean: Float!
-
-  """Стандартное отклонение"""
-  standardDeviation: Float!
-}
-
-"""Распределение вероятностной величины."""
-type Distribution {
-  """График функции кумулятивного распределения"""
-  cumulative: [Point!]!
+"""Результаты вычисления заданного распределения."""
+type DistributionChart {
   """График функции плотности распределения"""
-  probabilityDensity: [Point!]!
-  """График функции процентной точки"""
-  percentPoints: [Point!]!
+  pdf: [Point!]!
+
+  """Функция надежности (1 - cdf)"""
+  sf: [Point!]!
+
+  """Точки процентилей"""
+  percentiles: [Percentile!]!
 }
 
-union DistributionValueResult = DistributionValue | DistributionDefinitionErrors
+union DistributionChartResult = DistributionChart | DistributionDefinitionErrors
 
+"""Ошибка задания распределения."""
 type DistributionDefinitionError implements ErrorInterface {
+  """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
   code: ErrorCodes!
+
+  """
+  Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
+  """
   message: String!
+
+  """Список параметров задания распределения, к которым относится ошибка"""
   fields: [String!]!
 }
 
+"""Список ошибок задания распределения."""
 type DistributionDefinitionErrors {
   errors: [DistributionDefinitionError!]!
 }
 
-enum DistributionTypes {
-  NORMAL
-}
-
+"""Способы задания распределений."""
 enum DistributionDefinitionTypes {
+  """Через среднее и стандартное отклонение"""
   MEAN_SD
+
+  """Через минимум и максимум"""
   MIN_MAX
+
+  """
+  Через расположение, логарифмическое среднее и логарифмическое стандартное отклонение
+  """
+  LOCATION_MEANLOG_SDLOG
+
+  """Через наиболее вероятное, минимум и максимум"""
+  MODE_MIN_MAX
 }
 
-enum DistributionParameterTypes {
-  MEAN
-  STANDARD_DEVIATION
-  MIN
-  MAX
-}
-
-
-type DistributionValue {
-  pdf: [Point!]!
-  sf: [Point!]!
-  percentiles: [Percentile!]!
-}
-
-type Percentile {
-  point: Point!
-  rank: Int!
-}
-
+"""Параметры распределения."""
 input DistributionInput {
+  """Тип распределения"""
   type: DistributionTypes!
+
+  """Способ задания распределения"""
   definition: DistributionDefinitionTypes!
+
+  """Параметры распределения"""
   parameters: [DistributionParameterInput]!
 }
 
+"""Параметр способа задания распределения."""
 input DistributionParameterInput {
+  """Тип параметра распределения"""
   type: DistributionParameterTypes!
   value: Float!
 }
 
-"""Пространство имен для работы со распределениями."""
+"""Тип параметра задания распределения."""
+enum DistributionParameterTypes {
+  """Среднее"""
+  MEAN
+
+  """Стандартное отклонение"""
+  STANDARD_DEVIATION
+
+  """Мин."""
+  MIN
+
+  """Макс."""
+  MAX
+
+  """Расположение"""
+  LOCATION
+
+  """Наиболее вероятное"""
+  MODE
+
+  """Логарифмическое среднее"""
+  MEANLOG
+
+  """Логарифмическое стандартное отклонение"""
+  SDLOG
+}
+
+"""Пространство имен для работы с распределениями."""
 type DistributionQueries {
   """Результат вычисления значения распределения"""
-  distributionValue(distribution: DistributionInput!): DistributionValueResult
+  distributionChart(distribution: DistributionInput!): DistributionChartResult
+}
+
+"""Типы распределений."""
+enum DistributionTypes {
+  """Нормальное распределение"""
+  NORMAL
+
+  """Логнормальное распределение"""
+  LOGNORMAL
+
+  """Треугольное распределение"""
+  TRIANGULAR
+
+  """Равномерное распределение"""
+  UNIFORM
+}
+
+type DomainEntity {
+  """Имя доменной сущности геологического объекта"""
+  name: String!
+
+  """Иконка доменной сущности геологического объекта"""
+  icon: DomainEntityIcons!
+}
+
+"""Список иконок доменной сущности геологического объекта."""
+enum DomainEntityIcons {
+  LICENSING_ROUND_ICON
+  FIELD_ICON
+  FORMATION_ICON
+  OIL_POOL_ICON
+  WELL_ICON
+}
+
+input DomainEntityInput {
+  """Имя доменной сущности геологического объекта"""
+  name: String!
+
+  """Иконка доменной сущности геологического объекта"""
+  icon: DomainEntityIcons!
+}
+
+"""Геологический объект структуры проекта."""
+input DomainObjectInput {
+  """Иерархия геологического объекта в структуре проекта"""
+  domainObjectPath: [String!]!
+
+  """Категория геологического объекта"""
+  geoObjectCategory: GeoObjectCategories!
+
+  """Список значений атрибутов геологического объекта"""
+  attributeValues: [DistributionInput]!
+
+  """Список значений рисков геологического объекта"""
+  risksValues: [Float]!
 }
 
 """Список кодов ошибок приложения."""
 enum ErrorCodes {
-  """Шаг не может быть отрицательным"""
-  STEP_IS_NEGATIVE
-
-  """Минимальное значение не должно быть больше максимального"""
-  MIN_GREATER_THAN_MAX
-
   """Ошибка в загружаемой структуре"""
   INCORRECT_PROJECT_STRUCTURE
 
-  """В строке данных таблицы не может быть пустых ячеек"""
+  """В строке данных таблицы структуры не может быть пустых ячеек"""
   EMPTY_CELL_IN_TABLE_DATA
 
-  """В таблице не может быть одинаковых строк"""
+  """В таблице структуры не может быть одинаковых строк"""
   IDENTICAL_ROW_IN_TABLE_DATA
 
-  """Версия импортируемого файла не соответствует версии приложения"""
+  """Версия импортируемого файла не соответствует версии шаблона структуры"""
   INCORRECT_FILE_VERSION
 
-  """Стандартное отклонение должно быть положительным"""
-  STANDARD_DEVIATION_MUST_BE_POSITIVE
+  """Некорректная зависимость параметров распределения"""
+  DISTRIBUTION_PARAMETERS_INCORRECT_RELATION
+
+  """Параметр распределения выходит за границы допустимых значений"""
+  DISTRIBUTION_PARAMETER_OUT_OF_RANGE
+
+  """Для старта расчётов заполните ячейку таблицы"""
+  CELL_VALUE_IS_NULL
+
+  """Вероятность может иметь значение в пределах от 0.0 до 1.0"""
+  INVALID_PROBABILITY_VALUE
 }
 
 """Интерфейс ошибок, отображаемых пользователю."""
@@ -163,72 +244,29 @@ interface ErrorInterface {
   message: String!
 }
 
-"""Ошибка при заполнении формы."""
-type FormError implements ErrorInterface {
-  """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
-  code: ErrorCodes!
-
-  """
-  Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
-  """
-  message: String!
-
-  """Список полей формы, к которым относится ошибка"""
-  fields: [String!]!
+type GCoSCalculationResult {
+  """Список значений GCoS геологических объектов"""
+  GCoSValues: [Float]
+  errors: [TableError!]
 }
 
-"""Ошибки формы, отображаемые пользователю."""
-type FormErrors {
-  errors: [FormError!]!
-}
-
+"""Список категроий геологического объекта."""
 enum GeoObjectCategories {
-    RESERVES
-    RESOURCES
+  RESERVES
+  RESOURCES
 }
 
 type Mutation {
+  updateRiskValue(projectStructure: ProjectStructureInput!): UpdateRiskValueResult
   calculateProject(projectStructureInput: ProjectStructureInput!): CalculationResult
 }
 
-"""Категория геологического объекта."""
-type DomainEntity {
-    """Имя категории геологического объекта"""
-    name: String!
-    """Иконка категории геологического объекта"""
-    icon: DomainEntityIcons!
-}
-
-"""Список иконок категории геологического объекта."""
-enum DomainEntityIcons {
-    LICENSING_ROUND_ICON
-    FIELD_ICON
-    FORMATION_ICON
-    OIL_POOL_ICON
-    WELL_ICON
-}
-
-"""Категория геологического объекта."""
-input DomainEntityInput {
-    """Имя категории геологического объекта"""
-    name: String!
-    """Иконка категории геологического объекта"""
-    icon: DomainEntityIcons!
-}
-
-"""Строка в таблице структуры проекта."""
-input DomainObjectInput {
-    """Список ячеек в строке таблицы"""
-    cells: [String!]!
-    geoObjectCategory: GeoObjectCategories!
-}
-
-"""Точка процентиля на графике."""
-type PercentilePoint {
+"""Точка на графике."""
+type Percentile {
   point: Point!
 
-  """Процентный ранг"""
-  percentRank: Int!
+  """Процентильный ранг (1-99)"""
+  rank: Int!
 }
 
 """Точка на графике."""
@@ -237,16 +275,14 @@ type Point {
   y: Float!
 }
 
-"""Представление проекта."""
 type Project {
   """Версия шаблона структуры проекта"""
   version: String!
 
-  """Структуры проекта"""
+  """Структура проекта"""
   structure: ProjectStructure!
 }
 
-"""Представление проекта."""
 input ProjectInput {
   """Версия шаблона структуры проекта"""
   version: String!
@@ -262,14 +298,10 @@ type ProjectQueries {
 
   """Валидация структуры проекта перед импортом/экспортом"""
   validateBeforeLoad(project: ProjectInput!): DetailError
-
-  """Валидация данных структуры проекта перед вычислениями"""
-  validateBeforeCalculate(projectStructure: ProjectStructureInput!): [TableError]
 }
 
-"""Структура проекта."""
 type ProjectStructure {
-  """Список категорий геологических объектов"""
+  """Список доменных сущностей геологических объектов"""
   domainEntities: [DomainEntity!]!
 
   """Список подсчетных параметров"""
@@ -279,27 +311,28 @@ type ProjectStructure {
   risks: [Risk!]!
 }
 
-"""Структура проекта."""
 input ProjectStructureInput {
-  """Список категорий геологического объекта"""
+  """Список доменных сущностей геологических объектов"""
   domainEntities: [DomainEntityInput!]!
-  """Список строк в таблице структуры проекта"""
-  domainObjects: [DomainObjectInput!]!
 
   """Список подсчетных параметров"""
   attributes: [AttributeInput!]!
 
+  """Список геологических объектов структуры проекта"""
+  domainObjects: [DomainObjectInput!]!
+
+  """Список рисков геологических объектов"""
+  risks: [RiskInput!]!
 }
 
 type Query {
   """Пространство имен для работы с проектом."""
   project: ProjectQueries
 
-  """Пространство имен для работы со распределениями."""
+  """Пространство имен для работы с распределениями."""
   distribution: DistributionQueries
 }
 
-"""Риск геологического объекта."""
 type Risk {
   """Кодовое обозначение риска"""
   code: String!
@@ -308,6 +341,13 @@ type Risk {
   name: String!
 }
 
+input RiskInput {
+  """Кодовое обозначение риска"""
+  code: String!
+
+  """Наименование риска"""
+  name: String!
+}
 
 """
 Ошибка данных таблицы с информацией о расположении строк или ячеек повлекших ошибку.
@@ -321,10 +361,19 @@ type TableError implements ErrorInterface {
   """
   message: String!
 
+  """Имя таблицы, содержащей строки или ячейки, повлекшие ошибку"""
+  tableName: String
+
   """Индекс ячейки в строке таблицы, повлекшей ошибку"""
   column: Int
 
   """Индекс строки таблицы, повлекшей ошибку"""
   row: Int
 }
+
+type TableErrors {
+  errors: [TableError!]!
+}
+
+union UpdateRiskValueResult = GCoSCalculationResult | DetailError
 

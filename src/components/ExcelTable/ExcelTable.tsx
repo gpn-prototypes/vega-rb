@@ -1,24 +1,16 @@
 import React, { useCallback, useMemo } from 'react';
 import ReactDataGrid, {
   CalculatedColumn,
-  HeaderRendererProps,
   RowsUpdateEvent,
 } from 'react-data-grid';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { AutoSizer } from 'react-virtualized';
-import { curry } from 'lodash';
 
 import renderColumns from './Columns/renderColumns';
 import { cnExcelTable } from './cn-excel-table';
 import { HeaderContextMenu } from './ContextMenu';
-import Header from './Header';
-import {
-  columnsReorder,
-  generateColumn,
-  onBlurCell,
-  setColumnAttributes,
-} from './helpers';
+import { generateColumn } from './helpers';
 import StyledRow from './StyledRow';
 import {
   GridCollection,
@@ -29,6 +21,8 @@ import {
 } from './types';
 
 import './ExcelTable.css';
+
+const cnExcelTableClass = cnExcelTable();
 
 interface IProps {
   data: GridCollection;
@@ -74,10 +68,7 @@ export const ExcelTable: React.FC<IProps> = ({
       for (let i = fromRow; i <= toRow; i += 1) {
         newRows[i] = {
           ...newRows[i],
-          ...Object.entries(updated).reduce(
-            (prev, [key, value]) => ({ ...prev, [key]: { value } }),
-            {},
-          ),
+          ...updated,
         };
       }
 
@@ -116,28 +107,15 @@ export const ExcelTable: React.FC<IProps> = ({
     { idx }: { idx: number },
   ): void => pushColumn(idx + 1);
 
-  const setColumnProps = curry(setColumnAttributes)(columns, setColumns);
-  const handleColumnsReorder = curry(columnsReorder)(columns, setColumns);
-  const onBlurHandler = curry(onBlurCell)(columns, setColumns);
-
-  const columnsList = useMemo(
-    () =>
-      renderColumns(
-        columns,
-        React.createElement(Header, {
-          ...({} as HeaderRendererProps<GridRow>),
-          onBlurHandler,
-          setColumnProps,
-          handleColumnsReorder,
-        }),
-      ),
-    [columns, handleColumnsReorder, onBlurHandler, setColumnProps],
-  );
+  const columnsList = useMemo(() => renderColumns(columns, setColumns), [
+    columns,
+    setColumns,
+  ]);
 
   return (
     <>
       <DndProvider backend={HTML5Backend}>
-        <AutoSizer className={cnExcelTable()}>
+        <AutoSizer className={cnExcelTableClass}>
           {({ height, width }): JSX.Element => (
             <ReactDataGrid
               columns={columnsList}

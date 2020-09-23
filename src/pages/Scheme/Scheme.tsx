@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Button } from '@gpn-prototypes/vega-button';
 import { SelectedCell } from 'components/ExcelTable/types';
 
-import { CalculateButton } from './components/CalculateButton/CalculateButton';
-import DistributionSettings from './components/DistributionSettings/DistributionSettings';
+import CalculateButton from './components/CalculateButton';
+import DistributionSettings from './components/DistributionSettings';
 import ExportButton from './components/ExportButton';
 import ImportButton from './components/ImportButton';
 import Table from './components/Table';

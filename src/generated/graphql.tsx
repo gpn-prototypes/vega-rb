@@ -37,7 +37,7 @@ export type Project = {
   __typename?: 'Project';
   /** Версия шаблона структуры проекта */
   version: Scalars['String'];
-  /** Структуры проекта */
+  /** Структура проекта */
   structure: ProjectStructure;
 };
 
@@ -80,7 +80,6 @@ export type Attribute = {
   units: Scalars['String'];
 };
 
-/** Риск геологического объекта. */
 export type Risk = {
   __typename?: 'Risk';
   /** Кодовое обозначение риска */
@@ -112,22 +111,26 @@ export type ErrorInterface = {
 export enum ErrorCodes {
   /** Ошибка в загружаемой структуре */
   IncorrectProjectStructure = 'INCORRECT_PROJECT_STRUCTURE',
-  /** В строке данных таблицы не может быть пустых ячеек */
+  /** В строке данных таблицы структуры не может быть пустых ячеек */
   EmptyCellInTableData = 'EMPTY_CELL_IN_TABLE_DATA',
-  /** В таблице не может быть одинаковых строк */
+  /** В таблице структуры не может быть одинаковых строк */
   IdenticalRowInTableData = 'IDENTICAL_ROW_IN_TABLE_DATA',
-  /** Версия импортируемого файла не соответствует версии приложения */
+  /** Версия импортируемого файла не соответствует версии шаблона структуры */
   IncorrectFileVersion = 'INCORRECT_FILE_VERSION',
   /** Некорректная зависимость параметров распределения */
   DistributionParametersIncorrectRelation = 'DISTRIBUTION_PARAMETERS_INCORRECT_RELATION',
   /** Параметр распределения выходит за границы допустимых значений */
   DistributionParameterOutOfRange = 'DISTRIBUTION_PARAMETER_OUT_OF_RANGE',
+  /** Для старта расчётов заполните ячейку таблицы */
+  CellValueIsNull = 'CELL_VALUE_IS_NULL',
+  /** Вероятность может иметь значение в пределах от 0.0 до 1.0 */
+  InvalidProbabilityValue = 'INVALID_PROBABILITY_VALUE',
 }
 
 export type ProjectInput = {
   /** Версия шаблона структуры проекта */
   version: Scalars['String'];
-  /** Структуры проекта */
+  /** Структура проекта */
   structure: ProjectStructureInput;
 };
 
@@ -138,6 +141,8 @@ export type ProjectStructureInput = {
   attributes: Array<AttributeInput>;
   /** Список геологических объектов структуры проекта */
   domainObjects: Array<DomainObjectInput>;
+  /** Список рисков геологических объектов */
+  risks: Array<RiskInput>;
 };
 
 export type DomainEntityInput = {
@@ -160,11 +165,14 @@ export type AttributeInput = {
 
 /** Геологический объект структуры проекта. */
 export type DomainObjectInput = {
-  /** Список геологических объектов в строке */
-  cells: Array<Scalars['String']>;
+  /** Иерархия геологического объекта в структуре проекта */
+  domainObjectPath: Array<Scalars['String']>;
   /** Категория геологического объекта */
   geoObjectCategory: GeoObjectCategories;
-  attributeValues: Array<DistributionInput>;
+  /** Список значений атрибутов геологического объекта */
+  attributeValues: Array<Maybe<DistributionInput>>;
+  /** Список значений рисков геологического объекта */
+  risksValues: Array<Maybe<Scalars['Float']>>;
 };
 
 /** Список категроий геологического объекта. */
@@ -203,7 +211,7 @@ export enum DistributionDefinitionTypes {
   MinMax = 'MIN_MAX',
   /** Через расположение, логарифмическое среднее и логарифмическое стандартное отклонение */
   LocationMeanlogSdlog = 'LOCATION_MEANLOG_SDLOG',
-  /** Через расположение, минимум и максимум */
+  /** Через наиболее вероятное, минимум и максимум */
   ModeMinMax = 'MODE_MIN_MAX',
 }
 
@@ -226,7 +234,7 @@ export enum DistributionParameterTypes {
   Max = 'MAX',
   /** Расположение */
   Location = 'LOCATION',
-  /** Пик */
+  /** Наиболее вероятное */
   Mode = 'MODE',
   /** Логарифмическое среднее */
   Meanlog = 'MEANLOG',
@@ -234,25 +242,32 @@ export enum DistributionParameterTypes {
   Sdlog = 'SDLOG',
 }
 
+export type RiskInput = {
+  /** Кодовое обозначение риска */
+  code: Scalars['String'];
+  /** Наименование риска */
+  name: Scalars['String'];
+};
+
 /** Пространство имен для работы с распределениями. */
 export type DistributionQueries = {
   __typename?: 'DistributionQueries';
   /** Результат вычисления значения распределения */
-  distributionValue?: Maybe<DistributionValueResult>;
+  distributionChart?: Maybe<DistributionChartResult>;
 };
 
 /** Пространство имен для работы с распределениями. */
-export type DistributionQueriesDistributionValueArgs = {
+export type DistributionQueriesDistributionChartArgs = {
   distribution: DistributionInput;
 };
 
-export type DistributionValueResult =
-  | DistributionValue
+export type DistributionChartResult =
+  | DistributionChart
   | DistributionDefinitionErrors;
 
 /** Результаты вычисления заданного распределения. */
-export type DistributionValue = {
-  __typename?: 'DistributionValue';
+export type DistributionChart = {
+  __typename?: 'DistributionChart';
   /** График функции плотности распределения */
   pdf: Array<Point>;
   /** Функция надежности (1 - cdf) */
@@ -295,11 +310,40 @@ export type DistributionDefinitionError = ErrorInterface & {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  updateRiskValue?: Maybe<UpdateRiskValueResult>;
   calculateProject?: Maybe<CalculationResult>;
+};
+
+export type MutationUpdateRiskValueArgs = {
+  projectStructure: ProjectStructureInput;
 };
 
 export type MutationCalculateProjectArgs = {
   projectStructureInput: ProjectStructureInput;
+};
+
+export type UpdateRiskValueResult = GCoSCalculationResult | DetailError;
+
+export type GCoSCalculationResult = {
+  __typename?: 'GCoSCalculationResult';
+  /** Список значений GCoS геологических объектов */
+  GCoSValues?: Maybe<Array<Maybe<Scalars['Float']>>>;
+  errors?: Maybe<Array<TableError>>;
+};
+
+/** Ошибка данных таблицы с информацией о расположении строк или ячеек повлекших ошибку. */
+export type TableError = ErrorInterface & {
+  __typename?: 'TableError';
+  /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
+  code: ErrorCodes;
+  /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
+  message: Scalars['String'];
+  /** Имя таблицы, содержащей строки или ячейки, повлекшие ошибку */
+  tableName?: Maybe<Scalars['String']>;
+  /** Индекс ячейки в строке таблицы, повлекшей ошибку */
+  column?: Maybe<Scalars['Int']>;
+  /** Индекс строки таблицы, повлекшей ошибку */
+  row?: Maybe<Scalars['Int']>;
 };
 
 export type CalculationResult =
@@ -310,19 +354,6 @@ export type CalculationResult =
 export type TableErrors = {
   __typename?: 'TableErrors';
   errors: Array<TableError>;
-};
-
-/** Ошибка данных таблицы с информацией о расположении строк или ячеек повлекших ошибку. */
-export type TableError = ErrorInterface & {
-  __typename?: 'TableError';
-  /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
-  code: ErrorCodes;
-  /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
-  message: Scalars['String'];
-  /** Индекс ячейки в строке таблицы, повлекшей ошибку */
-  column?: Maybe<Scalars['Int']>;
-  /** Индекс строки таблицы, повлекшей ошибку */
-  row?: Maybe<Scalars['Int']>;
 };
 
 export type CalculationOk = {

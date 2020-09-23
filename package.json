@@ -6,7 +6,7 @@
     "build": "node scripts/build.js",
     "build-storybook": "build-storybook -s public --quiet",
     "format": "prettier --write '{src,types,scripts}/**/*.{json,{j,t}s{,x},css,}'",
-    "gen": "graphql-codegen --config codegen.yml",
+    "gen:codegen": "graphql-codegen --config codegen.yml",
     "lint": "npm-run-all lint:* --color",
     "lint-fix": "npm-run-all format lint-fix:*",
     "lint-fix:css": "stylelint 'src/**/*.css' --color --fix",

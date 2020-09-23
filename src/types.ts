@@ -20,12 +20,6 @@ export interface IProjectCell {
   cells: string[];
 }
 
-export interface IProjectStructureTemplate {
-  domainEntities: GeoCategory[];
-  attributes: CalculationParam[];
-  domainObjects?: IProjectCell[];
-}
-
 export interface IProjectStructure {
   domainEntities: GeoCategory[];
   calculationParameters: CalculationParam[];

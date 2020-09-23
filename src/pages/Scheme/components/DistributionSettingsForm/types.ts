@@ -2,18 +2,20 @@ import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
-} from '../../../../generated/graphql';
+} from 'generated/graphql';
 
 export type DistributionParametersMap = {
   [key in DistributionTypes]: DistributionParameters;
 };
 
+interface DistributionType {
+  type: DistributionDefinitionTypes;
+  title: string;
+}
+
 export type DistributionParameters = {
   fieldsByType: Partial<{ [key in DistributionDefinitionTypes]: Field[] }>;
-  types: {
-    type: DistributionDefinitionTypes;
-    title: string;
-  }[];
+  types: DistributionType[];
 };
 
 export type Field = {

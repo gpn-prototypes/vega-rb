@@ -12,130 +12,13 @@ import { Just } from 'monet';
 
 import { Dropdown, Option } from '../Dropdown';
 
+import distributionParametersMap from './data';
 import {
-  DistributionParametersMap,
   DistributionSettingsFormData,
   DistributionSettingsParameters,
 } from './types';
 
 import style from './DistributionSettingsForm.module.css';
-
-export const distributionParametersMap: DistributionParametersMap = {
-  [DistributionTypes.Uniform]: {
-    types: [
-      {
-        type: DistributionDefinitionTypes.MinMax,
-        title: 'Минимум, максимум',
-      },
-    ],
-    fieldsByType: {
-      [DistributionDefinitionTypes.MinMax]: [
-        {
-          key: DistributionParameterTypes.Min,
-          title: 'Минимум',
-          defaultValue: '',
-        },
-        {
-          key: DistributionParameterTypes.Max,
-          title: 'Максимум',
-          defaultValue: '',
-        },
-      ],
-    },
-  },
-  [DistributionTypes.Triangular]: {
-    types: [
-      {
-        type: DistributionDefinitionTypes.ModeMinMax,
-        title: 'Наиболее вероятное, минимум, максимум',
-      },
-    ],
-    fieldsByType: {
-      [DistributionDefinitionTypes.ModeMinMax]: [
-        {
-          key: DistributionParameterTypes.Min,
-          title: 'Минимум',
-          defaultValue: '',
-        },
-        {
-          key: DistributionParameterTypes.Max,
-          title: 'Максимум',
-          defaultValue: '',
-        },
-        {
-          key: DistributionParameterTypes.Mode,
-          title: 'Наиболее вероятное',
-          defaultValue: '',
-        },
-      ],
-    },
-  },
-  [DistributionTypes.Lognormal]: {
-    types: [
-      {
-        type: DistributionDefinitionTypes.LocationMeanlogSdlog,
-        title: 'Расположение, лог. среднее, лог. станд. отклонение',
-      },
-    ],
-    fieldsByType: {
-      [DistributionDefinitionTypes.LocationMeanlogSdlog]: [
-        {
-          key: DistributionParameterTypes.Meanlog,
-          title: 'Логарифмическое среднее',
-          defaultValue: '',
-        },
-        {
-          key: DistributionParameterTypes.Sdlog,
-          title: 'Логарифмическое стандартное отклонение',
-          defaultValue: '',
-        },
-        {
-          key: DistributionParameterTypes.Location,
-          title: 'Расположение',
-          defaultValue: '',
-        },
-      ],
-    },
-  },
-  [DistributionTypes.Normal]: {
-    types: [
-      {
-        type: DistributionDefinitionTypes.MeanSd,
-        title: 'Среднее, станд. отклонение',
-      },
-      {
-        type: DistributionDefinitionTypes.MinMax,
-        title: 'Минимум, максимум',
-      },
-    ],
-    fieldsByType: {
-      [DistributionDefinitionTypes.MeanSd]: [
-        {
-          key: DistributionParameterTypes.Mean,
-          title: 'Среднее',
-          defaultValue: '',
-        },
-        {
-          key: DistributionParameterTypes.StandardDeviation,
-          title: 'Стандартное',
-          defaultValue: '',
-        },
-      ],
-      [DistributionDefinitionTypes.MinMax]: [
-        {
-          key: DistributionParameterTypes.Min,
-          title: 'Минимум',
-          defaultValue: '',
-        },
-        {
-          key: DistributionParameterTypes.Max,
-          title: 'Максимум',
-          defaultValue: '',
-        },
-      ],
-    },
-  },
-};
 
 const options = [
   { value: DistributionTypes.Normal, label: 'Нормальное' },
@@ -145,11 +28,7 @@ const options = [
 ];
 
 interface DistributionSettingsFormProps {
-  onChange: ({
-    distributionType,
-    distributionDefinitionType,
-    parameters,
-  }: DistributionSettingsFormData) => void;
+  onChange: (distributionData: DistributionSettingsFormData) => void;
   formData: DistributionSettingsFormData;
   errors?: DistributionDefinitionError[];
 }
@@ -168,12 +47,13 @@ const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> = ({
   }));
 
   const handleTypeChange = (o: Option<DistributionTypes>): void => {
+    const typeByValue = distributionParametersMap[o.value].types[0].type;
+
     onChange({
       distributionType: o.value,
-      distributionDefinitionType:
-        distributionParametersMap[o.value].types[0].type,
+      distributionDefinitionType: typeByValue,
       parameters: distributionParametersMap[o.value].fieldsByType?.[
-        distributionParametersMap[o.value].types[0].type
+        typeByValue
       ]?.reduce(
         (prev, { key, defaultValue }) => ({
           ...prev,

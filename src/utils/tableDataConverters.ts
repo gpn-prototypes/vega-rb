@@ -6,6 +6,7 @@ import {
   IGridColumn,
   TableEntities,
 } from 'components/ExcelTable/types';
+import _ from 'lodash';
 import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
 
 import {
@@ -13,7 +14,6 @@ import {
   GeoCategory,
   IProjectCell,
   IProjectStructure,
-  IProjectStructureTemplate,
 } from '../types';
 
 const getCalculationColumn = (
@@ -81,21 +81,21 @@ function convertCellsDataToGridRow(
 
 export function unpackData({
   domainEntities = [],
-  attributes = [],
+  calculationParameters = [],
   domainObjects: cellsData = [],
-}: IProjectStructureTemplate): GridCollection {
+}: IProjectStructure): GridCollection {
   const columns: IGridColumn[] = [
     new GridColumn(SpecialColumns.ID),
     ...structureParamsReducer<GeoCategory>(domainEntities),
     new GridColumn(SpecialColumns.SPLITTER),
-    ...structureParamsReducer<CalculationParam>(attributes),
+    ...structureParamsReducer<CalculationParam>(calculationParameters),
   ];
   const rows = [
     ...cellsData.map(({ cells }, idx) => ({
       ...convertCellsDataToGridRow(cells, domainEntities),
       id: { value: idx },
     })),
-    ...Array.from({ length: 1000 - cellsData.length }, (_, index) => ({
+    ...Array.from({ length: 1000 - cellsData.length }, (val, index) => ({
       id: { value: index },
     })),
   ];
@@ -108,7 +108,7 @@ export function unpackData({
 
 export function packData(
   data: GridCollection,
-  template: IProjectStructureTemplate,
+  template: IProjectStructure,
 ): IProjectStructure {
   const domainEntitiesKeys = data.columns.filter(
     (col) => col.type === TableEntities.GEO_CATEGORY,
@@ -136,7 +136,7 @@ export function packData(
   const calculationParameters = calculationParametersKeys.map(
     ({ key }) =>
       ({
-        ...template.attributes.find(({ code }) => code === key),
+        ...template.calculationParameters.find(({ code }) => code === key),
       } as CalculationParam),
   );
 
