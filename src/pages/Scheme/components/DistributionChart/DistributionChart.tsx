@@ -181,7 +181,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
         .attr('class', 'axis axis__left')
         .call(
           d3
-            .axisLeft(probabilityDensityYScale)
+            .axisLeft(cumulativeYScale)
             .ticks(width / 80)
             .tickSize(4)
             .tickFormat((domainValue) => `${domainValue}`),
@@ -212,7 +212,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
         .attr('class', 'axis axis__right')
         .call(
           d3
-            .axisRight(cumulativeYScale)
+            .axisRight(probabilityDensityYScale)
             .ticks(width / 50)
             .tickSize(width)
             .tickFormat((domainValue) => `${domainValue}`)
