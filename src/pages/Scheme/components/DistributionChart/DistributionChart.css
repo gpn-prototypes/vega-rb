@@ -56,8 +56,9 @@
   }
 
   &__right text {
-    transform: translateX(5px);
     color: #33b4ff;
+
+    transform: translateX(5px);
   }
 
   &__right path {
