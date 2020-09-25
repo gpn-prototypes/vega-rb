@@ -264,11 +264,11 @@ export type DistributionQueriesDistributionChartArgs = {
 };
 
 export type DistributionChartResult =
-  | TDistributionChart
+  | DistributionChart
   | DistributionDefinitionErrors;
 
 /** Результаты вычисления заданного распределения. */
-export type TDistributionChart = {
+export type DistributionChart = {
   __typename?: 'DistributionChart';
   /** График функции плотности распределения */
   pdf: Array<Point>;

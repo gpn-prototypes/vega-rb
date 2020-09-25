@@ -21,8 +21,11 @@ module.exports = {
         'no-underscore-dangle': 'off',
       },
       settings: {
+        'import/parsers': {
+          '@typescript-eslint/parser': ['.ts', '.tsx'],
+        },
         'import/resolver': {
-          typescript: {},
+          typescript: './tsconfig.json',
         },
       },
     },

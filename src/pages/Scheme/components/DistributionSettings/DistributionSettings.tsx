@@ -2,6 +2,9 @@ import React, { ReactText, useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
 import { SelectedCell } from 'components/ExcelTable/types';
+import isEmpty from 'lodash/isEmpty';
+import tableDuck from 'store/tableDuck';
+
 import {
   DistributionChart as IDistributionChart,
   DistributionDefinitionError,
@@ -10,10 +13,7 @@ import {
   DistributionParameterTypes,
   DistributionTypes,
   Query,
-} from 'generated/graphql';
-import isEmpty from 'lodash/isEmpty';
-import tableDuck from 'store/tableDuck';
-
+} from '../../../../generated/graphql';
 import DistributionChart from '../DistributionChart';
 import DistributionSettingsForm from '../DistributionSettingsForm';
 import distributionParametersMap from '../DistributionSettingsForm/data';
