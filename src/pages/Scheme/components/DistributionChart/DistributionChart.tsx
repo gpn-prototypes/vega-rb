@@ -15,16 +15,10 @@ interface DistributionChartProps {
 const DistributionChart: React.FC<DistributionChartProps> = ({
   data: { pdf, sf, percentiles },
 }) => {
-<<<<<<< HEAD
-=======
-  const margin = { top: 18, right: 43, bottom: 38, left: 45 };
-
->>>>>>> feature(chart): update chart styles
   const getX = (d: Point) => d.x;
   const getY = (d: Point) => d.y;
 
   const d3Container = useRef(null);
-<<<<<<< HEAD
   const getScale = (
     domain: number[] | { valueOf(): number }[],
     position: number[],
@@ -35,33 +29,11 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     d3.min(points, func) as number,
     d3.max(points, func) as number,
   ];
-=======
-  const createXScale = useCallback(
-    (domain: Array<number | { valueOf(): number }>) =>
-      d3
-        .scaleLinear()
-        .domain(domain)
-        .nice()
-        .range([margin.left, width - margin.right]),
-    [margin.left, margin.right],
-  );
-  const createYScale = useCallback(
-    (domain: Array<number | { valueOf(): number }>) =>
-      d3
-        .scaleLinear()
-        .domain(domain)
-        .nice()
-        .range([height - margin.bottom, margin.top]),
-    [margin.bottom, margin.top],
-  );
-
->>>>>>> feature(chart): update chart styles
   const draw = useCallback(() => {
     const svg = d3.select(d3Container.current);
 
     svg.selectAll('*').remove();
 
-<<<<<<< HEAD
     const cumulativeXScale = getScale(getDomain(sf, getX), xScalePosition);
     const cumulativeYScale = getScale(getDomain(sf, getY), yScalePosition);
     const probabilityDensityXScale = getScale(
@@ -72,24 +44,6 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
       getDomain(pdf, getY),
       yScalePosition,
     );
-=======
-    const cumulativeXScale = createXScale([
-      d3.min(sf, getX) as number,
-      d3.max(sf, getX) as number,
-    ]);
-    const cumulativeYScale = createYScale([
-      d3.min(sf, getY) as number,
-      d3.max(sf, getY) as number,
-    ]);
-    const probabilityDensityXScale = createXScale([
-      d3.min(pdf, getX) as number,
-      d3.max(pdf, getX) as number,
-    ]);
-    const probabilityDensityYScale = createYScale([
-      d3.min(pdf, getY) as number,
-      d3.max(pdf, getY) as number,
-    ]);
->>>>>>> feature(chart): update chart styles
     const projectionLinesFromPoint = (point: Point, data: Point[]) => {
       svg
         .append('path')
@@ -114,18 +68,13 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(0,${height - margin.bottom})`)
-<<<<<<< HEAD
         .attr('class', 'axis axis_bottom')
-=======
-        .attr('class', 'axis axis__bottom')
->>>>>>> feature(chart): update chart styles
         .call(
           d3
             .axisBottom(probabilityDensityXScale)
             .ticks(width / 80)
             .tickSize(4)
             .tickFormat(() => ''),
-<<<<<<< HEAD
         ),
     );
 
@@ -162,30 +111,6 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
             .tickSize(width)
             .tickFormat((domainValue) => `${domainValue}`)
             .tickSize(3),
-=======
-        ),
-    );
-
-    svg.append('g').call((g) =>
-      g
-        .attr('transform', `translate(0,${height - margin.bottom})`)
-        .attr('class', 'grid bottom')
-        .call(
-          d3.axisBottom(probabilityDensityXScale).ticks(5).tickSize(-height),
-        ),
-    );
-
-    svg.append('g').call((g) =>
-      g
-        .attr('transform', `translate(${margin.left},0)`)
-        .attr('class', 'axis axis__left')
-        .call(
-          d3
-            .axisLeft(cumulativeYScale)
-            .ticks(width / 80)
-            .tickSize(4)
-            .tickFormat((domainValue) => `${domainValue}`),
->>>>>>> feature(chart): update chart styles
         ),
     );
     if (percentiles.length) {
@@ -209,7 +134,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(${width - margin.left + 4},0)`)
-        .attr('class', 'axis axis__right')
+        .attr('class', 'axis axis_right')
         .call(
           d3
             .axisRight(probabilityDensityYScale)
@@ -313,19 +238,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
           .x((d) => cumulativeXScale(getX(d)))
           .y((d) => cumulativeYScale(getY(d))),
       );
-<<<<<<< HEAD
   }, [sf, xScalePosition, yScalePosition, pdf, percentiles]);
-=======
-  }, [
-    createXScale,
-    sf,
-    createYScale,
-    pdf,
-    percentiles,
-    margin.bottom,
-    margin.left,
-  ]);
->>>>>>> feature(chart): update chart styles
 
   useEffect(() => {
     if (d3Container.current) {
