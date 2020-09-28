@@ -21,6 +21,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
   const d3Container = useRef(null);
   const getScale = (
     domain: number[] | { valueOf(): number }[],
+<<<<<<< HEAD
     position: number[],
   ) => d3.scaleLinear().domain(domain).nice().range(position);
   const xScalePosition = [margin.left, width - margin.right];
@@ -29,11 +30,19 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     d3.min(points, func) as number,
     d3.max(points, func) as number,
   ];
+=======
+    range: number[],
+  ) => d3.scaleLinear().domain(domain).nice().range(range);
+  const xScaleRange = [margin.left, width - margin.right];
+  const yScaleRange = [height - margin.bottom, margin.top];
+
+>>>>>>> refactor(code-style): update code by comments to the PR
   const draw = useCallback(() => {
     const svg = d3.select(d3Container.current);
 
     svg.selectAll('*').remove();
 
+<<<<<<< HEAD
     const cumulativeXScale = getScale(getDomain(sf, getX), xScalePosition);
     const cumulativeYScale = getScale(getDomain(sf, getY), yScalePosition);
     const probabilityDensityXScale = getScale(
@@ -43,6 +52,23 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     const probabilityDensityYScale = getScale(
       getDomain(pdf, getY),
       yScalePosition,
+=======
+    const cumulativeXScale = getScale(
+      [d3.min(sf, getX) as number, d3.max(sf, getX) as number],
+      xScaleRange,
+    );
+    const cumulativeYScale = getScale(
+      [d3.min(sf, getY) as number, d3.max(sf, getY) as number],
+      yScaleRange,
+    );
+    const probabilityDensityXScale = getScale(
+      [d3.min(pdf, getX) as number, d3.max(pdf, getX) as number],
+      xScaleRange,
+    );
+    const probabilityDensityYScale = getScale(
+      [d3.min(pdf, getY) as number, d3.max(pdf, getY) as number],
+      yScaleRange,
+>>>>>>> refactor(code-style): update code by comments to the PR
     );
     const projectionLinesFromPoint = (point: Point, data: Point[]) => {
       svg
@@ -238,7 +264,11 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
           .x((d) => cumulativeXScale(getX(d)))
           .y((d) => cumulativeYScale(getY(d))),
       );
+<<<<<<< HEAD
   }, [sf, xScalePosition, yScalePosition, pdf, percentiles]);
+=======
+  }, [sf, xScaleRange, yScaleRange, pdf, percentiles]);
+>>>>>>> refactor(code-style): update code by comments to the PR
 
   useEffect(() => {
     if (d3Container.current) {
