@@ -33,7 +33,7 @@ interface GridCellArguments {
   type: DistributionTypes;
   parameters: {
     type: DistributionParameterTypes;
-    value: string;
+    value: number;
   }[];
 }
 

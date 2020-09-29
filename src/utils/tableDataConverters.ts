@@ -6,15 +6,11 @@ import {
   IGridColumn,
   TableEntities,
 } from 'components/ExcelTable/types';
+import { Risk } from 'generated/graphql';
 import _ from 'lodash';
 import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
 
-import {
-  CalculationParam,
-  GeoCategory,
-  IProjectCell,
-  IProjectStructure,
-} from '../types';
+import { CalculationParam, GeoCategory, IProjectStructure } from '../types';
 
 const getCalculationColumn = (
   prev: IGridColumn[],
@@ -91,8 +87,8 @@ export function unpackData({
     ...structureParamsReducer<CalculationParam>(calculationParameters),
   ];
   const rows = [
-    ...cellsData.map(({ cells }, idx) => ({
-      ...convertCellsDataToGridRow(cells, domainEntities),
+    ...cellsData.map(({ domainObjectPath }, idx) => ({
+      ...convertCellsDataToGridRow(domainObjectPath, domainEntities),
       id: { value: idx },
     })),
     ...Array.from({ length: 1000 - cellsData.length }, (val, index) => ({
@@ -120,13 +116,18 @@ export function packData(
     domainEntitiesKeys.every(({ key }) => row[key]),
   );
 
-  const domainObjects = rows.map<IProjectCell>((row) => ({
-    cells: domainEntitiesKeys.map<string>(({ key }) => String(row[key]?.value)),
-    geoObjectCategory: 'RESERVES',
-    attributeValues: calculationParametersKeys
-      .filter(({ key }) => row[key])
-      .map(({ key }) => row[key]?.args),
-  }));
+  const domainObjects = rows
+    .filter((row) => domainEntitiesKeys.some(({ key }) => row[key]?.value))
+    .map((row) => ({
+      domainObjectPath: domainEntitiesKeys.map<string>(({ key }) => {
+        return row[key]?.value ? String(`domainObject ${row[key]?.value}`) : '';
+      }),
+      risksValues: [0.7, 0.7],
+      geoObjectCategory: 'RESERVES',
+      attributeValues: calculationParametersKeys.map(
+        ({ key }) => row[key]?.args,
+      ),
+    }));
 
   const domainEntities = domainEntitiesKeys.map(({ name, type }) => ({
     name,
@@ -139,10 +140,12 @@ export function packData(
         ...template.calculationParameters.find(({ code }) => code === key),
       } as CalculationParam),
   );
+  const risks = [] as Risk[];
 
   return {
     domainEntities,
     calculationParameters,
     domainObjects,
+    risks,
   };
 }

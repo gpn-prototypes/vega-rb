@@ -67,12 +67,12 @@ const distributionParametersMap: DistributionParametersMap = {
       [DistributionDefinitionTypes.LocationMeanlogSdlog]: [
         {
           key: DistributionParameterTypes.Meanlog,
-          title: 'Логарифмическое среднее',
+          title: 'Лог. среднее',
           defaultValue: '',
         },
         {
           key: DistributionParameterTypes.Sdlog,
-          title: 'Логарифмическое стандартное отклонение',
+          title: 'Лог. стандартное',
           defaultValue: '',
         },
         {
@@ -93,8 +93,24 @@ const distributionParametersMap: DistributionParametersMap = {
         type: DistributionDefinitionTypes.MinMax,
         title: 'Минимум, максимум',
       },
+      {
+        type: DistributionDefinitionTypes.Quantiles,
+        title: 'Р90, Р10',
+      },
     ],
     fieldsByType: {
+      [DistributionDefinitionTypes.Quantiles]: [
+        {
+          key: DistributionParameterTypes.Q1Value,
+          title: 'P10',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Q2Value,
+          title: 'P90',
+          defaultValue: '',
+        },
+      ],
       [DistributionDefinitionTypes.MeanSd]: [
         {
           key: DistributionParameterTypes.Mean,
@@ -116,6 +132,65 @@ const distributionParametersMap: DistributionParametersMap = {
         {
           key: DistributionParameterTypes.Max,
           title: 'Максимум',
+          defaultValue: '',
+        },
+      ],
+    },
+  },
+  [DistributionTypes.Beta]: {
+    types: [
+      {
+        type: DistributionDefinitionTypes.AlphaBetaMinMax,
+        title: 'Минимум, Максимум, Альфа, Бета',
+      },
+    ],
+    fieldsByType: {
+      [DistributionDefinitionTypes.AlphaBetaMinMax]: [
+        {
+          key: DistributionParameterTypes.Min,
+          title: 'Минимум',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Max,
+          title: 'Максимум',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Alpha,
+          title: 'Альфа',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Beta,
+          title: 'Бета',
+          defaultValue: '',
+        },
+      ],
+    },
+  },
+  [DistributionTypes.Pert]: {
+    types: [
+      {
+        type: DistributionDefinitionTypes.ModeMinMax,
+        title: 'Наиболее вероятное, минимум, максимум',
+      },
+    ],
+    fieldsByType: {
+      [DistributionDefinitionTypes.ModeMinMax]: [
+        {
+          key: DistributionParameterTypes.Min,
+          title: 'Минимум',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Max,
+          title: 'Максимум',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Mode,
+          title: 'Наиболее вероятное',
           defaultValue: '',
         },
       ],

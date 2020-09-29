@@ -9,6 +9,7 @@ export const CALCULATION_PROJECT = gql`
           message
           column
           row
+          tableName
         }
       }
       ... on CalculationOk {

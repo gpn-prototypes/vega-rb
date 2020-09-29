@@ -70,7 +70,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
 
         const parameters = {
           ...(distributionParametersMap[DistributionTypes.Normal].fieldsByType[
-            DistributionDefinitionTypes.MeanSd
+            distributionDefinitionType
           ]?.reduce(
             (prev, { key, defaultValue }) => ({ ...prev, [key]: defaultValue }),
             {},
@@ -105,9 +105,9 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
     },
     [],
   );
-  const [formData, setFormData] = useState(
-    {} as DistributionSettingsFormData & { isValid?: boolean },
-  );
+  const [formData, setFormData] = useState({
+    isValid: false,
+  } as DistributionSettingsFormData & { isValid?: boolean });
   const [errors, setErrors] = useState<DistributionDefinitionError[]>([]);
   const [chartData, setChartData] = useState<IDistributionChart>(
     defaultDistributionChartValue,
@@ -121,19 +121,42 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
         distributionType,
         distributionDefinitionType,
       }: DistributionSettingsFormData,
-      cell: SelectedCell,
+      cell,
     ) => {
       dispatch(
         tableDuck.actions.updateCell({
           selectedCell: cell,
           cellData: {
             args: {
-              parameters: (Object.keys(
-                parameters,
-              ) as DistributionParameterTypes[]).map((type) => ({
-                type,
-                value: parameters[type] as string,
-              })),
+              parameters:
+                distributionDefinitionType ===
+                DistributionDefinitionTypes.Quantiles
+                  ? [
+                      ...Object.entries(parameters).map(
+                        ([parameterType, parameterValue]) => ({
+                          type:
+                            parameterType === DistributionParameterTypes.Q1Value
+                              ? DistributionParameterTypes.Q1Rank
+                              : DistributionParameterTypes.Q2Rank,
+                          value:
+                            parameterType === DistributionParameterTypes.Q1Value
+                              ? 0.1
+                              : 0.9,
+                        }),
+                      ),
+                      ...Object.entries(parameters).map(
+                        ([parameterType, parameterValue]) => ({
+                          type: parameterType as DistributionParameterTypes,
+                          value: Number.parseFloat(parameterValue as string),
+                        }),
+                      ),
+                    ]
+                  : Object.entries(parameters).map(
+                      ([parameterType, parameterValue]) => ({
+                        type: parameterType as DistributionParameterTypes,
+                        value: Number.parseFloat(parameterValue as string),
+                      }),
+                    ),
               type: distributionType,
               definition: distributionDefinitionType,
             },
@@ -186,14 +209,16 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
     if (checkDistributionValidation(distributionProps)) {
       getChart(distributionProps).then((data) => {
         if (data.errors) {
-          setErrors(errors);
+          setErrors(data.errors);
           setChartData(defaultDistributionChartValue);
           updateTable('', distributionProps, selectedCell);
         } else if (data.distributionChart) {
           setChartData(data.distributionChart);
           setErrors([]);
           updateTable(
-            data.distributionChart.percentiles[0].point.x,
+            data.distributionChart.percentiles?.find(
+              (percentile) => percentile.rank === 50,
+            )?.point.x as number,
             distributionProps,
             selectedCell,
           );
@@ -211,19 +236,21 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
       const result = getFormDataFromTableCell(selectedCell);
       setFormData(result);
 
-      if (formData.isValid) {
-        getChart(result).then(({ distributionChart }) => {
-          if (distributionChart) {
-            setChartData(distributionChart);
-            setErrors([]);
-          }
-        });
-      } else {
-        setChartData(defaultDistributionChartValue);
-        setErrors([]);
+      if (checkDistributionValidation(result)) {
+        getChart(result).then(
+          ({ distributionChart, errors: distributionDefinitionErrors }) => {
+            if (distributionChart) {
+              setChartData(distributionChart);
+              setErrors([]);
+            } else if (distributionDefinitionErrors.length) {
+              setChartData(defaultDistributionChartValue);
+              setErrors(distributionDefinitionErrors);
+            }
+          },
+        );
       }
     }
-  }, [formData.isValid, getChart, getFormDataFromTableCell, selectedCell]);
+  }, [getChart, getFormDataFromTableCell, selectedCell]);
 
   return (
     <>

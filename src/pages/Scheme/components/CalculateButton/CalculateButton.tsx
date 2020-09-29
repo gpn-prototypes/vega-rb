@@ -1,7 +1,9 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { useApolloClient } from '@apollo/client';
+import { useDispatch, useSelector } from 'react-redux';
+import { useApolloClient, useQuery } from '@apollo/client';
 import { Button } from '@gpn-prototypes/vega-button';
+import { TableError } from 'generated/graphql';
+import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { packData } from 'utils';
 
@@ -11,16 +13,13 @@ import { TemplateProjectData } from '../Table/Table';
 
 export const CalculateButton: React.FC = () => {
   const client = useApolloClient();
-  const tableRows = useSelector(({ table }: RootState) => table);
-
-  const handleClick = async () => {
-    const { data } = await client.query<TemplateProjectData>({
-      query: GET_TABLE_TEMPLATE,
-    });
-
+  const dispatch = useDispatch();
+  const tableData = useSelector((state: RootState) => state.table);
+  const { data } = useQuery<TemplateProjectData>(GET_TABLE_TEMPLATE);
+  const handleClick = () => {
     if (data) {
       const { domainEntities, calculationParameters, domainObjects } = packData(
-        tableRows,
+        tableData,
         data?.project.template.structure,
       );
 
@@ -36,6 +35,10 @@ export const CalculateButton: React.FC = () => {
                 ({ __typename, ...attribute }) => attribute,
               ),
               domainObjects,
+              risks: [
+                { code: 'PARENT_MATERIAL', name: 'Мат. порода' },
+                { code: 'MIGRATION', name: 'Миграция' },
+              ],
             },
           },
         })
@@ -43,13 +46,22 @@ export const CalculateButton: React.FC = () => {
           if (res.data.calculateProject.resultId) {
             const a = document.createElement('a');
             a.target = '_blank';
-            a.href = `http://vg1-back-5.k8s17.gpn.cloud.nexign.com/calculation_result/${res.data.calculateProject.resultId}`;
+            a.href = `files/calculation_result/${res.data.calculateProject.resultId}`;
             a.download = 'result.zip';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
           }
-        });
+          const errors = res.data.calculateProject.errors?.filter(
+            (error: TableError) => error.tableName,
+          );
+          if (errors?.length) {
+            dispatch(tableDuck.actions.updateErrors(errors));
+          } else {
+            dispatch(tableDuck.actions.updateErrors([]));
+          }
+        })
+        .catch((e) => console.error(e));
     }
   };
 

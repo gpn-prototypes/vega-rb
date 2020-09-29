@@ -1,8 +1,13 @@
+import { TextFieldProps } from '@gpn-prototypes/vega-text-field/dist/src/TextField';
 import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
 } from 'generated/graphql';
+
+const textFieldFormPropertyName = 'form';
+
+export type TextFieldFormProperty = TextFieldProps[typeof textFieldFormPropertyName];
 
 export type DistributionParametersMap = {
   [key in DistributionTypes]: DistributionParameters;

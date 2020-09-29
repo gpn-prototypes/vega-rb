@@ -1,6 +1,5 @@
 import {
   GridCellProperties,
-  GridCollection,
   GridRow,
   IGridColumn,
   SelectedCell,
@@ -10,6 +9,8 @@ import { Epic } from 'redux-observable';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
+
+import { TableError } from '../generated/graphql';
 
 import { RootState, TableState } from './types';
 
@@ -22,6 +23,7 @@ const actions = {
     selectedCell: SelectedCell;
     cellData: GridCellProperties;
   }>('UPDATE_CELL'),
+  updateErrors: factory<TableError[]>('UPDATE_ERRORS'),
 };
 
 const loadState = (): TableState | undefined => {
@@ -36,16 +38,17 @@ const loadState = (): TableState | undefined => {
   }
 };
 
-const setLocalStorage = (state: GridCollection): void => {
+const setLocalStorage = (state: TableState): void => {
   localStorage.setItem('table', JSON.stringify(state));
 };
 
 const initialState: TableState = loadState() || {
   columns: [],
   rows: [],
+  errors: [],
 };
 
-const reducer = reducerWithInitialState<GridCollection>(initialState)
+const reducer = reducerWithInitialState<TableState>(initialState)
   .case(actions.updateColumns, (state, payload) => ({
     ...state,
     columns: payload,
@@ -53,6 +56,10 @@ const reducer = reducerWithInitialState<GridCollection>(initialState)
   .case(actions.updateRows, (state, payload) => ({
     ...state,
     rows: payload,
+  }))
+  .case(actions.updateErrors, (state, payload) => ({
+    ...state,
+    errors: payload,
   }))
   .case(actions.updateCell, (state, { selectedCell, cellData }) => {
     const rows = [...state.rows];

@@ -1,8 +1,11 @@
 import { GridCollection } from 'components/ExcelTable/types';
 import { Param } from 'model/Param';
 
-export type TableState = GridCollection;
+import { TableError } from '../generated/graphql';
 
+export interface TableState extends GridCollection {
+  errors: TableError[];
+}
 export interface AlertState {
   text: string;
   loaderText: string;

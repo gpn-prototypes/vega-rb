@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form } from '@gpn-prototypes/vega-form';
+import { IconAlert } from '@gpn-prototypes/vega-icons';
 import { TextField } from '@gpn-prototypes/vega-text-field';
 import cn from 'classnames';
 import {
@@ -16,6 +17,8 @@ import distributionParametersMap from './data';
 import {
   DistributionSettingsFormData,
   DistributionSettingsParameters,
+  Field,
+  TextFieldFormProperty,
 } from './types';
 
 import style from './DistributionSettingsForm.module.css';
@@ -25,6 +28,8 @@ const options = [
   { value: DistributionTypes.Triangular, label: 'Треугольное' },
   { value: DistributionTypes.Uniform, label: 'Равномерное' },
   { value: DistributionTypes.Lognormal, label: 'Логнормальное' },
+  { value: DistributionTypes.Beta, label: 'Бета' },
+  { value: DistributionTypes.Pert, label: 'PERT' },
 ];
 
 interface DistributionSettingsFormProps {
@@ -88,6 +93,18 @@ const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> = ({
       parameters: { ...formData.parameters, [key]: args.value },
     });
   };
+  const getFormFieldType = (index: number, length: number) => {
+    const isLast = index === length - 1;
+    const isFirst = index === 0;
+    let form: TextFieldFormProperty = 'brick';
+    if (isFirst) {
+      form = length <= 2 ? 'defaultClear' : 'defaultBrick';
+    } else if (isLast) {
+      form = 'brickDefault';
+    }
+    return form;
+  };
+  const hasError = (key: string) => errors?.[0]?.fields?.includes(key);
 
   return (
     <Form className={style.Form}>
@@ -122,20 +139,29 @@ const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> = ({
       <Form.Row>
         <div className={style.Grid}>
           {fieldsByType[formData.distributionDefinitionType]?.map(
-            ({ key, defaultValue, title }) => (
-              <Form.Field key={key}>
-                <Form.Label>{title}</Form.Label>
-                <TextField
-                  width="full"
-                  size="s"
-                  value={formData.parameters[key] ?? defaultValue}
-                  onChange={handleChange(key)}
-                  className={cn({
-                    [style.TextField__error]: errors?.[0]?.fields.includes(key),
-                  })}
-                />
-              </Form.Field>
-            ),
+            ({ key, defaultValue, title }, index) => {
+              return (
+                <Form.Field key={key}>
+                  <Form.Label>{title}</Form.Label>
+                  <TextField
+                    width="full"
+                    size="s"
+                    leftSide={hasError(key) ? IconAlert : ''}
+                    form={getFormFieldType(
+                      index,
+                      (fieldsByType[
+                        formData.distributionDefinitionType
+                      ] as Field[]).length,
+                    )}
+                    value={formData.parameters[key] ?? defaultValue}
+                    onChange={handleChange(key)}
+                    className={cn({
+                      [style.TextField__error]: hasError(key),
+                    })}
+                  />
+                </Form.Field>
+              );
+            },
           )}
         </div>
       </Form.Row>

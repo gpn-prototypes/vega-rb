@@ -15,15 +15,19 @@ export interface CalculationParam extends Structure {
   shortName: string;
   units: string;
 }
-
+export interface Risk extends Structure {
+  code: string;
+  name: string;
+}
 export interface IProjectCell {
-  cells: string[];
+  domainObjectPath: string[];
 }
 
 export interface IProjectStructure {
   domainEntities: GeoCategory[];
   calculationParameters: CalculationParam[];
   domainObjects?: IProjectCell[];
+  risks: Risk[];
 }
 
 export type Nullable<T> = T | null;
