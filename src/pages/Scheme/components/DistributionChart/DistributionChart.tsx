@@ -61,7 +61,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
           point,
           { x: point.x, y: d3.min(data, getY) as number },
         ])
-        .attr('class', cnProjectionLines.toString())
+        .attr('class', cnProjectionLines)
         .attr(
           'd',
           d3
@@ -74,7 +74,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(0,${height - margin.bottom})`)
-        .attr('class', cnAxis.toString())
+        .attr('class', cnAxis)
         .call(
           d3
             .axisBottom(probabilityDensityXScale)
@@ -87,7 +87,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(0,${height - margin.bottom})`)
-        .attr('class', cnGrid.toString())
+        .attr('class', cnGrid)
         .call(
           d3.axisBottom(probabilityDensityXScale).ticks(5).tickSize(-height),
         ),
@@ -96,7 +96,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(${margin.left},0)`)
-        .attr('class', `${cnAxis.toString()} ${cnAxisLeft.toString()}`)
+        .attr('class', cnAxisLeft)
         .call(
           d3
             .axisLeft(cumulativeYScale)
@@ -109,7 +109,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(${width - margin.left + 4},0)`)
-        .attr('class', `${cnAxis.toString()} ${cnAxisRight.toString()}`)
+        .attr('class', cnAxisRight)
         .call(
           d3
             .axisRight(probabilityDensityYScale)
@@ -126,7 +126,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
         .enter()
         .append('text')
         .text((d) => `${Number.parseFloat(getX(d).toFixed(3))}`)
-        .attr('class', cnPercentilesText.toString())
+        .attr('class', cnPercentilesText)
         .attr('x', (d) => cumulativeXScale(getX(d)))
         .attr('y', (d) => cumulativeYScale(getY(d)))
         .attr('transform', `translate(5, 0)`);

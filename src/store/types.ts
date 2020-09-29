@@ -1,7 +1,6 @@
 import { GridCollection } from 'components/ExcelTable/types';
+import { TableError } from 'generated/graphql';
 import { Param } from 'model/Param';
-
-import { TableError } from '../generated/graphql';
 
 export interface TableState extends GridCollection {
   errors: TableError[];

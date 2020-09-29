@@ -4,13 +4,12 @@ import {
   IGridColumn,
   SelectedCell,
 } from 'components/ExcelTable/types';
+import { TableError } from 'generated/graphql';
 import { ofAction } from 'operators/ofAction';
 import { Epic } from 'redux-observable';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-
-import { TableError } from '../generated/graphql';
 
 import { RootState, TableState } from './types';
 
