@@ -1,6 +1,15 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
+import {
+  cnAxis,
+  cnAxisLeft,
+  cnAxisRight,
+  cnDistributionChart,
+  cnGrid,
+  cnPercentilesText,
+  cnProjectionLines,
+} from './cn-distribution-chart';
 import { Data, Point } from './types';
 
 import './DistributionChart.css';
@@ -21,7 +30,6 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
   const d3Container = useRef(null);
   const getScale = (
     domain: number[] | { valueOf(): number }[],
-<<<<<<< HEAD
     position: number[],
   ) => d3.scaleLinear().domain(domain).nice().range(position);
   const xScalePosition = [margin.left, width - margin.right];
@@ -30,19 +38,11 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     d3.min(points, func) as number,
     d3.max(points, func) as number,
   ];
-=======
-    range: number[],
-  ) => d3.scaleLinear().domain(domain).nice().range(range);
-  const xScaleRange = [margin.left, width - margin.right];
-  const yScaleRange = [height - margin.bottom, margin.top];
-
->>>>>>> refactor(code-style): update code by comments to the PR
   const draw = useCallback(() => {
     const svg = d3.select(d3Container.current);
 
     svg.selectAll('*').remove();
 
-<<<<<<< HEAD
     const cumulativeXScale = getScale(getDomain(sf, getX), xScalePosition);
     const cumulativeYScale = getScale(getDomain(sf, getY), yScalePosition);
     const probabilityDensityXScale = getScale(
@@ -52,23 +52,6 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     const probabilityDensityYScale = getScale(
       getDomain(pdf, getY),
       yScalePosition,
-=======
-    const cumulativeXScale = getScale(
-      [d3.min(sf, getX) as number, d3.max(sf, getX) as number],
-      xScaleRange,
-    );
-    const cumulativeYScale = getScale(
-      [d3.min(sf, getY) as number, d3.max(sf, getY) as number],
-      yScaleRange,
-    );
-    const probabilityDensityXScale = getScale(
-      [d3.min(pdf, getX) as number, d3.max(pdf, getX) as number],
-      xScaleRange,
-    );
-    const probabilityDensityYScale = getScale(
-      [d3.min(pdf, getY) as number, d3.max(pdf, getY) as number],
-      yScaleRange,
->>>>>>> refactor(code-style): update code by comments to the PR
     );
     const projectionLinesFromPoint = (point: Point, data: Point[]) => {
       svg
@@ -78,10 +61,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
           point,
           { x: point.x, y: d3.min(data, getY) as number },
         ])
-        .attr('fill', 'none')
-        .attr('stroke', '#E68200')
-        .attr('stroke-width', 1)
-        .attr('opacity', 0.3)
+        .attr('class', cnProjectionLines.toString())
         .attr(
           'd',
           d3
@@ -94,7 +74,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(0,${height - margin.bottom})`)
-        .attr('class', 'axis axis_bottom')
+        .attr('class', cnAxis.toString())
         .call(
           d3
             .axisBottom(probabilityDensityXScale)
@@ -107,7 +87,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(0,${height - margin.bottom})`)
-        .attr('class', 'grid bottom')
+        .attr('class', cnGrid.toString())
         .call(
           d3.axisBottom(probabilityDensityXScale).ticks(5).tickSize(-height),
         ),
@@ -116,7 +96,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(${margin.left},0)`)
-        .attr('class', 'axis axis_left')
+        .attr('class', `${cnAxis.toString()} ${cnAxisLeft.toString()}`)
         .call(
           d3
             .axisLeft(cumulativeYScale)
@@ -129,7 +109,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(${width - margin.left + 4},0)`)
-        .attr('class', 'axis axis_right')
+        .attr('class', `${cnAxis.toString()} ${cnAxisRight.toString()}`)
         .call(
           d3
             .axisRight(probabilityDensityYScale)
@@ -146,8 +126,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
         .enter()
         .append('text')
         .text((d) => `${Number.parseFloat(getX(d).toFixed(3))}`)
-        .attr('font-size', '12px')
-        .attr('fill', '#FAFAFA')
+        .attr('class', cnPercentilesText.toString())
         .attr('x', (d) => cumulativeXScale(getX(d)))
         .attr('y', (d) => cumulativeYScale(getY(d)))
         .attr('transform', `translate(5, 0)`);
@@ -157,39 +136,6 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
       });
     }
 
-    svg.append('g').call((g) =>
-      g
-        .attr('transform', `translate(${width - margin.left + 4},0)`)
-        .attr('class', 'axis axis_right')
-        .call(
-          d3
-            .axisRight(probabilityDensityYScale)
-            .ticks(width / 50)
-            .tickSize(width)
-            .tickFormat((domainValue) => `${domainValue}`)
-            .tickSize(3),
-        ),
-    );
-    if (percentiles.length) {
-      svg
-        .selectAll('points')
-        .data(percentiles.map(({ point }) => point))
-        .enter()
-        .append('text')
-        .text(
-          (d) =>
-            `${Number.parseFloat((getX(d).toFixed(3) as unknown) as string)}`,
-        )
-        .attr('font-size', '12px')
-        .attr('fill', '#FAFAFA')
-        .attr('x', (d) => cumulativeXScale(getX(d)))
-        .attr('y', (d) => cumulativeYScale(getY(d)))
-        .attr('transform', `translate(5, 0)`);
-
-      percentiles.forEach((percentile) => {
-        projectionLinesFromPoint(percentile.point, sf);
-      });
-    }
     const area = d3
       .area<Point>()
       .x((d) => probabilityDensityXScale(getX(d)))
@@ -264,11 +210,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
           .x((d) => cumulativeXScale(getX(d)))
           .y((d) => cumulativeYScale(getY(d))),
       );
-<<<<<<< HEAD
   }, [sf, xScalePosition, yScalePosition, pdf, percentiles]);
-=======
-  }, [sf, xScaleRange, yScaleRange, pdf, percentiles]);
->>>>>>> refactor(code-style): update code by comments to the PR
 
   useEffect(() => {
     if (d3Container.current) {
@@ -277,7 +219,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
   }, [draw]);
 
   return (
-    <div className="chart">
+    <div className={cnDistributionChart.toString()}>
       <svg width={width} height={height} ref={d3Container} />
     </div>
   );

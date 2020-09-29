@@ -1,54 +1,71 @@
-.chart {
+.DistributionChart {
   background-color: #16191c;
-}
 
-.grid line {
-  stroke: #fff;
-  stroke-dasharray: 1, 3;
-  stroke-width: 1;
-  stroke-opacity: 0.1;
-  stroke-linecap: round;
-}
-
-.grid text {
-  font-size: 12px;
-
-  color: rgba(246, 251, 253, 0.6);
-
-  transform: translateY(10px);
-}
-
-.grid path {
-  stroke-width: 0;
-}
-
-.axis {
-  fill: none;
-
-  .domain {
-    stroke: rgba(246, 251, 253, 0.28);
+  &__Percentiles {
+    &__Text {
+      font-size: 12px;
+      fill: #fafafa;
+    }
   }
 
-  line {
-    stroke: rgba(246, 251, 253, 0.28);
+  &__ProjectionLines {
+    fill: none;
+    stroke: #e68200;
+    stroke-width: 1;
+
+    opacity: 0.3;
   }
 
-  text {
-    font-size: 12px;
-    line-height: 17px;
+  &__Grid {
+    line {
+      stroke: #fff;
+      stroke-dasharray: 1, 3;
+      stroke-width: 1;
+      stroke-opacity: 0.1;
+      stroke-linecap: round;
+    }
+
+    text {
+      font-size: 12px;
+
+      color: rgba(246, 251, 253, 0.6);
+
+      transform: translateY(10px);
+    }
+
+    path {
+      stroke-width: 0;
+    }
   }
 
-  &_left text {
-    color: #e68200;
-  }
+  &__Axis {
+    fill: none;
 
-  &_right text {
-    color: #33b4ff;
+    .domain {
+      stroke: rgba(246, 251, 253, 0.28);
+    }
 
-    transform: translateX(5px);
-  }
+    line {
+      stroke: rgba(246, 251, 253, 0.28);
+    }
 
-  &_right path {
-    stroke-width: 0;
+    text {
+      font-size: 12px;
+      line-height: 17px;
+    }
+
+    &__Left text {
+      color: #e68200;
+    }
+
+    &__Right text {
+      color: #33b4ff;
+
+      transform: translateX(5px);
+    }
+
+    &__Right path {
+      stroke-width: 0;
+    }
   }
 }
