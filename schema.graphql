@@ -89,6 +89,7 @@ enum DistributionDefinitionTypes {
 
   """Через минимум и максимум"""
   MIN_MAX
+}
 
   """
   Через расположение, логарифмическое среднее и логарифмическое стандартное отклонение
@@ -275,6 +276,7 @@ type Point {
   y: Float!
 }
 
+"""Представление проекта."""
 type Project {
   """Версия шаблона структуры проекта"""
   version: String!
@@ -283,6 +285,7 @@ type Project {
   structure: ProjectStructure!
 }
 
+"""Представление проекта."""
 input ProjectInput {
   """Версия шаблона структуры проекта"""
   version: String!
@@ -300,6 +303,7 @@ type ProjectQueries {
   validateBeforeLoad(project: ProjectInput!): DetailError
 }
 
+"""Структура проекта."""
 type ProjectStructure {
   """Список доменных сущностей геологических объектов"""
   domainEntities: [DomainEntity!]!

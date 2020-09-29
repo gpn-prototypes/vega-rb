@@ -80,6 +80,7 @@ export type Attribute = {
   units: Scalars['String'];
 };
 
+/** Риск геологического объекта. */
 export type Risk = {
   __typename?: 'Risk';
   /** Кодовое обозначение риска */
@@ -211,7 +212,7 @@ export enum DistributionDefinitionTypes {
   MinMax = 'MIN_MAX',
   /** Через расположение, логарифмическое среднее и логарифмическое стандартное отклонение */
   LocationMeanlogSdlog = 'LOCATION_MEANLOG_SDLOG',
-  /** Через наиболее вероятное, минимум и максимум */
+  /** Через расположение, минимум и максимум */
   ModeMinMax = 'MODE_MIN_MAX',
 }
 
@@ -234,7 +235,7 @@ export enum DistributionParameterTypes {
   Max = 'MAX',
   /** Расположение */
   Location = 'LOCATION',
-  /** Наиболее вероятное */
+  /** Пик */
   Mode = 'MODE',
   /** Логарифмическое среднее */
   Meanlog = 'MEANLOG',
@@ -242,6 +243,7 @@ export enum DistributionParameterTypes {
   Sdlog = 'SDLOG',
 }
 
+/** Риск геологического объекта. */
 export type RiskInput = {
   /** Кодовое обозначение риска */
   code: Scalars['String'];
@@ -310,25 +312,21 @@ export type DistributionDefinitionError = ErrorInterface & {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  updateRiskValue?: Maybe<UpdateRiskValueResult>;
   calculateProject?: Maybe<CalculationResult>;
-};
-
-export type MutationUpdateRiskValueArgs = {
-  projectStructure: ProjectStructureInput;
 };
 
 export type MutationCalculateProjectArgs = {
   projectStructureInput: ProjectStructureInput;
 };
 
-export type UpdateRiskValueResult = GCoSCalculationResult | DetailError;
+export type CalculationResult =
+  | TableErrors
+  | CalculationOk
+  | DistributionDefinitionErrors;
 
-export type GCoSCalculationResult = {
-  __typename?: 'GCoSCalculationResult';
-  /** Список значений GCoS геологических объектов */
-  GCoSValues?: Maybe<Array<Maybe<Scalars['Float']>>>;
-  errors?: Maybe<Array<TableError>>;
+export type TableErrors = {
+  __typename?: 'TableErrors';
+  errors: Array<TableError>;
 };
 
 /** Ошибка данных таблицы с информацией о расположении строк или ячеек повлекших ошибку. */
@@ -344,16 +342,6 @@ export type TableError = ErrorInterface & {
   column?: Maybe<Scalars['Int']>;
   /** Индекс строки таблицы, повлекшей ошибку */
   row?: Maybe<Scalars['Int']>;
-};
-
-export type CalculationResult =
-  | TableErrors
-  | CalculationOk
-  | DistributionDefinitionErrors;
-
-export type TableErrors = {
-  __typename?: 'TableErrors';
-  errors: Array<TableError>;
 };
 
 export type CalculationOk = {
