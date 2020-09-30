@@ -60,8 +60,8 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
           'd',
           d3
             .line<Point>()
-            .x((d) => cumulativeXScale(getX(d)))
-            .y((d) => cumulativeYScale(getY(d))),
+            .x((d) => cumulativeXScale(getX(d)) as number)
+            .y((d) => cumulativeYScale(getY(d)) as number),
         );
     };
 
@@ -122,8 +122,8 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
         .text((d) => `${Number.parseFloat(getX(d).toFixed(3))}`)
         .attr('font-size', '12px')
         .attr('fill', '#FAFAFA')
-        .attr('x', (d) => cumulativeXScale(getX(d)))
-        .attr('y', (d) => cumulativeYScale(getY(d)))
+        .attr('x', (d) => cumulativeXScale(getX(d)) as number)
+        .attr('y', (d) => cumulativeYScale(getY(d)) as number)
         .attr('transform', `translate(5, 0)`);
 
       percentiles.forEach((percentile) => {
@@ -133,9 +133,9 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
 
     const area = d3
       .area<Point>()
-      .x((d) => probabilityDensityXScale(getX(d)))
+      .x((d) => probabilityDensityXScale(getX(d)) as number)
       .y0(height)
-      .y1((d) => probabilityDensityYScale(getY(d)));
+      .y1((d) => probabilityDensityYScale(getY(d)) as number);
 
     const graphArea = svg.append('g');
     const defs = svg.append('defs');
@@ -189,8 +189,8 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
         'd',
         d3
           .line<Point>()
-          .x((d) => probabilityDensityXScale(getX(d)))
-          .y((d) => probabilityDensityYScale(getY(d))),
+          .x((d) => probabilityDensityXScale(getX(d)) as number)
+          .y((d) => probabilityDensityYScale(getY(d)) as number),
       );
     graphArea
       .append('path')
@@ -202,8 +202,8 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
         'd',
         d3
           .line<Point>()
-          .x((d) => cumulativeXScale(getX(d)))
-          .y((d) => cumulativeYScale(getY(d))),
+          .x((d) => cumulativeXScale(getX(d)) as number)
+          .y((d) => cumulativeYScale(getY(d)) as number),
       );
   }, [sf, xScalePosition, yScalePosition, pdf, percentiles]);
 
