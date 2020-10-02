@@ -1,17 +1,17 @@
 .StyledRow {
   text-overflow: ellipsis;
 
-  color: #fff;
+  color: var(--color-typo-primary);
 
   &__Even {
-    background-color: #22272b;
+    background-color: var(--color-bg-default);
   }
 
   &__Odd {
-    background-color: #2f3438;
+    background-color: var(--color-bg-stripe);
   }
 }
 
 .StyledRow:hover {
-  background-color: #54585b;
+  background-color: var(--color-bg-ghost);
 }

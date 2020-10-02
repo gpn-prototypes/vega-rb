@@ -5,11 +5,11 @@
 }
 
 .Tabs {
-  padding: 8px;
+  padding: var(--space-xs);
 }
 
 .Header {
-  padding: 8px 16px;
+  padding: var(--space-xs) var(--space-m);
 }
 
 .Content {
@@ -20,11 +20,11 @@
 }
 
 .ButtonStructure {
-  margin-right: 12px;
+  margin-right: var(--space-s);
 }
 
 .ButtonData {
-  margin-right: 12px;
+  margin-right: var(--space-s);
 }
 
 .LeftPanel {
@@ -35,7 +35,7 @@
 }
 
 .RightPanel {
-  padding: 16px;
+  padding: var(--space-m);
 
   max-width: 400px;
 }

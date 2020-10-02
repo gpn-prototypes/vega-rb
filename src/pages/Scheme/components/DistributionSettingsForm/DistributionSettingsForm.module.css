@@ -9,9 +9,9 @@
 }
 
 .Form {
-  margin: 20px 0;
+  margin: var(--space-l) 0;
 }
 
 .TextField__error {
-  border-color: #cd3939;
+  border-color: var(--color-bg-alert);
 }
