@@ -1,9 +1,9 @@
 import React, { Component, useMemo } from 'react';
 import { ContextMenu, ContextMenuProps, MenuItem } from 'react-contextmenu';
 import { createPortal } from 'react-dom';
+import { noop } from 'utils';
 import { useTheme } from '@consta/uikit/Theme';
 import classNames from 'classnames';
-import noop from 'utils/noop';
 
 import {
   ArrowLeftIcon,

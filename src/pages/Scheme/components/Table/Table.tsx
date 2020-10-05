@@ -7,7 +7,7 @@ import { isEmpty } from 'fp-ts/Array';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { Nullable } from 'types';
-import { mockTableRows, unpackData } from 'utils';
+import { mockTableRows, unpackTableData } from 'utils';
 
 import { GET_TABLE_TEMPLATE } from './queries';
 import { TemplateProjectData } from './types';
@@ -25,7 +25,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   const templateStructure = respData?.project.template.structure;
 
   const columns = useCallback(() => {
-    return templateStructure ? unpackData(templateStructure).columns : [];
+    return templateStructure ? unpackTableData(templateStructure).columns : [];
   }, [templateStructure]);
 
   useEffect(() => {

@@ -6,7 +6,7 @@ import { saveAs } from 'file-saver';
 import { TableError } from 'generated/graphql';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
-import { packData } from 'utils';
+import { packTableData } from 'utils';
 
 import { CALCULATION_PROJECT } from '../../mutations';
 import { GET_TABLE_TEMPLATE } from '../Table/queries';
@@ -21,10 +21,11 @@ export const CalculateButton: React.FC = () => {
   const { data } = useQuery<TemplateProjectData>(GET_TABLE_TEMPLATE);
   const handleClick = () => {
     if (data) {
-      const { domainEntities, calculationParameters, domainObjects } = packData(
-        tableData,
-        data?.project.template.structure,
-      );
+      const {
+        domainEntities,
+        calculationParameters,
+        domainObjects,
+      } = packTableData(tableData, data?.project.template.structure);
 
       client
         .mutate({

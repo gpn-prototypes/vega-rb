@@ -1,6 +1,5 @@
 import GridColumnEntity from 'components/ExcelTable/Models/GridColumnEntity';
 import {
-  CategoryIcon,
   GridCollection,
   GridColumn,
   GridRow,
@@ -86,91 +85,52 @@ function convertCellsDataToGridRow(
     ) as GridRow;
 }
 
-export function unpackData({
+function constructColumns({
   domainEntities = [],
   calculationParameters = [],
   risks = [],
-  domainObjects: cellsData = [],
-}: ProjectStructure): GridCollection {
-  const columns: GridColumn[] = [
-    new GridColumnEntity(SpecialColumns.ID, undefined, TableEntities.ID),
+}: ProjectStructure): GridCollection[] {
+  return [
+    new GridColumn(SpecialColumns.ID, undefined, TableEntities.ID),
     ...structureParamsReducer(domainEntities),
-    new GridColumnEntity(
-      SpecialColumns.SPLITTER,
-      undefined,
-      TableEntities.SPLITTER,
-    ),
+    new GridColumn(SpecialColumns.SPLITTER, undefined, TableEntities.SPLITTER),
     ...structureParamsReducer(calculationParameters),
-    new GridColumnEntity(
+    new GridColumn(
       SpecialColumns.SPLITTER_RISKS,
       undefined,
       TableEntities.SPLITTER,
     ),
     ...structureParamsReducer(risks),
   ];
+}
 
-  const rows = [
+function getEmptyRows(count: number) {
+  return Array.from({ length: count }, (val, index) => ({
+    id: { value: index },
+  }));
+}
+
+function constructRows({
+  domainEntities = [],
+  domainObjects: cellsData = [],
+}: ProjectStructure): GridRow[] {
+  return [
     ...cellsData.map(({ domainObjectPath }, idx) => ({
       ...convertCellsDataToGridRow(domainObjectPath, domainEntities),
       id: { value: idx },
     })),
-    ...Array.from({ length: 1000 - cellsData.length }, (val, index) => ({
-      id: { value: index },
-    })),
+    ...getEmptyRows(1000 - cellsData.length),
   ];
+}
+
+export function unpackTableData(
+  projectStructure: ProjectStructure,
+): GridCollection {
+  const columns: GridColumn[] = constructColumns(projectStructure);
+  const rows: GridRow[] = constructRows(projectStructure);
 
   return {
     columns,
     rows,
-  };
-}
-
-export function packData(
-  data: GridCollection,
-  template: ProjectStructure,
-): ProjectStructure {
-  const domainEntitiesKeys = data.columns.filter(
-    (col) => col.type === TableEntities.GEO_CATEGORY,
-  );
-  const calculationParametersKeys = data.columns.filter(
-    (col) => col.type === TableEntities.CALC_PARAM,
-  );
-  const rows = data.rows.filter((row) =>
-    domainEntitiesKeys.every(({ key }) => row[key]),
-  );
-
-  const domainObjects = rows
-    .filter((row) => domainEntitiesKeys.some(({ key }) => row[key]?.value))
-    .map((row) => ({
-      domainObjectPath: domainEntitiesKeys.map(({ key }) =>
-        String(row[key]?.value || ''),
-      ),
-      risksValues: [0.7, 0.7],
-      geoObjectCategory: 'RESERVES',
-      attributeValues: calculationParametersKeys.map(
-        ({ key }) => row[key]?.args,
-      ),
-    }));
-
-  const domainEntities = domainEntitiesKeys.map(({ name, type }) => ({
-    name,
-    icon: CategoryIcon.FORMATION_ICON,
-    __typename: type,
-  }));
-
-  const calculationParameters = calculationParametersKeys.map(
-    ({ key }) =>
-      ({
-        ...template.calculationParameters.find(({ code }) => code === key),
-      } as CalculationParam),
-  );
-
-  const risks: Risk[] = [];
-
-  return {
-    domainEntities,
-    calculationParameters,
-    risks,
-    domainObjects,
   };
 }
