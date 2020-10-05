@@ -80,7 +80,6 @@ export type Attribute = {
   units: Scalars['String'];
 };
 
-/** Риск геологического объекта. */
 export type Risk = {
   __typename?: 'Risk';
   /** Кодовое обозначение риска */
@@ -176,7 +175,7 @@ export type DomainObjectInput = {
   risksValues: Array<Maybe<Scalars['Float']>>;
 };
 
-/** Список категроий геологического объекта. */
+/** Список категорий геологического объекта. */
 export enum GeoObjectCategories {
   Reserves = 'RESERVES',
   Resources = 'RESOURCES',
@@ -202,6 +201,10 @@ export enum DistributionTypes {
   Triangular = 'TRIANGULAR',
   /** Равномерное распределение */
   Uniform = 'UNIFORM',
+  /** Бета распределение */
+  Beta = 'BETA',
+  /** ПЕРТ распределение */
+  Pert = 'PERT',
 }
 
 /** Способы задания распределений. */
@@ -212,8 +215,10 @@ export enum DistributionDefinitionTypes {
   MinMax = 'MIN_MAX',
   /** Через расположение, логарифмическое среднее и логарифмическое стандартное отклонение */
   LocationMeanlogSdlog = 'LOCATION_MEANLOG_SDLOG',
-  /** Через расположение, минимум и максимум */
+  /** Через наиболее вероятное, минимум и максимум */
   ModeMinMax = 'MODE_MIN_MAX',
+  /** Через альфа, бета, минимум и максимум */
+  AlphaBetaMinMax = 'ALPHA_BETA_MIN_MAX',
 }
 
 /** Параметр способа задания распределения. */
@@ -235,15 +240,18 @@ export enum DistributionParameterTypes {
   Max = 'MAX',
   /** Расположение */
   Location = 'LOCATION',
-  /** Пик */
+  /** Наиболее вероятное */
   Mode = 'MODE',
   /** Логарифмическое среднее */
   Meanlog = 'MEANLOG',
   /** Логарифмическое стандартное отклонение */
   Sdlog = 'SDLOG',
+  /** Параметр расположения Альфа */
+  Alpha = 'ALPHA',
+  /** Параметр расположения Бэта */
+  Beta = 'BETA',
 }
 
-/** Риск геологического объекта. */
 export type RiskInput = {
   /** Кодовое обозначение риска */
   code: Scalars['String'];
@@ -312,21 +320,25 @@ export type DistributionDefinitionError = ErrorInterface & {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  updateRiskValue?: Maybe<UpdateRiskValueResult>;
   calculateProject?: Maybe<CalculationResult>;
+};
+
+export type MutationUpdateRiskValueArgs = {
+  projectStructure: ProjectStructureInput;
 };
 
 export type MutationCalculateProjectArgs = {
   projectStructureInput: ProjectStructureInput;
 };
 
-export type CalculationResult =
-  | TableErrors
-  | CalculationOk
-  | DistributionDefinitionErrors;
+export type UpdateRiskValueResult = GCoSCalculationResult | DetailError;
 
-export type TableErrors = {
-  __typename?: 'TableErrors';
-  errors: Array<TableError>;
+export type GCoSCalculationResult = {
+  __typename?: 'GCoSCalculationResult';
+  /** Список значений GCoS геологических объектов */
+  GCoSValues?: Maybe<Array<Maybe<Scalars['Float']>>>;
+  errors?: Maybe<Array<TableError>>;
 };
 
 /** Ошибка данных таблицы с информацией о расположении строк или ячеек повлекших ошибку. */
@@ -337,11 +349,28 @@ export type TableError = ErrorInterface & {
   /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
   message: Scalars['String'];
   /** Имя таблицы, содержащей строки или ячейки, повлекшие ошибку */
-  tableName?: Maybe<Scalars['String']>;
+  tableName: TableNames;
   /** Индекс ячейки в строке таблицы, повлекшей ошибку */
   column?: Maybe<Scalars['Int']>;
   /** Индекс строки таблицы, повлекшей ошибку */
   row?: Maybe<Scalars['Int']>;
+};
+
+/** Имена таблиц в структуре проекта. */
+export enum TableNames {
+  DomainEntities = 'DOMAIN_ENTITIES',
+  Attributes = 'ATTRIBUTES',
+  Risks = 'RISKS',
+}
+
+export type CalculationResult =
+  | TableErrors
+  | CalculationOk
+  | DistributionDefinitionErrors;
+
+export type TableErrors = {
+  __typename?: 'TableErrors';
+  errors: Array<TableError>;
 };
 
 export type CalculationOk = {

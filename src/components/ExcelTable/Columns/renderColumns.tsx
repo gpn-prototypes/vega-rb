@@ -2,13 +2,9 @@ import React from 'react';
 import { curry } from 'lodash';
 
 import Header from '../Header';
-import {
-  columnsFactory,
-  columnsReorder,
-  onBlurCell,
-  setColumnAttributes,
-} from '../helpers';
+import { columnsReorder, onBlurCell, setColumnAttributes } from '../helpers';
 import { IGridColumn } from '../types';
+import { columnsFactory } from '../utils';
 
 const renderColumns = (
   columns: IGridColumn[],

@@ -1,3 +1,3 @@
-import DistributionSettingsForm from './DistributionSettingsForm';
+import { DistributionSettingsForm } from './DistributionSettingsForm';
 
 export default DistributionSettingsForm;

@@ -5,6 +5,7 @@ import { Button } from '@gpn-prototypes/vega-button';
 import { FileInput } from '@gpn-prototypes/vega-file-input';
 import { IconAlert, IconAttach, IconProps } from '@gpn-prototypes/vega-icons';
 import { SnackBar } from '@gpn-prototypes/vega-snack-bar';
+import { Maybe } from 'generated/graphql';
 import useAsyncError from 'hooks/useAsyncError';
 import tableDuck from 'store/tableDuck';
 import { IProjectStructure } from 'types';
@@ -17,11 +18,11 @@ import styles from './ImportButton.module.css';
 
 interface IValidateBeforeLoadResponse {
   project: {
-    validateBeforeLoad: {
+    validateBeforeLoad: Maybe<{
       code: string;
       message: string;
       details: string;
-    } | null;
+    }>;
   };
 }
 

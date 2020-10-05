@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useQuery } from '@apollo/client';
 import ExcelTable from 'components/ExcelTable';
 import { SelectedCell, TableEntities } from 'components/ExcelTable/types';
+import { isEmpty } from 'fp-ts/Array';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { IProjectStructure, Nullable } from 'types';
@@ -30,17 +31,18 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   const dispatch = useDispatch();
   const templateStructure = respData?.project.template.structure;
 
+  const columns = useCallback(() => {
+    return templateStructure ? unpackData(templateStructure).columns : [];
+  }, [templateStructure]);
+
   useEffect(() => {
-    if (templateStructure) {
-      if (!reduxTableData?.columns.length) {
-        const { columns } = unpackData(templateStructure);
-        dispatch(tableDuck.actions.updateColumns(columns));
-      }
-      if (!reduxTableData?.rows.length) {
-        dispatch(tableDuck.actions.updateRows(mockTableRows));
-      }
+    if (isEmpty(reduxTableData.columns)) {
+      dispatch(tableDuck.actions.updateColumns(columns()));
     }
-  }, [dispatch, reduxTableData, templateStructure]);
+    if (isEmpty(reduxTableData.rows)) {
+      dispatch(tableDuck.actions.updateRows(mockTableRows));
+    }
+  }, [columns, dispatch, reduxTableData]);
 
   if (loading) return <div>Loading</div>;
 

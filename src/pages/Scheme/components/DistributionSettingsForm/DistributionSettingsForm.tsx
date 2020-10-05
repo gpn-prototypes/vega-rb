@@ -32,7 +32,7 @@ interface DistributionSettingsFormProps {
   formData: DistributionSettingsFormData;
   errors?: DistributionDefinitionError[];
 }
-const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> = ({
+export const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> = ({
   onChange,
   formData,
   errors,
@@ -142,5 +142,3 @@ const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> = ({
     </Form>
   );
 };
-
-export default DistributionSettingsForm;

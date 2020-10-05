@@ -8,24 +8,21 @@ import {
 } from 'components/ExcelTable/types';
 import _ from 'lodash';
 import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
-
 import {
   CalculationParam,
   GeoCategory,
   IProjectCell,
   IProjectStructure,
-} from '../types';
+  Risk,
+  TableStructures,
+} from 'types';
 
 const getCalculationColumn = (
   prev: IGridColumn[],
   { code, shortName, units }: CalculationParam,
 ): IGridColumn[] => [
   ...prev,
-  {
-    key: code,
-    name: `${shortName}, ${units}`,
-    type: TableEntities.CALC_PARAM,
-  } as IGridColumn,
+  new GridColumn(code, `${shortName}, ${units}`, TableEntities.CALC_PARAM),
 ];
 
 const getCategoryColumn = (
@@ -33,14 +30,17 @@ const getCategoryColumn = (
   { name }: GeoCategory,
 ): IGridColumn[] => [
   ...prev,
-  {
-    key: CATEGORIES_TYPES.get(name),
-    name,
-    type: TableEntities.GEO_CATEGORY,
-  } as IGridColumn,
+  new GridColumn(CATEGORIES_TYPES.get(name)!, name, TableEntities.GEO_CATEGORY),
 ];
 
-function structureParamsReducer<T extends CalculationParam | GeoCategory>(
+const getRiskColumn = (
+  prev: IGridColumn[],
+  { code, name }: Risk,
+): IGridColumn[] => {
+  return [...prev, new GridColumn(code, name, TableEntities.RISK)];
+};
+
+function structureParamsReducer<T extends TableStructures>(
   list: T[],
 ): IGridColumn[] {
   if (!list.length) return [];
@@ -55,6 +55,9 @@ function structureParamsReducer<T extends CalculationParam | GeoCategory>(
           return getCategoryColumn(prev, curr as GeoCategory);
         }
         return prev;
+
+      case TableEntities.RISK:
+        return getRiskColumn(prev, curr as Risk);
 
       default:
         return prev;
@@ -82,14 +85,22 @@ function convertCellsDataToGridRow(
 export function unpackData({
   domainEntities = [],
   calculationParameters = [],
+  risks = [],
   domainObjects: cellsData = [],
 }: IProjectStructure): GridCollection {
   const columns: IGridColumn[] = [
-    new GridColumn(SpecialColumns.ID),
+    new GridColumn(SpecialColumns.ID, undefined, TableEntities.ID),
     ...structureParamsReducer<GeoCategory>(domainEntities),
-    new GridColumn(SpecialColumns.SPLITTER),
+    new GridColumn(SpecialColumns.SPLITTER, undefined, TableEntities.SPLITTER),
     ...structureParamsReducer<CalculationParam>(calculationParameters),
+    new GridColumn(
+      SpecialColumns.SPLITTER_RISKS,
+      undefined,
+      TableEntities.SPLITTER,
+    ),
+    ...structureParamsReducer<Risk>(risks),
   ];
+
   const rows = [
     ...cellsData.map(({ cells }, idx) => ({
       ...convertCellsDataToGridRow(cells, domainEntities),
@@ -140,9 +151,12 @@ export function packData(
       } as CalculationParam),
   );
 
+  const risks: Risk[] = [];
+
   return {
     domainEntities,
     calculationParameters,
+    risks,
     domainObjects,
   };
 }

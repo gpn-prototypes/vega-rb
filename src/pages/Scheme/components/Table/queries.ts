@@ -14,6 +14,10 @@ export const GET_TABLE_TEMPLATE = gql`
             shortName
             units
           }
+          risks {
+            code
+            name
+          }
         }
       }
     }
