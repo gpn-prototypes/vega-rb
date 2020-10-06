@@ -53,7 +53,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
   const getFormDataFromTableCell = useCallback(
     (
       cell: SelectedCell,
-    ): DistributionSettingsFormData & { isValid?: boolean } => {
+    ): DistributionSettingsFormData & { isValid: boolean } => {
       const cellProps = cell.row[cell.column.key];
 
       if (cellProps?.args?.type) {
@@ -123,40 +123,35 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
       }: DistributionSettingsFormData,
       cell,
     ) => {
+      const quantiles =
+        distributionDefinitionType === DistributionDefinitionTypes.Quantiles
+          ? Object.entries(parameters).map(
+              ([parameterType, parameterValue]) => ({
+                type:
+                  parameterType === DistributionParameterTypes.Q1Value
+                    ? DistributionParameterTypes.Q1Rank
+                    : DistributionParameterTypes.Q2Rank,
+                value:
+                  parameterType === DistributionParameterTypes.Q1Value
+                    ? 0.1
+                    : 0.9,
+              }),
+            )
+          : [];
       dispatch(
         tableDuck.actions.updateCell({
           selectedCell: cell,
           cellData: {
             args: {
-              parameters:
-                distributionDefinitionType ===
-                DistributionDefinitionTypes.Quantiles
-                  ? [
-                      ...Object.entries(parameters).map(
-                        ([parameterType, parameterValue]) => ({
-                          type:
-                            parameterType === DistributionParameterTypes.Q1Value
-                              ? DistributionParameterTypes.Q1Rank
-                              : DistributionParameterTypes.Q2Rank,
-                          value:
-                            parameterType === DistributionParameterTypes.Q1Value
-                              ? 0.1
-                              : 0.9,
-                        }),
-                      ),
-                      ...Object.entries(parameters).map(
-                        ([parameterType, parameterValue]) => ({
-                          type: parameterType as DistributionParameterTypes,
-                          value: Number.parseFloat(parameterValue as string),
-                        }),
-                      ),
-                    ]
-                  : Object.entries(parameters).map(
-                      ([parameterType, parameterValue]) => ({
-                        type: parameterType as DistributionParameterTypes,
-                        value: Number.parseFloat(parameterValue as string),
-                      }),
-                    ),
+              parameters: [
+                ...Object.entries(parameters).map(
+                  ([parameterType, parameterValue]) => ({
+                    type: parameterType as DistributionParameterTypes,
+                    value: Number.parseFloat(parameterValue as string),
+                  }),
+                ),
+                ...quantiles,
+              ],
               type: distributionType,
               definition: distributionDefinitionType,
             },

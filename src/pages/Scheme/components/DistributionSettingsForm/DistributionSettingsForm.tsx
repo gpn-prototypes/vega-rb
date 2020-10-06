@@ -17,8 +17,6 @@ import distributionParametersMap from './data';
 import {
   DistributionSettingsFormData,
   DistributionSettingsParameters,
-  Field,
-  TextFieldFormProperty,
 } from './types';
 
 import style from './DistributionSettingsForm.module.css';
@@ -96,15 +94,15 @@ const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> = ({
   const getFormFieldType = (index: number, length: number) => {
     const isLast = index === length - 1;
     const isFirst = index === 0;
-    let form: TextFieldFormProperty = 'brick';
     if (isFirst) {
-      form = length <= 2 ? 'defaultClear' : 'defaultBrick';
-    } else if (isLast) {
-      form = 'brickDefault';
+      return length <= 2 ? 'defaultClear' : 'defaultBrick';
     }
-    return form;
+    if (isLast) {
+      return 'brickDefault';
+    }
+    return 'brick';
   };
-  const hasError = (key: string) => errors?.[0]?.fields?.includes(key);
+  const hasError = (key: string) => !!errors?.[0]?.fields?.includes(key);
 
   return (
     <Form className={style.Form}>
@@ -139,7 +137,7 @@ const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> = ({
       <Form.Row>
         <div className={style.Grid}>
           {fieldsByType[formData.distributionDefinitionType]?.map(
-            ({ key, defaultValue, title }, index) => {
+            ({ key, defaultValue, title }, index, fields) => {
               return (
                 <Form.Field key={key}>
                   <Form.Label>{title}</Form.Label>
@@ -147,12 +145,7 @@ const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> = ({
                     width="full"
                     size="s"
                     leftSide={hasError(key) ? IconAlert : ''}
-                    form={getFormFieldType(
-                      index,
-                      (fieldsByType[
-                        formData.distributionDefinitionType
-                      ] as Field[]).length,
-                    )}
+                    form={getFormFieldType(index, fields.length)}
                     value={formData.parameters[key] ?? defaultValue}
                     onChange={handleChange(key)}
                     className={cn({

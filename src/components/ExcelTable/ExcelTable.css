@@ -72,3 +72,18 @@
 .HeaderBefore {
   opacity: 0.7;
 }
+
+/* TODO: fix it */
+.Tooltip {
+  .Tooltip-Background {
+    background: var(--color-bg-alert);
+  }
+
+  .Tooltip-Arrow {
+    border-right-color: var(--color-bg-alert);
+  }
+
+  .Tooltip-Content {
+    color: var(--color-typo-primary);
+  }
+}

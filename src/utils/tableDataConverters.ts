@@ -7,10 +7,8 @@ import {
   TableEntities,
 } from 'components/ExcelTable/types';
 import { Risk } from 'generated/graphql';
-import _ from 'lodash';
 import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
-
-import { CalculationParam, GeoCategory, IProjectStructure } from '../types';
+import { CalculationParam, GeoCategory, IProjectStructure } from 'types';
 
 const getCalculationColumn = (
   prev: IGridColumn[],
@@ -140,7 +138,7 @@ export function packData(
         ...template.calculationParameters.find(({ code }) => code === key),
       } as CalculationParam),
   );
-  const risks = [] as Risk[];
+  const risks: Risk[] = [];
 
   return {
     domainEntities,

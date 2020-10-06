@@ -37,7 +37,7 @@ const loadState = (): TableState | undefined => {
   }
 };
 
-const setLocalStorage = (state: TableState): void => {
+const setStateToLocalStorage = (state: TableState): void => {
   localStorage.setItem('table', JSON.stringify(state));
 };
 
@@ -86,7 +86,7 @@ const saveToLocalStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
     ofAction(actions.updateColumns, actions.updateRows),
     distinctUntilChanged(),
     tap(() => {
-      setLocalStorage(state$.value.table);
+      setStateToLocalStorage(state$.value.table);
     }),
   );
 

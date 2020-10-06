@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useApolloClient, useQuery } from '@apollo/client';
 import { Button } from '@gpn-prototypes/vega-button';
+import { saveAs } from 'file-saver';
 import { TableError } from 'generated/graphql';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
@@ -10,6 +11,8 @@ import { packData } from 'utils';
 import { CALCULATION_PROJECT } from '../../mutations';
 import { GET_TABLE_TEMPLATE } from '../Table/queries';
 import { TemplateProjectData } from '../Table/Table';
+
+const DOWNLOAD_RESULT_ROUTE = '`files/calculation_result/`';
 
 export const CalculateButton: React.FC = () => {
   const client = useApolloClient();
@@ -44,13 +47,10 @@ export const CalculateButton: React.FC = () => {
         })
         .then((res) => {
           if (res.data.calculateProject.resultId) {
-            const a = document.createElement('a');
-            a.target = '_blank';
-            a.href = `files/calculation_result/${res.data.calculateProject.resultId}`;
-            a.download = 'result.zip';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            saveAs(
+              `${DOWNLOAD_RESULT_ROUTE}${res.data.calculateProject.resultId}`,
+              'result.zip',
+            );
           }
           const errors = res.data.calculateProject.errors?.filter(
             (error: TableError) => error.tableName,

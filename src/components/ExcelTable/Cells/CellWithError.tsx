@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { Tooltip } from '@gpn-prototypes/vega-tooltip';
 import cn from 'classnames';
 import { TableNames } from 'generated/graphql';
 import { RootState } from 'store/types';
@@ -20,31 +21,48 @@ export const CellWithError: React.FC<CellWithErrorProps> = ({
   column,
   rowIdx: currentRowIdx,
 }) => {
+  const ref = useRef(null);
+  const [isShowError, setIsShowError] = useState(true);
   const errors = useSelector(({ table }: RootState) => table.errors);
-  const tableColumnIdx = columns
-    .filter((c) => c.type === column.type)
-    .findIndex((c) => c.key === column.key);
-  const hasError = useMemo(
-    () =>
-      errors?.find(
-        ({ row: rowIdx, column: columnIdx, tableName }) =>
-          rowIdx === currentRowIdx &&
-          tableColumnIdx === columnIdx &&
-          ((column.type === TableEntities.GEO_CATEGORY &&
-            tableName === TableNames.DomainEntities) ||
-            (column.type === TableEntities.CALC_PARAM &&
-              tableName === TableNames.Attributes)),
-      )?.message,
-    [errors, currentRowIdx, tableColumnIdx, column.type],
-  );
+  const error = errors.find(({ row: rowIdx, column: columnIdx, tableName }) => {
+    const tableColumnIdx = columns
+      .filter((c) => c.type === column.type)
+      .findIndex((c) => c.key === column.key);
+    // TODO: fix it
+    const isSameTableType =
+      (column.type === TableEntities.GEO_CATEGORY &&
+        tableName === TableNames.DomainEntities) ||
+      (column.type === TableEntities.CALC_PARAM &&
+        tableName === TableNames.Attributes);
+    const isSameColumn = tableColumnIdx === columnIdx;
+    const isSameRow = rowIdx === currentRowIdx;
+
+    return isSameRow && isSameColumn && isSameTableType;
+  });
+  const handleMouseEnter = () => {
+    setIsShowError(true);
+  };
+  const handleMouseLeave = () => {
+    setIsShowError(false);
+  };
 
   return (
-    <span
-      className={cn({
-        [cnCellValueError]: hasError,
-      })}
-    >
-      {row[column.key]?.value ?? ''}
-    </span>
+    <>
+      <span
+        className={cn({
+          [cnCellValueError]: !!error,
+        })}
+        ref={ref}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {row[column.key]?.value ?? ''}
+      </span>
+      {isShowError && error && (
+        <Tooltip size="s" anchorRef={ref} direction="rightCenter">
+          {error.message}
+        </Tooltip>
+      )}
+    </>
   );
 };
