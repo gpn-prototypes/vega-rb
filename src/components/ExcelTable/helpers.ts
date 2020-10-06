@@ -1,99 +1,8 @@
-import { ComponentType, ReactText } from 'react';
-import { FormatterProps, HeaderRendererProps } from 'react-data-grid';
-import classNames from 'classnames';
-import { SpecialColumns } from 'model/Table';
+import { ReactText } from 'react';
 
-import { cnCell, cnCellId, cnCellSplitter, cnHeader } from './cn-excel-table';
-import { GridRow, IGridColumn, TableEntities } from './types';
+import { IGridColumn, TableEntities } from './types';
 
 import './ExcelTable.css';
-
-const cnHeaderClass = cnHeader.toString();
-const cnCellClass = cnCell.toString();
-const cnCellIdClass = cnCellId.toString();
-const cnSplitterClass = cnCellSplitter.toString();
-
-export const generateColumn = (
-  genType: TableEntities = TableEntities.NONE,
-): IGridColumn => {
-  const hasIcon = genType === TableEntities.GEO_CATEGORY;
-
-  return {
-    key: Math.random().toString(),
-    name: '',
-    editable: true,
-    resizable: true,
-    sortable: true,
-    cellClass: cnCellClass,
-    headerCellClass: cnHeaderClass,
-    type: genType,
-    hasIcon,
-    isRenaming: true,
-  };
-};
-
-const setupSpecialColumnProps = (item: IGridColumn): IGridColumn => {
-  const commonParams = {
-    editable: false,
-    resizable: false,
-    sortable: false,
-  };
-
-  switch (item.key) {
-    case SpecialColumns.ID:
-      return {
-        ...item,
-        ...commonParams,
-        frozen: true,
-        minWidth: 40,
-        maxWidth: 55,
-        headerCellClass: classNames(item.headerCellClass, cnCellIdClass),
-        cellClass: classNames(item.cellClass, cnCellIdClass),
-      };
-    case SpecialColumns.SPLITTER:
-      return {
-        ...item,
-        ...commonParams,
-        maxWidth: 40,
-        headerCellClass: classNames(item.headerCellClass, cnSplitterClass),
-        cellClass: classNames(item.cellClass, cnSplitterClass),
-      };
-    default:
-      return item;
-  }
-};
-
-export const columnsFactory = (
-  column: IGridColumn,
-  formatter: ComponentType<FormatterProps<GridRow> & { value?: string }>,
-  HeaderRenderer: ComponentType<HeaderRendererProps<GridRow>>,
-): IGridColumn => {
-  const item = {
-    ...column,
-    formatter,
-    editable: true,
-    resizable: true,
-    sortable: true,
-    minWidth: 112,
-    headerCellClass: classNames(
-      cnHeader.state({ renaming: !!column.isRenaming }).toString(),
-    ),
-    cellClass: classNames(column.cellClass, cnCellClass),
-    headerRenderer: HeaderRenderer,
-  };
-
-  switch (item.type) {
-    case TableEntities.CALC_PARAM:
-      return {
-        ...item,
-        editable: false,
-      };
-    case TableEntities.NONE:
-      return setupSpecialColumnProps(item);
-    default:
-      return item;
-  }
-};
 
 export function setColumnAttributes(
   columns: IGridColumn[],
@@ -137,6 +46,14 @@ export function onBlurCell(
 
   column.isRenaming = false;
   setColumns(nextColumns);
+}
+
+export function isNoneColumnType(type: TableEntities): boolean {
+  return (
+    type === TableEntities.ID ||
+    type === TableEntities.SPLITTER ||
+    type === TableEntities.NONE
+  );
 }
 
 // export const compose = (...fns: Function[]) =>

@@ -10,15 +10,15 @@ import { AutoSizer } from 'react-virtualized';
 import renderColumns from './Columns/renderColumns';
 import { cnExcelTable } from './cn-excel-table';
 import { HeaderContextMenu } from './ContextMenu';
-import { generateColumn } from './helpers';
+import { isNoneColumnType } from './helpers';
 import StyledRow from './StyledRow';
 import {
   GridCollection,
   GridRow,
   HEADER_CONTEXT_ID,
   IGridColumn,
-  TableEntities,
 } from './types';
+import { createColumn } from './utils';
 
 import './ExcelTable.css';
 
@@ -64,7 +64,6 @@ export const ExcelTable: React.FC<IProps> = ({
   const handleRowsUpdate = useCallback(
     ({ fromRow, toRow, updated }: RowsUpdateEvent<Partial<GridRow>>) => {
       const newRows = [...rows];
-
       for (let i = fromRow; i <= toRow; i += 1) {
         newRows[i] = {
           ...newRows[i],
@@ -88,14 +87,13 @@ export const ExcelTable: React.FC<IProps> = ({
   };
 
   const pushColumn = (insertIdx: number): void => {
-    const prevIdx =
-      columns[insertIdx].type !== TableEntities.NONE
-        ? insertIdx
-        : insertIdx - 1;
-    const { type } = columns[prevIdx];
+    const prevIdx = isNoneColumnType(columns[insertIdx].type!)
+      ? insertIdx - 1
+      : insertIdx;
+    const { type: newColumnType } = columns[prevIdx];
     setColumns([
       ...columns.slice(0, insertIdx),
-      generateColumn(type),
+      createColumn(newColumnType),
       ...columns.slice(insertIdx),
     ]);
   };
@@ -114,7 +112,6 @@ export const ExcelTable: React.FC<IProps> = ({
     columns,
     setColumns,
   ]);
-
   return (
     <>
       <DndProvider backend={HTML5Backend}>

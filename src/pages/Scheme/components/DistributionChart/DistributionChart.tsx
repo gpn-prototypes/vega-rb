@@ -219,7 +219,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
   }, [draw]);
 
   return (
-    <div className={cnDistributionChart.toString()}>
+    <div className={cnDistributionChart}>
       <svg width={width} height={height} ref={d3Container} />
     </div>
   );

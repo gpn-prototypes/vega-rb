@@ -9,4 +9,5 @@ export const CATEGORIES_TYPES = new Map<string, string>([
 export enum SpecialColumns {
   ID = 'id',
   SPLITTER = 'splitter',
+  SPLITTER_RISKS = 'splitter_risks',
 }

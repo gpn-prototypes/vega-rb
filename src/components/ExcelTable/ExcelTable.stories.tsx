@@ -3,7 +3,7 @@ import faker from 'faker';
 import { SpecialColumns } from 'model/Table';
 
 import { cnCell, cnCellId, cnCellSplitter, cnHeader } from './cn-excel-table';
-import { ExcelTable } from './ExcelTable';
+import ExcelTable from './index';
 import { GridCollection, TableEntities } from './types';
 
 import './ExcelTable.css';
@@ -20,7 +20,7 @@ const mockData: GridCollection = {
       name: '',
       cellClass: cnCellId,
       headerCellClass: cnCellId,
-      type: TableEntities.GEO_CATEGORY,
+      type: TableEntities.ID,
     },
     {
       key: 'area',
@@ -62,7 +62,7 @@ const mockData: GridCollection = {
       name: '',
       maxWidth: 32,
       minWidth: 32,
-      type: TableEntities.NONE,
+      type: TableEntities.SPLITTER,
       headerCellClass: cnCellSplitter,
       cellClass: cnCellSplitter,
     },

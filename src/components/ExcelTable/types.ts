@@ -1,5 +1,6 @@
 import React, { ReactText } from 'react';
 import { Column } from 'react-data-grid';
+import { FormatterProps as BaseFormatterProps } from 'react-data-grid/lib/common/types';
 import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
@@ -25,16 +26,21 @@ export type SelectedCell = {
 export enum TableEntities {
   GEO_CATEGORY = 'DomainEntity',
   CALC_PARAM = 'Attribute',
+  RISK = 'Risk',
+  ID = 'ID',
+  SPLITTER = 'Splitter',
   NONE = 'None',
+}
+
+interface GridCellParameters {
+  value: ReactText;
+  type: DistributionParameterTypes;
 }
 
 interface GridCellArguments {
   definition: DistributionDefinitionTypes;
   type: DistributionTypes;
-  parameters: {
-    type: DistributionParameterTypes;
-    value: number;
-  }[];
+  parameters: GridCellParameters[];
 }
 
 export interface GridCellProperties {
@@ -52,6 +58,7 @@ export interface IGridColumn extends Column<GridRow> {
   isRenaming?: boolean;
   before?: JSX.Element;
   headerId?: string;
+  notRemovable?: boolean;
 }
 
 export interface GridCollection {
@@ -63,3 +70,5 @@ export type ContextHandler = (
   e: React.MouseEvent<HTMLDivElement>,
   { idx }: { idx: number },
 ) => void;
+
+export type FormatterProps<T> = BaseFormatterProps<T> & { value?: string };

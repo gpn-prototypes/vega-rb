@@ -1,15 +1,11 @@
 import React from 'react';
+import Formatter from 'components/ExcelTable/Formatters';
 import { curry } from 'lodash';
 
-import { CellWithError } from '../Cells/CellWithError';
 import Header from '../Header';
-import {
-  columnsFactory,
-  columnsReorder,
-  onBlurCell,
-  setColumnAttributes,
-} from '../helpers';
+import { columnsReorder, onBlurCell, setColumnAttributes } from '../helpers';
 import { IGridColumn } from '../types';
+import { columnsFactory } from '../utils';
 
 const renderColumns = (
   columns: IGridColumn[],
@@ -22,7 +18,7 @@ const renderColumns = (
   return columns.map((column) =>
     columnsFactory(
       column,
-      (props) => <CellWithError {...props} columns={columns} />,
+      Formatter,
       React.memo((props) => (
         <Header
           {...props}

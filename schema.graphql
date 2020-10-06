@@ -89,7 +89,6 @@ enum DistributionDefinitionTypes {
 
   """Через минимум и максимум"""
   MIN_MAX
-}
 
   """
   Через расположение, логарифмическое среднее и логарифмическое стандартное отклонение
@@ -98,6 +97,9 @@ enum DistributionDefinitionTypes {
 
   """Через наиболее вероятное, минимум и максимум"""
   MODE_MIN_MAX
+
+  """Через альфа, бета, минимум и максимум"""
+  ALPHA_BETA_MIN_MAX
 }
 
 """Параметры распределения."""
@@ -144,6 +146,12 @@ enum DistributionParameterTypes {
 
   """Логарифмическое стандартное отклонение"""
   SDLOG
+
+  """Параметр расположения Альфа"""
+  ALPHA
+
+  """Параметр расположения Бэта"""
+  BETA
 }
 
 """Пространство имен для работы с распределениями."""
@@ -165,6 +173,12 @@ enum DistributionTypes {
 
   """Равномерное распределение"""
   UNIFORM
+
+  """Бета распределение"""
+  BETA
+
+  """ПЕРТ распределение"""
+  PERT
 }
 
 type DomainEntity {
@@ -251,7 +265,7 @@ type GCoSCalculationResult {
   errors: [TableError!]
 }
 
-"""Список категроий геологического объекта."""
+"""Список категорий геологического объекта."""
 enum GeoObjectCategories {
   RESERVES
   RESOURCES
@@ -276,7 +290,6 @@ type Point {
   y: Float!
 }
 
-"""Представление проекта."""
 type Project {
   """Версия шаблона структуры проекта"""
   version: String!
@@ -285,7 +298,6 @@ type Project {
   structure: ProjectStructure!
 }
 
-"""Представление проекта."""
 input ProjectInput {
   """Версия шаблона структуры проекта"""
   version: String!
@@ -303,7 +315,6 @@ type ProjectQueries {
   validateBeforeLoad(project: ProjectInput!): DetailError
 }
 
-"""Структура проекта."""
 type ProjectStructure {
   """Список доменных сущностей геологических объектов"""
   domainEntities: [DomainEntity!]!
@@ -366,7 +377,7 @@ type TableError implements ErrorInterface {
   message: String!
 
   """Имя таблицы, содержащей строки или ячейки, повлекшие ошибку"""
-  tableName: String
+  tableName: TableNames!
 
   """Индекс ячейки в строке таблицы, повлекшей ошибку"""
   column: Int
@@ -377,6 +388,13 @@ type TableError implements ErrorInterface {
 
 type TableErrors {
   errors: [TableError!]!
+}
+
+"""Имена таблиц в структуре проекта."""
+enum TableNames {
+  DOMAIN_ENTITIES
+  ATTRIBUTES
+  RISKS
 }
 
 union UpdateRiskValueResult = GCoSCalculationResult | DetailError
