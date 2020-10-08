@@ -1,7 +1,7 @@
 import {
   GridCellProperties,
+  GridColumn,
   GridRow,
-  IGridColumn,
   SelectedCell,
 } from 'components/ExcelTable/types';
 import { TableError } from 'generated/graphql';
@@ -16,7 +16,7 @@ import { RootState, TableState } from './types';
 const factory = actionCreatorFactory('table');
 
 const actions = {
-  updateColumns: factory<IGridColumn[]>('UPDATE_COLUMNS'),
+  updateColumns: factory<GridColumn[]>('UPDATE_COLUMNS'),
   updateRows: factory<GridRow[]>('UPDATE_ROWS'),
   updateCell: factory<{
     selectedCell: SelectedCell;

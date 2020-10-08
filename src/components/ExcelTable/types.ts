@@ -1,6 +1,9 @@
 import React, { ReactText } from 'react';
-import { Column } from 'react-data-grid';
-import { FormatterProps as BaseFormatterProps } from 'react-data-grid/lib/common/types';
+import { CalculatedColumn, Column } from 'react-data-grid';
+import {
+  FormatterProps as BaseFormatterProps,
+  HeaderRendererProps as BaseHeaderRendererProps,
+} from 'react-data-grid/lib/common/types';
 import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
@@ -20,7 +23,7 @@ export enum CategoryIcon {
 export type SelectedCell = {
   rowIdx: number;
   row: GridRow;
-  column: IGridColumn;
+  column: GridColumn;
 };
 
 export enum TableEntities {
@@ -52,7 +55,7 @@ export interface GridRow {
   [key: string]: GridCellProperties | undefined;
 }
 
-export interface IGridColumn extends Column<GridRow> {
+export interface GridColumn extends Column<GridRow> {
   type?: TableEntities;
   hasIcon?: boolean;
   isRenaming?: boolean;
@@ -62,7 +65,7 @@ export interface IGridColumn extends Column<GridRow> {
 }
 
 export interface GridCollection {
-  columns: IGridColumn[];
+  columns: GridColumn[];
   rows: GridRow[];
 }
 
@@ -72,3 +75,16 @@ export type ContextHandler = (
 ) => void;
 
 export type FormatterProps<T> = BaseFormatterProps<T> & { value?: string };
+
+export type UniColumn = CalculatedColumn<GridRow> & GridColumn;
+
+export interface HeaderRendererProps extends BaseHeaderRendererProps<GridRow> {
+  column: UniColumn;
+  onBlurHandler: (idx: number) => void;
+  setColumnProps: (
+    columnIdx: number,
+    property: string,
+    value: ReactText | boolean,
+  ) => void;
+  handleColumnsReorder: (sourceKey: string, targetKey: string) => void;
+}

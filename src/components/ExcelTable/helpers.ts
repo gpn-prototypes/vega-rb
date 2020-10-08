@@ -1,12 +1,12 @@
 import { ReactText } from 'react';
 
-import { IGridColumn, TableEntities } from './types';
+import { GridColumn, TableEntities } from './types';
 
 import './ExcelTable.css';
 
 export function setColumnAttributes(
-  columns: IGridColumn[],
-  setColumns: (columnsList: IGridColumn[]) => void,
+  columns: GridColumn[],
+  setColumns: (columnsList: GridColumn[]) => void,
   idx: number,
   propertyName: string,
   propertyValue: ReactText | boolean,
@@ -19,8 +19,8 @@ export function setColumnAttributes(
 }
 
 export function columnsReorder(
-  columns: IGridColumn[],
-  setColumns: (columnsList: IGridColumn[]) => void,
+  columns: GridColumn[],
+  setColumns: (columnsList: GridColumn[]) => void,
   sourceKey: string,
   targetKey: string,
 ): void {
@@ -36,8 +36,8 @@ export function columnsReorder(
 }
 
 export function onBlurCell(
-  columns: IGridColumn[],
-  setColumns: (columnsList: IGridColumn[]) => void,
+  columns: GridColumn[],
+  setColumns: (columnsList: GridColumn[]) => void,
   idx: number,
 ): void {
   const nextColumns = [...columns];

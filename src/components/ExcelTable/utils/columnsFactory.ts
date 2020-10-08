@@ -1,8 +1,9 @@
 import { ComponentType } from 'react';
 import { HeaderRendererProps } from 'react-data-grid';
+import { SimpleTextEditor } from 'components/ExcelTable/Editors';
 
 import { cnCell, cnCellId, cnCellSplitter, cnHeader } from '../cn-excel-table';
-import { FormatterProps, GridRow, IGridColumn, TableEntities } from '../types';
+import { FormatterProps, GridColumn, GridRow, TableEntities } from '../types';
 
 const COMMON_COLUMN_PROPS = {
   editable: true,
@@ -18,7 +19,7 @@ const SUPPORT_COLUMN_PROPS = {
 };
 
 function getBaseProps(
-  column: IGridColumn,
+  column: GridColumn,
   formatter: ComponentType<FormatterProps<GridRow>>,
   HeaderRenderer: ComponentType<HeaderRendererProps<GridRow>>,
 ) {
@@ -32,11 +33,18 @@ function getBaseProps(
   };
 }
 
+function getEditor(type?: TableEntities) {
+  if (type === TableEntities.GEO_CATEGORY) {
+    return { editor: SimpleTextEditor };
+  }
+  return {};
+}
+
 export function columnsFactory(
-  column: IGridColumn,
+  column: GridColumn,
   formatter: ComponentType<FormatterProps<GridRow>>,
   HeaderRenderer: ComponentType<HeaderRendererProps<GridRow>>,
-): IGridColumn {
+): GridColumn {
   const baseProps = getBaseProps(column, formatter, HeaderRenderer);
 
   switch (column.type) {
@@ -81,6 +89,11 @@ export function columnsFactory(
       };
 
     default:
-      return { ...column, ...COMMON_COLUMN_PROPS, ...baseProps };
+      return {
+        ...column,
+        ...COMMON_COLUMN_PROPS,
+        ...baseProps,
+        ...getEditor(column.type),
+      };
   }
 }

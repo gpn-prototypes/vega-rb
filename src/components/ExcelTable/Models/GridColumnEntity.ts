@@ -1,6 +1,6 @@
-import { IGridColumn, TableEntities } from '../types';
+import { GridColumn, TableEntities } from '../types';
 
-export default class GridColumn implements IGridColumn {
+export default class GridColumnEntity implements GridColumn {
   readonly key: string;
 
   name: string;

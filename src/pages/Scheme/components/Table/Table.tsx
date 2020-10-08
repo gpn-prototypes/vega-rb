@@ -36,11 +36,13 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   }, [templateStructure]);
 
   useEffect(() => {
-    if (isEmpty(reduxTableData.columns)) {
-      dispatch(tableDuck.actions.updateColumns(columns()));
-    }
-    if (isEmpty(reduxTableData.rows)) {
-      dispatch(tableDuck.actions.updateRows(mockTableRows));
+    if (!isEmpty(columns())) {
+      if (isEmpty(reduxTableData.columns)) {
+        dispatch(tableDuck.actions.updateColumns(columns()));
+      }
+      if (isEmpty(reduxTableData.rows)) {
+        dispatch(tableDuck.actions.updateRows(mockTableRows));
+      }
     }
   }, [columns, dispatch, reduxTableData]);
 
