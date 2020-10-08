@@ -1,9 +1,10 @@
 import { ComponentType } from 'react';
 import { HeaderRendererProps } from 'react-data-grid';
-import { SimpleTextEditor } from 'components/ExcelTable/Editors';
 
 import { cnCell, cnCellId, cnCellSplitter, cnHeader } from '../cn-excel-table';
 import { FormatterProps, GridColumn, GridRow, TableEntities } from '../types';
+
+import { getEditor } from './getEditor';
 
 const COMMON_COLUMN_PROPS = {
   editable: true,
@@ -31,13 +32,6 @@ function getBaseProps(
     cellClass: cnCell.mix(column.cellClass).toString(),
     headerRenderer: HeaderRenderer,
   };
-}
-
-function getEditor(type?: TableEntities) {
-  if (type === TableEntities.GEO_CATEGORY) {
-    return { editor: SimpleTextEditor };
-  }
-  return {};
 }
 
 export function columnsFactory(
