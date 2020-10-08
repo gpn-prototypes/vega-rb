@@ -23,10 +23,28 @@ export type DistributionParameters = {
   types: DistributionType[];
 };
 
-export type Field = {
-  key: DistributionParameterTypes;
+export type Field = DefaultField | QuantilesField;
+
+export type DefaultField = {
+  key: Exclude<
+    DistributionParameterTypes,
+    | DistributionParameterTypes.Q1Value
+    | DistributionParameterTypes.Q2Value
+    | DistributionParameterTypes.Q1Rank
+    | DistributionParameterTypes.Q2Rank
+  >;
   defaultValue: string;
   title: string;
+};
+
+export type QuantilesField = {
+  key: DistributionParameterTypes.Q1Value | DistributionParameterTypes.Q2Value;
+  rankKey:
+    | DistributionParameterTypes.Q1Rank
+    | DistributionParameterTypes.Q2Rank;
+  title: (rank: string) => string;
+  defaultRankValue: string;
+  defaultValue: string;
 };
 
 export type DistributionSettingsParameters = {

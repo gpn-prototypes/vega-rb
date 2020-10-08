@@ -4,6 +4,10 @@
 }
 
 .Grid {
+  position: relative;
+
+  margin-bottom: 60px;
+
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 }
@@ -12,6 +16,19 @@
   margin: 20px 0;
 }
 
-.TextField__error {
+.Field {
+  position: relative;
+}
+
+.Field__ErrorMessage {
+  bottom: -30px;
+  position: absolute;
+  font-size: 10px;
+  line-height: 12px;
+
+  color: #ed4545;
+}
+
+.TextField__Error {
   border-color: #cd3939;
 }
