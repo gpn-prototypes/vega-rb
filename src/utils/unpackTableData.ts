@@ -91,11 +91,20 @@ function constructColumns({
   risks = [],
 }: ProjectStructure): GridCollection[] {
   return [
-    new GridColumn(SpecialColumns.ID, undefined, TableEntities.ID),
+    new GridColumnEntity(SpecialColumns.ID, undefined, TableEntities.ID),
     ...structureParamsReducer(domainEntities),
-    new GridColumn(SpecialColumns.SPLITTER, undefined, TableEntities.SPLITTER),
+    new GridColumnEntity(
+      SpecialColumns.GEO_CATEGORY,
+      'Кат.',
+      TableEntities.GEO_CATEGORY_TYPE,
+    ),
+    new GridColumnEntity(
+      SpecialColumns.SPLITTER,
+      undefined,
+      TableEntities.SPLITTER,
+    ),
     ...structureParamsReducer(calculationParameters),
-    new GridColumn(
+    new GridColumnEntity(
       SpecialColumns.SPLITTER_RISKS,
       undefined,
       TableEntities.SPLITTER,
