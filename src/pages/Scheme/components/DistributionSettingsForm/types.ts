@@ -1,13 +1,8 @@
-import { TextFieldProps } from '@gpn-prototypes/vega-text-field/dist/src/TextField';
 import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
 } from 'generated/graphql';
-
-const textFieldFormPropertyName = 'form';
-
-export type TextFieldFormProperty = TextFieldProps[typeof textFieldFormPropertyName];
 
 export type DistributionParametersMap = {
   [key in DistributionTypes]: DistributionParameters;
@@ -23,26 +18,33 @@ export type DistributionParameters = {
   types: DistributionType[];
 };
 
-export type Field = DefaultField | QuantilesField;
+export type Field = DefaultField | PercentileField;
+export type DistributionParameterPercentileValue =
+  | DistributionParameterTypes.P1Value
+  | DistributionParameterTypes.P2Value
+  | DistributionParameterTypes.P3Value
+  | DistributionParameterTypes.P4Value;
+export type DistributionParameterPercentileRank =
+  | DistributionParameterTypes.P1Rank
+  | DistributionParameterTypes.P2Rank
+  | DistributionParameterTypes.P3Rank
+  | DistributionParameterTypes.P4Rank;
+export type DistributionParameterPercentileTypes =
+  | DistributionParameterPercentileValue
+  | DistributionParameterPercentileRank;
 
 export type DefaultField = {
   key: Exclude<
     DistributionParameterTypes,
-    | DistributionParameterTypes.Q1Value
-    | DistributionParameterTypes.Q2Value
-    | DistributionParameterTypes.Q1Rank
-    | DistributionParameterTypes.Q2Rank
+    DistributionParameterPercentileTypes
   >;
   defaultValue: string;
   title: string;
 };
 
-export type QuantilesField = {
-  key: DistributionParameterTypes.Q1Value | DistributionParameterTypes.Q2Value;
-  rankKey:
-    | DistributionParameterTypes.Q1Rank
-    | DistributionParameterTypes.Q2Rank;
-  title: (rank: string) => string;
+export type PercentileField = {
+  key: DistributionParameterPercentileValue;
+  rankKey: DistributionParameterPercentileRank;
   defaultRankValue: string;
   defaultValue: string;
 };

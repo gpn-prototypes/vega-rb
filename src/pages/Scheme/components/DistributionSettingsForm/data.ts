@@ -94,24 +94,22 @@ const distributionParametersMap: DistributionParametersMap = {
         title: 'Минимум, максимум',
       },
       {
-        type: DistributionDefinitionTypes.Quantiles,
+        type: DistributionDefinitionTypes.TwoPercentiles,
         title: 'Р90, Р10',
       },
     ],
     fieldsByType: {
-      [DistributionDefinitionTypes.Quantiles]: [
+      [DistributionDefinitionTypes.TwoPercentiles]: [
         {
-          key: DistributionParameterTypes.Q1Value,
-          rankKey: DistributionParameterTypes.Q1Rank,
+          key: DistributionParameterTypes.P1Value,
+          rankKey: DistributionParameterTypes.P1Rank,
           defaultRankValue: '10',
-          title: (rank: string): string => `P${rank}`,
           defaultValue: '',
         },
         {
-          key: DistributionParameterTypes.Q2Value,
-          rankKey: DistributionParameterTypes.Q2Rank,
+          key: DistributionParameterTypes.P2Value,
+          rankKey: DistributionParameterTypes.P2Rank,
           defaultRankValue: '90',
-          title: (rank: string): string => `P${rank}`,
           defaultValue: '',
         },
       ],

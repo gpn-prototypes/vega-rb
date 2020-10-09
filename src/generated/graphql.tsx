@@ -217,10 +217,26 @@ export enum DistributionDefinitionTypes {
   LocationMeanlogSdlog = 'LOCATION_MEANLOG_SDLOG',
   /** Через наиболее вероятное, минимум и максимум */
   ModeMinMax = 'MODE_MIN_MAX',
-  /** Через квантили */
-  Quantiles = 'QUANTILES',
   /** Через альфа, бета, минимум и максимум */
   AlphaBetaMinMax = 'ALPHA_BETA_MIN_MAX',
+  /** Через два процентиля */
+  TwoPercentiles = 'TWO_PERCENTILES',
+  /** Через три процентиля */
+  ThreePercentiles = 'THREE_PERCENTILES',
+  /** Через четыре процентиля */
+  FourPercentiles = 'FOUR_PERCENTILES',
+  /** Через среднее и один процентиль */
+  MeanOnePercentile = 'MEAN_ONE_PERCENTILE',
+  /** Через расположение и два процентиля */
+  LocationTwoPercentiles = 'LOCATION_TWO_PERCENTILES',
+  /** Через расположение, среднее и один процентиль */
+  LocationMeanOnePercentile = 'LOCATION_MEAN_ONE_PERCENTILE',
+  /** Через среднее и два процентиля */
+  MeanTwoPercentiles = 'MEAN_TWO_PERCENTILES',
+  /** Через наиболее вероятное и два процентиля */
+  ModeTwoPercentiles = 'MODE_TWO_PERCENTILES',
+  /** Через минимум, максимум и два процентиля */
+  MinMaxTwoPercentiles = 'MIN_MAX_TWO_PERCENTILES',
 }
 
 /** Параметр способа задания распределения. */
@@ -236,9 +252,9 @@ export enum DistributionParameterTypes {
   Mean = 'MEAN',
   /** Стандартное отклонение */
   StandardDeviation = 'STANDARD_DEVIATION',
-  /** Мин. */
+  /** Минимум */
   Min = 'MIN',
-  /** Макс. */
+  /** Максимум */
   Max = 'MAX',
   /** Расположение */
   Location = 'LOCATION',
@@ -248,18 +264,26 @@ export enum DistributionParameterTypes {
   Meanlog = 'MEANLOG',
   /** Логарифмическое стандартное отклонение */
   Sdlog = 'SDLOG',
-  /** q1_rank */
-  Q1Rank = 'Q1_RANK',
-  /** q1_value */
-  Q1Value = 'Q1_VALUE',
-  /** q2_rank */
-  Q2Rank = 'Q2_RANK',
-  /** q2_value */
-  Q2Value = 'Q2_VALUE',
   /** Параметр расположения Альфа */
   Alpha = 'ALPHA',
   /** Параметр расположения Бэта */
   Beta = 'BETA',
+  /** Первый процентильный ранг */
+  P1Rank = 'P1_RANK',
+  /** Второй процентильный ранг */
+  P2Rank = 'P2_RANK',
+  /** Третий процентильный ранг */
+  P3Rank = 'P3_RANK',
+  /** Четвертый процентильный ранг */
+  P4Rank = 'P4_RANK',
+  /** Значение первого процентильного ранга */
+  P1Value = 'P1_VALUE',
+  /** Значение второго процентильного ранга */
+  P2Value = 'P2_VALUE',
+  /** Значение третьего процентильного ранга */
+  P3Value = 'P3_VALUE',
+  /** Значение четвертого процентильного ранга */
+  P4Value = 'P4_VALUE',
 }
 
 export type RiskInput = {
