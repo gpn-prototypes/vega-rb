@@ -79,6 +79,9 @@ export default function columnsFactory(
         cellClass: cnCellSplitter.mix(cnCell).toString(),
       });
 
+    case TableEntities.GEO_CATEGORY_TYPE:
+      return getColumn({ ...defaultStyles });
+
     default:
       return getColumn({ ...defaultStyles, ...COMMON_COLUMN_PROPS });
   }
