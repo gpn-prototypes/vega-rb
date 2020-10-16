@@ -39,11 +39,11 @@
     &__Value.is-error {
       position: absolute;
       z-index: 1;
-      top: 2px;
-      left: 2px;
-      bottom: 2px;
+      top: var(--space-3xs);
+      left: var(--space-3xs);
+      bottom: var(--space-3xs);
 
-      padding: 0 8px;
+      padding: 0 var(--space-xs);
 
       display: inline-block;
       overflow: hidden;
@@ -54,7 +54,7 @@
       white-space: nowrap;
       text-overflow: ellipsis;
 
-      border: 1px solid #f00;
+      border: var(--control-border-width) solid var(--color-bg-alert);
     }
 
     &__Id {

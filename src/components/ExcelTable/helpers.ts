@@ -14,7 +14,7 @@ export function setColumnAttributes(
   const nextColumns = [...columns];
   // eslint-disable-next-line
   // @ts-ignore
-  nextColumns[idx][propertyName] = propertyValue; // { ...nextColumns[idx], ...{[propertyName]: propertyValue}
+  nextColumns[idx][propertyName] = propertyValue;
   setColumns(nextColumns);
 }
 
@@ -55,9 +55,3 @@ export function isNoneColumnType(type: TableEntities): boolean {
     type === TableEntities.NONE
   );
 }
-
-// export const compose = (...fns: Function[]) =>
-//   fns.reduceRight(
-//     (prevFn, nextFn) => (...args: any[]) => nextFn(prevFn(...args)),
-//     (value: any) => value,
-//   );

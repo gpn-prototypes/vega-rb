@@ -10,7 +10,7 @@ import { packData } from 'utils';
 
 import { CALCULATION_PROJECT } from '../../mutations';
 import { GET_TABLE_TEMPLATE } from '../Table/queries';
-import { TemplateProjectData } from '../Table/Table';
+import { TemplateProjectData } from '../Table/types';
 
 const DOWNLOAD_RESULT_ROUTE = '`files/calculation_result/`';
 
