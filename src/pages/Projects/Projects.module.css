@@ -1,16 +1,16 @@
 .ProjectsPage {
-  padding: 24px 12px;
+  padding: var(--space-xl) var(--space-s);
 }
 
 .Headtext {
   margin: 0;
-  padding: 0 0 12px;
+  padding: 0 0 var(--space-s);
 
-  font-size: 32px;
+  font-size: var(--size-text-3xl);
   font-weight: 700;
   font-style: normal;
 
-  color: #fafafa;
+  color: var(--color-typo-primary);
 }
 
 .FlexContainer {
@@ -22,7 +22,7 @@
 }
 
 .ProjectList {
-  padding: 12px 0;
+  padding: var(--space-s) 0;
 
   overflow-y: scroll;
 
@@ -30,30 +30,30 @@
 
   list-style-type: none;
 
-  color: #fafafa;
+  color: var(--color-typo-primary);
 }
 
 .ProjectList li {
   margin: 0;
-  padding: 12px;
+  padding: var(--space-s);
 
   cursor: pointer;
 }
 
 .ProjectList li:nth-child(even) {
-  background: rgba(246, 251, 253, 0.06);
+  background: var(--color-bg-stripe);
 }
 
 .ProjectList li:nth-child(odd) {
-  background: #23272b;
+  background: var(--color-bg-default);
 }
 
 .NavWrapper {
-  margin-right: 40px;
+  margin-right: var(--space-3xl);
 
   width: 302px;
 }
 
 .TextField {
-  margin-right: 40px;
+  margin-right: var(--space-3xl);
 }

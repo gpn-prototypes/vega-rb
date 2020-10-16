@@ -1,6 +1,5 @@
 import React, {
   forwardRef,
-  MutableRefObject,
   PropsWithoutRef,
   RefAttributes,
   RefObject,
@@ -14,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { Tooltip } from '@gpn-prototypes/vega-tooltip';
 import cn from 'classnames';
 import { TableNames } from 'generated/graphql';
+import useCombinedRefs from 'hooks/useCombinedRefs';
 import { RootState } from 'store/types';
 
 import { cnCellValueError } from '../cn-excel-table';
@@ -40,18 +40,17 @@ const CellWithError: React.ForwardRefExoticComponent<
     onDragOver,
     isRowSelected,
   } = props;
-  const innerRef = useRef<HTMLDivElement>(
-    (ref as MutableRefObject<HTMLDivElement | null>).current,
-  );
+  const innerRef = useRef<HTMLDivElement>(null);
+  const combinedRef = useCombinedRefs(ref, innerRef);
   const [isShowError, setIsShowError] = useState(false);
   const errors = useSelector(({ table }: RootState) => table.errors);
   const error = useMemo(
     () =>
+      // TODO: поправить условие после обновления API(заменить columnIdx на columnKey)
       errors.find(({ row: rowIdx, column: columnIdx, tableName }) => {
         const tableColumnIdx = columns
           .filter((c) => c.type === (column as IGridColumn).type)
           .findIndex((c) => c.key === (column as IGridColumn).key);
-        // TODO: fix it
         const isSameTableType =
           (column.key === TableEntities.GEO_CATEGORY &&
             tableName === TableNames.DomainEntities) ||
@@ -113,7 +112,7 @@ const CellWithError: React.ForwardRefExoticComponent<
       onMouseEnter={() => setIsShowError(true)}
       onMouseLeave={() => setIsShowError(false)}
       onDragOver={wrapEvent(preventDefault, onDragOver)}
-      ref={innerRef}
+      ref={combinedRef}
     >
       {React.createElement(column.formatter, {
         column,

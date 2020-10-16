@@ -1,0 +1,23 @@
+.ContextMenu {
+  &__Item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  &__Splitter {
+    margin: var(--space-s);
+
+    border-top: solid var(--control-border-width) var(--color-bg-border);
+  }
+
+  &__Icon {
+    position: absolute;
+
+    padding: 0 var(--space-xs);
+  }
+
+  &__Title {
+    padding: var(--space-s) var(--space-2xl);
+  }
+}

@@ -13,7 +13,11 @@
 }
 
 .Form {
-  margin: 20px 0;
+  margin: var(--space-l) 0;
+}
+
+.TextField__error {
+  border-color: var(--color-bg-alert);
 }
 
 .Field {
@@ -21,14 +25,11 @@
 }
 
 .Field__ErrorMessage {
-  bottom: -30px;
   position: absolute;
+  bottom: -30px;
+
   font-size: 10px;
   line-height: 12px;
 
   color: #ed4545;
-}
-
-.TextField__Error {
-  border-color: #cd3939;
 }

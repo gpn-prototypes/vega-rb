@@ -7,33 +7,33 @@
   width: 100vw;
   height: 100vh;
 
-  color: #fafafa;
-  background-color: #22272b;
+  color: var(--color-typo-primary);
+  background-color: var(--color-bg-default);
 }
 
 .Header {
-  padding: 9px 16px;
+  padding: var(--space-xs) var(--space-m);
 
   display: flex;
   align-items: center;
 
-  background: #16191c;
-}
+  background: var(--color-bg-secondary);
 
-.Header a {
-  margin-right: 6px;
+  a {
+    margin-right: var(--space-xs);
 
-  display: inline-block;
+    display: inline-block;
 
-  width: 16px;
-  height: 16px;
-}
+    width: var(--control-box-size-m);
+    height: var(--control-box-size-m);
+  }
 
-.Header span {
-  font-family: Arial, serif;
-  font-size: 14px;
-  line-height: 16px;
-  text-transform: uppercase;
+  span {
+    font-family: Arial, serif;
+    font-size: var(--size-text-s);
+    line-height: var(--line-height-text-2xs);
+    text-transform: uppercase;
 
-  color: #fafafa;
+    color: var(--color-typo-primary);
+  }
 }

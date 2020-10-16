@@ -1,16 +1,16 @@
 .DistributionChart {
-  background-color: #16191c;
+  background-color: var(--color-bg-secondary);
 
   &__Percentiles {
     &__Text {
-      font-size: 12px;
-      fill: #fafafa;
+      font-size: var(--size-text-xs);
+      fill: var(--color-typo-primary);
     }
   }
 
   &__ProjectionLines {
     fill: none;
-    stroke: #e68200;
+    stroke: var(--color-typo-warning);
     stroke-width: 1;
 
     opacity: 0.3;
@@ -18,7 +18,7 @@
 
   &__Grid {
     line {
-      stroke: #fff;
+      stroke: var(--color-control-typo-primary);
       stroke-dasharray: 1, 3;
       stroke-width: 1;
       stroke-opacity: 0.1;
@@ -26,9 +26,9 @@
     }
 
     text {
-      font-size: 12px;
+      font-size: var(--size-text-xs);
 
-      color: rgba(246, 251, 253, 0.6);
+      color: var(--color-typo-secondary);
 
       transform: translateY(10px);
     }
@@ -42,29 +42,29 @@
     fill: none;
 
     .domain {
-      stroke: rgba(246, 251, 253, 0.28);
+      stroke: var(--color-control-bg-border-default);
     }
 
     line {
-      stroke: rgba(246, 251, 253, 0.28);
+      stroke: var(--color-control-bg-border-default);
     }
 
     text {
-      font-size: 12px;
-      line-height: 17px;
+      font-size: var(--size-text-xs);
+      line-height: var(--line-height-text-xs);
     }
 
-    &__Left text {
-      color: #e68200;
+    &_position_left text {
+      color: var(--color-typo-warning);
     }
 
-    &__Right text {
-      color: #33b4ff;
+    &_position_right text {
+      color: var(--color-typo-normal);
 
       transform: translateX(5px);
     }
 
-    &__Right path {
+    &_position_right path {
       stroke-width: 0;
     }
   }

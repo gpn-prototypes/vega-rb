@@ -93,10 +93,6 @@ const distributionParametersMap: DistributionParametersMap = {
         type: DistributionDefinitionTypes.MinMax,
         title: 'Минимум, максимум',
       },
-      {
-        type: DistributionDefinitionTypes.Quantiles,
-        title: 'Р90, Р10',
-      },
     ],
     fieldsByType: {
       [DistributionDefinitionTypes.Quantiles]: [
