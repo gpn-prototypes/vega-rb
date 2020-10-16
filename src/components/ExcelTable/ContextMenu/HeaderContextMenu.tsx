@@ -1,6 +1,8 @@
 import React, { Component, useMemo } from 'react';
 import { ContextMenu, ContextMenuProps, MenuItem } from 'react-contextmenu';
 import { createPortal } from 'react-dom';
+import { useTheme } from '@consta/uikit/Theme';
+import classNames from 'classnames';
 import noop from 'utils/noop';
 
 import {
@@ -12,8 +14,14 @@ import {
 } from '../Icons';
 import { ContextHandler } from '../types';
 
+import { cnContextMenu } from './cn-context-menu';
+
 import './react-context.css';
-import styles from './ContextMenu.module.css';
+import './ContextMenu.css';
+
+const cnMenuItem = cnContextMenu('Item');
+const cnMenuIcon = cnContextMenu('Icon');
+const cnMenuTitle = cnContextMenu('Title');
 
 interface IProps {
   id: string;
@@ -67,23 +75,32 @@ export default React.forwardRef<Component<ContextMenuProps>, IProps>(
       [onInsertLeft, onInsertRight],
     );
 
+    const { themeClassNames } = useTheme();
+
     return createPortal(
-      <ContextMenu id={id} hideOnLeave ref={contextRef}>
+      <ContextMenu
+        id={id}
+        ref={contextRef}
+        className={classNames([
+          ...Object.values(themeClassNames),
+          themeClassNames.color.primary,
+        ])}
+      >
         {data.map(({ title: itemTitle, onClick, Icon, disabled }) => (
           <MenuItem
             key={itemTitle}
             onClick={onClick}
-            className={styles.MenuItem}
+            className={cnMenuItem.toString()}
             disabled={disabled}
           >
-            {Icon && <Icon className={styles.Icon} />}
-            <span className={styles.Title}>{itemTitle}</span>
+            {Icon && <Icon className={cnMenuIcon} />}
+            <span className={cnMenuTitle}>{itemTitle}</span>
           </MenuItem>
         ))}
-        <div className={styles.Splitter} />
-        <MenuItem onClick={onDelete} className={styles.MenuItem}>
-          <ThrashIcon className={styles.Icon} />
-          <span className={styles.Title}>Удалить</span>
+        <div className={cnContextMenu('Splitter')} />
+        <MenuItem onClick={onDelete} className={cnMenuItem.toString()}>
+          <ThrashIcon className={cnMenuIcon} />
+          <span className={cnMenuTitle}>Удалить</span>
         </MenuItem>
       </ContextMenu>,
       document.body,

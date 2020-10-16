@@ -1,5 +1,5 @@
 .Root {
-  padding: 0 8px;
+  padding: 0 var(--space-xs);
 
   display: flex;
   align-items: center;
@@ -13,7 +13,7 @@
 }
 
 .Icon {
-  margin-right: 6px;
+  margin-right: var(--space-xs);
 }
 
 .WrapperIcon {
@@ -21,11 +21,11 @@
 }
 
 .HeaderId {
-  padding-right: 8px;
+  padding-right: var(--space-xs);
 
   display: flex;
 
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--color-typo-ghost);
   opacity: 0.8;
 }
 
@@ -45,5 +45,5 @@
 }
 
 .IsOver {
-  background-color: rgba(0, 150, 235, 0.4);
+  background-color: var(--color-control-bg-focus);
 }

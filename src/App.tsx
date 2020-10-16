@@ -1,5 +1,4 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import {
   BrowserRouter,
   Redirect,
@@ -7,15 +6,13 @@ import {
   RouteProps,
   Switch,
 } from 'react-router-dom';
-import { ApolloProvider } from '@apollo/client';
-import { cnTheme } from '@gpn-design/uikit/Theme';
+import { cnTheme, useTheme } from '@gpn-design/uikit/Theme';
 import classNames from 'classnames';
-import client from 'client';
+import Providers from 'components/Providers';
 import { ReactComponent as IconLogo } from 'icons/logo.svg';
 import HomePage from 'pages/Home/HomePage';
 import LoginPage from 'pages/Login/LoginPage';
 import SchemePage from 'pages/Scheme/Scheme';
-import store from 'store/initStore';
 
 import '@gpn-design/uikit/__internal__/src/components/Theme/Theme.css';
 import '@gpn-design/uikit/__internal__/src/components/Theme/_color/Theme_color_gpnDefault.css';
@@ -26,14 +23,6 @@ import '@gpn-design/uikit/__internal__/src/components/Theme/_size/Theme_size_gpn
 import '@gpn-design/uikit/__internal__/src/components/Theme/_control/Theme_control_gpnDefault.css';
 import '@gpn-design/uikit/__internal__/src/utils/whitepaper/whitepaper.css';
 import './App.css';
-
-const themeClassname = cnTheme({
-  color: 'gpnDark',
-  space: 'gpnDefault',
-  size: 'gpnDefault',
-  font: 'gpnDark',
-  control: 'gpnDefault',
-});
 
 function PrivateRoute(props: RouteProps): JSX.Element {
   const hasToken = true;
@@ -47,28 +36,29 @@ function PrivateRoute(props: RouteProps): JSX.Element {
 }
 
 const App: React.FC = () => {
-  return (
-    <Provider store={store}>
-      <ApolloProvider client={client}>
-        <div className={classNames('App', themeClassname)}>
-          <div className="Header">
-            <a href="/">
-              <IconLogo />
-            </a>
-            <span>Вега 1.0</span>
-          </div>
+  const { theme } = useTheme();
+  const themeClassName = { ...theme, color: theme.color.invert };
 
-          <BrowserRouter>
-            <Switch>
-              <PrivateRoute path="/home" component={HomePage} />
-              <Route exact path="/login" component={LoginPage} />
-              <Route exact path="/" component={SchemePage} />
-              <Redirect to="/" />
-            </Switch>
-          </BrowserRouter>
+  return (
+    <Providers>
+      <div className={classNames('App', cnTheme(themeClassName))}>
+        <div className="Header">
+          <a href="/">
+            <IconLogo />
+          </a>
+          <span>Вега 1.0</span>
         </div>
-      </ApolloProvider>
-    </Provider>
+
+        <BrowserRouter>
+          <Switch>
+            <PrivateRoute path="/home" component={HomePage} />
+            <Route exact path="/login" component={LoginPage} />
+            <Route exact path="/" component={SchemePage} />
+            <Redirect to="/" />
+          </Switch>
+        </BrowserRouter>
+      </div>
+    </Providers>
   );
 };
 

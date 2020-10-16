@@ -1,5 +1,5 @@
 .FileInput {
-  margin-right: 12px;
+  margin-right: var(--space-s);
 
   display: inline-grid;
 }

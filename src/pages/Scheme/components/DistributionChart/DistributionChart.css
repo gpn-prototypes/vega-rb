@@ -1,10 +1,10 @@
 .DistributionChart {
-  background-color: #16191c;
+  background-color: var(--color-bg-secondary);
 
   &__Percentiles {
     &__Text {
       font-size: 12px;
-      fill: #fafafa;
+      fill: var(--color-control-typo-primary);
     }
   }
 
@@ -26,9 +26,9 @@
     }
 
     text {
-      font-size: 12px;
+      font-size: var(--size-text-xs);
 
-      color: rgba(246, 251, 253, 0.6);
+      color: var(--color-typo-secondary);
 
       transform: translateY(10px);
     }
@@ -42,24 +42,24 @@
     fill: none;
 
     .domain {
-      stroke: rgba(246, 251, 253, 0.28);
+      stroke: var(--color-control-bg-border-default);
     }
 
     line {
-      stroke: rgba(246, 251, 253, 0.28);
+      stroke: var(--color-control-bg-border-default);
     }
 
     text {
-      font-size: 12px;
-      line-height: 17px;
+      font-size: var(--size-text-xs);
+      line-height: var(--line-height-text-xs);
     }
 
     &__Left text {
-      color: #e68200;
+      color: var(--color-typo-warning);
     }
 
     &__Right text {
-      color: #33b4ff;
+      color: var(--color-typo-normal);
 
       transform: translateX(5px);
     }
