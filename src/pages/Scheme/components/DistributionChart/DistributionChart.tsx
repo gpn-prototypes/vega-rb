@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
+import { cnDistributionChart } from './cn-distribution-chart';
 import { Data, Point } from './types';
 
 import './DistributionChart.css';
@@ -52,10 +53,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
           point,
           { x: point.x, y: d3.min(data, getY) as number },
         ])
-        .attr('fill', 'none')
-        .attr('stroke', '#E68200')
-        .attr('stroke-width', 1)
-        .attr('opacity', 0.3)
+        .attr('class', cnDistributionChart('ProjectionLines'))
         .attr(
           'd',
           d3
@@ -68,7 +66,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(0,${height - margin.bottom})`)
-        .attr('class', 'axis axis_bottom')
+        .attr('class', cnDistributionChart('Axis'))
         .call(
           d3
             .axisBottom(probabilityDensityXScale)
@@ -81,7 +79,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(0,${height - margin.bottom})`)
-        .attr('class', 'grid bottom')
+        .attr('class', cnDistributionChart('Grid'))
         .call(
           d3.axisBottom(probabilityDensityXScale).ticks(5).tickSize(-height),
         ),
@@ -90,7 +88,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(${margin.left},0)`)
-        .attr('class', 'axis axis_left')
+        .attr('class', cnDistributionChart('Axis', { position: 'left' }))
         .call(
           d3
             .axisLeft(cumulativeYScale)
@@ -103,7 +101,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(${width - margin.left + 4},0)`)
-        .attr('class', 'axis axis_right')
+        .attr('class', cnDistributionChart('Axis', { position: 'right' }))
         .call(
           d3
             .axisRight(probabilityDensityYScale)
@@ -120,8 +118,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
         .enter()
         .append('text')
         .text((d) => `${Number.parseFloat(getX(d).toFixed(3))}`)
-        .attr('font-size', '12px')
-        .attr('fill', '#FAFAFA')
+        .attr('class', cnDistributionChart('Percentiles', 'Text'))
         .attr('x', (d) => cumulativeXScale(getX(d)) as number)
         .attr('y', (d) => cumulativeYScale(getY(d)) as number)
         .attr('transform', `translate(5, 0)`);
@@ -214,7 +211,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
   }, [draw]);
 
   return (
-    <div className="chart">
+    <div className={cnDistributionChart()}>
       <svg width={width} height={height} ref={d3Container} />
     </div>
   );

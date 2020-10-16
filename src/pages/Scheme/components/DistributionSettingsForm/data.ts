@@ -93,8 +93,24 @@ const distributionParametersMap: DistributionParametersMap = {
         type: DistributionDefinitionTypes.MinMax,
         title: 'Минимум, максимум',
       },
+      {
+        type: DistributionDefinitionTypes.Quantiles,
+        title: 'Р90, Р10',
+      },
     ],
     fieldsByType: {
+      [DistributionDefinitionTypes.Quantiles]: [
+        {
+          key: DistributionParameterTypes.Q1Value,
+          title: 'P10',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Q2Value,
+          title: 'P90',
+          defaultValue: '',
+        },
+      ],
       [DistributionDefinitionTypes.MeanSd]: [
         {
           key: DistributionParameterTypes.Mean,

@@ -36,6 +36,27 @@
     border-right: none;
     border-bottom-color: var(--color-bg-border);
 
+    &__Value.is-error {
+      position: absolute;
+      z-index: 1;
+      top: 2px;
+      left: 2px;
+      bottom: 2px;
+
+      padding: 0 8px;
+
+      display: inline-block;
+      overflow: hidden;
+
+      width: calc(100% - 4px);
+      height: calc(100% - 4px);
+
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      border: 1px solid #f00;
+    }
+
     &__Id {
       text-align: end;
 
@@ -51,4 +72,19 @@
 
 .HeaderBefore {
   opacity: 0.7;
+}
+
+/* TODO: fix it */
+.Tooltip {
+  .Tooltip-Background {
+    background: var(--color-bg-alert);
+  }
+
+  .Tooltip-Arrow {
+    border-right-color: var(--color-bg-alert);
+  }
+
+  .Tooltip-Content {
+    color: var(--color-typo-primary);
+  }
 }
