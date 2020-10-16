@@ -88,19 +88,20 @@ export function unpackData({
 }: IProjectStructure): GridCollection {
   const columns: IGridColumn[] = [
     new GridColumn(SpecialColumns.ID, undefined, TableEntities.ID),
-    ...structureParamsReducer<GeoCategory>(domainEntities),
+    ...structureParamsReducer(domainEntities),
     new GridColumn(SpecialColumns.SPLITTER, undefined, TableEntities.SPLITTER),
-    ...structureParamsReducer<CalculationParam>(calculationParameters),
+    ...structureParamsReducer(calculationParameters),
     new GridColumn(
       SpecialColumns.SPLITTER_RISKS,
       undefined,
       TableEntities.SPLITTER,
     ),
-    ...structureParamsReducer<Risk>(risks),
+    ...structureParamsReducer(risks),
   ];
+
   const rows = [
-    ...cellsData.map(({ domainObjectPath: values }, idx) => ({
-      ...convertCellsDataToGridRow(values, domainEntities),
+    ...cellsData.map(({ domainObjectPath }, idx) => ({
+      ...convertCellsDataToGridRow(domainObjectPath, domainEntities),
       id: { value: idx },
     })),
     ...Array.from({ length: 1000 - cellsData.length }, (val, index) => ({
@@ -131,9 +132,9 @@ export function packData(
   const domainObjects = rows
     .filter((row) => domainEntitiesKeys.some(({ key }) => row[key]?.value))
     .map((row) => ({
-      domainObjectPath: domainEntitiesKeys.map<string>(({ key }) => {
-        return row[key]?.value ? String(`domainObject ${row[key]?.value}`) : '';
-      }),
+      domainObjectPath: domainEntitiesKeys.map(({ key }) =>
+        String(row[key]?.value || ''),
+      ),
       risksValues: [0.7, 0.7],
       geoObjectCategory: 'RESERVES',
       attributeValues: calculationParametersKeys.map(

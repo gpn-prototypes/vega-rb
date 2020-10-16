@@ -52,14 +52,11 @@ export const CalculateButton: React.FC = () => {
               'result.zip',
             );
           }
-          const errors = res.data.calculateProject.errors?.filter(
-            (error: TableError) => error.tableName,
-          );
-          if (errors?.length) {
-            dispatch(tableDuck.actions.updateErrors(errors));
-          } else {
-            dispatch(tableDuck.actions.updateErrors([]));
-          }
+          const errors =
+            res.data.calculateProject.errors?.filter(
+              (error: TableError) => error.tableName,
+            ) || [];
+          dispatch(tableDuck.actions.updateErrors(errors));
         })
         .catch((e) => console.error(e));
     }

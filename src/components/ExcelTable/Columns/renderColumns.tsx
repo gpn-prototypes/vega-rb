@@ -1,7 +1,7 @@
 import React from 'react';
-import Formatter from 'components/ExcelTable/Formatters';
 import { curry } from 'lodash';
 
+import { Formatter } from '../Formatters';
 import Header from '../Header';
 import { columnsReorder, onBlurCell, setColumnAttributes } from '../helpers';
 import { IGridColumn } from '../types';

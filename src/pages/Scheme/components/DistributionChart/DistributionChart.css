@@ -3,14 +3,14 @@
 
   &__Percentiles {
     &__Text {
-      font-size: 12px;
-      fill: var(--color-control-typo-primary);
+      font-size: var(--size-text-xs);
+      fill: var(--color-typo-primary);
     }
   }
 
   &__ProjectionLines {
     fill: none;
-    stroke: #e68200;
+    stroke: var(--color-typo-warning);
     stroke-width: 1;
 
     opacity: 0.3;
@@ -18,7 +18,7 @@
 
   &__Grid {
     line {
-      stroke: #fff;
+      stroke: var(--color-control-typo-primary);
       stroke-dasharray: 1, 3;
       stroke-width: 1;
       stroke-opacity: 0.1;
@@ -54,17 +54,17 @@
       line-height: var(--line-height-text-xs);
     }
 
-    &__Left text {
+    &_position_left text {
       color: var(--color-typo-warning);
     }
 
-    &__Right text {
+    &_position_right text {
       color: var(--color-typo-normal);
 
       transform: translateX(5px);
     }
 
-    &__Right path {
+    &_position_right path {
       stroke-width: 0;
     }
   }

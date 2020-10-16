@@ -1,20 +1,24 @@
 .EditableText {
   display: flex;
   align-items: baseline;
+
   height: 25px;
 
   &:hover &__Icon_Wrap {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     align-self: center;
   }
 
   &__Prefix {
+    display: flex;
+
+    align-items: center;
+
     font-size: 14px;
     line-height: 24px;
-    display: flex;
-    align-items: center;
+
     color: var(--color-typo-secondary);
 
     &.is-edit {
@@ -28,40 +32,56 @@
   }
 
   &__Icon_Wrap {
-    outline: none;
-    border: none;
-    color: var(--color-control-typo-ghost);
-    display: none;
-    cursor: pointer;
-    background: var(--color-control-bg-ghost);
     margin-left: 5px;
+
     padding: 5px;
+
+    display: none;
+
+    cursor: pointer;
+
+    color: var(--color-control-typo-ghost);
+
+    background: var(--color-control-bg-ghost);
+    border: none;
+    outline: none;
 
     &.is-edit {
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       align-self: center;
     }
   }
 
   &__Input {
-    width: 25px;
     display: flex;
+
+    width: 25px;
+    height: fit-content;
+
     font-size: 14px;
     line-height: 24px;
-    color: var(--color-typo-secondary);
-    background: transparent;
-    border: none;
-    outline: none;
+
     cursor: default;
+
     pointer-events: none;
-    height: fit-content;
+
+    color: var(--color-typo-secondary);
+
+    background: transparent;
+
+    border: none;
+
+    outline: none;
 
     &.is-edit {
       margin-left: 5px;
+
       font-size: 12px;
+
       cursor: text;
+
       pointer-events: all;
     }
   }

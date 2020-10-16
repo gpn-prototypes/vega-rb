@@ -217,6 +217,8 @@ export enum DistributionDefinitionTypes {
   LocationMeanlogSdlog = 'LOCATION_MEANLOG_SDLOG',
   /** Через наиболее вероятное, минимум и максимум */
   ModeMinMax = 'MODE_MIN_MAX',
+  /** Через квантили */
+  Quantiles = 'QUANTILES',
   /** Через альфа, бета, минимум и максимум */
   AlphaBetaMinMax = 'ALPHA_BETA_MIN_MAX',
   /** Через два процентиля */
@@ -264,6 +266,14 @@ export enum DistributionParameterTypes {
   Meanlog = 'MEANLOG',
   /** Логарифмическое стандартное отклонение */
   Sdlog = 'SDLOG',
+  /** q1_rank */
+  Q1Rank = 'Q1_RANK',
+  /** q1_value */
+  Q1Value = 'Q1_VALUE',
+  /** q2_rank */
+  Q2Rank = 'Q2_RANK',
+  /** q2_value */
+  Q2Value = 'Q2_VALUE',
   /** Параметр расположения Альфа */
   Alpha = 'ALPHA',
   /** Параметр расположения Бэта */

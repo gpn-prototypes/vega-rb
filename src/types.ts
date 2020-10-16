@@ -1,4 +1,4 @@
-import { CategoryIcon } from 'components/ExcelTable/types';
+import { CategoryIcon } from './components/ExcelTable/types';
 
 interface Structure {
   __typename?: string;
