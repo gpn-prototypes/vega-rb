@@ -10,7 +10,7 @@ import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
 import {
   CalculationParam,
   GeoCategory,
-  IProjectStructure,
+  ProjectStructure,
   Risk,
   TableStructures,
 } from 'types';
@@ -91,7 +91,7 @@ export function unpackData({
   calculationParameters = [],
   risks = [],
   domainObjects: cellsData = [],
-}: IProjectStructure): GridCollection {
+}: ProjectStructure): GridCollection {
   const columns: GridColumn[] = [
     new GridColumnEntity(SpecialColumns.ID, undefined, TableEntities.ID),
     ...structureParamsReducer(domainEntities),
@@ -127,8 +127,8 @@ export function unpackData({
 
 export function packData(
   data: GridCollection,
-  template: IProjectStructure,
-): IProjectStructure {
+  template: ProjectStructure,
+): ProjectStructure {
   const domainEntitiesKeys = data.columns.filter(
     (col) => col.type === TableEntities.GEO_CATEGORY,
   );

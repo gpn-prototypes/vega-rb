@@ -1,9 +1,4 @@
-import {
-  GridCellProperties,
-  GridColumn,
-  GridRow,
-  SelectedCell,
-} from 'components/ExcelTable/types';
+import { GridCell, GridColumn, GridRow } from 'components/ExcelTable/types';
 import { TableError } from 'generated/graphql';
 import { ofAction } from 'operators/ofAction';
 import { Epic } from 'redux-observable';
@@ -18,10 +13,7 @@ const factory = actionCreatorFactory('table');
 const actions = {
   updateColumns: factory<GridColumn[]>('UPDATE_COLUMNS'),
   updateRows: factory<GridRow[]>('UPDATE_ROWS'),
-  updateCell: factory<{
-    selectedCell: SelectedCell;
-    cellData: GridCellProperties;
-  }>('UPDATE_CELL'),
+  updateCell: factory<GridCell>('UPDATE_CELL'),
   updateErrors: factory<TableError[]>('UPDATE_ERRORS'),
 };
 

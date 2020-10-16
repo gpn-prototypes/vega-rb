@@ -51,6 +51,11 @@ export interface GridCellProperties {
   args?: GridCellArguments;
 }
 
+export interface GridCell {
+  selectedCell: SelectedCell;
+  cellData: GridCellProperties;
+}
+
 export interface GridRow {
   [key: string]: GridCellProperties | undefined;
 }
