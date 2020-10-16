@@ -11,7 +11,6 @@ import {
   DistributionTypes,
   ResourceBaseQueries,
 } from 'generated/graphql';
-import isEmpty from 'lodash/isEmpty';
 import tableDuck from 'store/tableDuck';
 
 import DistributionChart from '../DistributionChart';
@@ -36,8 +35,8 @@ const checkDistributionValidation = ({
   parameters,
 }: DistributionSettingsFormData) =>
   parameters &&
-  !!distributionParametersMap[type].fieldsByType[definition]?.every(
-    ({ key }) => !Number.isNaN(parameters[key]) && !isEmpty(parameters[key]),
+  !!distributionParametersMap[type].fieldsByType[definition]?.every(({ key }) =>
+    Number.isFinite(Number.parseFloat(parameters[key] as string)),
   );
 
 interface DistributionSettingsProps {
