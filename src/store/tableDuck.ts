@@ -75,7 +75,7 @@ const saveToLocalStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
   state$,
 ) =>
   action$.pipe(
-    ofAction(actions.updateColumns, actions.updateRows),
+    ofAction(actions.updateColumns, actions.updateRows, actions.updateCell),
     distinctUntilChanged(),
     tap(() => {
       setStateToLocalStorage(state$.value.table);
