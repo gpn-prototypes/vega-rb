@@ -1,9 +1,14 @@
-import { SimpleTextEditor } from '../Editors';
-import { TableEntities } from '../types';
+import { ComponentType } from 'react';
+import { EditorProps } from 'react-data-grid';
 
-export function getEditor(
-  type?: TableEntities,
-): { editor: typeof SimpleTextEditor } | { editor: undefined } {
+import { SimpleTextEditor } from '../Editors';
+import { GridCellProperties, TableEntities } from '../types';
+
+type EditorResult =
+  | { editor: ComponentType<EditorProps<GridCellProperties | undefined>> }
+  | { editor: undefined };
+
+export default function getEditor(type?: TableEntities): EditorResult {
   if (type === TableEntities.GEO_CATEGORY) {
     return { editor: SimpleTextEditor };
   }

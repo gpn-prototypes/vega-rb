@@ -3,7 +3,7 @@ import { GridColumn, TableEntities } from 'components/ExcelTable/types';
 
 const hasIcon = (type: TableEntities) => type === TableEntities.GEO_CATEGORY;
 
-export function createColumn(
+export default function createColumn(
   genType: TableEntities = TableEntities.NONE,
 ): GridColumn {
   return {

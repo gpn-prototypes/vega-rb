@@ -1,4 +1,4 @@
-import React, { ReactText } from 'react';
+import React, { ComponentType, ReactText } from 'react';
 import { CalculatedColumn, Column } from 'react-data-grid';
 import {
   FormatterProps as BaseFormatterProps,
@@ -80,6 +80,11 @@ export type ContextHandler = (
 ) => void;
 
 export type FormatterProps<T> = BaseFormatterProps<T> & { value?: string };
+
+export type BaseProps = {
+  formatter: ComponentType<FormatterProps<GridRow>>;
+  headerRenderer: ComponentType<BaseHeaderRendererProps<GridRow>>;
+};
 
 export type UniColumn = CalculatedColumn<GridRow> & GridColumn;
 
