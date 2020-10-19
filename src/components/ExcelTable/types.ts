@@ -1,5 +1,5 @@
 import React, { ComponentType, ReactText } from 'react';
-import { CalculatedColumn, Column } from 'react-data-grid';
+import { CalculatedColumn, Column, EditorProps } from 'react-data-grid';
 import {
   FormatterProps as BaseFormatterProps,
   HeaderRendererProps as BaseHeaderRendererProps,
@@ -99,3 +99,13 @@ export interface HeaderRendererProps extends BaseHeaderRendererProps<GridRow> {
   ) => void;
   handleColumnsReorder: (sourceKey: string, targetKey: string) => void;
 }
+
+export interface DropdownOption {
+  id: string;
+  value: string;
+  text: string;
+}
+
+export type EditorResult =
+  | { editor: ComponentType<EditorProps<GridCellProperties | undefined>> }
+  | { editor: undefined };

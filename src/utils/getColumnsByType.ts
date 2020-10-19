@@ -1,6 +1,6 @@
-import { IGridColumn, TableEntities } from 'components/ExcelTable/types';
+import { GridColumn, TableEntities } from 'components/ExcelTable/types';
 
 export const getColumnsByType = (
-  list: IGridColumn[],
+  list: GridColumn[],
   type: TableEntities,
-): IGridColumn[] => list.filter((column: IGridColumn) => column.type === type);
+): GridColumn[] => list.filter((column: GridColumn) => column.type === type);

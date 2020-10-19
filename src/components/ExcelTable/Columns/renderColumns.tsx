@@ -7,7 +7,7 @@ import { columnsReorder, onBlurCell, setColumnAttributes } from '../helpers';
 import { GridColumn } from '../types';
 import { columnsFactory } from '../utils';
 
-const renderColumns = (
+export const renderColumns = (
   columns: GridColumn[],
   setColumns: (data: GridColumn[]) => void,
 ): GridColumn[] => {
@@ -30,5 +30,3 @@ const renderColumns = (
     ),
   );
 };
-
-export default renderColumns;

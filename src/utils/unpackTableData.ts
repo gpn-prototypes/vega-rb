@@ -89,7 +89,7 @@ function constructColumns({
   domainEntities = [],
   calculationParameters = [],
   risks = [],
-}: ProjectStructure): GridCollection[] {
+}: ProjectStructure): GridColumn[] {
   return [
     new GridColumnEntity(SpecialColumns.ID, undefined, TableEntities.ID),
     ...structureParamsReducer(domainEntities),

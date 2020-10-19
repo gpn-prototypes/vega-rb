@@ -8,7 +8,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { AutoSizer } from 'react-virtualized';
 
-import renderColumns from './Columns/renderColumns';
+import { renderColumns } from './Columns/renderColumns';
 import { cnExcelTable } from './cn-excel-table';
 import { HeaderContextMenu } from './ContextMenu';
 import { isNoneColumnType } from './helpers';
@@ -18,7 +18,6 @@ import {
   GridColumn,
   GridRow,
   HEADER_CONTEXT_ID,
-  TableEntities,
 } from './types';
 import { createColumn } from './utils';
 
@@ -61,11 +60,11 @@ export const ExcelTable: React.FC<IProps> = ({
 
   const handleRowClick = useCallback(
     (rowIdx: number, row: GridRow, column: CommonTableColumn) => {
-      if (column.type === TableEntities.GEO_CATEGORY_TYPE) {
-        gridRef.current?.selectCell({ rowIdx, idx: column.idx }, true);
-      } else {
-        onRowClick(rowIdx, row, column);
-      }
+      // if (column.type === TableEntities.GEO_CATEGORY_TYPE) {
+      //   gridRef.current?.selectCell({ rowIdx, idx: column.idx }, true);
+      // } else {
+      onRowClick(rowIdx, row, column);
+      // }
     },
     [onRowClick],
   );

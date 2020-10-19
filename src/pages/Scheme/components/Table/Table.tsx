@@ -6,11 +6,18 @@ import { SelectedCell, TableEntities } from 'components/ExcelTable/types';
 import { isEmpty } from 'fp-ts/Array';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
-import { Nullable } from 'types';
+import { Nullable, ProjectStructure } from 'types';
 import { mockTableRows, unpackTableData } from 'utils';
 
 import { GET_TABLE_TEMPLATE } from './queries';
-import { TemplateProjectData } from './types';
+
+export interface TemplateProjectData {
+  project: {
+    template: {
+      structure: ProjectStructure;
+    };
+  };
+}
 
 interface IProps {
   onSelect?: (data: Nullable<SelectedCell>) => void;

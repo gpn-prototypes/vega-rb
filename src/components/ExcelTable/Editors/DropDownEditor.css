@@ -1,0 +1,5 @@
+.Option {
+  padding: var(--space-s);
+
+  line-height: var(--line-height-text-m);
+}
