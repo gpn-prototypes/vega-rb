@@ -1,3 +1,8 @@
+schema {
+  query: ResourceBaseQueries
+  mutation: ResourceBaseMutations
+}
+
 type Attribute {
   """Кодовое обозначение подсчётного параметра"""
   code: String!
@@ -36,9 +41,9 @@ type CalculationOk {
 union CalculationResult = TableErrors | CalculationOk | DistributionDefinitionErrors
 
 """Ошибка с дополнительной информацией."""
-type DetailError implements ErrorInterface {
+type DetailError implements RBErrorInterface {
   """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
-  code: ErrorCodes!
+  code: RBErrorCodes!
 
   """
   Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
@@ -64,9 +69,9 @@ type DistributionChart {
 union DistributionChartResult = DistributionChart | DistributionDefinitionErrors
 
 """Ошибка задания распределения."""
-type DistributionDefinitionError implements ErrorInterface {
+type DistributionDefinitionError implements RBErrorInterface {
   """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
-  code: ErrorCodes!
+  code: RBErrorCodes!
 
   """
   Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
@@ -100,6 +105,33 @@ enum DistributionDefinitionTypes {
 
   """Через альфа, бета, минимум и максимум"""
   ALPHA_BETA_MIN_MAX
+
+  """Через два процентиля"""
+  TWO_PERCENTILES
+
+  """Через три процентиля"""
+  THREE_PERCENTILES
+
+  """Через четыре процентиля"""
+  FOUR_PERCENTILES
+
+  """Через среднее и один процентиль"""
+  MEAN_ONE_PERCENTILE
+
+  """Через расположение и два процентиля"""
+  LOCATION_TWO_PERCENTILES
+
+  """Через расположение, среднее и один процентиль"""
+  LOCATION_MEAN_ONE_PERCENTILE
+
+  """Через среднее и два процентиля"""
+  MEAN_TWO_PERCENTILES
+
+  """Через наиболее вероятное и два процентиля"""
+  MODE_TWO_PERCENTILES
+
+  """Через минимум, максимум и два процентиля"""
+  MIN_MAX_TWO_PERCENTILES
 }
 
 """Параметры распределения."""
@@ -129,10 +161,10 @@ enum DistributionParameterTypes {
   """Стандартное отклонение"""
   STANDARD_DEVIATION
 
-  """Мин."""
+  """Минимум"""
   MIN
 
-  """Макс."""
+  """Максимум"""
   MAX
 
   """Расположение"""
@@ -152,6 +184,30 @@ enum DistributionParameterTypes {
 
   """Параметр расположения Бэта"""
   BETA
+
+  """Первый квантильный ранг"""
+  Q1_RANK
+
+  """Второй квантильный ранг"""
+  Q2_RANK
+
+  """Третий квантильный ранг"""
+  Q3_RANK
+
+  """Четвертый квантильный ранг"""
+  Q4_RANK
+
+  """Значение первого квантиля"""
+  Q1_VALUE
+
+  """Значение второго квантиля"""
+  Q2_VALUE
+
+  """Значение третьего квантиля"""
+  Q3_VALUE
+
+  """Значение четвертого квантиля"""
+  Q4_VALUE
 }
 
 """Пространство имен для работы с распределениями."""
@@ -181,31 +237,6 @@ enum DistributionTypes {
   PERT
 }
 
-type DomainEntity {
-  """Имя доменной сущности геологического объекта"""
-  name: String!
-
-  """Иконка доменной сущности геологического объекта"""
-  icon: DomainEntityIcons!
-}
-
-"""Список иконок доменной сущности геологического объекта."""
-enum DomainEntityIcons {
-  LICENSING_ROUND_ICON
-  FIELD_ICON
-  FORMATION_ICON
-  OIL_POOL_ICON
-  WELL_ICON
-}
-
-input DomainEntityInput {
-  """Имя доменной сущности геологического объекта"""
-  name: String!
-
-  """Иконка доменной сущности геологического объекта"""
-  icon: DomainEntityIcons!
-}
-
 """Геологический объект структуры проекта."""
 input DomainObjectInput {
   """Иерархия геологического объекта в структуре проекта"""
@@ -221,44 +252,6 @@ input DomainObjectInput {
   risksValues: [Float]!
 }
 
-"""Список кодов ошибок приложения."""
-enum ErrorCodes {
-  """Ошибка в загружаемой структуре"""
-  INCORRECT_PROJECT_STRUCTURE
-
-  """В строке данных таблицы структуры не может быть пустых ячеек"""
-  EMPTY_CELL_IN_TABLE_DATA
-
-  """В таблице структуры не может быть одинаковых строк"""
-  IDENTICAL_ROW_IN_TABLE_DATA
-
-  """Версия импортируемого файла не соответствует версии шаблона структуры"""
-  INCORRECT_FILE_VERSION
-
-  """Некорректная зависимость параметров распределения"""
-  DISTRIBUTION_PARAMETERS_INCORRECT_RELATION
-
-  """Параметр распределения выходит за границы допустимых значений"""
-  DISTRIBUTION_PARAMETER_OUT_OF_RANGE
-
-  """Для старта расчётов заполните ячейку таблицы"""
-  CELL_VALUE_IS_NULL
-
-  """Вероятность может иметь значение в пределах от 0.0 до 1.0"""
-  INVALID_PROBABILITY_VALUE
-}
-
-"""Интерфейс ошибок, отображаемых пользователю."""
-interface ErrorInterface {
-  """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
-  code: ErrorCodes!
-
-  """
-  Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
-  """
-  message: String!
-}
-
 type GCoSCalculationResult {
   """Список значений GCoS геологических объектов"""
   GCoSValues: [Float]
@@ -269,11 +262,6 @@ type GCoSCalculationResult {
 enum GeoObjectCategories {
   RESERVES
   RESOURCES
-}
-
-type Mutation {
-  updateRiskValue(projectStructure: ProjectStructureInput!): UpdateRiskValueResult
-  calculateProject(projectStructureInput: ProjectStructureInput!): CalculationResult
 }
 
 """Точка на графике."""
@@ -317,7 +305,7 @@ type ProjectQueries {
 
 type ProjectStructure {
   """Список доменных сущностей геологических объектов"""
-  domainEntities: [DomainEntity!]!
+  domainEntities: [RBDomainEntity!]!
 
   """Список подсчетных параметров"""
   attributes: [Attribute!]!
@@ -328,7 +316,7 @@ type ProjectStructure {
 
 input ProjectStructureInput {
   """Список доменных сущностей геологических объектов"""
-  domainEntities: [DomainEntityInput!]!
+  domainEntities: [RBDomainEntityInput!]!
 
   """Список подсчетных параметров"""
   attributes: [AttributeInput!]!
@@ -340,7 +328,77 @@ input ProjectStructureInput {
   risks: [RiskInput!]!
 }
 
-type Query {
+type RBDomainEntity {
+  """Имя доменной сущности геологического объекта"""
+  name: String!
+
+  """Иконка доменной сущности геологического объекта"""
+  icon: RBDomainEntityIcons!
+}
+
+"""Список иконок доменной сущности геологического объекта."""
+enum RBDomainEntityIcons {
+  LICENSING_ROUND_ICON
+  FIELD_ICON
+  FORMATION_ICON
+  OIL_POOL_ICON
+  WELL_ICON
+}
+
+input RBDomainEntityInput {
+  """Имя доменной сущности геологического объекта"""
+  name: String!
+
+  """Иконка доменной сущности геологического объекта"""
+  icon: RBDomainEntityIcons!
+}
+
+"""Список кодов ошибок приложения."""
+enum RBErrorCodes {
+  """Ошибка в загружаемой структуре"""
+  INCORRECT_PROJECT_STRUCTURE
+
+  """В строке данных таблицы структуры не может быть пустых ячеек"""
+  EMPTY_CELL_IN_TABLE_DATA
+
+  """В таблице структуры не может быть одинаковых строк"""
+  IDENTICAL_ROW_IN_TABLE_DATA
+
+  """Версия импортируемого файла не соответствует версии шаблона структуры"""
+  INCORRECT_FILE_VERSION
+
+  """Некорректная зависимость параметров распределения"""
+  DISTRIBUTION_PARAMETERS_INCORRECT_RELATION
+
+  """Параметр распределения выходит за границы допустимых значений"""
+  DISTRIBUTION_PARAMETER_OUT_OF_RANGE
+
+  """Для старта расчётов заполните ячейку таблицы"""
+  CELL_VALUE_IS_NULL
+
+  """Вероятность может иметь значение в пределах от 0.0 до 1.0"""
+  INVALID_PROBABILITY_VALUE
+}
+
+"""Интерфейс ошибок, отображаемых пользователю."""
+interface RBErrorInterface {
+  """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
+  code: RBErrorCodes!
+
+  """
+  Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
+  """
+  message: String!
+}
+
+"""Мутации данных ресурсной базы."""
+type ResourceBaseMutations {
+  updateRiskValue(projectStructure: ProjectStructureInput!): UpdateRiskValueResult
+  calculateProject(projectStructureInput: ProjectStructureInput!): CalculationResult
+}
+
+"""Запросы к данным ресурсной базы."""
+type ResourceBaseQueries {
   """Пространство имен для работы с проектом."""
   project: ProjectQueries
 
@@ -367,9 +425,9 @@ input RiskInput {
 """
 Ошибка данных таблицы с информацией о расположении строк или ячеек повлекших ошибку.
 """
-type TableError implements ErrorInterface {
+type TableError implements RBErrorInterface {
   """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
-  code: ErrorCodes!
+  code: RBErrorCodes!
 
   """
   Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте

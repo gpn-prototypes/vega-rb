@@ -9,7 +9,7 @@ import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
-  Query,
+  ResourceBaseQueries,
 } from 'generated/graphql';
 import isEmpty from 'lodash/isEmpty';
 import tableDuck from 'store/tableDuck';
@@ -169,7 +169,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
       distributionDefinitionType,
     }: DistributionSettingsFormData) =>
       client
-        .query<Query>({
+        .query<ResourceBaseQueries>({
           query: GET_DISTRIBUTION_VALUE,
           variables: {
             distribution: {
