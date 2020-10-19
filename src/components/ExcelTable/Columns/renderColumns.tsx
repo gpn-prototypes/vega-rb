@@ -1,7 +1,6 @@
 import React from 'react';
 import { curry } from 'lodash';
 
-import { Formatter } from '../Formatters';
 import Header from '../Header';
 import { columnsReorder, onBlurCell, setColumnAttributes } from '../helpers';
 import { GridColumn } from '../types';
@@ -18,7 +17,6 @@ const renderColumns = (
   return columns.map((column) =>
     columnsFactory(
       column,
-      Formatter,
       React.memo((props) => (
         <Header
           {...props}

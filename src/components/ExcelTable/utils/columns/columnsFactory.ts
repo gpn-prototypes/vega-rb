@@ -6,8 +6,8 @@ import {
   cnCellSplitter,
   cnHeader,
 } from 'components/ExcelTable/cn-excel-table';
+import { Formatter } from 'components/ExcelTable/Formatters';
 import {
-  FormatterProps,
   GridColumn,
   GridRow,
   TableEntities,
@@ -31,11 +31,10 @@ const SUPPORT_COLUMN_PROPS = {
 
 export default function columnsFactory(
   column: GridColumn,
-  formatter: ComponentType<FormatterProps<GridRow>>,
   HeaderRenderer: ComponentType<HeaderRendererProps<GridRow>>,
 ): GridColumn {
   const getColumn = getBaseColumn(
-    getBaseProps(formatter, HeaderRenderer, column.type),
+    getBaseProps(Formatter, HeaderRenderer, column.type),
     column,
   );
   const defaultStyles = {

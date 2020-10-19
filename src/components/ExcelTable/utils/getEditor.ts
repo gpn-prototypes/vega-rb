@@ -8,9 +8,8 @@ type EditorResult =
   | { editor: ComponentType<EditorProps<GridCellProperties | undefined>> }
   | { editor: undefined };
 
-export default function getEditor(type?: TableEntities): EditorResult {
-  if (type === TableEntities.GEO_CATEGORY) {
-    return { editor: SimpleTextEditor };
-  }
-  return { editor: undefined };
+function getEditor(type: TableEntities = TableEntities.NONE): EditorResult {
+  return { editor: SimpleTextEditor };
 }
+
+export default getEditor;
