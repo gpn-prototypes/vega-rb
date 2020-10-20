@@ -1,3 +1,6 @@
+# base image
+FROM registry.access.redhat.com/ubi7/nodejs-12 as node
+
 #########################
 ### build environment ###
 #########################
@@ -9,11 +12,7 @@ ENV LISTEN_PORT=3009
 ARG NPM_AUTH_TOKEN
 RUN echo "//npm.pkg.github.com/:_authToken=$NPM_AUTH_TOKEN" > /${HOME}/.npmrc
 
-# base image
-FROM registry.access.redhat.com/ubi7/nodejs-12 as node
 ARG APP_DIR
-
-SHELL [ "/usr/bin/scl", "enable", "rh-nodejs12" ]
 
 # set working directory
 RUN mkdir -p ${APP_DIR}
