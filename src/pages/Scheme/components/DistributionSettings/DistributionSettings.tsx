@@ -190,7 +190,6 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
     if (selectedCell) {
       const result = getFormDataFromTableCell(selectedCell);
       setFormData(result);
-
       if (checkDistributionValidation(result.parameters)) {
         getChart(result).then(
           ({ distributionChart, errors: distributionDefinitionErrors }) => {
@@ -203,6 +202,8 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
             }
           },
         );
+      } else {
+        setChartData(defaultDistributionChartValue);
       }
     }
   }, [getChart, getFormDataFromTableCell, selectedCell]);

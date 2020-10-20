@@ -1,4 +1,5 @@
-import { columnsFactory } from './columnsFactory';
-import { createColumn } from './createColumn';
+import columnsFactory from './columns/columnsFactory';
+import createColumn from './columns/createColumn';
+import getEditor from './getEditor';
 
-export { createColumn, columnsFactory };
+export { createColumn, columnsFactory, getEditor };

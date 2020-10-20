@@ -1,12 +1,12 @@
 import { ReactText } from 'react';
 
-import { IGridColumn, TableEntities } from './types';
+import { GridColumn, TableEntities } from './types';
 
 import './ExcelTable.css';
 
 export function setColumnAttributes(
-  columns: IGridColumn[],
-  setColumns: (columnsList: IGridColumn[]) => void,
+  columns: GridColumn[],
+  setColumns: (columnsList: GridColumn[]) => void,
   idx: number,
   propertyName: string,
   propertyValue: ReactText | boolean,
@@ -14,13 +14,13 @@ export function setColumnAttributes(
   const nextColumns = [...columns];
   // eslint-disable-next-line
   // @ts-ignore
-  nextColumns[idx][propertyName] = propertyValue; // { ...nextColumns[idx], ...{[propertyName]: propertyValue}
+  nextColumns[idx][propertyName] = propertyValue;
   setColumns(nextColumns);
 }
 
 export function columnsReorder(
-  columns: IGridColumn[],
-  setColumns: (columnsList: IGridColumn[]) => void,
+  columns: GridColumn[],
+  setColumns: (columnsList: GridColumn[]) => void,
   sourceKey: string,
   targetKey: string,
 ): void {
@@ -36,8 +36,8 @@ export function columnsReorder(
 }
 
 export function onBlurCell(
-  columns: IGridColumn[],
-  setColumns: (columnsList: IGridColumn[]) => void,
+  columns: GridColumn[],
+  setColumns: (columnsList: GridColumn[]) => void,
   idx: number,
 ): void {
   const nextColumns = [...columns];
@@ -55,9 +55,3 @@ export function isNoneColumnType(type: TableEntities): boolean {
     type === TableEntities.NONE
   );
 }
-
-// export const compose = (...fns: Function[]) =>
-//   fns.reduceRight(
-//     (prevFn, nextFn) => (...args: any[]) => nextFn(prevFn(...args)),
-//     (value: any) => value,
-//   );

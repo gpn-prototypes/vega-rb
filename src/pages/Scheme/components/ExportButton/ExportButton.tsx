@@ -2,16 +2,15 @@
 // @ts-nocheck
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useApolloClient, useLazyQuery, useQuery } from '@apollo/client';
+import { useApolloClient } from '@apollo/client';
 import { Button } from '@gpn-prototypes/vega-button';
 import { RootState } from 'store/types';
 import { packData } from 'utils/tableDataConverters';
 
 import { GET_TABLE_TEMPLATE } from '../Table/queries';
-import { TemplateProjectData } from '../Table/Table';
+import { TemplateProjectData } from '../Table/types';
 
 import styles from './ExportButton.module.css';
-import { tap } from 'rxjs/operators';
 
 export const ExportButton: React.FC = () => {
   const client = useApolloClient();

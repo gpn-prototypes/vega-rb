@@ -3,7 +3,7 @@ import {
   DistributionParameterTypes,
   DistributionTypes,
 } from 'generated/graphql';
-import { isEmpty, toPairs } from 'lodash';
+import { toPairs } from 'lodash';
 import distributionParametersMap from 'pages/Scheme/components/DistributionSettingsForm/data';
 import {
   DistributionParameterPercentileRank,
@@ -25,16 +25,16 @@ export const percentileFieldTypes = [
   DistributionParameterTypes.Q4Value,
 ];
 
+const isNumeric = (num?: string | number) =>
+  (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) &&
+  !Number.isNaN(num as number);
+
 export const checkDistributionValidation = (
   parameters: Partial<DistributionSettingsParameters>,
 ): boolean => {
-  const checkEmpty = (parameter?: string) =>
-    !Number.isNaN(parameter) && !isEmpty(parameter);
   return (Object.keys(
     parameters,
-  ) as DistributionParameterTypes[]).every((key) =>
-    checkEmpty(parameters[key]),
-  );
+  ) as DistributionParameterTypes[]).every((key) => isNumeric(parameters[key]));
 };
 
 export const getDistributionFormDataParams = (
