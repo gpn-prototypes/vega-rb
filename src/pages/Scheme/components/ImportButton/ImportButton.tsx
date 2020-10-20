@@ -8,7 +8,7 @@ import { SnackBar } from '@gpn-prototypes/vega-snack-bar';
 import { Maybe } from 'generated/graphql';
 import useAsyncError from 'hooks/useAsyncError';
 import tableDuck from 'store/tableDuck';
-import { IProjectStructure } from 'types';
+import { ProjectStructure } from 'types';
 import { mockTableRows } from 'utils/fakerGenerators';
 import { unpackData } from 'utils/tableDataConverters';
 
@@ -61,7 +61,7 @@ export const ImportButton: React.FC = () => {
       reader.onload = async function onLoad(): Promise<void> {
         const readerResult = JSON.parse(
           reader.result as string,
-        ) as IProjectStructure;
+        ) as ProjectStructure;
         const {
           domainEntities,
           calculationParameters,

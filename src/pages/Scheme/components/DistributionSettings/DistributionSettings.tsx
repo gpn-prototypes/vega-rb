@@ -2,9 +2,6 @@ import React, { ReactText, useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
 import { SelectedCell } from 'components/ExcelTable/types';
-import isEmpty from 'lodash/isEmpty';
-import tableDuck from 'store/tableDuck';
-
 import {
   DistributionChart as IDistributionChart,
   DistributionDefinitionError,
@@ -12,8 +9,11 @@ import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
-  Query,
-} from '../../../../generated/graphql';
+  ResourceBaseQueries,
+} from 'generated/graphql';
+import isEmpty from 'lodash/isEmpty';
+import tableDuck from 'store/tableDuck';
+
 import DistributionChart from '../DistributionChart';
 import DistributionSettingsForm from '../DistributionSettingsForm';
 import distributionParametersMap from '../DistributionSettingsForm/data';
@@ -169,7 +169,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
       distributionDefinitionType,
     }: DistributionSettingsFormData) =>
       client
-        .query<Query>({
+        .query<ResourceBaseQueries>({
           query: GET_DISTRIBUTION_VALUE,
           variables: {
             distribution: {

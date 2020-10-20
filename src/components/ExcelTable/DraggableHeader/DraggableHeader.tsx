@@ -1,15 +1,14 @@
 import React, { ComponentType, ReactElement, ReactText } from 'react';
-import { HeaderRendererProps } from 'react-data-grid';
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
 import classNames from 'classnames';
 import { Nullable } from 'types';
 
-import { IGridColumn, TableEntities } from '../types';
+import { GridColumn, HeaderRendererProps, TableEntities } from '../types';
 
 import styles from './DraggableHeader.module.css';
 
 interface IProps {
-  column: IGridColumn;
+  column: GridColumn;
   onColumnsReorder: (sourceKey: string, targetKey: string) => void;
   onDoubleClick: () => void;
   editor: ComponentType | ReactElement;
@@ -35,14 +34,14 @@ function wrapRefs<T>(...refs: React.Ref<T>[]) {
   };
 }
 
-export function DraggableHeader<R>({
+export function DraggableHeader({
   onColumnsReorder,
   onDoubleClick,
   editor,
   beforeContent,
   className,
   ...props
-}: IProps & HeaderRendererProps<R>): JSX.Element {
+}: IProps & HeaderRendererProps): JSX.Element {
   const { isRenaming, name } = props.column;
   const columnType = props.column?.type || TableEntities.NONE;
 

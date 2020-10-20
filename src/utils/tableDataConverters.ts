@@ -1,47 +1,55 @@
-import GridColumn from 'components/ExcelTable/Models/GridColumn';
+import GridColumnEntity from 'components/ExcelTable/Models/GridColumnEntity';
 import {
   CategoryIcon,
   GridCollection,
+  GridColumn,
   GridRow,
-  IGridColumn,
   TableEntities,
 } from 'components/ExcelTable/types';
 import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
 import {
   CalculationParam,
   GeoCategory,
-  IProjectStructure,
+  ProjectStructure,
   Risk,
   TableStructures,
 } from 'types';
 
 const getCalculationColumn = (
-  prev: IGridColumn[],
+  prev: GridColumn[],
   { code, shortName, units }: CalculationParam,
-): IGridColumn[] => [
+): GridColumn[] => [
   ...prev,
-  new GridColumn(code, `${shortName}, ${units}`, TableEntities.CALC_PARAM),
+  new GridColumnEntity(
+    code,
+    `${shortName}, ${units}`,
+    TableEntities.CALC_PARAM,
+  ),
 ];
 
 const getCategoryColumn = (
-  prev: IGridColumn[],
+  prev: GridColumn[],
   { name }: GeoCategory,
-): IGridColumn[] => [
+): GridColumn[] => [
   ...prev,
-  new GridColumn(CATEGORIES_TYPES.get(name)!, name, TableEntities.GEO_CATEGORY),
+  new GridColumnEntity(
+    CATEGORIES_TYPES.get(name)!,
+    name,
+    TableEntities.GEO_CATEGORY,
+  ),
 ];
 
 const getRiskColumn = (
-  prev: IGridColumn[],
+  prev: GridColumn[],
   { code, name }: Risk,
-): IGridColumn[] => {
-  return [...prev, new GridColumn(code, name, TableEntities.RISK)];
+): GridColumn[] => {
+  return [...prev, new GridColumnEntity(code, name, TableEntities.RISK)];
 };
 
-function structureParamsReducer(list: TableStructures[]): IGridColumn[] {
+function structureParamsReducer(list: TableStructures[]): GridColumn[] {
   if (!list.length) return [];
 
-  return list.reduce((prev: IGridColumn[], curr: TableStructures) => {
+  return list.reduce((prev: GridColumn[], curr: TableStructures) => {
     switch (curr.__typename) {
       case TableEntities.CALC_PARAM:
         return getCalculationColumn(prev, curr as CalculationParam);
@@ -83,13 +91,17 @@ export function unpackData({
   calculationParameters = [],
   risks = [],
   domainObjects: cellsData = [],
-}: IProjectStructure): GridCollection {
-  const columns: IGridColumn[] = [
-    new GridColumn(SpecialColumns.ID, undefined, TableEntities.ID),
+}: ProjectStructure): GridCollection {
+  const columns: GridColumn[] = [
+    new GridColumnEntity(SpecialColumns.ID, undefined, TableEntities.ID),
     ...structureParamsReducer(domainEntities),
-    new GridColumn(SpecialColumns.SPLITTER, undefined, TableEntities.SPLITTER),
+    new GridColumnEntity(
+      SpecialColumns.SPLITTER,
+      undefined,
+      TableEntities.SPLITTER,
+    ),
     ...structureParamsReducer(calculationParameters),
-    new GridColumn(
+    new GridColumnEntity(
       SpecialColumns.SPLITTER_RISKS,
       undefined,
       TableEntities.SPLITTER,
@@ -115,8 +127,8 @@ export function unpackData({
 
 export function packData(
   data: GridCollection,
-  template: IProjectStructure,
-): IProjectStructure {
+  template: ProjectStructure,
+): ProjectStructure {
   const domainEntitiesKeys = data.columns.filter(
     (col) => col.type === TableEntities.GEO_CATEGORY,
   );
@@ -145,18 +157,20 @@ export function packData(
     icon: CategoryIcon.FORMATION_ICON,
     __typename: type,
   }));
+
   const calculationParameters = calculationParametersKeys.map(
     ({ key }) =>
       ({
         ...template.calculationParameters.find(({ code }) => code === key),
       } as CalculationParam),
   );
+
   const risks: Risk[] = [];
 
   return {
     domainEntities,
     calculationParameters,
-    domainObjects,
     risks,
+    domainObjects,
   };
 }

@@ -21,15 +21,15 @@ export interface Risk extends Structure {
   name: string;
 }
 
-export interface IProjectCell {
+export interface ProjectCell {
   domainObjectPath: string[];
 }
 
-export interface IProjectStructure {
+export interface ProjectStructure {
   domainEntities: GeoCategory[];
   calculationParameters: CalculationParam[];
   risks: Risk[];
-  domainObjects?: IProjectCell[];
+  domainObjects?: ProjectCell[];
 }
 
 export type TableStructures = GeoCategory | CalculationParam | Risk;

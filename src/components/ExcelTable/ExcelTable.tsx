@@ -14,9 +14,9 @@ import { isNoneColumnType } from './helpers';
 import StyledRow from './StyledRow';
 import {
   GridCollection,
+  GridColumn,
   GridRow,
   HEADER_CONTEXT_ID,
-  IGridColumn,
 } from './types';
 import { createColumn } from './utils';
 
@@ -24,11 +24,17 @@ import './ExcelTable.css';
 
 const cnExcelTableClass = cnExcelTable();
 
+type CommonTableColumn = GridColumn & CalculatedColumn<GridRow>;
+
 interface IProps {
   data: GridCollection;
-  setColumns?: (data: IGridColumn[]) => void;
+  setColumns?: (data: GridColumn[]) => void;
   setRows?: (data: GridRow[]) => void;
-  onRowClick?: (rowIdx: number, row: GridRow, column: IGridColumn) => void;
+  onRowClick?: (
+    rowIdx: number,
+    row: GridRow,
+    column: CommonTableColumn,
+  ) => void;
 }
 
 export const ExcelTable: React.FC<IProps> = ({
@@ -51,12 +57,8 @@ export const ExcelTable: React.FC<IProps> = ({
   // )
 
   const handleRowClick = useCallback(
-    (
-      rowIdx: number,
-      row: GridRow,
-      column: IGridColumn & CalculatedColumn<GridRow>,
-    ) => {
-      onRowClick(rowIdx, row, column);
+    (rowIdx: number, row: GridRow, column: CalculatedColumn<GridRow>) => {
+      onRowClick(rowIdx, row, column as CommonTableColumn);
     },
     [onRowClick],
   );
@@ -68,7 +70,7 @@ export const ExcelTable: React.FC<IProps> = ({
         newRows[i] = {
           ...newRows[i],
           ...Object.entries(updated).reduce(
-            (prev, [key, value]) => ({ ...prev, [key]: { value } }),
+            (prev, [key, value]) => ({ ...prev, [key]: value }),
             {},
           ),
         };

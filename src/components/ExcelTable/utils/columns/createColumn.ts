@@ -1,11 +1,11 @@
 import { cnCell, cnHeader } from 'components/ExcelTable/cn-excel-table';
-import { IGridColumn, TableEntities } from 'components/ExcelTable/types';
+import { GridColumn, TableEntities } from 'components/ExcelTable/types';
 
 const hasIcon = (type: TableEntities) => type === TableEntities.GEO_CATEGORY;
 
-export function createColumn(
+export default function createColumn(
   genType: TableEntities = TableEntities.NONE,
-): IGridColumn {
+): GridColumn {
   return {
     key: Math.random().toString(),
     name: '',

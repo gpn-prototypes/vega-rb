@@ -6,18 +6,11 @@ import { SelectedCell, TableEntities } from 'components/ExcelTable/types';
 import { isEmpty } from 'fp-ts/Array';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
-import { IProjectStructure, Nullable } from 'types';
+import { Nullable } from 'types';
 import { mockTableRows, unpackData } from 'utils';
 
 import { GET_TABLE_TEMPLATE } from './queries';
-
-export interface TemplateProjectData {
-  project: {
-    template: {
-      structure: IProjectStructure;
-    };
-  };
-}
+import { TemplateProjectData } from './types';
 
 interface IProps {
   onSelect?: (data: Nullable<SelectedCell>) => void;
@@ -36,11 +29,13 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   }, [templateStructure]);
 
   useEffect(() => {
-    if (isEmpty(reduxTableData.columns)) {
-      dispatch(tableDuck.actions.updateColumns(columns()));
-    }
-    if (isEmpty(reduxTableData.rows)) {
-      dispatch(tableDuck.actions.updateRows(mockTableRows));
+    if (!isEmpty(columns())) {
+      if (isEmpty(reduxTableData.columns)) {
+        dispatch(tableDuck.actions.updateColumns(columns()));
+      }
+      if (isEmpty(reduxTableData.rows)) {
+        dispatch(tableDuck.actions.updateRows(mockTableRows));
+      }
     }
   }, [columns, dispatch, reduxTableData]);
 

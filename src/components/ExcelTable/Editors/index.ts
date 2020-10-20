@@ -1,3 +1,4 @@
 import { InputEditor } from './InputEditor';
+import { SimpleTextEditor } from './SimpleTextEditor';
 
-export { InputEditor };
+export { InputEditor, SimpleTextEditor };

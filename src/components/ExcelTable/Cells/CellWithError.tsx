@@ -17,10 +17,10 @@ import useCombinedRefs from 'hooks/useCombinedRefs';
 import { RootState } from 'store/types';
 
 import { cnCellValueError } from '../cn-excel-table';
-import { GridRow, IGridColumn, TableEntities } from '../types';
+import { GridColumn, GridRow, TableEntities } from '../types';
 
 interface IProps extends CellRendererProps<GridRow> {
-  columns: IGridColumn[];
+  columns: GridColumn[];
 }
 
 const CellWithError: React.ForwardRefExoticComponent<
@@ -49,12 +49,12 @@ const CellWithError: React.ForwardRefExoticComponent<
       // TODO: поправить условие после обновления API(заменить columnIdx на columnKey)
       errors.find(({ row: rowIdx, column: columnIdx, tableName }) => {
         const tableColumnIdx = columns
-          .filter((c) => c.type === (column as IGridColumn).type)
-          .findIndex((c) => c.key === (column as IGridColumn).key);
+          .filter((c) => c.type === (column as GridColumn).type)
+          .findIndex((c) => c.key === (column as GridColumn).key);
         const isSameTableType =
           (column.key === TableEntities.GEO_CATEGORY &&
             tableName === TableNames.DomainEntities) ||
-          ((column as IGridColumn).type === TableEntities.CALC_PARAM &&
+          ((column as GridColumn).type === TableEntities.CALC_PARAM &&
             tableName === TableNames.Attributes);
         const isSameColumn = tableColumnIdx === columnIdx;
         const isSameRow = rowIdx === currentRowIdx;

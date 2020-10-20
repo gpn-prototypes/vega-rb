@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { classnames } from '@bem-react/classnames';
 import { RootState } from 'store/types';
 
-import CellWithError from '../Cells';
+import { CellWithError } from '../Cells';
 import { withContextMenu } from '../ContextMenu';
 import { GridRow } from '../types';
 
