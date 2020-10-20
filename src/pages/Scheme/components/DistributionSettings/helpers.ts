@@ -12,17 +12,17 @@ import {
 } from 'pages/Scheme/components/DistributionSettingsForm/types';
 
 export const percentileFieldRankTypes = [
-  DistributionParameterTypes.P1Rank,
-  DistributionParameterTypes.P2Rank,
-  DistributionParameterTypes.P3Rank,
-  DistributionParameterTypes.P4Rank,
+  DistributionParameterTypes.Q1Rank,
+  DistributionParameterTypes.Q2Rank,
+  DistributionParameterTypes.Q3Rank,
+  DistributionParameterTypes.Q4Rank,
 ];
 export const percentileFieldTypes = [
   ...percentileFieldRankTypes,
-  DistributionParameterTypes.P1Value,
-  DistributionParameterTypes.P2Value,
-  DistributionParameterTypes.P3Value,
-  DistributionParameterTypes.P4Value,
+  DistributionParameterTypes.Q1Value,
+  DistributionParameterTypes.Q2Value,
+  DistributionParameterTypes.Q3Value,
+  DistributionParameterTypes.Q4Value,
 ];
 
 export const checkDistributionValidation = (

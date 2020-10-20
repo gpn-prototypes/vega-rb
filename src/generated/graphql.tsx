@@ -11,8 +11,9 @@ export type Scalars = {
   Float: number;
 };
 
-export type Query = {
-  __typename?: 'Query';
+/** Запросы к данным ресурсной базы. */
+export type ResourceBaseQueries = {
+  __typename?: 'ResourceBaseQueries';
   /** Пространство имен для работы с проектом. */
   project?: Maybe<ProjectQueries>;
   /** Пространство имен для работы с распределениями. */
@@ -44,23 +45,23 @@ export type Project = {
 export type ProjectStructure = {
   __typename?: 'ProjectStructure';
   /** Список доменных сущностей геологических объектов */
-  domainEntities: Array<DomainEntity>;
+  domainEntities: Array<RbDomainEntity>;
   /** Список подсчетных параметров */
   attributes: Array<Attribute>;
   /** Список рисков геологических объектов */
   risks: Array<Risk>;
 };
 
-export type DomainEntity = {
-  __typename?: 'DomainEntity';
+export type RbDomainEntity = {
+  __typename?: 'RBDomainEntity';
   /** Имя доменной сущности геологического объекта */
   name: Scalars['String'];
   /** Иконка доменной сущности геологического объекта */
-  icon: DomainEntityIcons;
+  icon: RbDomainEntityIcons;
 };
 
 /** Список иконок доменной сущности геологического объекта. */
-export enum DomainEntityIcons {
+export enum RbDomainEntityIcons {
   LicensingRoundIcon = 'LICENSING_ROUND_ICON',
   FieldIcon = 'FIELD_ICON',
   FormationIcon = 'FORMATION_ICON',
@@ -89,10 +90,10 @@ export type Risk = {
 };
 
 /** Ошибка с дополнительной информацией. */
-export type DetailError = ErrorInterface & {
+export type DetailError = RbErrorInterface & {
   __typename?: 'DetailError';
   /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
-  code: ErrorCodes;
+  code: RbErrorCodes;
   /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
   message: Scalars['String'];
   /** Детальная информация об ошибке */
@@ -100,15 +101,15 @@ export type DetailError = ErrorInterface & {
 };
 
 /** Интерфейс ошибок, отображаемых пользователю. */
-export type ErrorInterface = {
+export type RbErrorInterface = {
   /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
-  code: ErrorCodes;
+  code: RbErrorCodes;
   /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
   message: Scalars['String'];
 };
 
 /** Список кодов ошибок приложения. */
-export enum ErrorCodes {
+export enum RbErrorCodes {
   /** Ошибка в загружаемой структуре */
   IncorrectProjectStructure = 'INCORRECT_PROJECT_STRUCTURE',
   /** В строке данных таблицы структуры не может быть пустых ячеек */
@@ -125,6 +126,8 @@ export enum ErrorCodes {
   CellValueIsNull = 'CELL_VALUE_IS_NULL',
   /** Вероятность может иметь значение в пределах от 0.0 до 1.0 */
   InvalidProbabilityValue = 'INVALID_PROBABILITY_VALUE',
+  /** Некорректное значение параметра для этого способа задания */
+  IncorrectParameterValueForDefinition = 'INCORRECT_PARAMETER_VALUE_FOR_DEFINITION',
 }
 
 export type ProjectInput = {
@@ -136,7 +139,7 @@ export type ProjectInput = {
 
 export type ProjectStructureInput = {
   /** Список доменных сущностей геологических объектов */
-  domainEntities: Array<DomainEntityInput>;
+  domainEntities: Array<RbDomainEntityInput>;
   /** Список подсчетных параметров */
   attributes: Array<AttributeInput>;
   /** Список геологических объектов структуры проекта */
@@ -145,11 +148,11 @@ export type ProjectStructureInput = {
   risks: Array<RiskInput>;
 };
 
-export type DomainEntityInput = {
+export type RbDomainEntityInput = {
   /** Имя доменной сущности геологического объекта */
   name: Scalars['String'];
   /** Иконка доменной сущности геологического объекта */
-  icon: DomainEntityIcons;
+  icon: RbDomainEntityIcons;
 };
 
 export type AttributeInput = {
@@ -217,8 +220,6 @@ export enum DistributionDefinitionTypes {
   LocationMeanlogSdlog = 'LOCATION_MEANLOG_SDLOG',
   /** Через наиболее вероятное, минимум и максимум */
   ModeMinMax = 'MODE_MIN_MAX',
-  /** Через квантили */
-  Quantiles = 'QUANTILES',
   /** Через альфа, бета, минимум и максимум */
   AlphaBetaMinMax = 'ALPHA_BETA_MIN_MAX',
   /** Через два процентиля */
@@ -266,34 +267,26 @@ export enum DistributionParameterTypes {
   Meanlog = 'MEANLOG',
   /** Логарифмическое стандартное отклонение */
   Sdlog = 'SDLOG',
-  /** q1_rank */
-  Q1Rank = 'Q1_RANK',
-  /** q1_value */
-  Q1Value = 'Q1_VALUE',
-  /** q2_rank */
-  Q2Rank = 'Q2_RANK',
-  /** q2_value */
-  Q2Value = 'Q2_VALUE',
   /** Параметр расположения Альфа */
   Alpha = 'ALPHA',
   /** Параметр расположения Бэта */
   Beta = 'BETA',
-  /** Первый процентильный ранг */
-  P1Rank = 'P1_RANK',
-  /** Второй процентильный ранг */
-  P2Rank = 'P2_RANK',
-  /** Третий процентильный ранг */
-  P3Rank = 'P3_RANK',
-  /** Четвертый процентильный ранг */
-  P4Rank = 'P4_RANK',
-  /** Значение первого процентильного ранга */
-  P1Value = 'P1_VALUE',
-  /** Значение второго процентильного ранга */
-  P2Value = 'P2_VALUE',
-  /** Значение третьего процентильного ранга */
-  P3Value = 'P3_VALUE',
-  /** Значение четвертого процентильного ранга */
-  P4Value = 'P4_VALUE',
+  /** Первый квантильный ранг */
+  Q1Rank = 'Q1_RANK',
+  /** Второй квантильный ранг */
+  Q2Rank = 'Q2_RANK',
+  /** Третий квантильный ранг */
+  Q3Rank = 'Q3_RANK',
+  /** Четвертый квантильный ранг */
+  Q4Rank = 'Q4_RANK',
+  /** Значение первого квантиля */
+  Q1Value = 'Q1_VALUE',
+  /** Значение второго квантиля */
+  Q2Value = 'Q2_VALUE',
+  /** Значение третьего квантиля */
+  Q3Value = 'Q3_VALUE',
+  /** Значение четвертого квантиля */
+  Q4Value = 'Q4_VALUE',
 }
 
 export type RiskInput = {
@@ -352,27 +345,30 @@ export type DistributionDefinitionErrors = {
 };
 
 /** Ошибка задания распределения. */
-export type DistributionDefinitionError = ErrorInterface & {
+export type DistributionDefinitionError = RbErrorInterface & {
   __typename?: 'DistributionDefinitionError';
   /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
-  code: ErrorCodes;
+  code: RbErrorCodes;
   /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
   message: Scalars['String'];
   /** Список параметров задания распределения, к которым относится ошибка */
   fields: Array<Scalars['String']>;
 };
 
-export type Mutation = {
-  __typename?: 'Mutation';
+/** Мутации данных ресурсной базы. */
+export type ResourceBaseMutations = {
+  __typename?: 'ResourceBaseMutations';
   updateRiskValue?: Maybe<UpdateRiskValueResult>;
   calculateProject?: Maybe<CalculationResult>;
 };
 
-export type MutationUpdateRiskValueArgs = {
+/** Мутации данных ресурсной базы. */
+export type ResourceBaseMutationsUpdateRiskValueArgs = {
   projectStructure: ProjectStructureInput;
 };
 
-export type MutationCalculateProjectArgs = {
+/** Мутации данных ресурсной базы. */
+export type ResourceBaseMutationsCalculateProjectArgs = {
   projectStructureInput: ProjectStructureInput;
 };
 
@@ -386,10 +382,10 @@ export type GCoSCalculationResult = {
 };
 
 /** Ошибка данных таблицы с информацией о расположении строк или ячеек повлекших ошибку. */
-export type TableError = ErrorInterface & {
+export type TableError = RbErrorInterface & {
   __typename?: 'TableError';
   /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
-  code: ErrorCodes;
+  code: RbErrorCodes;
   /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
   message: Scalars['String'];
   /** Имя таблицы, содержащей строки или ячейки, повлекшие ошибку */

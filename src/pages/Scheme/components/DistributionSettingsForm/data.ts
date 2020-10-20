@@ -101,14 +101,14 @@ const distributionParametersMap: DistributionParametersMap = {
     fieldsByType: {
       [DistributionDefinitionTypes.TwoPercentiles]: [
         {
-          key: DistributionParameterTypes.P1Value,
-          rankKey: DistributionParameterTypes.P1Rank,
+          key: DistributionParameterTypes.Q1Value,
+          rankKey: DistributionParameterTypes.Q1Rank,
           defaultRankValue: '10',
           defaultValue: '',
         },
         {
-          key: DistributionParameterTypes.P2Value,
-          rankKey: DistributionParameterTypes.P2Rank,
+          key: DistributionParameterTypes.Q2Value,
+          rankKey: DistributionParameterTypes.Q2Rank,
           defaultRankValue: '90',
           defaultValue: '',
         },

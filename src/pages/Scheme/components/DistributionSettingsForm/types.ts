@@ -20,15 +20,15 @@ export type DistributionParameters = {
 
 export type Field = DefaultField | PercentileField;
 export type DistributionParameterPercentileValue =
-  | DistributionParameterTypes.P1Value
-  | DistributionParameterTypes.P2Value
-  | DistributionParameterTypes.P3Value
-  | DistributionParameterTypes.P4Value;
+  | DistributionParameterTypes.Q1Value
+  | DistributionParameterTypes.Q2Value
+  | DistributionParameterTypes.Q3Value
+  | DistributionParameterTypes.Q4Value;
 export type DistributionParameterPercentileRank =
-  | DistributionParameterTypes.P1Rank
-  | DistributionParameterTypes.P2Rank
-  | DistributionParameterTypes.P3Rank
-  | DistributionParameterTypes.P4Rank;
+  | DistributionParameterTypes.Q1Rank
+  | DistributionParameterTypes.Q2Rank
+  | DistributionParameterTypes.Q3Rank
+  | DistributionParameterTypes.Q4Rank;
 export type DistributionParameterPercentileTypes =
   | DistributionParameterPercentileValue
   | DistributionParameterPercentileRank;
