@@ -8,11 +8,13 @@ ARG APP_DIR=/usr/src/app
 ARG BACKEND_API=http://localhost:5005
 ENV LISTEN_PORT=3009
 
+USER root
+
+RUN npm install --global yarn 
+
 # репозиторий для NPM
 ARG NPM_AUTH_TOKEN
 RUN echo "//npm.pkg.github.com/:_authToken=$NPM_AUTH_TOKEN" > /${HOME}/.npmrc
-
-ARG APP_DIR
 
 # set working directory
 RUN mkdir -p ${APP_DIR}
