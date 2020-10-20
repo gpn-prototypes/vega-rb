@@ -1,0 +1,35 @@
+#########################
+### build environment ###
+#########################
+ARG APP_DIR=/usr/src/app
+ARG BACKEND_API=http://localhost:5005
+ENV LISTEN_PORT=3009
+
+# репозиторий для NPM
+ARG NPM_AUTH_TOKEN
+RUN echo "//npm.pkg.github.com/:_authToken=$NPM_AUTH_TOKEN" > /${HOME}/.npmrc
+
+# base image
+FROM registry.access.redhat.com/ubi7/nodejs-12 as node
+ARG APP_DIR
+
+SHELL [ "/usr/bin/scl", "enable", "rh-nodejs12" ]
+
+# set working directory
+RUN mkdir -p ${APP_DIR}
+WORKDIR ${APP_DIR}
+
+# install and cache app dependencies
+COPY package*.json ${APP_DIR}/
+
+# add app
+COPY . ${APP_DIR}
+
+RUN yarn install && yarn build
+
+# expose port
+EXPOSE ${LISTEN_PORT}
+
+# run server
+CMD ["/bin/sh" , "-c" , "yarn start"]
+
