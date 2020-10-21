@@ -1,0 +1,19 @@
+FROM centos/nginx-116-centos7
+USER root
+#ARG APP_DIR
+ARG BACKEND_API
+
+ENV LISTEN_PORT=80 \
+  BACKEND_API=${BACKEND_API}
+
+COPY /nginx/nginx.conf /etc/opt/rh/rh-nginx116/nginx/nginx.conf
+COPY /nginx/app-nginx.tpl.conf /opt/app-root/etc/app-nginx.tpl.conf
+
+# expose port
+EXPOSE ${LISTEN_PORT}
+
+# run nginx
+CMD ["/bin/sh" , "-c" , "envsubst '$BACKEND_API $LISTEN_PORT' < \
+  /opt/app-root/etc/app-nginx.tpl.conf > \
+  /opt/app-root/etc/nginx.d/app.conf && \
+  exec nginx -g 'daemon off;'"]
