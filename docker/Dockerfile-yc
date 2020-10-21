@@ -5,10 +5,14 @@ FROM registry.access.redhat.com/ubi7/nodejs-12 as node
 ### build environment ###
 #########################
 ARG APP_DIR=/usr/src/app
-ARG BACKEND_API=http://localhost:5005
+ARG BACKEND_API=http://localhost:8080
 ENV LISTEN_PORT=3009
 
 USER root
+
+# Increasing the amount of notify watchers
+#RUN yum -y install sudo
+#RUN echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
 RUN npm install --global yarn 
 
@@ -33,4 +37,3 @@ EXPOSE ${LISTEN_PORT}
 
 # run server
 CMD ["/bin/sh" , "-c" , "yarn start"]
-
