@@ -1,8 +1,6 @@
 import React, { Component, useMemo } from 'react';
 import { ContextMenu, ContextMenuProps, MenuItem } from 'react-contextmenu';
-import { createPortal } from 'react-dom';
-import { useTheme } from '@consta/uikit/Theme';
-import classNames from 'classnames';
+import { usePortalRender } from '@gpn-prototypes/vega-ui';
 import noop from 'utils/noop';
 
 import {
@@ -75,17 +73,10 @@ export default React.forwardRef<Component<ContextMenuProps>, IProps>(
       [onInsertLeft, onInsertRight],
     );
 
-    const { themeClassNames } = useTheme();
+    const { renderPortalWithTheme } = usePortalRender();
 
-    return createPortal(
-      <ContextMenu
-        id={id}
-        ref={contextRef}
-        className={classNames([
-          ...Object.values(themeClassNames),
-          themeClassNames.color.primary,
-        ])}
-      >
+    return renderPortalWithTheme(
+      <ContextMenu id={id} ref={contextRef}>
         {data.map(({ title: itemTitle, onClick, Icon, disabled }) => (
           <MenuItem
             key={itemTitle}

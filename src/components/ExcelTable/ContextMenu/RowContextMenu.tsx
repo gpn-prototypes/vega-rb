@@ -1,6 +1,6 @@
 import React from 'react';
 import { ContextMenu, MenuItem } from 'react-contextmenu';
-import { createPortal } from 'react-dom';
+import { usePortalRender } from '@gpn-prototypes/vega-ui';
 
 import { ContextHandler } from '../types';
 
@@ -20,7 +20,9 @@ export default React.memo<IProps>(function RowContextMenu({
   onInsertAbove,
   onInsertBelow,
 }) {
-  return createPortal(
+  const { renderPortalWithTheme } = usePortalRender();
+
+  return renderPortalWithTheme(
     <ContextMenu id={id} hideOnLeave>
       <MenuItem onClick={onDelete}>Удалить</MenuItem>
       <MenuItem onClick={onInsertAbove}>Добавить выше</MenuItem>
