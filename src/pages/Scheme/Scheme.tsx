@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@gpn-prototypes/vega-button';
-import { SelectedCell } from 'components/ExcelTable/types';
+import { Sidebar, useSidebar } from '@gpn-prototypes/vega-sidebar';
+import {
+  GridColumn,
+  SelectedCell,
+  TableEntities,
+} from 'components/ExcelTable/types';
+import HierarchyLevelList from 'pages/Scheme/components/HierarchyLevelList';
+import { HierarchyLevelItem } from 'pages/Scheme/components/HierarchyLevelList/HierarchyLevelList';
+import tableDuck from 'store/tableDuck';
+import { RootState } from 'store/types';
 import { Nullable } from 'types';
 
 import CalculateButton from './components/CalculateButton';
@@ -12,15 +22,41 @@ import Table from './components/Table';
 import style from './Scheme.module.css';
 
 const SchemePage: React.FC = () => {
+  const dispatch = useDispatch();
   const [selectedCell, setSelectedCell] = useState<Nullable<SelectedCell>>(
     null,
   );
+  const data = useSelector(({ table }: RootState) => table);
+  const geoCategoryColumns = data.columns.filter(
+    ({ type }) => type === TableEntities.GEO_CATEGORY,
+  );
+
+  const {
+    state: { isOpen },
+    close: handleClose,
+    open: handleOpen,
+  } = useSidebar({
+    isOpen: false,
+    isMinimized: false,
+  });
+
+  const updateColumns = (columns: GridColumn[]) => {
+    dispatch(tableDuck.actions.updateColumns(columns));
+    handleClose();
+  };
+
   return (
     <div className={style.SchemePage}>
       <div className={style.Header}>
         <Button
           label="Структура проекта"
           view="ghost"
+          className={style.ButtonStructure}
+        />
+        <Button
+          label="Настройка уровней иерархии"
+          view="ghost"
+          onClick={handleOpen}
           className={style.ButtonStructure}
         />
         <Button label="Данные" view="ghost" className={style.ButtonData} />
@@ -36,6 +72,26 @@ const SchemePage: React.FC = () => {
           {selectedCell && <DistributionSettings selectedCell={selectedCell} />}
         </div>
       </div>
+      <Sidebar isOpen={isOpen} onClose={handleClose}>
+        <>
+          <Sidebar.Header hasMinimizeButton={false}>
+            Настройка уровней иерархии
+          </Sidebar.Header>
+          <Sidebar.Body>
+            <HierarchyLevelList
+              items={geoCategoryColumns as HierarchyLevelItem[]}
+              onSubmit={(columns) =>
+                updateColumns([
+                  ...columns,
+                  ...data.columns.filter(
+                    ({ type }) => type !== TableEntities.GEO_CATEGORY,
+                  ),
+                ])
+              }
+            />
+          </Sidebar.Body>
+        </>
+      </Sidebar>
     </div>
   );
 };
