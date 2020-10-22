@@ -19,15 +19,10 @@ import { RootState } from 'store/types';
 import { cnCellValueError } from '../cn-excel-table';
 import { GridColumn, GridRow, TableEntities } from '../types';
 
-interface IProps extends CellRendererProps<GridRow> {
-  columns: GridColumn[];
-}
-
 const CellWithError: React.ForwardRefExoticComponent<
-  PropsWithoutRef<IProps> & RefAttributes<HTMLDivElement>
+  PropsWithoutRef<CellRendererProps<GridRow>> & RefAttributes<HTMLDivElement>
 > = forwardRef((props, ref) => {
   const {
-    columns,
     column,
     rowIdx: currentRowIdx,
     row,
@@ -44,6 +39,8 @@ const CellWithError: React.ForwardRefExoticComponent<
   const combinedRef = useCombinedRefs(ref, innerRef);
   const [isShowError, setIsShowError] = useState(false);
   const errors = useSelector(({ table }: RootState) => table.errors);
+  const columns = useSelector((state: RootState) => state.table.columns);
+
   const error = useMemo(
     () =>
       // TODO: поправить условие после обновления API(заменить columnIdx на columnKey)

@@ -1,6 +1,6 @@
 /* eslint-disable */
 // @ts-nocheck
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   Cell,
   CellRendererProps,
@@ -8,7 +8,7 @@ import {
   RowRendererProps,
 } from 'react-data-grid';
 import { classnames } from '@bem-react/classnames';
-import { DropDownCell } from 'components/ExcelTable/Cells';
+import { DropDownCell, CellWithError } from 'components/ExcelTable/Cells';
 
 import { withContextMenu } from '../ContextMenu';
 import { GridColumn, GridRow, TableEntities } from '../types';
@@ -20,11 +20,12 @@ import './StyledRow.css';
 const CellRenderer: React.FC<CellRendererProps<GridRow>> = (
   props,
 ): JSX.Element => {
+  const ref = useRef<HTMLDivElement>(null);
   const column = props.column as GridColumn;
   if (column.type === TableEntities.GEO_CATEGORY_TYPE)
     return <DropDownCell {...props} />;
 
-  return <Cell {...props} />;
+  return <CellWithError {...props} ref={ref} />;
 };
 
 export default React.memo<RowRendererProps<GridRow>>(function StyledRow(props) {
