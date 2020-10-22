@@ -1,6 +1,6 @@
 FROM centos/nginx-116-centos7
 USER root
-#ARG APP_DIR
+
 ARG BACKEND_API
 
 ENV LISTEN_PORT=80 \
