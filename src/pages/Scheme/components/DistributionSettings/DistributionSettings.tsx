@@ -7,7 +7,6 @@ import {
   DistributionDefinitionError,
   DistributionDefinitionErrors,
   DistributionDefinitionTypes,
-  DistributionParameterTypes,
   DistributionTypes,
   ResourceBaseQueries,
 } from 'generated/graphql';
@@ -15,12 +14,17 @@ import tableDuck from 'store/tableDuck';
 
 import DistributionChart from '../DistributionChart';
 import DistributionSettingsForm from '../DistributionSettingsForm';
-import distributionParametersMap from '../DistributionSettingsForm/data';
 import {
   DistributionSettingsFormData,
   DistributionSettingsParameters,
 } from '../DistributionSettingsForm/types';
 
+import {
+  checkDistributionValidation,
+  getDistributionFormDataParams,
+  mapEntries,
+  prepareDistributionParams,
+} from './helpers';
 import { GET_DISTRIBUTION_VALUE } from './queries';
 
 const defaultDistributionChartValue: IDistributionChart = {
@@ -28,16 +32,6 @@ const defaultDistributionChartValue: IDistributionChart = {
   pdf: [],
   percentiles: [],
 };
-
-const checkDistributionValidation = ({
-  distributionType: type,
-  distributionDefinitionType: definition,
-  parameters,
-}: DistributionSettingsFormData) =>
-  parameters &&
-  !!distributionParametersMap[type].fieldsByType[definition]?.every(({ key }) =>
-    Number.isFinite(Number.parseFloat(parameters[key] as string)),
-  );
 
 interface DistributionSettingsProps {
   selectedCell: SelectedCell;
@@ -66,23 +60,20 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
 
         const distributionDefinitionType =
           cellArgs?.definition || DistributionDefinitionTypes.MeanSd;
-
-        const parameters = {
-          ...(distributionParametersMap[DistributionTypes.Normal].fieldsByType[
-            distributionDefinitionType
-          ]?.reduce(
-            (prev, { key, defaultValue }) => ({ ...prev, [key]: defaultValue }),
-            {},
-          ) as Partial<DistributionSettingsParameters>),
-          ...defaultParameters,
-        };
+        const parameters = getDistributionFormDataParams(
+          distributionType,
+          distributionDefinitionType,
+        );
 
         const result = {
           distributionType,
           distributionDefinitionType,
-          parameters,
+          parameters: {
+            ...parameters,
+            ...defaultParameters,
+          },
         };
-        const isValid = checkDistributionValidation(result);
+        const isValid = checkDistributionValidation(result.parameters);
 
         return {
           ...result,
@@ -93,12 +84,10 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
       return {
         distributionType: DistributionTypes.Normal,
         distributionDefinitionType: DistributionDefinitionTypes.MeanSd,
-        parameters: distributionParametersMap[
-          DistributionTypes.Normal
-        ].fieldsByType[DistributionDefinitionTypes.MeanSd]?.reduce(
-          (prev, { key, defaultValue }) => ({ ...prev, [key]: defaultValue }),
-          {},
-        ) as Partial<DistributionSettingsParameters>,
+        parameters: getDistributionFormDataParams(
+          DistributionTypes.Normal,
+          DistributionDefinitionTypes.MeanSd,
+        ),
         isValid: false,
       };
     },
@@ -122,35 +111,12 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
       }: DistributionSettingsFormData,
       cell,
     ) => {
-      const quantiles =
-        distributionDefinitionType === DistributionDefinitionTypes.Quantiles
-          ? Object.entries(parameters).map(
-              ([parameterType, parameterValue]) => ({
-                type:
-                  parameterType === DistributionParameterTypes.Q1Value
-                    ? DistributionParameterTypes.Q1Rank
-                    : DistributionParameterTypes.Q2Rank,
-                value:
-                  parameterType === DistributionParameterTypes.Q1Value
-                    ? 0.1
-                    : 0.9,
-              }),
-            )
-          : [];
       dispatch(
         tableDuck.actions.updateCell({
           selectedCell: cell,
           cellData: {
             args: {
-              parameters: [
-                ...Object.entries(parameters).map(
-                  ([parameterType, parameterValue]) => ({
-                    type: parameterType as DistributionParameterTypes,
-                    value: Number.parseFloat(parameterValue as string),
-                  }),
-                ),
-                ...quantiles,
-              ],
+              parameters: mapEntries(parameters, prepareDistributionParams),
               type: distributionType,
               definition: distributionDefinitionType,
             },
@@ -172,12 +138,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
           query: GET_DISTRIBUTION_VALUE,
           variables: {
             distribution: {
-              parameters: Object.entries(parameters).map(
-                ([parameterType, value]) => ({
-                  type: parameterType,
-                  value: Number.parseFloat(value as string),
-                }),
-              ),
+              parameters: mapEntries(parameters, prepareDistributionParams),
               type: distributionType,
               definition: distributionDefinitionType,
             },
@@ -200,7 +161,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
 
   const handleChange = (distributionProps: DistributionSettingsFormData) => {
     setFormData(distributionProps);
-    if (checkDistributionValidation(distributionProps)) {
+    if (checkDistributionValidation(distributionProps.parameters)) {
       getChart(distributionProps).then((data) => {
         if (data.errors) {
           setErrors(data.errors);
@@ -229,8 +190,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
     if (selectedCell) {
       const result = getFormDataFromTableCell(selectedCell);
       setFormData(result);
-
-      if (checkDistributionValidation(result)) {
+      if (checkDistributionValidation(result.parameters)) {
         getChart(result).then(
           ({ distributionChart, errors: distributionDefinitionErrors }) => {
             if (distributionChart) {
@@ -242,6 +202,8 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
             }
           },
         );
+      } else {
+        setChartData(defaultDistributionChartValue);
       }
     }
   }, [getChart, getFormDataFromTableCell, selectedCell]);

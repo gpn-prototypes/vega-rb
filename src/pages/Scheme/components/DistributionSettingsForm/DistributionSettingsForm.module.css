@@ -24,6 +24,10 @@
   position: relative;
 }
 
+.Field__Label {
+  margin-bottom: 5px;
+}
+
 .Field__ErrorMessage {
   position: absolute;
   bottom: -30px;

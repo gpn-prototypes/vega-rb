@@ -126,6 +126,8 @@ export enum RbErrorCodes {
   CellValueIsNull = 'CELL_VALUE_IS_NULL',
   /** Вероятность может иметь значение в пределах от 0.0 до 1.0 */
   InvalidProbabilityValue = 'INVALID_PROBABILITY_VALUE',
+  /** Некорректное значение параметра для этого способа задания */
+  IncorrectParameterValueForDefinition = 'INCORRECT_PARAMETER_VALUE_FOR_DEFINITION',
 }
 
 export type ProjectInput = {
@@ -218,8 +220,6 @@ export enum DistributionDefinitionTypes {
   LocationMeanlogSdlog = 'LOCATION_MEANLOG_SDLOG',
   /** Через наиболее вероятное, минимум и максимум */
   ModeMinMax = 'MODE_MIN_MAX',
-  /** Через квантили */
-  Quantiles = 'QUANTILES',
   /** Через альфа, бета, минимум и максимум */
   AlphaBetaMinMax = 'ALPHA_BETA_MIN_MAX',
   /** Через два процентиля */
