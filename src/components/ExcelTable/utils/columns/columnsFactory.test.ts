@@ -144,6 +144,18 @@ describe('SPLITTER column', () => {
   });
 });
 
+describe('GEO_CATEGORY_TYPE column', () => {
+  const column = columnsFactory(
+    mockColumn(TableEntities.GEO_CATEGORY_TYPE),
+    formatter,
+    HeaderRenderer,
+  );
+
+  test('Validate type', () => {
+    expect(column.type).toEqual(TableEntities.GEO_CATEGORY_TYPE);
+  });
+});
+
 describe('DEFAULT column', () => {
   const column = columnsFactory(createColumn(), formatter, HeaderRenderer);
 

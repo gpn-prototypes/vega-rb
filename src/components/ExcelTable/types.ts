@@ -1,6 +1,7 @@
 import React, { ComponentType, ReactText } from 'react';
-import { CalculatedColumn, Column } from 'react-data-grid';
+import { CalculatedColumn, Column, EditorProps } from 'react-data-grid';
 import {
+  CellRendererProps,
   FormatterProps as BaseFormatterProps,
   HeaderRendererProps as BaseHeaderRendererProps,
 } from 'react-data-grid/lib/common/types';
@@ -29,6 +30,7 @@ export type SelectedCell = {
 export enum TableEntities {
   GEO_CATEGORY = 'RBDomainEntity',
   CALC_PARAM = 'Attribute',
+  GEO_CATEGORY_TYPE = 'GeoObjectType',
   RISK = 'Risk',
   ID = 'ID',
   SPLITTER = 'Splitter',
@@ -67,6 +69,7 @@ export interface GridColumn extends Column<GridRow> {
   before?: JSX.Element;
   headerId?: string;
   notRemovable?: boolean;
+  cellRenderer?: React.ComponentType<CellRendererProps<GridRow>>;
 }
 
 export interface GridCollection {
@@ -98,3 +101,13 @@ export interface HeaderRendererProps extends BaseHeaderRendererProps<GridRow> {
   ) => void;
   handleColumnsReorder: (sourceKey: string, targetKey: string) => void;
 }
+
+export interface DropdownOption {
+  id: string;
+  value: string;
+  text: string;
+}
+
+export type EditorResult =
+  | { editor: ComponentType<EditorProps<GridCellProperties | undefined>> }
+  | { editor: undefined };

@@ -1,6 +1,9 @@
 @import url('~react-data-grid/dist/react-data-grid.css');
 
 .rdg {
+  --selection-color: #0091ff;
+  --checkbox-color: #0078d2;
+  --checkbox-focus-color: #0078d2;
   background: inherit;
   border-color: transparent;
 }
@@ -19,4 +22,16 @@
   border: 2px solid #0091e6;
   outline: none;
   caret-color: #fff;
+}
+
+.rdg-cell-mask {
+  border-color: var(--selection-color);
+}
+
+.rdg-selected .drag-handle {
+  background-color: var(--selection-color);
+}
+
+.rdg-row-selected:hover {
+  background-color: #c0dbfb;
 }

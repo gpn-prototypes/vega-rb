@@ -1,16 +1,16 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useApolloClient, useQuery } from '@apollo/client';
+import { useApolloClient } from '@apollo/client';
 import { Button } from '@gpn-prototypes/vega-button';
 import { saveAs } from 'file-saver';
 import { TableError } from 'generated/graphql';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
-import { packData } from 'utils';
+import { packTableData } from 'utils';
 
 import { CALCULATION_PROJECT } from '../../mutations';
 import { GET_TABLE_TEMPLATE } from '../Table/queries';
-import { TemplateProjectData } from '../Table/types';
+import { TemplateProjectData } from '../Table/Table';
 
 const DOWNLOAD_RESULT_ROUTE = '`files/calculation_result/`';
 
@@ -18,13 +18,18 @@ export const CalculateButton: React.FC = () => {
   const client = useApolloClient();
   const dispatch = useDispatch();
   const tableData = useSelector((state: RootState) => state.table);
-  const { data } = useQuery<TemplateProjectData>(GET_TABLE_TEMPLATE);
-  const handleClick = () => {
+
+  const handleClick = async () => {
+    const { data } = await client.query<TemplateProjectData>({
+      query: GET_TABLE_TEMPLATE,
+    });
+
     if (data) {
-      const { domainEntities, calculationParameters, domainObjects } = packData(
-        tableData,
-        data?.project.template.structure,
-      );
+      const {
+        domainEntities,
+        calculationParameters,
+        domainObjects,
+      } = packTableData(tableData, data?.project.template.structure);
 
       client
         .mutate({

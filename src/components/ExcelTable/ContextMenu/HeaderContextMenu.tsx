@@ -3,7 +3,7 @@ import { ContextMenu, ContextMenuProps, MenuItem } from 'react-contextmenu';
 import { createPortal } from 'react-dom';
 import { useTheme } from '@consta/uikit/Theme';
 import classNames from 'classnames';
-import noop from 'utils/noop';
+import { noop } from 'utils';
 
 import {
   ArrowLeftIcon,
