@@ -49,7 +49,6 @@ export default function columnsFactory(
   switch (column.type) {
     case TableEntities.CALC_PARAM:
       return getColumn({
-        ...editor,
         ...defaultStyles,
         ...COMMON_COLUMN_PROPS,
         editable: false,
