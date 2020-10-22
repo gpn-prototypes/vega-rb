@@ -15,7 +15,7 @@ const geoCategoryTypeEditor = (): EditorResult => ({
   ),
 });
 
-const geoCategoryEditor = (): EditorResult => ({ editor: SimpleTextEditor });
+const geoDefaultEditor = (): EditorResult => ({ editor: SimpleTextEditor });
 
 export default function getEditor(
   type: TableEntities = TableEntities.NONE,
@@ -24,10 +24,7 @@ export default function getEditor(
     case TableEntities.GEO_CATEGORY_TYPE:
       return geoCategoryTypeEditor();
 
-    case TableEntities.GEO_CATEGORY:
-      return geoCategoryEditor();
-
     default:
-      return { editor: undefined };
+      return geoDefaultEditor();
   }
 }
