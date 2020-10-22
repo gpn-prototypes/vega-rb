@@ -12,7 +12,7 @@ import { CALCULATION_PROJECT } from '../../mutations';
 import { GET_TABLE_TEMPLATE } from '../Table/queries';
 import { TemplateProjectData } from '../Table/Table';
 
-const DOWNLOAD_RESULT_ROUTE = '`files/calculation_result/`';
+const DOWNLOAD_RESULT_ROUTE = 'files/calculation_result/';
 
 export const CalculateButton: React.FC = () => {
   const client = useApolloClient();
