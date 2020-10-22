@@ -27,7 +27,7 @@ export type SelectedCell = {
 };
 
 export enum TableEntities {
-  GEO_CATEGORY = 'RBDomainEntity',
+  GEO_CATEGORY = 'DomainEntity',
   CALC_PARAM = 'Attribute',
   RISK = 'Risk',
   ID = 'ID',
