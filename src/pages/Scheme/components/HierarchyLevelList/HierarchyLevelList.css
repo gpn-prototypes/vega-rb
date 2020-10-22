@@ -1,0 +1,132 @@
+.HierarchyLevelList {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+
+  &__Content {
+    margin-bottom: 5px;
+  }
+
+  &__Footer {
+    margin-top: auto;
+
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__Item {
+    padding: 10px 0 8px 5px;
+
+    display: flex;
+
+    background: var(--color-bg-default);
+
+    border-bottom: 1px solid var(--color-bg-border);
+
+    &.is-editing {
+      background: var(--color-bg-secondary);
+    }
+
+    &.is-dragging {
+      position: relative;
+
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid transparent;
+
+      & > * {
+        opacity: 0;
+      }
+    }
+
+    &__Buttons {
+      margin-right: 4px;
+      margin-left: auto;
+
+      display: grid;
+      grid-template-columns: 1fr min-content;
+      grid-row: 1;
+      grid-column-gap: 4px;
+      align-self: center;
+    }
+
+    &__ContextMenu {
+      padding: 20px 10px;
+
+      display: grid;
+
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--control-radius);
+      box-shadow: 0 1px 1px rgba(var(--color-nums-shadow), 0.25),
+        0 0 3px rgba(var(--color-nums-shadow), 0.25),
+        0 2px 6px rgba(var(--color-nums-shadow), 0.25);
+      grid-template-rows: repeat(2, 1fr);
+
+      &__Item {
+        color: #fafafa;
+
+        .Button-Label {
+          text-align: left;
+        }
+      }
+    }
+
+    &__Options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-column-gap: 5px;
+    }
+
+    &__Controls {
+      margin-left: auto;
+
+      display: grid;
+      align-items: center;
+      grid-template-columns: repeat(2, 1fr);
+      grid-column-gap: 5px;
+
+      &__Order {
+        display: flex;
+        flex-direction: column;
+
+        & > :nth-child(1) {
+          align-self: start;
+        }
+
+        & > :nth-child(2) {
+          align-self: end;
+        }
+      }
+    }
+
+    &__Body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &__Title {
+      margin-bottom: 8px;
+
+      color: var(--color-typo-primary);
+
+      &__Input {
+        display: flex;
+
+        outline: none;
+      }
+    }
+
+    &__DndControl {
+      margin-right: 13px;
+
+      display: flex;
+      align-items: center;
+
+      cursor: grab;
+
+      &.is-editing {
+        cursor: not-allowed;
+      }
+    }
+  }
+}
