@@ -5,8 +5,6 @@ import { Nullable } from 'types';
 
 import CalculateButton from './components/CalculateButton';
 import DistributionSettings from './components/DistributionSettings';
-import ExportButton from './components/ExportButton';
-import ImportButton from './components/ImportButton';
 import Table from './components/Table';
 
 import style from './Scheme.module.css';
@@ -18,14 +16,7 @@ const SchemePage: React.FC = () => {
   return (
     <div className={style.SchemePage}>
       <div className={style.Header}>
-        <Button
-          label="Структура проекта"
-          view="ghost"
-          className={style.ButtonStructure}
-        />
         <Button label="Данные" view="ghost" className={style.ButtonData} />
-        <ExportButton />
-        <ImportButton />
         <CalculateButton />
       </div>
       <div className={style.Content}>
