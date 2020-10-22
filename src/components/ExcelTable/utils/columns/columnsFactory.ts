@@ -12,6 +12,7 @@ import {
   GridRow,
   TableEntities,
 } from 'components/ExcelTable/types';
+import getEditor from 'components/ExcelTable/utils/getEditor';
 
 import getBaseColumn from './getBaseColumn';
 import getBaseProps from './getBaseProps';
@@ -34,7 +35,7 @@ export default function columnsFactory(
   HeaderRenderer: ComponentType<HeaderRendererProps<GridRow>>,
 ): GridColumn {
   const getColumn = getBaseColumn(
-    getBaseProps(Formatter, HeaderRenderer, column.type),
+    getBaseProps(Formatter, HeaderRenderer),
     column,
   );
   const defaultStyles = {
@@ -43,10 +44,12 @@ export default function columnsFactory(
       .toString(),
     cellClass: cnCell.toString(),
   };
+  const editor = getEditor(column.type);
 
   switch (column.type) {
     case TableEntities.CALC_PARAM:
       return getColumn({
+        ...editor,
         ...defaultStyles,
         ...COMMON_COLUMN_PROPS,
         editable: false,
@@ -54,6 +57,7 @@ export default function columnsFactory(
 
     case TableEntities.RISK:
       return getColumn({
+        ...editor,
         ...defaultStyles,
         ...COMMON_COLUMN_PROPS,
         notRemovable: false,
@@ -79,9 +83,12 @@ export default function columnsFactory(
       });
 
     case TableEntities.GEO_CATEGORY_TYPE:
-      return getColumn({ ...defaultStyles });
+      return getColumn({
+        ...editor,
+        ...defaultStyles,
+      });
 
     default:
-      return getColumn({ ...defaultStyles, ...COMMON_COLUMN_PROPS });
+      return getColumn({ ...editor, ...defaultStyles, ...COMMON_COLUMN_PROPS });
   }
 }

@@ -1,3 +1,4 @@
 import { block } from 'bem-cn';
 
-export const cnOption = block('Option');
+export const cnDropDownEditor = block('DropDownEditor');
+export const cnOption = cnDropDownEditor('Option');

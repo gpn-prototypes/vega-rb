@@ -1,6 +1,7 @@
 import React, { ComponentType, ReactText } from 'react';
 import { CalculatedColumn, Column, EditorProps } from 'react-data-grid';
 import {
+  CellRendererProps,
   FormatterProps as BaseFormatterProps,
   HeaderRendererProps as BaseHeaderRendererProps,
 } from 'react-data-grid/lib/common/types';
@@ -68,6 +69,7 @@ export interface GridColumn extends Column<GridRow> {
   before?: JSX.Element;
   headerId?: string;
   notRemovable?: boolean;
+  cellRenderer?: React.ComponentType<CellRendererProps<GridRow>>;
 }
 
 export interface GridCollection {

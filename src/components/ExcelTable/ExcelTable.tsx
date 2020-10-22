@@ -18,6 +18,7 @@ import {
   GridColumn,
   GridRow,
   HEADER_CONTEXT_ID,
+  TableEntities,
 } from './types';
 import { createColumn } from './utils';
 
@@ -60,11 +61,11 @@ export const ExcelTable: React.FC<IProps> = ({
 
   const handleRowClick = useCallback(
     (rowIdx: number, row: GridRow, column: CommonTableColumn) => {
-      // if (column.type === TableEntities.GEO_CATEGORY_TYPE) {
-      //   gridRef.current?.selectCell({ rowIdx, idx: column.idx }, true);
-      // } else {
-      onRowClick(rowIdx, row, column);
-      // }
+      if (column.type === TableEntities.GEO_CATEGORY_TYPE) {
+        gridRef.current?.selectCell({ rowIdx, idx: column.idx }, true);
+      } else {
+        onRowClick(rowIdx, row, column);
+      }
     },
     [onRowClick],
   );
@@ -72,7 +73,6 @@ export const ExcelTable: React.FC<IProps> = ({
   const handleRowsUpdate = useCallback(
     ({ fromRow, toRow, updated }: RowsUpdateEvent<Partial<GridRow>>) => {
       const newRows = [...rows];
-      console.log('last rows', newRows);
       for (let i = fromRow; i <= toRow; i += 1) {
         newRows[i] = {
           ...newRows[i],
@@ -82,7 +82,6 @@ export const ExcelTable: React.FC<IProps> = ({
           ),
         };
       }
-      console.log('new rows', newRows);
       setRows(newRows);
     },
     [rows, setRows],

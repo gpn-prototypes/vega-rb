@@ -2,11 +2,22 @@
 // @ts-nocheck
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { Editor, EditorProps } from 'react-data-grid';
-import { BasicSelect } from '@consta/uikit/BasicSelect';
+import { useTheme } from '@consta/uikit/Theme';
 
-import { DropdownOption, GridCellProperties, GridRow } from '../types';
+import {
+  DropdownOption,
+  GridCellProperties,
+  GridRow,
+} from 'components/ExcelTable/types';
 import { mapValues, size } from 'lodash/fp';
-import { cnOption } from 'components/ExcelTable/Editors/cn-editor';
+import {
+  cnDropDownEditor,
+  cnOption,
+} from 'components/ExcelTable/Editors/cn-editor';
+import { classnames } from '@bem-react/classnames';
+
+import './DropDownEditor.css';
+import classNames from 'classnames';
 
 interface DropDownEditorProps<TRow>
   extends EditorProps<GridCellProperties | undefined, TRow, unknown> {
@@ -19,6 +30,7 @@ function DropDownEditor<TRow>(
   { column, value, onCommit, options }: DropDownEditorProps<TRow>,
   ref: React.Ref<DropDownEditorHandle>,
 ) {
+  const { color: themeColors, ...themeClassNames } = useTheme().themeClassNames;
   const selectRef = useRef<HTMLSelectElement>(null);
 
   useImperativeHandle(ref, () => ({
@@ -36,7 +48,11 @@ function DropDownEditor<TRow>(
   return (
     <select
       ref={selectRef}
-      className="rdg-text-editor"
+      className={classNames([
+        ...Object.values(themeClassNames),
+        themeColors.accent,
+        cnDropDownEditor.toString(),
+      ])}
       defaultValue={value?.value}
       onBlur={onCommit}
       size={size(options)}
@@ -58,20 +74,6 @@ function DropDownEditor<TRow>(
       ))}
     </select>
   );
-
-  // const getItemLabel = (option: SelectOption): string => option.text;
-  // const getItemKey = (option: SelectOption): string => option.id;
-  // const getItemValue = (option: SelectOption): string => option.value;
-
-  // return (
-  //   <BasicSelect
-  //     ref={selectRef}
-  //     id="city"
-  //     value={value}
-  //     options={Object.values(options)}
-  //     getOptionLabel={getItemLabel}
-  //   />
-  // );
 }
 
 export default forwardRef(DropDownEditor) as <R>(
