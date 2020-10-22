@@ -69,6 +69,11 @@ export interface GridColumn extends Column<GridRow> {
   before?: JSX.Element;
   headerId?: string;
   notRemovable?: boolean;
+  visible?: {
+    calculation: boolean;
+    table: boolean;
+    tree: boolean;
+  };
   cellRenderer?: React.ComponentType<CellRendererProps<GridRow>>;
 }
 

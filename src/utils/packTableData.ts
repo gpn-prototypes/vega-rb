@@ -14,7 +14,7 @@ export function packTableData(
   const domainEntitiesKeys = getColumnsByType(
     data.columns,
     TableEntities.GEO_CATEGORY,
-  );
+  ).filter((column) => column.visible && column.visible.calculation);
 
   const calculationParametersKeys = getColumnsByType(
     data.columns,

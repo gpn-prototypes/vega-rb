@@ -30,7 +30,7 @@ import { cnHierarchyLevelList } from './cn-hierarchy-level-list';
 import './HierarchyLevelList.css';
 
 const tags = {
-  calc: {
+  calculation: {
     title: 'Расчет',
   },
   tree: {
@@ -46,7 +46,7 @@ enum DragItemTypes {
 }
 
 enum VisibleKeys {
-  calc = 'calc',
+  calculation = 'calculation',
   table = 'table',
   tree = 'tree',
 }
@@ -56,7 +56,7 @@ interface HierarchyLevelItemProps {
   icon: string;
   index: number;
   visible: {
-    calc: boolean;
+    calculation: boolean;
     table: boolean;
     tree: boolean;
   };
@@ -303,6 +303,7 @@ const HierarchyLevelItemContextMenu: React.FC<HierarchyLevelItemContextMenuProps
     <div className={cnHierarchyLevelList('Item', 'ContextMenu')}>
       {data.map(({ Icon, title, onClick }) => (
         <Button
+          key={title}
           onClick={() => {
             onClick(index);
           }}
@@ -326,7 +327,7 @@ export interface HierarchyLevelItem extends GridColumn {
   id: string;
   icon: string;
   visible: {
-    calc: boolean;
+    calculation: boolean;
     table: boolean;
     tree: boolean;
   };
@@ -388,7 +389,7 @@ const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
         name: 'Новый уровень',
         icon: CategoryIcon.FORMATION_ICON,
         visible: {
-          calc: true,
+          calculation: true,
           table: true,
           tree: true,
         },
@@ -400,7 +401,7 @@ const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
   const onChangeName = (index: number, name: string) => {
     const arr = [...items];
     arr.splice(index, 1, {
-      ...arr[index],
+      ...items[index],
       name,
     });
     setItems(arr);

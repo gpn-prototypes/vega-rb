@@ -8,7 +8,7 @@ export default class GridColumnEntity implements GridColumn {
   type: TableEntities;
 
   visible: {
-    calc: boolean;
+    calculation: boolean;
     table: boolean;
     tree: boolean;
   };
@@ -18,11 +18,11 @@ export default class GridColumnEntity implements GridColumn {
     name = '',
     type: TableEntities = TableEntities.NONE,
     visible: {
-      calc: boolean;
+      calculation: boolean;
       table: boolean;
       tree: boolean;
     } = {
-      calc: true,
+      calculation: true,
       table: true,
       tree: true,
     },

@@ -14,17 +14,19 @@ export const renderColumns = (
   const handleColumnsReorder = curry(columnsReorder)(columns, setColumns);
   const onBlurHandler = curry(onBlurCell)(columns, setColumns);
 
-  return columns.map((column) =>
-    columnsFactory(
-      column,
-      React.memo((props) => (
-        <Header
-          {...props}
-          setColumnProps={setColumnProps}
-          handleColumnsReorder={handleColumnsReorder}
-          onBlurHandler={onBlurHandler}
-        />
-      )),
-    ),
-  );
+  return columns
+    .filter((column) => column.visible && column.visible?.table)
+    .map((column) =>
+      columnsFactory(
+        column,
+        React.memo((props) => (
+          <Header
+            {...props}
+            setColumnProps={setColumnProps}
+            handleColumnsReorder={handleColumnsReorder}
+            onBlurHandler={onBlurHandler}
+          />
+        )),
+      ),
+    );
 };

@@ -71,14 +71,15 @@ const SchemePage: React.FC = () => {
           <Sidebar.Body>
             <HierarchyLevelList
               items={geoCategoryColumns as HierarchyLevelItem[]}
-              onSubmit={(columns) =>
-                updateColumns([
+              onSubmit={(columns) => {
+                console.log(columns);
+                return updateColumns([
                   ...columns,
                   ...data.columns.filter(
                     ({ type }) => type !== TableEntities.GEO_CATEGORY,
                   ),
-                ])
-              }
+                ]);
+              }}
             />
           </Sidebar.Body>
         </>

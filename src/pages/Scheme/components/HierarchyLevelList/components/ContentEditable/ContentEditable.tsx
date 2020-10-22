@@ -13,6 +13,7 @@ const ContentEditableField: React.FC<ContentEditableField> = ({
   disabled,
   tag = 'span',
   className,
+  onChange,
 }) => {
   const editableRef = useRef(null);
   const [value, setValue] = useState(initialValue);
@@ -31,6 +32,7 @@ const ContentEditableField: React.FC<ContentEditableField> = ({
       onChange={(e) => {
         const { value: str } = e.target;
         setValue(str);
+        onChange(str);
       }}
     />
   );
