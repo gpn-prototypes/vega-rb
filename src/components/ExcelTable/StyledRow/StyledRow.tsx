@@ -29,6 +29,7 @@ const CellRenderer: React.FC<CellRendererProps<GridRow>> = (
 
 export default React.memo<RowRendererProps<GridRow>>(function StyledRow(props) {
   const collect = (): { rowIdx: number } => ({ rowIdx: props.rowIdx });
+
   return withContextMenu(
     <Row
       {...props}

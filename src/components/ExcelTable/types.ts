@@ -37,8 +37,8 @@ export enum TableEntities {
   NONE = 'None',
 }
 
-export interface GridCellParameters {
-  value: number;
+interface GridCellParameters {
+  value: ReactText;
   type: DistributionParameterTypes;
 }
 

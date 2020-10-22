@@ -4,6 +4,10 @@
 }
 
 .Grid {
+  position: relative;
+
+  margin-bottom: 60px;
+
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 }
@@ -14,4 +18,18 @@
 
 .TextField__error {
   border-color: var(--color-bg-alert);
+}
+
+.Field {
+  position: relative;
+}
+
+.Field__ErrorMessage {
+  position: absolute;
+  bottom: -30px;
+
+  font-size: 10px;
+  line-height: 12px;
+
+  color: #ed4545;
 }

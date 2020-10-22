@@ -120,7 +120,6 @@ export const ExcelTable: React.FC<IProps> = ({
     columns,
     setColumns,
   ]);
-
   return (
     <>
       <DndProvider backend={HTML5Backend}>
