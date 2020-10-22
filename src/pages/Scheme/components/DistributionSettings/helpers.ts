@@ -80,7 +80,6 @@ export function prepareDistributionParams([
     value: Number.parseFloat(parameterValue),
   };
 }
-
 export const mapEntries = (
   parameters: Partial<DistributionSettingsParameters>,
   callback: (

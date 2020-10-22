@@ -23,6 +23,7 @@ import {
   checkDistributionValidation,
   getDistributionFormDataParams,
   mapEntries,
+  percentileFieldRankTypes,
   prepareDistributionParams,
 } from './helpers';
 import { GET_DISTRIBUTION_VALUE } from './queries';
@@ -52,7 +53,12 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
       if (cellProps?.args?.type) {
         const cellArgs = cellProps.args;
         const defaultParameters = cellArgs?.parameters.reduce(
-          (prev, { type: t, value }) => ({ ...prev, [t]: value }),
+          (prev, { type: t, value }) => ({
+            ...prev,
+            [t]: !percentileFieldRankTypes.includes(t)
+              ? value
+              : Number(value) * 100,
+          }),
           {},
         ) as Partial<DistributionSettingsParameters>;
 
