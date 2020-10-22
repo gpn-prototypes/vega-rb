@@ -1,0 +1,22 @@
+# base image
+FROM registry.access.redhat.com/ubi7/nodejs-12 as node
+
+#########################
+### build environment ###
+#########################
+ARG APP_DIR=/usr/src/app
+
+USER root
+
+RUN npm install --global yarn
+
+# npm repo auth token
+ARG NPM_AUTH_TOKEN
+RUN echo "//npm.pkg.github.com/:_authToken=$NPM_AUTH_TOKEN" > /${HOME}/.npmrc
+
+# set working directory
+RUN mkdir -p ${APP_DIR}
+WORKDIR ${APP_DIR}
+
+# run server
+CMD ["/bin/sh" , "-c" , "yarn install && yarn build"]
