@@ -16,6 +16,7 @@ import {
 import { Popover } from '@gpn-prototypes/vega-popover';
 import { Tag } from '@gpn-prototypes/vega-tag';
 import arrayMove from 'array-move';
+import { ResourceIcon } from 'components/ExcelTable/Icons';
 import {
   CategoryIcon,
   GridColumn,
@@ -167,6 +168,7 @@ const HierarchyLevelItem: React.FC<HierarchyLevelItemProps> = ({
       </div>
       <div className={cnHierarchyLevelList('Item', 'Body')}>
         <div className={cnHierarchyLevelList('Item', 'Title')}>
+          <ResourceIcon color="#00eeaa" />
           <ContentEditableField
             value={value}
             disabled={!isEditing}
@@ -324,7 +326,6 @@ const HierarchyLevelItemContextMenu: React.FC<HierarchyLevelItemContextMenuProps
 };
 
 export interface HierarchyLevelItem extends GridColumn {
-  id: string;
   icon: string;
   visible: {
     calculation: boolean;
@@ -342,9 +343,7 @@ const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
   items: innerItems,
   onSubmit,
 }) => {
-  const [items, setItems] = useState(
-    innerItems.map((item) => ({ ...item, id: uniqueId() })),
-  );
+  const [items, setItems] = useState(innerItems);
   const [editItemIndex, setEditItemIndex] = useState<number | null>(null);
   const moveItem = (dragIndex: number, hoverIndex: number) => {
     setItems(arrayMove(items, dragIndex, hoverIndex));
@@ -383,7 +382,6 @@ const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
     const arr = [
       ...items,
       {
-        id: uniqueId(),
         key: uniqueId(),
         type: TableEntities.GEO_CATEGORY,
         name: 'Новый уровень',
@@ -415,7 +413,7 @@ const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
               {...item}
               index={index}
               // eslint-disable-next-line
-              key={item.id}
+              key={item.key}
               moveItemDown={moveItemDown}
               moveItemUp={moveItemUp}
               moveItem={moveItem}

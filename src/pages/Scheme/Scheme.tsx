@@ -42,7 +42,6 @@ const SchemePage: React.FC = () => {
     dispatch(tableDuck.actions.updateColumns(columns));
     handleClose();
   };
-
   return (
     <div className={style.SchemePage}>
       <div className={style.Header}>
@@ -71,15 +70,14 @@ const SchemePage: React.FC = () => {
           <Sidebar.Body>
             <HierarchyLevelList
               items={geoCategoryColumns as HierarchyLevelItem[]}
-              onSubmit={(columns) => {
-                console.log(columns);
-                return updateColumns([
+              onSubmit={(columns) =>
+                updateColumns([
                   ...columns,
                   ...data.columns.filter(
                     ({ type }) => type !== TableEntities.GEO_CATEGORY,
                   ),
-                ]);
-              }}
+                ])
+              }
             />
           </Sidebar.Body>
         </>

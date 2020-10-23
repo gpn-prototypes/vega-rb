@@ -107,7 +107,12 @@
     &__Title {
       margin-bottom: 8px;
 
+      display: grid;
+      align-items: center;
+
       color: var(--color-typo-primary);
+      grid-template-columns: 12px 3fr;
+      grid-column-gap: 9px;
 
       &__Input {
         display: flex;

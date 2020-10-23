@@ -46,8 +46,7 @@ export default React.memo<HeaderRendererProps>(function Header(props) {
       )}
       onColumnsReorder={handleColumnsReorder}
       onDoubleClick={(): void => {
-        if (type !== TableEntities.ID && type !== TableEntities.SPLITTER)
-          setColumnProps(columnIdx, 'isRenaming', true);
+        setColumnProps(columnIdx, 'isRenaming', true);
       }}
       editor={editor}
       beforeContent={beforeContentByType}
