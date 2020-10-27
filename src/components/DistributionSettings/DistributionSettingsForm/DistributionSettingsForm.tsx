@@ -91,13 +91,14 @@ export const DistributionSettingsForm: React.FC<IProps> = ({
 
     const Label = percentileFieldTypes.includes(key) ? (
       <EditableText
+        key={key}
         value={formData.parameters[rankKey] ?? defaultRankValue}
         onSubmit={handleChange(rankKey)}
         prefix="P"
         className={cnForm('Field', 'Label')}
       />
     ) : (
-      <Form.Label>{(field as DefaultField).title}</Form.Label>
+      <Form.Label key={key}>{(field as DefaultField).title}</Form.Label>
     );
 
     return (

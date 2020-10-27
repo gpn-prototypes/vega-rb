@@ -1,6 +1,5 @@
 import React from 'react';
-import { Editor } from 'react-data-grid';
-import { EditorProps } from 'react-data-grid/lib/common/types';
+import { Editor, EditorProps } from 'react-data-grid';
 import { GridCellProperties, GridRow } from 'components/ExcelTable/types';
 import { Nullable } from 'types';
 

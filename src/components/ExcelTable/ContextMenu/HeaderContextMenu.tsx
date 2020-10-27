@@ -1,5 +1,6 @@
 import React, { Component, useMemo } from 'react';
-import { ContextMenu, ContextMenuProps, MenuItem } from 'react-contextmenu';
+import { MenuItem } from 'react-contextmenu';
+import { ContextMenu } from 'components/ContextMenu';
 import {
   IconArrowLeft,
   IconArrowRight,
@@ -8,93 +9,90 @@ import {
   IconTrash,
   usePortalRender,
 } from '@gpn-prototypes/vega-ui';
+import { ContextHandler } from 'components/types';
 import { noop } from 'utils';
-
-import { ContextHandler } from '../types';
-
-import { cnContextMenu } from './cn-context-menu';
-
-import './react-context.css';
-import './ContextMenu.css';
-
-const cnMenuItem = cnContextMenu('Item');
-const cnMenuIcon = cnContextMenu('Icon').toString();
-const cnMenuTitle = cnContextMenu('Title');
 
 interface IProps {
   id: string;
-  onDelete: ContextHandler;
-  onInsertLeft: ContextHandler;
-  onInsertRight: ContextHandler;
+  onDelete: ContextHandler<number>;
+  onInsertLeft: ContextHandler<number>;
+  onInsertRight: ContextHandler<number>;
   title?: string;
 }
 
-export default React.forwardRef<Component<ContextMenuProps>, IProps>(
-  function HeaderContextMenu(
-    { id, onDelete, onInsertLeft, onInsertRight },
-    contextRef,
-  ) {
-    const data = useMemo(
-      () => [
-        {
-          title: 'Фильтр и сортировка',
-          onClick: noop,
-          Icon: IconFunnel,
-          disabled: true,
-        },
-        {
-          title: 'Добавить столбец слева',
-          onClick: onInsertLeft,
-          Icon: IconArrowLeft,
-        },
+const HeaderContextMenu: React.FC<IProps> = ({
+                                               id,
+                                               onDelete,
+                                               onInsertLeft,
+                                               onInsertRight
+                                             }) => {
+  const items = useMemo(
+    () => [
+      {
+        id: 'header:filter_and_sort',
+        title: 'Фильтр и сортировка',
+        onClick: noop,
+        Icon: IconFunnel,
+        disabled: true
+      },
+      {
+        id: 'header:add_left',
+        title: 'Добавить столбец слева',
+        onClick: onInsertLeft,
+        Icon: IconArrowLeft
+      },
+      {
+        id: 'header:add_right',
+        title: 'Добавить столбец справа',
+        onClick: onInsertRight,
+        Icon: IconArrowRight
+      },
+      {
+        id: 'header:hide',
+        title: 'Скрыть столбец',
+        onClick: noop,
+        Icon: IconEye,
+        disabled: true
+      },
+      {
+        id: 'header:pin',
+        title: 'Закрепить столбец',
+        onClick: noop,
+        disabled: true
+      },
+      {
+        id: 'header:rename',
+        title: 'Переименовать',
+        onClick: noop,
+        disabled: true
+      }
+    ],
+    [onInsertLeft, onInsertRight]
+  );
 
-        {
-          title: 'Добавить столбец справа',
-          onClick: onInsertRight,
-          Icon: IconArrowRight,
-        },
-        {
-          title: 'Скрыть столбец',
-          onClick: noop,
-          Icon: IconEye,
-          disabled: true,
-        },
-        {
-          title: 'Закрепить столбец',
-          onClick: noop,
-          disabled: true,
-        },
-        {
-          title: 'Переименовать',
-          onClick: noop,
-          disabled: true,
-        },
-      ],
-      [onInsertLeft, onInsertRight],
-    );
+  const { renderPortalWithTheme } = usePortalRender();
 
-    const { renderPortalWithTheme } = usePortalRender();
-
-    return renderPortalWithTheme(
-      <ContextMenu id={id} ref={contextRef}>
-        {data.map(({ title: itemTitle, onClick, Icon, disabled }) => (
-          <MenuItem
-            key={itemTitle}
-            onClick={onClick}
-            className={cnMenuItem.toString()}
-            disabled={disabled}
-          >
-            {Icon && <Icon className={cnMenuIcon} size="s" />}
-            <span className={cnMenuTitle}>{itemTitle}</span>
-          </MenuItem>
-        ))}
-        <div className={cnContextMenu('Splitter')} />
-        <MenuItem onClick={onDelete} className={cnMenuItem.toString()}>
-          <IconTrash className={cnMenuIcon} size="s" />
-          <span className={cnMenuTitle}>Удалить</span>
+  return renderPortalWithTheme(
+    <ContextMenu id={id} ref={contextRef}>
+      {items.map(({ title: itemTitle, onClick, Icon, disabled }) => (
+        <MenuItem
+          key={itemTitle}
+          onClick={onClick}
+          className={cnMenuItem.toString()}
+          disabled={disabled}
+        >
+          {Icon && <Icon className={cnMenuIcon} size="s" />}
+          <span className={cnMenuTitle}>{itemTitle}</span>
         </MenuItem>
-      </ContextMenu>,
-      document.body,
-    );
-  },
-);
+      ))}
+      <div className={cnContextMenu('Splitter')} />
+      <MenuItem onClick={onDelete} className={cnMenuItem.toString()}>
+        <IconTrash className={cnMenuIcon} size="s" />
+        <span className={cnMenuTitle}>Удалить</span>
+      </MenuItem>
+    </ContextMenu>,
+    document.body
+  );
+};
+
+export default HeaderContextMenu;

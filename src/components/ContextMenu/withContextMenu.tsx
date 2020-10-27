@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { ContextMenuTrigger, ContextMenuTriggerProps } from 'react-contextmenu';
 
-export default function withContextMenu(
+export function withContextMenu(
   Component: ReactElement,
   props: ContextMenuTriggerProps,
 ): JSX.Element {

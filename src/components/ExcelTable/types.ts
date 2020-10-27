@@ -1,10 +1,12 @@
 import React, { ComponentType, ReactText } from 'react';
-import { CalculatedColumn, Column, EditorProps } from 'react-data-grid';
 import {
+  CalculatedColumn,
   CellRendererProps,
+  Column,
+  EditorProps,
   FormatterProps as BaseFormatterProps,
   HeaderRendererProps as BaseHeaderRendererProps,
-} from 'react-data-grid/lib/common/types';
+} from 'react-data-grid';
 import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
@@ -92,11 +94,6 @@ export interface GridCollection {
   errors: ColumnErrors;
   version: number;
 }
-
-export type ContextHandler = (
-  e: React.MouseEvent<HTMLDivElement>,
-  { idx }: { idx: number },
-) => void;
 
 export type FormatterProps<T> = BaseFormatterProps<T> & { value?: string };
 

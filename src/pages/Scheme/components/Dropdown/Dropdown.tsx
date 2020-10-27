@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions,jsx-a11y/no-noninteractive-element-interactions */
 import React, { ReactNode } from 'react';
 import CSSTransition from 'react-transition-group/CSSTransition';
 import classNames from 'classnames';
@@ -78,6 +77,7 @@ export class Dropdown<T extends string | number> extends React.PureComponent<
     }
 
     return (
+      // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
       <li
         className={style.DropdownOption}
         onClick={(): void => this.handleChange(option)}
@@ -113,6 +113,7 @@ export class Dropdown<T extends string | number> extends React.PureComponent<
         data-test={fieldName}
       >
         {label && <div className="form__label">{label}</div>}
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
         <div
           className={classNames(style.DropdownSelected, {
             [style.open]: showDropdown,

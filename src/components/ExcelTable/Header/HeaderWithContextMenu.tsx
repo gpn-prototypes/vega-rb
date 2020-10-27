@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { withContextMenu } from 'components/ExcelTable/ContextMenu';
+import { withContextMenu } from 'components/ContextMenu/withContextMenu';
 import {
   HEADER_CONTEXT_ID,
   HeaderRendererProps,

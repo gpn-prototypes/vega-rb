@@ -1,17 +1,15 @@
 import React from 'react';
-import { ContextMenu, MenuItem } from 'react-contextmenu';
+import { MenuItem } from 'react-contextmenu';
 import { usePortalRender } from '@gpn-prototypes/vega-ui';
-
-import { ContextHandler } from '../types';
-
-import './react-context.css';
+import { ContextMenu } from 'components/ContextMenu';
+import { ContextHandler } from 'components/types';
 
 interface IProps {
   id: string;
   title: string;
-  onDelete: ContextHandler;
-  onInsertAbove: ContextHandler;
-  onInsertBelow: ContextHandler;
+  onDelete: ContextHandler<number>;
+  onInsertAbove: ContextHandler<number>;
+  onInsertBelow: ContextHandler<number>;
 }
 
 export default React.memo<IProps>(function RowContextMenu({

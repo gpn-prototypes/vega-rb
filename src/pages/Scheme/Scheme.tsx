@@ -1,21 +1,25 @@
+import React, { useState } from 'react';
+import { SplitPanes } from '@gpn-prototypes/vega-ui';
+import { Conceptions } from 'components/Conceptions';
+import { SelectedCell } from 'components/ExcelTable/types';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ApolloClient,
   NormalizedCacheObject,
-  useApolloClient,
+  useApolloClient
 } from '@apollo/client';
 import {
   Button,
   SplitPanes,
   useInterval,
-  useSidebar,
+  useSidebar
 } from '@gpn-prototypes/vega-ui';
 import { DistributionSettings } from 'components/DistributionSettings';
 import {
   GridColumn,
   SelectedCell,
-  TableEntities,
+  TableEntities
 } from 'components/ExcelTable/types';
 import { HierarchyLevelList } from 'components/HierarchyLevelList';
 import { ProjectContext } from 'components/Providers';
@@ -26,52 +30,61 @@ import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { Nullable } from 'types';
 
-import { RecentlyEditedAlert } from '../../components/CompetitiveAccess/RecentlyEditedAlert';
-import competitiveAccessDuck from '../../store/competitiveAccessDuck';
+import { RecentlyEditedAlert } from 'components/CompetitiveAccess/RecentlyEditedAlert';
+import competitiveAccessDuck from 'store/competitiveAccessDuck';
 
 import CalculateButton from './components/CalculateButton';
 import Table from './components/Table';
+import { cnScheme } from './cn-scheme';
 
-import style from './Scheme.module.css';
+import './Scheme.css';
+
+const PANELS_SIZE = {
+  left: '190px',
+  right: '400px'
+};
 
 const SchemePage: React.FC = () => {
-  const dispatch = useDispatch();
-  const { projectId } = useContext(ProjectContext);
-  const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
   const [selectedCell, setSelectedCell] = useState<Nullable<SelectedCell>>(
-    null,
-  );
-  const treeEditorRef = useRef<HTMLDivElement>(null);
+    null
   const [isShownTree, setIsShownTree] = useState(true);
+
+  const dispatch = useDispatch();
+  const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
+  const { projectId } = useContext(ProjectContext);
+  const data = useSelector(({ table }: RootState) => table);
+
+  const treeEditorRef = useRef<HTMLDivElement>(null);
+
   const handleEndResize = (): void => {
     if (treeEditorRef?.current?.clientWidth) {
       setIsShownTree(Number(treeEditorRef?.current?.clientWidth) > 100);
     }
   };
 
-  const data = useSelector(({ table }: RootState) => table);
   const isRecentlyEdited = useSelector(
-    ({ competitiveAccess }: RootState) => competitiveAccess.isRecentlyEdited,
+    ({ competitiveAccess }: RootState) => competitiveAccess.isRecentlyEdited
   );
+
   const geoCategoryColumns = data.columns.filter(
-    ({ type }) => type === TableEntities.GEO_CATEGORY,
+    ({ type }) => type === TableEntities.GEO_CATEGORY
   );
 
   const {
     state: { isOpen },
     close: handleClose,
-    open: handleOpen,
+    open: handleOpen
   } = useSidebar({
     isOpen: false,
-    isMinimized: false,
+    isMinimized: false
   });
 
   const updateColumns = (columns: GridColumn[]) => {
     dispatch(
       tableDuck.actions.updateColumnsByType({
         columns,
-        type: TableEntities.GEO_CATEGORY,
-      }),
+        type: TableEntities.GEO_CATEGORY
+      })
     );
     handleClose();
   };
@@ -79,12 +92,12 @@ const SchemePage: React.FC = () => {
   useEffect(() => {
     projectService.init({
       client,
-      projectId,
+      projectId
     });
     projectService
       .getProjectName()
       .then((projectName) =>
-        dispatch(projectDuck.actions.updateProjectName(projectName)),
+        dispatch(projectDuck.actions.updateProjectName(projectName))
       );
   }, [client, dispatch, projectId]);
 
@@ -97,15 +110,15 @@ const SchemePage: React.FC = () => {
         }
 
         dispatch(
-          competitiveAccessDuck.actions.setRecentlyEdited(recentlyEdited),
+          competitiveAccessDuck.actions.setRecentlyEdited(recentlyEdited)
         );
       })
       .catch(() => competitiveAccessDuck.actions.setRecentlyEdited(false));
   });
 
   return (
-    <div className={style.SchemePage}>
-      <div className={style.Header}>
+    <div className={cnScheme.toString()}>
+      <div className={cnScheme('Header')}>
         <CalculateButton />
         <Button
           label="Настройка уровней иерархии"
@@ -114,31 +127,60 @@ const SchemePage: React.FC = () => {
           className={style.ButtonStructure}
         />
       </div>
-      <SplitPanes split="vertical" onResizeEnd={handleEndResize}>
+      <SplitPanes
+        resizerSize={0.1}
+        allowResize={false}
+        className={cnScheme('Content')}
+      >
         <SplitPanes.Pane
-          aria-label="tree"
-          initialSize="180px"
-          min="24px"
-          max="240px"
+          initialSize={PANELS_SIZE.left}
+          min={PANELS_SIZE.left}
+          max={PANELS_SIZE.left}
+          className={cnScheme('LeftPanel')}
         >
-          <TreeEditor
-            rows={data.rows}
-            columns={data.columns}
-            isOpen={isShownTree}
-            ref={treeEditorRef}
-          />
+          <Conceptions />
         </SplitPanes.Pane>
-        <SplitPanes.Pane aria-label="table">
-          <div className={style.Content}>
-            <div className={style.LeftPanel}>
-              <Table onSelect={setSelectedCell} />
-            </div>
-            <div className={style.RightPanel} hidden={!selectedCell}>
-              {selectedCell && (
-                <DistributionSettings selectedCell={selectedCell} />
-              )}
-            </div>
-          </div>
+        <SplitPanes.Pane>
+          <SplitPanes split="vertical" onResizeEnd={handleEndResize}>
+            <SplitPanes.Pane
+              aria-label="tree"
+              initialSize="180px"
+              min="24px"
+              max="240px"
+            >
+              <TreeEditor
+                rows={data.rows}
+                columns={data.columns}
+                isOpen={isShownTree}
+                ref={treeEditorRef}
+              />
+            </SplitPanes.Pane>
+            <SplitPanes.Pane aria-label="table">
+              <div className={style.Content}>
+                <div className={style.LeftPanel}>
+                  <Table onSelect={setSelectedCell} />
+                </div>
+                <div className={style.RightPanel} hidden={!selectedCell}>
+                  {selectedCell && (
+                    <DistributionSettings selectedCell={selectedCell} />
+                  )}
+                </div>
+              </div>
+            </SplitPanes.Pane>
+          </SplitPanes>
+        </SplitPanes.Pane>
+        <SplitPanes.Pane
+          initialSize={PANELS_SIZE.right}
+          min={PANELS_SIZE.right}
+          max={PANELS_SIZE.right}
+          className={cnScheme('RightPanel')}
+        >
+          {selectedCell && (
+            <DistributionSettings
+              selectedCell={selectedCell}
+              className={cnScheme('DistributionSettings')}
+            />
+          )}
         </SplitPanes.Pane>
       </SplitPanes>
       <HierarchyLevelList

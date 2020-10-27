@@ -1,0 +1,48 @@
+.ProbabilitiesModal {
+  width: 480px;
+
+  &__Body {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__Wrapper {
+    padding: var(--space-2xs) 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+
+    &__Left {
+      flex: 1;
+
+      padding-bottom: var(--space-2xs);
+    }
+
+    &__Right {
+      width: 112px;
+    }
+  }
+
+  &__Info {
+    padding: var(--space-m) var(--space-xs) 0 var(--space-xs);
+
+    display: flex;
+    justify-content: space-between;
+
+    .Text {
+      padding-left: var(--space-2xs);
+    }
+  }
+
+  &__Footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__CancelButton {
+    margin-right: var(--space-s);
+  }
+}

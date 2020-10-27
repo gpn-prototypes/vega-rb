@@ -4,9 +4,20 @@ import {
   TableEntities,
 } from 'components/ExcelTable/types';
 import { Param } from 'model/Param';
+import { Conception } from 'types';
+
+export type SavedStates = { [index: string]: TableState };
+export type ProbabilityStates = { [index: string]: 'string' };
 
 export interface CompetitiveAccess {
   isRecentlyEdited: boolean;
+}
+
+export interface ConceptionsState {
+  list: Conception[];
+  savedStates: SavedStates;
+  probabilities: ProbabilityStates;
+  active: string;
 }
 
 export interface AlertState {
@@ -35,6 +46,7 @@ export interface RootState {
   table: GridCollection;
   tree: TreeState;
   competitiveAccess: CompetitiveAccess;
+  conceptions: ConceptionsState;
 }
 
 export type TypedColumnsList = {

@@ -12,6 +12,14 @@ interface Structure {
   __typename?: string;
 }
 
+export interface Conception {
+  id: string;
+  title: string;
+  description: string;
+  created: number;
+  probability: number | string;
+}
+
 export interface GeoCategory extends Structure {
   name: string;
   icon: RbDomainEntityIcons;
@@ -45,6 +53,8 @@ export interface ProjectStructure {
 export type TableStructures = GeoCategory | CalculationParam | Risk;
 
 export type Nullable<T> = T | null;
+
+export type NoopFunction<R = never, T = void> = (data: R) => T;
 
 type RowError = { [index: number]: TableError[] };
 

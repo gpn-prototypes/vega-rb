@@ -1,0 +1,15 @@
+.CommonModal {
+  &__Body {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__Footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.SelectDropdown {
+  z-index: 100;
+}

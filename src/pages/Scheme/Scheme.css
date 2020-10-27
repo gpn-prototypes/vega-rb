@@ -1,0 +1,40 @@
+.SchemePage {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  &__Header {
+    padding: var(--space-xs) var(--space-m);
+  }
+
+  &__Content {
+    border-top: var(--control-border-width) var(--color-bg-border) solid;
+  }
+
+  &__LeftPanel {
+    display: block;
+
+    background-color: var(--color-bg-secondary);
+    border: none;
+  }
+
+  &__RightPanel {
+    display: block;
+  }
+
+  &__DistributionSettings {
+    padding: var(--space-m);
+  }
+}
+
+.Tabs {
+  padding: var(--space-xs);
+}
+
+.ButtonStructure {
+  margin-right: var(--space-s);
+}
+
+.ButtonData {
+  margin-right: var(--space-s);
+}

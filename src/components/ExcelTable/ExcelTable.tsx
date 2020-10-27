@@ -23,8 +23,6 @@ import { createColumn, getInsertableType } from './utils';
 
 import './ExcelTable.css';
 
-const cnExcelTableClass = cnExcelTable();
-
 type CommonTableColumn = GridColumn & CalculatedColumn<GridRow>;
 
 interface IProps {
@@ -111,7 +109,7 @@ export const ExcelTable: React.FC<IProps> = ({
     <>
       <DndProvider backend={HTML5Backend}>
         <div style={{ height: '100%', flex: 1 }}>
-          <AutoSizer className={cnExcelTableClass}>
+          <AutoSizer className={cnExcelTable()}>
             {({ height, width }): JSX.Element => (
               <ReactDataGrid
                 ref={gridRef}

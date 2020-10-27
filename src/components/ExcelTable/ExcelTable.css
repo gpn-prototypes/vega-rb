@@ -45,7 +45,13 @@
     &__Id {
       text-align: end;
 
+      background-color: var(--color-bg-default);
+
       border-right: solid 3px var(--color-bg-border);
+
+      .is-odd {
+        background-color: rgb(60, 64, 67);
+      }
     }
 
     &__Splitter {
