@@ -8,7 +8,8 @@ import './DistributionChart.css';
 
 const height = 224;
 const width = 400;
-const margin = { top: 18, right: 43, bottom: 38, left: 45 };
+const margin = { top: 18, right: 20, bottom: 28, left: 45 };
+
 interface DistributionChartProps {
   data: Data;
 }
@@ -98,19 +99,6 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
         ),
     );
 
-    svg.append('g').call((g) =>
-      g
-        .attr('transform', `translate(${width - margin.left + 4},0)`)
-        .attr('class', cnDistributionChart('Axis', { position: 'right' }))
-        .call(
-          d3
-            .axisRight(probabilityDensityYScale)
-            .ticks(width / 50)
-            .tickSize(width)
-            .tickFormat((domainValue) => `${domainValue}`)
-            .tickSize(3),
-        ),
-    );
     if (percentiles.length) {
       svg
         .selectAll('points')
