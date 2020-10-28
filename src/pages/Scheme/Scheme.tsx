@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Button } from '@gpn-prototypes/vega-button';
 import { SelectedCell } from 'components/ExcelTable/types';
 import { Nullable } from 'types';
 
@@ -16,7 +15,6 @@ const SchemePage: React.FC = () => {
   return (
     <div className={style.SchemePage}>
       <div className={style.Header}>
-        <Button label="Данные" view="ghost" className={style.ButtonData} />
         <CalculateButton />
       </div>
       <div className={style.Content}>
