@@ -1,13 +1,22 @@
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 import { Provider } from 'react-redux';
-import { ApolloProvider } from '@apollo/client';
+import {
+  ApolloClient,
+  ApolloProvider,
+  NormalizedCacheObject,
+} from '@apollo/client';
 import client from 'client';
 import store from 'store/initStore';
 
-export const Providers: React.FC<PropsWithChildren<unknown>> = ({
-  children,
-}) => (
-  <Provider store={store}>
-    <ApolloProvider client={client}>{children}</ApolloProvider>
-  </Provider>
-);
+interface ProvidersProps {
+  graphqlClient?: ApolloClient<NormalizedCacheObject>;
+}
+
+export const Providers: React.FC<ProvidersProps> = (props) => {
+  const { graphqlClient = client, children } = props;
+  return (
+    <Provider store={store}>
+      <ApolloProvider client={graphqlClient}>{children}</ApolloProvider>
+    </Provider>
+  );
+};

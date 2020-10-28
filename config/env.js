@@ -69,6 +69,7 @@ function getClientEnvironment(publicUrl) {
         return env;
       },
       {
+        APP_MODE: process.env.APP_MODE || 'standalone',
         // Useful for determining whether we’re running in production mode.
         // Most importantly, it switches React into the correct mode.
         NODE_ENV: process.env.NODE_ENV || 'development',

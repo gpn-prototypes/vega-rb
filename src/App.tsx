@@ -1,4 +1,5 @@
 import React from 'react';
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { Root } from '@gpn-prototypes/vega-ui';
 import classNames from 'classnames';
 import Providers from 'components/Providers';
@@ -7,10 +8,15 @@ import SchemePage from 'pages/Scheme/Scheme';
 
 import './App.css';
 
-const App: React.FC = () => {
+interface AppProps {
+  graphqlClient?: ApolloClient<NormalizedCacheObject>;
+}
+
+const App: React.FC<AppProps> = (props) => {
+  const { graphqlClient } = props;
   return (
     <Root defaultTheme="dark">
-      <Providers>
+      <Providers graphqlClient={graphqlClient}>
         <div className={classNames('App')}>
           <div className="Header">
             <a href="/">
