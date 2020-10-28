@@ -33,7 +33,7 @@ const distributionParametersMap: DistributionParametersMap = {
     types: [
       {
         type: DistributionDefinitionTypes.ModeMinMax,
-        title: 'Наиболее вероятное, минимум, максимум',
+        title: 'Минимум, наиболее вероятное, максимум',
       },
     ],
     fieldsByType: {
@@ -44,13 +44,13 @@ const distributionParametersMap: DistributionParametersMap = {
           defaultValue: '',
         },
         {
-          key: DistributionParameterTypes.Max,
-          title: 'Максимум',
+          key: DistributionParameterTypes.Mode,
+          title: 'Наиболее вероятное',
           defaultValue: '',
         },
         {
-          key: DistributionParameterTypes.Mode,
-          title: 'Наиболее вероятное',
+          key: DistributionParameterTypes.Max,
+          title: 'Максимум',
           defaultValue: '',
         },
       ],
@@ -66,6 +66,11 @@ const distributionParametersMap: DistributionParametersMap = {
     fieldsByType: {
       [DistributionDefinitionTypes.LocationMeanlogSdlog]: [
         {
+          key: DistributionParameterTypes.Location,
+          title: 'Расположение',
+          defaultValue: '',
+        },
+        {
           key: DistributionParameterTypes.Meanlog,
           title: 'Лог. среднее',
           defaultValue: '',
@@ -73,11 +78,6 @@ const distributionParametersMap: DistributionParametersMap = {
         {
           key: DistributionParameterTypes.Sdlog,
           title: 'Лог. стандартное',
-          defaultValue: '',
-        },
-        {
-          key: DistributionParameterTypes.Location,
-          title: 'Расположение',
           defaultValue: '',
         },
       ],
@@ -173,7 +173,7 @@ const distributionParametersMap: DistributionParametersMap = {
     types: [
       {
         type: DistributionDefinitionTypes.ModeMinMax,
-        title: 'Наиболее вероятное, минимум, максимум',
+        title: 'Минимум, наиболее вероятное, максимум',
       },
     ],
     fieldsByType: {
@@ -184,13 +184,13 @@ const distributionParametersMap: DistributionParametersMap = {
           defaultValue: '',
         },
         {
-          key: DistributionParameterTypes.Max,
-          title: 'Максимум',
+          key: DistributionParameterTypes.Mode,
+          title: 'Наиболее вероятное',
           defaultValue: '',
         },
         {
-          key: DistributionParameterTypes.Mode,
-          title: 'Наиболее вероятное',
+          key: DistributionParameterTypes.Max,
+          title: 'Максимум',
           defaultValue: '',
         },
       ],
