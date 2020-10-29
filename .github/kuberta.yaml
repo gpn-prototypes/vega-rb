@@ -1,0 +1,16 @@
+version: 1-alpha.1
+
+releases:
+  vega-rb-testing:
+    name: VEGA Resource base
+    autodeploy-on: default
+    chart: csssr/static-site@~1.0.0
+    static-params:
+      projectID: vega-rb
+      ingress:
+        annotations:
+          nginx.ingress.kubernetes.io/enable-cors: 'true'
+    builds:
+      - workflow: build-static.yaml
+        values:
+          buildID: build-{{ .Build.RunID }}
