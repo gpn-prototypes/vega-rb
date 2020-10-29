@@ -1,0 +1,48 @@
+name: vega-rb
+on:
+  workflow_dispatch:
+    inputs:
+      kuberta_system:
+jobs:
+  build:
+    name: Build Static
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: docker://quay.csssr.cloud/csssr/kuberta-init-workflow:v1
+
+      - name: Download CSSSR actions
+        uses: actions/checkout@v2
+        with:
+          repository: CSSSR/actions
+          ssh-key: ${{ secrets.DOWNLOAD_ACTIONS_SSH_KEY }}
+          path: actions
+
+      - uses: actions/checkout@v2
+        with:
+          path: vega
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - run: yarn install --frozen-lockfile
+        working-directory: vega
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker://quay.csssr.cloud/csssr/github-info:v1
+        id: gh
+
+      - run: yarn build:shell
+        working-directory: vega
+        env:
+          BASE_URL: http://${{ steps.gh.outputs.releaseID }}.vega-rb.csssr.cloud
+
+      - uses: ./actions/upload-static/v1beta1
+        with:
+          project-id: vega
+          files: ./vega/dist
+          auth: ${{ secrets.CDN_UPLOAD_SECRET }}
+          token: ${{ secrets.GITHUB_TOKEN }}
