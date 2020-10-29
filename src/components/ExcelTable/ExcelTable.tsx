@@ -3,6 +3,7 @@ import ReactDataGrid, {
   CalculatedColumn,
   DataGridHandle,
   RowsUpdateEvent,
+  UpdateActions,
 } from 'react-data-grid';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -71,9 +72,16 @@ export const ExcelTable: React.FC<IProps> = ({
   );
 
   const handleRowsUpdate = useCallback(
-    ({ fromRow, toRow, updated }: RowsUpdateEvent<Partial<GridRow>>) => {
+    ({
+      fromRow,
+      toRow,
+      updated,
+      action,
+    }: RowsUpdateEvent<Partial<GridRow>>) => {
       const newRows = [...rows];
-      for (let i = fromRow; i <= toRow; i += 1) {
+      const isCopy = action === UpdateActions.COPY_PASTE;
+      const isDrag = action === UpdateActions.CELL_DRAG;
+      const changeRows = (i: number) => {
         newRows[i] = {
           ...newRows[i],
           ...Object.entries(updated).reduce(
@@ -81,8 +89,32 @@ export const ExcelTable: React.FC<IProps> = ({
             {},
           ),
         };
+      };
+      const increase = () => {
+        for (let i = fromRow; i <= toRow; i += 1) {
+          changeRows(i);
+        }
+      };
+      const decrease = () => {
+        for (let i = fromRow; i >= toRow; i -= 1) {
+          changeRows(i);
+        }
+      };
+
+      if (isCopy) {
+        newRows[toRow] = { ...newRows[toRow], ...updated };
+        return setRows(newRows);
       }
-      setRows(newRows);
+
+      if (fromRow < toRow && isDrag) {
+        increase();
+      }
+      if (fromRow > toRow && isDrag) {
+        decrease();
+      }
+      increase();
+
+      return setRows(newRows);
     },
     [rows, setRows],
   );
@@ -120,6 +152,7 @@ export const ExcelTable: React.FC<IProps> = ({
     columns,
     setColumns,
   ]);
+
   return (
     <>
       <DndProvider backend={HTML5Backend}>
