@@ -42,7 +42,6 @@ jobs:
 
       - uses: ./actions/upload-static/v1beta1
         with:
-          project-id: vega
+          project-id: vega-rb
           files: ./vega/dist
           auth: ${{ secrets.CDN_UPLOAD_SECRET }}
-          token: ${{ secrets.GITHUB_TOKEN }}

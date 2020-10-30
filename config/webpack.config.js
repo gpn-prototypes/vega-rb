@@ -156,7 +156,7 @@ module.exports = function (webpackEnv) {
       pathinfo: isEnvDevelopment,
       // There will be one main bundle, and one file per asynchronous chunk.
       // In development, it does not produce real files.
-      filename: isShellMode
+      filename: isEnvProduction || isShellMode
         ? 'vega-rb.js'
         : isEnvDevelopment && 'static/js/bundle.js',
       // TODO: remove this when upgrading to webpack 5

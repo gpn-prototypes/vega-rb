@@ -6,8 +6,14 @@
 #### `yarn start`
 Запуск dev server `http://localhost:3009`
 
+#### `yarn dev:shell`
+Запуск dev server для работы из под обвязки `http://localhost:9004`
+
 #### `yarn build`
-Production build в папку `./build`
+Production build в папку `./dist`
+
+#### `yarn build:shell`
+Production build для обвязки в папку `./dist`
 
 ## Настройка proxy
 Для необходимости изменить `proxy` по-умолчанию, например во время разработки, 
