@@ -6,7 +6,7 @@ import {
   cnCellSplitter,
   cnHeader,
 } from 'components/ExcelTable/cn-excel-table';
-import { Formatter } from 'components/ExcelTable/Formatters';
+import { Formatter, NumberFormatter } from 'components/ExcelTable/Formatters';
 import {
   GridColumn,
   GridRow,
@@ -49,6 +49,7 @@ export default function columnsFactory(
       return getColumn({
         ...defaultStyles,
         ...COMMON_COLUMN_PROPS,
+        formatter: NumberFormatter,
         editable: false,
       });
 
