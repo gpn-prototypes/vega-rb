@@ -1,6 +1,6 @@
 import { TableEntities } from 'components/ExcelTable/types';
 
-import createColumn from './createColumn';
+import { createColumn } from './createColumn';
 
 describe('createColumn function', () => {
   test('default', () => {

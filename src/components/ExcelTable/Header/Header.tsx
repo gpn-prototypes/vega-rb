@@ -1,15 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { withContextMenu } from '../ContextMenu';
 import DraggableHeader from '../DraggableHeader';
 import { InputEditor } from '../Editors';
 import { ResourceIcon } from '../Icons';
-import {
-  HEADER_CONTEXT_ID,
-  HeaderRendererProps,
-  TableEntities,
-} from '../types';
+import { HeaderRendererProps, TableEntities } from '../types';
 
 import styles from '../DraggableHeader/DraggableHeader.module.css';
 
@@ -25,6 +20,7 @@ export default React.memo<HeaderRendererProps>(function Header(props) {
       onBlurHandler={onBlurHandler}
     />
   );
+
   const beforeContentByType = (
     <>
       {type === TableEntities.GEO_CATEGORY && (
@@ -38,7 +34,7 @@ export default React.memo<HeaderRendererProps>(function Header(props) {
     </>
   );
 
-  return withContextMenu(
+  return (
     <DraggableHeader
       {...props}
       className={classNames(
@@ -50,10 +46,6 @@ export default React.memo<HeaderRendererProps>(function Header(props) {
       }}
       editor={editor}
       beforeContent={beforeContentByType}
-    />,
-    {
-      id: HEADER_CONTEXT_ID,
-      collect: () => ({ idx: columnIdx }),
-    },
+    />
   );
 });

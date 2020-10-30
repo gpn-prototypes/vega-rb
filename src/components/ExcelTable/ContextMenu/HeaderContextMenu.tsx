@@ -1,7 +1,7 @@
 import React, { Component, useMemo } from 'react';
 import { ContextMenu, ContextMenuProps, MenuItem } from 'react-contextmenu';
 import { usePortalRender } from '@gpn-prototypes/vega-ui';
-import noop from 'utils/noop';
+import { noop } from 'utils';
 
 import {
   ArrowLeftIcon,

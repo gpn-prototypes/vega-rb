@@ -9,8 +9,7 @@ import { Maybe } from 'generated/graphql';
 import useAsyncError from 'hooks/useAsyncError';
 import tableDuck from 'store/tableDuck';
 import { ProjectStructure } from 'types';
-import { mockTableRows } from 'utils/fakerGenerators';
-import { unpackData } from 'utils/tableDataConverters';
+import { mockTableRows, unpackTableData } from 'utils';
 
 import { VALIDATE_BEFORE_LOAD } from '../../queries';
 
@@ -87,7 +86,7 @@ export const ImportButton: React.FC = () => {
           });
 
         if (data?.project.validateBeforeLoad === null) {
-          const { columns, rows: gridRows = mockTableRows } = unpackData(
+          const { columns, rows: gridRows = mockTableRows } = unpackTableData(
             readerResult,
           );
           dispatch(tableDuck.actions.updateColumns(columns));

@@ -1,13 +1,14 @@
 import { cnCell, cnHeader } from 'components/ExcelTable/cn-excel-table';
 import { GridColumn, TableEntities } from 'components/ExcelTable/types';
+import { uniqueId } from 'lodash/fp';
 
 const hasIcon = (type: TableEntities) => type === TableEntities.GEO_CATEGORY;
 
-export default function createColumn(
+export function createColumn(
   genType: TableEntities = TableEntities.NONE,
 ): GridColumn {
   return {
-    key: Math.random().toString(),
+    key: uniqueId('col_'),
     name: '',
     editable: true,
     resizable: true,

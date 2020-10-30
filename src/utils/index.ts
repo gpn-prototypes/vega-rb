@@ -1,11 +1,14 @@
 import { mockTableRows } from './fakerGenerators';
 import { isCalculationParam, isTemplateCategory } from './guards';
-import { packData, unpackData } from './tableDataConverters';
+import { noop } from './noop';
+import { packTableData } from './packTableData';
+import { unpackTableData } from './unpackTableData';
 
 export {
   mockTableRows,
-  unpackData,
-  packData,
+  unpackTableData,
+  packTableData,
   isCalculationParam,
   isTemplateCategory,
+  noop,
 };

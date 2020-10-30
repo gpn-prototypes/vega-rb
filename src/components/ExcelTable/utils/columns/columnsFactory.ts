@@ -13,6 +13,8 @@ import {
   TableEntities,
 } from 'components/ExcelTable/types';
 
+import { getEditor } from '../getEditor';
+
 import getBaseColumn from './getBaseColumn';
 import getBaseProps from './getBaseProps';
 
@@ -29,12 +31,12 @@ const SUPPORT_COLUMN_PROPS = {
   sortable: false,
 };
 
-export default function columnsFactory(
+export function columnsFactory(
   column: GridColumn,
   HeaderRenderer: ComponentType<HeaderRendererProps<GridRow>>,
 ): GridColumn {
   const getColumn = getBaseColumn(
-    getBaseProps(Formatter, HeaderRenderer, column.type),
+    getBaseProps(Formatter, HeaderRenderer),
     column,
   );
   const defaultStyles = {
@@ -43,6 +45,7 @@ export default function columnsFactory(
       .toString(),
     cellClass: cnCell.toString(),
   };
+  const editor = getEditor(column.type);
 
   switch (column.type) {
     case TableEntities.CALC_PARAM:
@@ -55,6 +58,7 @@ export default function columnsFactory(
 
     case TableEntities.RISK:
       return getColumn({
+        ...editor,
         ...defaultStyles,
         ...COMMON_COLUMN_PROPS,
         notRemovable: false,
@@ -74,12 +78,18 @@ export default function columnsFactory(
     case TableEntities.SPLITTER:
       return getColumn({
         ...SUPPORT_COLUMN_PROPS,
-        maxWidth: 40,
+        maxWidth: 32,
         headerCellClass: cnCellSplitter.mix(cnHeader).toString(),
         cellClass: cnCellSplitter.mix(cnCell).toString(),
       });
 
+    case TableEntities.GEO_CATEGORY_TYPE:
+      return getColumn({
+        ...editor,
+        ...defaultStyles,
+      });
+
     default:
-      return getColumn({ ...defaultStyles, ...COMMON_COLUMN_PROPS });
+      return getColumn({ ...editor, ...defaultStyles, ...COMMON_COLUMN_PROPS });
   }
 }

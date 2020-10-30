@@ -1,26 +1,20 @@
-/* eslint-disable */
-// @ts-nocheck
-
 import { ComponentType } from 'react';
 import { HeaderRendererProps } from 'react-data-grid';
-import { Formatter } from 'components/ExcelTable/Formatters/Formatter';
-import {
-  FormatterProps,
-  GridRow,
-  GridColumn,
-  TableEntities,
-} from 'components/ExcelTable/types';
-
-import columnsFactory from './columnsFactory';
-import createColumn from './createColumn';
 import {
   cnCell,
   cnCellId,
   cnCellSplitter,
   cnHeader,
 } from 'components/ExcelTable/cn-excel-table';
+import {
+  GridColumn,
+  GridRow,
+  TableEntities,
+} from 'components/ExcelTable/types';
 
-let formatter: ComponentType<FormatterProps<GridRow>>;
+import { columnsFactory } from './columnsFactory';
+import { createColumn } from './createColumn';
+
 let HeaderRenderer: ComponentType<HeaderRendererProps<GridRow>>;
 
 const mockColumn = jest.fn((type) => ({
@@ -28,14 +22,9 @@ const mockColumn = jest.fn((type) => ({
   isRenaming: false,
 }));
 
-beforeEach(() => {
-  formatter = Formatter;
-});
-
 describe('CALC_PARAM column', () => {
   const column = columnsFactory(
     mockColumn(TableEntities.CALC_PARAM),
-    formatter,
     HeaderRenderer,
   );
 
@@ -48,7 +37,7 @@ describe('CALC_PARAM column', () => {
       resizable: true,
       sortable: true,
       minWidth: 112,
-    });
+    } as GridColumn);
   });
   test('correct headerCellClass', () => {
     const expectClassName = cnHeader.toString();
@@ -61,11 +50,7 @@ describe('CALC_PARAM column', () => {
 });
 
 describe('RISK column', () => {
-  const column = columnsFactory(
-    mockColumn(TableEntities.RISK),
-    formatter,
-    HeaderRenderer,
-  );
+  const column = columnsFactory(mockColumn(TableEntities.RISK), HeaderRenderer);
 
   test('Validate type', () => {
     expect(column.type).toEqual(TableEntities.RISK);
@@ -77,7 +62,7 @@ describe('RISK column', () => {
       sortable: true,
       minWidth: 112,
       notRemovable: false,
-    });
+    } as GridColumn);
   });
   test('correct headerCellClass', () => {
     const expectClassName = cnHeader.toString();
@@ -90,11 +75,7 @@ describe('RISK column', () => {
 });
 
 describe('ID column', () => {
-  const column = columnsFactory(
-    mockColumn(TableEntities.ID),
-    formatter,
-    HeaderRenderer,
-  );
+  const column = columnsFactory(mockColumn(TableEntities.ID), HeaderRenderer);
 
   test('Validate type', () => {
     expect(column.type).toEqual(TableEntities.ID);
@@ -107,7 +88,7 @@ describe('ID column', () => {
       frozen: true,
       minWidth: 40,
       maxWidth: 55,
-    });
+    } as GridColumn);
   });
   test('correct headerCellClass', () => {
     const expectClassName = cnCellId.mix(cnHeader).toString();
@@ -122,7 +103,6 @@ describe('ID column', () => {
 describe('SPLITTER column', () => {
   const column = columnsFactory(
     mockColumn(TableEntities.SPLITTER),
-    formatter,
     HeaderRenderer,
   );
 
@@ -132,7 +112,7 @@ describe('SPLITTER column', () => {
   test('Validate properties', () => {
     expect(column).toMatchObject<GridColumn>({
       type: TableEntities.SPLITTER,
-    });
+    } as GridColumn);
   });
   test('correct headerCellClass', () => {
     const expectClassName = cnCellSplitter.mix(cnHeader).toString();
@@ -144,8 +124,19 @@ describe('SPLITTER column', () => {
   });
 });
 
+describe('GEO_CATEGORY_TYPE column', () => {
+  const column = columnsFactory(
+    mockColumn(TableEntities.GEO_CATEGORY_TYPE),
+    HeaderRenderer,
+  );
+
+  test('Validate type', () => {
+    expect(column.type).toEqual(TableEntities.GEO_CATEGORY_TYPE);
+  });
+});
+
 describe('DEFAULT column', () => {
-  const column = columnsFactory(createColumn(), formatter, HeaderRenderer);
+  const column = columnsFactory(createColumn(), HeaderRenderer);
 
   test('Default column', () => {
     expect(column).toMatchObject<GridColumn>({
@@ -153,7 +144,7 @@ describe('DEFAULT column', () => {
       resizable: true,
       sortable: true,
       minWidth: 112,
-    });
+    } as GridColumn);
   });
   test('correct headerCellClass', () => {
     const expectClassName = cnHeader.state({ renaming: true }).toString();

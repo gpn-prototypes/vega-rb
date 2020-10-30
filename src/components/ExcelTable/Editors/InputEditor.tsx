@@ -1,19 +1,16 @@
-import React, { KeyboardEvent, ReactText, useState } from 'react';
+import React, { KeyboardEvent, useState } from 'react';
+import { GridColumn, SetColumnProperty } from 'components/ExcelTable/types';
 
 import Input from '../Input';
 
-interface IProps {
+interface IProps<T> {
   idx: number;
   name: string;
-  setColumnProps: (
-    idx: number,
-    property: string,
-    value: ReactText | boolean,
-  ) => void;
+  setColumnProps: SetColumnProperty<T>;
   onBlurHandler: (idx: number) => void;
 }
 
-export const InputEditor: React.FC<IProps> = ({
+export const InputEditor: React.FC<IProps<GridColumn>> = ({
   name,
   idx,
   setColumnProps,

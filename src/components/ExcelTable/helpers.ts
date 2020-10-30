@@ -1,4 +1,5 @@
 import { ReactText } from 'react';
+import { set } from 'lodash';
 
 import { GridColumn, TableEntities } from './types';
 
@@ -8,13 +9,11 @@ export function setColumnAttributes(
   columns: GridColumn[],
   setColumns: (columnsList: GridColumn[]) => void,
   idx: number,
-  propertyName: string,
+  propertyName: keyof GridColumn,
   propertyValue: ReactText | boolean,
 ): void {
-  const nextColumns = [...columns];
-  // eslint-disable-next-line
-  // @ts-ignore
-  nextColumns[idx][propertyName] = propertyValue;
+  const attributePath = [idx, propertyName];
+  const nextColumns = set([...columns], attributePath, propertyValue);
   setColumns(nextColumns);
 }
 

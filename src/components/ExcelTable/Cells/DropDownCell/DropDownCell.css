@@ -1,0 +1,19 @@
+.DropDownCell {
+  display: inline-flex;
+  align-items: center;
+
+  &__IconWrapper {
+    margin-left: auto;
+    padding: 5px;
+
+    float: right;
+
+    background: var(--color-control-bg-ghost);
+
+    border-radius: var(--control-radius);
+  }
+
+  .Icon {
+    display: block;
+  }
+}

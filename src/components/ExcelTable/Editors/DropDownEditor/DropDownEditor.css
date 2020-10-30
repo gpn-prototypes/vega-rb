@@ -1,0 +1,36 @@
+.DropDownEditor {
+  padding: 0;
+
+  overflow-y: auto;
+
+  box-sizing: border-box;
+
+  width: calc(100% + 1px);
+
+  max-height: 400px;
+
+  border: var(--control-border-width) solid var(--color-bg-border);
+  border-radius: var(--control-radius);
+  outline: none;
+  box-shadow: 0 2px 2px rgba(var(--color-nums-shadow), 0.04),
+    0 4px 16px rgba(0, 32, 51, 0.18);
+
+  appearance: none;
+
+  &__Option {
+    padding: var(--space-3xs) var(--space-xs);
+
+    display: flex;
+
+    align-items: center;
+
+    height: 30px;
+
+    color: var(--color-typo-primary);
+    background: var(--color-bg-default);
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}

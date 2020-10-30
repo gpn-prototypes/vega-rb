@@ -1,24 +1,25 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import ReactDataGrid, {
   CalculatedColumn,
+  DataGridHandle,
   RowsUpdateEvent,
 } from 'react-data-grid';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { AutoSizer } from 'react-virtualized';
 
-import renderColumns from './Columns/renderColumns';
+import { renderColumns } from './Columns/renderColumns';
 import { cnExcelTable } from './cn-excel-table';
 import { HeaderContextMenu } from './ContextMenu';
-import { isNoneColumnType } from './helpers';
 import StyledRow from './StyledRow';
 import {
   GridCollection,
   GridColumn,
   GridRow,
   HEADER_CONTEXT_ID,
+  TableEntities,
 } from './types';
-import { createColumn } from './utils';
+import { createColumn, getInsertableType } from './utils';
 
 import './ExcelTable.css';
 
@@ -44,21 +45,15 @@ export const ExcelTable: React.FC<IProps> = ({
   onRowClick = (): void => {},
 }) => {
   const { columns, rows } = data;
-  // eslint-disable-next-line no-unused-vars
-  // const [[sortColumn, sortDirection], setSort] = useState<
-  //     [string, SortDirection]
-  // >(['id', 'NONE'])
-
-  // const handleSort = useCallback(
-  //     (columnKey: string, direction: SortDirection) => {
-  //         setSort([columnKey, direction])
-  //     },
-  //     []
-  // )
+  const gridRef = useRef<DataGridHandle>(null);
 
   const handleRowClick = useCallback(
-    (rowIdx: number, row: GridRow, column: CalculatedColumn<GridRow>) => {
-      onRowClick(rowIdx, row, column as CommonTableColumn);
+    (rowIdx: number, row: GridRow, column: CommonTableColumn) => {
+      if (column.type === TableEntities.GEO_CATEGORY_TYPE) {
+        gridRef.current?.selectCell({ rowIdx, idx: column.idx }, true);
+      } else {
+        onRowClick(rowIdx, row, column);
+      }
     },
     [onRowClick],
   );
@@ -75,7 +70,6 @@ export const ExcelTable: React.FC<IProps> = ({
           ),
         };
       }
-
       setRows(newRows);
     },
     [rows, setRows],
@@ -89,13 +83,9 @@ export const ExcelTable: React.FC<IProps> = ({
   };
 
   const pushColumn = (insertIdx: number): void => {
-    const prevIdx = isNoneColumnType(columns[insertIdx].type!)
-      ? insertIdx - 1
-      : insertIdx;
-    const { type: newColumnType } = columns[prevIdx];
     setColumns([
       ...columns.slice(0, insertIdx),
-      createColumn(newColumnType),
+      createColumn(getInsertableType(columns, insertIdx)),
       ...columns.slice(insertIdx),
     ]);
   };
@@ -121,13 +111,12 @@ export const ExcelTable: React.FC<IProps> = ({
         <AutoSizer className={cnExcelTableClass}>
           {({ height, width }): JSX.Element => (
             <ReactDataGrid
+              ref={gridRef}
               columns={columnsList}
               rows={rows}
               width={width}
               height={height}
               rowHeight={32}
-              // sortColumn={sortColumn}
-              // onSort={handleSort}
               onRowClick={handleRowClick}
               onRowsUpdate={handleRowsUpdate}
               rowRenderer={StyledRow}

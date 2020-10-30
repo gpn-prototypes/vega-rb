@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
 import { Button } from '@gpn-prototypes/vega-button';
 import { RootState } from 'store/types';
-import { packData } from 'utils/tableDataConverters';
+import { packTableData } from 'utils';
 
 import { GET_TABLE_TEMPLATE } from '../Table/queries';
 import { TemplateProjectData } from '../Table/types';
@@ -26,7 +26,10 @@ export const ExportButton: React.FC = () => {
       });
 
     if (data) {
-      const fileData = packData(tableData, data.project.template.structure);
+      const fileData = packTableData(
+        tableData,
+        data.project.template.structure,
+      );
       const filename = 'export.json';
       const contentType = 'application/json;charset=utf-8;';
       if (window?.navigator?.msSaveOrOpenBlob) {

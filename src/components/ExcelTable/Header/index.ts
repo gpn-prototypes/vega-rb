@@ -1,3 +1,5 @@
+import { getHeaderComponent } from './getHeaderComponent';
 import Header from './Header';
+import { HeaderWithContextMenu } from './HeaderWithContextMenu';
 
-export default Header;
+export { Header, HeaderWithContextMenu, getHeaderComponent };

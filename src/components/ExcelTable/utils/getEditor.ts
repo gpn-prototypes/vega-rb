@@ -1,15 +1,36 @@
-import { ComponentType } from 'react';
-import { EditorProps } from 'react-data-grid';
+import React, { forwardRef } from 'react';
+import { OptionEntity } from 'components/ExcelTable/Models/OptionEntity';
 
-import { SimpleTextEditor } from '../Editors';
-import { GridCellProperties, TableEntities } from '../types';
+import { DropDownEditor, SimpleTextEditor } from '../Editors';
+import { EditorResult, TableEntities } from '../types';
 
-type EditorResult =
-  | { editor: ComponentType<EditorProps<GridCellProperties | undefined>> }
-  | { editor: undefined };
+const options = {
+  resource: new OptionEntity('resource', 'Р'),
+  reef: new OptionEntity('reef', 'З'),
+};
 
-function getEditor(type: TableEntities = TableEntities.NONE): EditorResult {
-  return { editor: SimpleTextEditor };
+const geoCategoryTypeEditor = (): EditorResult => ({
+  editor: forwardRef((props, ref) =>
+    React.createElement(DropDownEditor, { ...props, ref, options }),
+  ),
+});
+
+const geoCategoryEditor = (): EditorResult => ({ editor: SimpleTextEditor });
+
+const getEmptyEditor = (): EditorResult => ({ editor: undefined });
+
+export function getEditor(
+  type: TableEntities = TableEntities.NONE,
+): EditorResult {
+  switch (type) {
+    case TableEntities.GEO_CATEGORY_TYPE:
+      return geoCategoryTypeEditor();
+
+    case TableEntities.GEO_CATEGORY:
+    case TableEntities.RISK:
+      return geoCategoryEditor();
+
+    default:
+      return getEmptyEditor();
+  }
 }
-
-export default getEditor;
