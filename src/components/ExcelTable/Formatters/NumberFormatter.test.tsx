@@ -43,12 +43,27 @@ describe('NumberFormatter', () => {
   });
 
   test('отображение нечисловых строк', () => {
-    const { container } = render(mockComponent('Olololo'));
-    expect(getNodeText(container)).toEqual('Olololo');
+    const { container } = render(mockComponent('Some content'));
+    expect(getNodeText(container)).toEqual('Some content');
   });
 
   test('значение ячейки округляется до 3х знаков', () => {
     const { container } = render(mockComponent('1.32512'));
     expect(getNodeText(container)).toEqual('1.325');
+  });
+
+  test('отображение пустого значения', () => {
+    const { container } = render(mockComponent(''));
+    expect(getNodeText(container)).toEqual('');
+  });
+
+  test('передача null', () => {
+    const { container } = render(mockComponent(null));
+    expect(getNodeText(container)).toEqual('');
+  });
+
+  test('передача undefined', () => {
+    const { container } = render(mockComponent(undefined));
+    expect(getNodeText(container)).toEqual('');
   });
 });
