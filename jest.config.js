@@ -11,4 +11,14 @@ module.exports = {
   modulePaths: ['<rootDir>/src/'],
   testEnvironment: 'jest-environment-jsdom-fourteen',
   transformIgnorePatterns: ['node_modules/?!(@gpn-prototypes)/'],
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        outputDirectory: './reports',
+        suiteName: 'Jest Tests',
+      },
+    ],
+  ],
 };
