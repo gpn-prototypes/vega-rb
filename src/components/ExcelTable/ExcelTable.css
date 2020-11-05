@@ -37,24 +37,7 @@
     border-bottom-color: var(--color-bg-border);
 
     &__Value.is-error {
-      position: absolute;
-      z-index: 1;
-      top: var(--space-3xs);
-      left: var(--space-3xs);
-      bottom: var(--space-3xs);
-
-      padding: 0 var(--space-xs);
-
-      display: inline-block;
-      overflow: hidden;
-
-      width: calc(100% - 4px);
-      height: calc(100% - 4px);
-
-      white-space: nowrap;
-      text-overflow: ellipsis;
-
-      border: var(--control-border-width) solid var(--color-bg-alert);
+      color: var(--color-typo-alert);
     }
 
     &__Id {

@@ -1,13 +1,10 @@
-import React from 'react';
-import {
-  Cell,
-  CellRendererProps,
-  Row,
-  RowRendererProps,
-} from 'react-data-grid';
+import React, { useRef } from 'react';
+import { CellRendererProps, Row, RowRendererProps } from 'react-data-grid';
+import { useSelector } from 'react-redux';
 import { classnames } from '@bem-react/classnames';
-import { DropDownCell } from 'components/ExcelTable/Cells';
+import { RootState } from 'store/types';
 
+import { CellWithError, DropDownCell } from '../Cells';
 import { withContextMenu } from '../ContextMenu';
 import { GridColumn, GridRow, TableEntities } from '../types';
 
@@ -19,14 +16,18 @@ const CellRenderer: React.FC<CellRendererProps<GridRow>> = (
   props,
 ): JSX.Element => {
   const column = props.column as GridColumn;
+  const columns = useSelector((state: RootState) => state.table.columns);
+  const ref = useRef<HTMLDivElement>(null);
+
   if (column.type === TableEntities.GEO_CATEGORY_TYPE)
     return <DropDownCell {...props} />;
 
-  return <Cell {...props} />;
+  return <CellWithError {...props} columns={columns} ref={ref} />;
 };
 
 export default React.memo<RowRendererProps<GridRow>>(function StyledRow(props) {
   const collect = (): { rowIdx: number } => ({ rowIdx: props.rowIdx });
+
   return withContextMenu(
     <Row
       {...props}
