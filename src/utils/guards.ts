@@ -1,4 +1,4 @@
-import { CalculationParam, GeoCategory } from '../types';
+import { CalculationParam, GeoCategory } from 'types';
 
 function isCalculationParam(
   value: CalculationParam | unknown,

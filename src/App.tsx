@@ -3,8 +3,8 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { Root } from '@gpn-prototypes/vega-ui';
 import classNames from 'classnames';
 import ErrorBoundary from 'components/ErrorBoundary';
-import Providers from 'components/Providers';
-import SchemePage from 'pages/Scheme/Scheme';
+import { Providers } from 'components/Providers';
+import { SchemePage } from 'pages/Scheme';
 
 import './App.css';
 

@@ -1,3 +1,4 @@
+import { ProjectContext } from './ProjectProvider';
 import { Providers } from './Providers';
 
-export default Providers;
+export { Providers, ProjectContext };

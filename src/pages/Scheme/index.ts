@@ -1,3 +1,3 @@
 import SchemePage from './Scheme';
 
-export default SchemePage;
+export { SchemePage };

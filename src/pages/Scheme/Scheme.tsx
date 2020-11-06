@@ -12,6 +12,7 @@ const SchemePage: React.FC = () => {
   const [selectedCell, setSelectedCell] = useState<Nullable<SelectedCell>>(
     null,
   );
+
   return (
     <div className={style.SchemePage}>
       <div className={style.Header}>
