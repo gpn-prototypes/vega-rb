@@ -1,0 +1,16 @@
+.DistributionSettingsForm {
+  margin: var(--space-l) 0;
+
+  &__Grid {
+    position: relative;
+
+    margin-bottom: var(--space-4xl);
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+
+  &__Label {
+    margin-bottom: var(--space-2xs);
+  }
+}

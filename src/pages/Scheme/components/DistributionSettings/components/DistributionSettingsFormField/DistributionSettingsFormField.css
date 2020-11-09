@@ -1,0 +1,18 @@
+.DistributionSettingsFormField {
+  position: relative;
+
+  display: grid;
+
+  &.is-error {
+    border-color: var(--color-bg-alert);
+  }
+
+  &__ErrorMessage {
+    padding-top: var(--space-2xs);
+
+    font-size: var(--size-text-2xs);
+    line-height: var(--line-height-text-2xs);
+
+    color: var(--color-typo-alert);
+  }
+}
