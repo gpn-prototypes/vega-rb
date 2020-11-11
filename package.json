@@ -148,7 +148,6 @@
     "resolve-url-loader": "3.1.1",
     "rxjs": "^6.5.5",
     "sass-loader": "8.0.2",
-    "semver": "6.3.0",
     "single-spa-react": "^3.1.0",
     "style-loader": "0.23.1",
     "systemjs-webpack-interop": "^2.1.2",
@@ -193,5 +192,5 @@
     "stylelint-prettier": "^1.1.2",
     "webpack-import-map-plugin": "^1.0.0-alpha0"
   },
-  "proxy": "http://localhost:8000"
+  "proxy": "http://localhost:8080"
 }

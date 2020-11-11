@@ -1,4 +1,4 @@
-import { CategoryIcon } from 'components/ExcelTable/types';
+import { DomainObject, RbDomainEntityIcons } from 'generated/graphql';
 
 interface Structure {
   __typename?: string;
@@ -6,7 +6,12 @@ interface Structure {
 
 export interface GeoCategory extends Structure {
   name: string;
-  icon: CategoryIcon;
+  icon: RbDomainEntityIcons;
+  visible?: {
+    table: boolean;
+    calc: boolean;
+    tree: boolean;
+  };
 }
 
 export interface CalculationParam extends Structure {
@@ -21,15 +26,11 @@ export interface Risk extends Structure {
   name: string;
 }
 
-export interface ProjectCell {
-  domainObjectPath: string[];
-}
-
 export interface ProjectStructure {
   domainEntities: GeoCategory[];
   calculationParameters: CalculationParam[];
   risks: Risk[];
-  domainObjects?: ProjectCell[];
+  domainObjects?: DomainObject[];
 }
 
 export type TableStructures = GeoCategory | CalculationParam | Risk;

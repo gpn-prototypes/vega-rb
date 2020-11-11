@@ -1,7 +1,14 @@
-import React, { ReactText, useCallback, useEffect, useState } from 'react';
+import React, {
+  ReactText,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { useDispatch } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
 import { SelectedCell } from 'components/ExcelTable/types';
+import { ProjectContext } from 'components/Providers';
 import {
   DistributionChart as IDistributionChart,
   DistributionDefinitionError,
@@ -9,8 +16,8 @@ import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
-  ResourceBaseQueries,
 } from 'generated/graphql';
+import { getGraphqlUri } from 'pages/Scheme/helpers';
 import tableDuck from 'store/tableDuck';
 
 import DistributionChart from './components/DistributionChart';
@@ -43,7 +50,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
 }) => {
   const dispatch = useDispatch();
   const client = useApolloClient();
-
+  const { projectId } = useContext(ProjectContext);
   const getFormDataFromTableCell = useCallback(
     (
       cell: SelectedCell,
@@ -149,8 +156,11 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
       distributionDefinitionType,
     }: DistributionSettingsFormData) =>
       client
-        .query<ResourceBaseQueries>({
+        .query({
           query: GET_DISTRIBUTION_VALUE,
+          context: {
+            uri: getGraphqlUri(projectId),
+          },
           variables: {
             distribution: {
               parameters: mapEntries(parameters, prepareDistributionParams),
@@ -161,7 +171,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
         })
         .then((response) => {
           const distributionChart =
-            response?.data?.distribution?.distributionChart;
+            response?.data?.resourceBase.distribution?.distributionChart;
 
           return {
             distributionChart: distributionChart as IDistributionChart,
@@ -171,7 +181,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
         .catch(({ message }) => {
           return { distributionChart: undefined, errors: [message] };
         }),
-    [client],
+    [client, projectId],
   );
 
   const handleChange = (distributionProps: DistributionSettingsFormData) => {

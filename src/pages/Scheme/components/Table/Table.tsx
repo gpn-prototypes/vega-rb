@@ -1,52 +1,61 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useQuery } from '@apollo/client';
+import { useApolloClient } from '@apollo/client';
 import ExcelTable from 'components/ExcelTable';
 import { SelectedCell, TableEntities } from 'components/ExcelTable/types';
-import { isEmpty } from 'fp-ts/Array';
+import { ProjectContext } from 'components/Providers';
+import {
+  GET_VERSION,
+  LOAD_PROJECT,
+} from 'pages/Scheme/components/Table/queries';
+import { getGraphqlUri } from 'pages/Scheme/helpers';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
-import { Nullable, ProjectStructure } from 'types';
-import { mockTableRows, unpackTableData } from 'utils';
-
-import { GET_TABLE_TEMPLATE } from './queries';
-
-export interface TemplateProjectData {
-  project: {
-    template: {
-      structure: ProjectStructure;
-    };
-  };
-}
+import { Nullable } from 'types';
+import { unpackTableData } from 'utils';
 
 interface IProps {
   onSelect?: (data: Nullable<SelectedCell>) => void;
 }
 
 export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
-  const { loading, data: respData } = useQuery<TemplateProjectData>(
-    GET_TABLE_TEMPLATE,
-  );
+  const { projectId } = useContext(ProjectContext);
   const reduxTableData = useSelector(({ table }: RootState) => table);
   const dispatch = useDispatch();
-  const templateStructure = respData?.project.template.structure;
-
-  const columns = useCallback(() => {
-    return templateStructure ? unpackTableData(templateStructure).columns : [];
-  }, [templateStructure]);
+  const client = useApolloClient();
 
   useEffect(() => {
-    if (!isEmpty(columns())) {
-      if (isEmpty(reduxTableData.columns)) {
-        dispatch(tableDuck.actions.updateColumns(columns()));
-      }
-      if (isEmpty(reduxTableData.rows)) {
-        dispatch(tableDuck.actions.updateRows(mockTableRows));
-      }
-    }
-  }, [columns, dispatch, reduxTableData]);
-
-  if (loading) return <div>Loading</div>;
+    client
+      .query({
+        query: GET_VERSION,
+        variables: {
+          vid: projectId,
+        },
+      })
+      .then((versionRes) => {
+        client
+          .query({
+            query: LOAD_PROJECT,
+            context: {
+              uri: getGraphqlUri(projectId),
+            },
+          })
+          .then((res) => {
+            const { project } = res.data.resourceBase.project.loadFromDatabase;
+            if (project) {
+              dispatch(
+                tableDuck.actions.init(
+                  unpackTableData(
+                    project.conceptions[0].structure,
+                    versionRes.data.project.version,
+                    [],
+                  ),
+                ),
+              );
+            }
+          });
+      });
+  }, [client, dispatch, projectId]);
 
   return (
     <ExcelTable

@@ -6,7 +6,6 @@ import {
   ApolloProvider,
   NormalizedCacheObject,
 } from '@apollo/client';
-import client from 'client';
 import store from 'store/initStore';
 
 import { ProjectProvider } from './ProjectProvider';
@@ -16,13 +15,16 @@ interface ProvidersProps {
 }
 
 export const Providers: React.FC<ProvidersProps> = (props) => {
-  const { graphqlClient = client, children } = props;
-
+  const { graphqlClient, children } = props;
   return (
     <Provider store={store}>
-      <ApolloProvider client={graphqlClient}>
+      <ApolloProvider
+        client={graphqlClient as ApolloClient<NormalizedCacheObject>}
+      >
         <BrowserRouter>
-          <ProjectProvider>{children}</ProjectProvider>
+          <ProjectProvider graphqlClient={graphqlClient}>
+            {children}
+          </ProjectProvider>
         </BrowserRouter>
       </ApolloProvider>
     </Provider>

@@ -4,6 +4,7 @@ import { Param } from 'model/Param';
 
 export interface TableState extends GridCollection {
   errors: TableError[];
+  version: number;
 }
 export interface AlertState {
   text: string;

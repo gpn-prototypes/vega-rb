@@ -14,6 +14,7 @@ interface AppProps {
 
 const App: React.FC<AppProps> = (props) => {
   const { graphqlClient } = props;
+
   return (
     <React.StrictMode>
       <ErrorBoundary>

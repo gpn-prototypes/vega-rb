@@ -4,339 +4,206 @@ schema {
 }
 
 type Attribute {
-  """Кодовое обозначение подсчётного параметра"""
   code: String!
-
-  """Имя подсчётного параметра"""
   name: String!
-
-  """Сокращенное имя или обозначение подсчётного параметра"""
   shortName: String!
-
-  """Единицы измерения подсчётного параметра"""
   units: String!
 }
 
 input AttributeInput {
-  """Кодовое обозначение подсчётного параметра"""
   code: String!
-
-  """Имя подсчётного параметра"""
   name: String!
-
-  """Сокращенное имя или обозначение подсчётного параметра"""
   shortName: String!
-
-  """Единицы измерения подсчётного параметра"""
   units: String!
 }
 
-type CalculationOk {
-  """
-  Архив с результатом вычислений. Доступен по url /calculation_result/<resultId>
-  """
+union CalculatedOrError = CalculationResult | TableErrors | DistributionDefinitionErrors
+
+type CalculationResult {
   resultId: ID
 }
 
-union CalculationResult = TableErrors | CalculationOk | DistributionDefinitionErrors
+type Conception {
+  name: String!
+  description: String!
+  probability: Float
+  structure: ProjectStructure!
+}
 
-"""Ошибка с дополнительной информацией."""
+input ConceptionInput {
+  name: String!
+  description: String!
+  probability: Float
+  structure: ProjectStructureInput!
+}
+
 type DetailError implements RBErrorInterface {
-  """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
   code: RBErrorCodes!
-
-  """
-  Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
-  """
   message: String!
-
-  """Детальная информация об ошибке"""
   details: String
 }
 
-"""Результаты вычисления заданного распределения."""
+type Distribution {
+  type: DistributionTypes!
+  definition: DistributionDefinitionTypes!
+  parameters: [DistributionParameter]!
+}
+
 type DistributionChart {
-  """График функции плотности распределения"""
   pdf: [Point!]!
-
-  """Функция надежности (1 - cdf)"""
   sf: [Point!]!
-
-  """Точки процентилей"""
   percentiles: [Percentile!]!
+  visiblePercentile: Percentile!
 }
 
 union DistributionChartResult = DistributionChart | DistributionDefinitionErrors
 
-"""Ошибка задания распределения."""
 type DistributionDefinitionError implements RBErrorInterface {
-  """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
   code: RBErrorCodes!
-
-  """
-  Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
-  """
   message: String!
-
-  """Список параметров задания распределения, к которым относится ошибка"""
   fields: [String!]!
 }
 
-"""Список ошибок задания распределения."""
 type DistributionDefinitionErrors {
   errors: [DistributionDefinitionError!]!
 }
 
-"""Способы задания распределений."""
 enum DistributionDefinitionTypes {
-  """Через среднее и стандартное отклонение"""
   MEAN_SD
-
-  """Через минимум и максимум"""
   MIN_MAX
-
-  """
-  Через расположение, логарифмическое среднее и логарифмическое стандартное отклонение
-  """
-  LOCATION_MEANLOG_SDLOG
-
-  """Через наиболее вероятное, минимум и максимум"""
+  LOCATION_LOGMEAN_LOGSD
+  LOCATION_GEOMMEAN_GEOMSD
+  LOCATION_ARMEAN_ARSD
   MODE_MIN_MAX
-
-  """Через альфа, бета, минимум и максимум"""
   ALPHA_BETA_MIN_MAX
-
-  """Через два процентиля"""
   TWO_PERCENTILES
-
-  """Через три процентиля"""
   THREE_PERCENTILES
-
-  """Через четыре процентиля"""
   FOUR_PERCENTILES
-
-  """Через среднее и один процентиль"""
   MEAN_ONE_PERCENTILE
-
-  """Через расположение и два процентиля"""
   LOCATION_TWO_PERCENTILES
-
-  """Через расположение, среднее и один процентиль"""
   LOCATION_MEAN_ONE_PERCENTILE
-
-  """Через среднее и два процентиля"""
   MEAN_TWO_PERCENTILES
-
-  """Через наиболее вероятное и два процентиля"""
   MODE_TWO_PERCENTILES
-
-  """Через минимум, максимум и два процентиля"""
   MIN_MAX_TWO_PERCENTILES
 }
 
-"""Параметры распределения."""
 input DistributionInput {
-  """Тип распределения"""
   type: DistributionTypes!
-
-  """Способ задания распределения"""
   definition: DistributionDefinitionTypes!
-
-  """Параметры распределения"""
   parameters: [DistributionParameterInput]!
+  minBound: Float
+  maxBound: Float
 }
 
-"""Параметр способа задания распределения."""
-input DistributionParameterInput {
-  """Тип параметра распределения"""
+type DistributionParameter {
   type: DistributionParameterTypes!
   value: Float!
 }
 
-"""Тип параметра задания распределения."""
+input DistributionParameterInput {
+  type: DistributionParameterTypes!
+  value: Float!
+}
+
 enum DistributionParameterTypes {
-  """Среднее"""
   MEAN
-
-  """Стандартное отклонение"""
-  STANDARD_DEVIATION
-
-  """Минимум"""
+  SD
   MIN
-
-  """Максимум"""
   MAX
-
-  """Расположение"""
   LOCATION
-
-  """Наиболее вероятное"""
   MODE
-
-  """Логарифмическое среднее"""
-  MEANLOG
-
-  """Логарифмическое стандартное отклонение"""
-  SDLOG
-
-  """Параметр расположения Альфа"""
+  LOGMEAN
+  LOGSD
+  GEOMMEAN
+  GEOMSD
+  ARMEAN
+  ARSD
   ALPHA
-
-  """Параметр расположения Бэта"""
   BETA
-
-  """Первый квантильный ранг"""
   Q1_RANK
-
-  """Второй квантильный ранг"""
   Q2_RANK
-
-  """Третий квантильный ранг"""
   Q3_RANK
-
-  """Четвертый квантильный ранг"""
   Q4_RANK
-
-  """Значение первого квантиля"""
   Q1_VALUE
-
-  """Значение второго квантиля"""
   Q2_VALUE
-
-  """Значение третьего квантиля"""
   Q3_VALUE
-
-  """Значение четвертого квантиля"""
   Q4_VALUE
 }
 
-"""Пространство имен для работы с распределениями."""
 type DistributionQueries {
-  """Результат вычисления значения распределения"""
-  distributionChart(distribution: DistributionInput!): DistributionChartResult
+  distributionChart(distribution: DistributionInput!, visibleRank: Int): DistributionChartResult
 }
 
-"""Типы распределений."""
 enum DistributionTypes {
-  """Нормальное распределение"""
   NORMAL
-
-  """Логнормальное распределение"""
   LOGNORMAL
-
-  """Треугольное распределение"""
   TRIANGULAR
-
-  """Равномерное распределение"""
   UNIFORM
-
-  """Бета распределение"""
   BETA
-
-  """ПЕРТ распределение"""
   PERT
 }
 
-"""Геологический объект структуры проекта."""
-input DomainObjectInput {
-  """Иерархия геологического объекта в структуре проекта"""
+type DomainObject {
   domainObjectPath: [String!]!
-
-  """Категория геологического объекта"""
   geoObjectCategory: GeoObjectCategories!
-
-  """Список значений атрибутов геологического объекта"""
-  attributeValues: [DistributionInput]!
-
-  """Список значений рисков геологического объекта"""
   risksValues: [Float]!
+  visible: Boolean!
+  attributeValues: [Distribution]!
+}
+
+input DomainObjectInput {
+  domainObjectPath: [String!]!
+  geoObjectCategory: GeoObjectCategories!
+  risksValues: [Float]!
+  visible: Boolean!
+  attributeValues: [DistributionInput]!
 }
 
 type GCoSCalculationResult {
-  """Список значений GCoS геологических объектов"""
   GCoSValues: [Float]
   errors: [TableError!]
 }
 
-"""Список категорий геологического объекта."""
 enum GeoObjectCategories {
   RESERVES
   RESOURCES
 }
 
-"""Точка на графике."""
 type Percentile {
   point: Point!
-
-  """Процентильный ранг (1-99)"""
   rank: Int!
 }
 
-"""Точка на графике."""
 type Point {
   x: Float!
   y: Float!
 }
 
-type Project {
-  """Версия шаблона структуры проекта"""
-  version: String!
-
-  """Структура проекта"""
-  structure: ProjectStructure!
-}
-
-input ProjectInput {
-  """Версия шаблона структуры проекта"""
-  version: String!
-
-  """Структура проекта"""
-  structure: ProjectStructureInput!
-}
-
-"""Пространство имен для работы с проектом."""
 type ProjectQueries {
-  """Шаблон структуры проекта"""
-  template: Project
-
-  """Валидация структуры проекта перед импортом/экспортом"""
-  validateBeforeLoad(project: ProjectInput!): DetailError
+  template: RBProject
+  validateBeforeLoad(project: RBProjectInput!): [DetailError!]
+  loadFromDatabase: RBProject
 }
 
 type ProjectStructure {
-  """Список доменных сущностей геологических объектов"""
   domainEntities: [RBDomainEntity!]!
-
-  """Список подсчетных параметров"""
   attributes: [Attribute!]!
-
-  """Список рисков геологических объектов"""
   risks: [Risk!]!
+  domainObjects: [DomainObject!]!
 }
 
 input ProjectStructureInput {
-  """Список доменных сущностей геологических объектов"""
   domainEntities: [RBDomainEntityInput!]!
-
-  """Список подсчетных параметров"""
   attributes: [AttributeInput!]!
-
-  """Список геологических объектов структуры проекта"""
-  domainObjects: [DomainObjectInput!]!
-
-  """Список рисков геологических объектов"""
   risks: [RiskInput!]!
+  domainObjects: [DomainObjectInput!]!
 }
 
 type RBDomainEntity {
-  """Имя доменной сущности геологического объекта"""
   name: String!
-
-  """Иконка доменной сущности геологического объекта"""
   icon: RBDomainEntityIcons!
 }
 
-"""Список иконок доменной сущности геологического объекта."""
 enum RBDomainEntityIcons {
   LICENSING_ROUND_ICON
   FIELD_ICON
@@ -346,101 +213,70 @@ enum RBDomainEntityIcons {
 }
 
 input RBDomainEntityInput {
-  """Имя доменной сущности геологического объекта"""
   name: String!
-
-  """Иконка доменной сущности геологического объекта"""
   icon: RBDomainEntityIcons!
+  visible: VisibleInput
 }
 
-"""Список кодов ошибок приложения."""
 enum RBErrorCodes {
-  """Ошибка в загружаемой структуре"""
   INCORRECT_PROJECT_STRUCTURE
-
-  """В строке данных таблицы структуры не может быть пустых ячеек"""
   EMPTY_CELL_IN_TABLE_DATA
-
-  """В таблице структуры не может быть одинаковых строк"""
   IDENTICAL_ROW_IN_TABLE_DATA
-
-  """Версия импортируемого файла не соответствует версии шаблона структуры"""
   INCORRECT_FILE_VERSION
-
-  """Некорректная зависимость параметров распределения"""
   DISTRIBUTION_PARAMETERS_INCORRECT_RELATION
-
-  """Параметр распределения выходит за границы допустимых значений"""
   DISTRIBUTION_PARAMETER_OUT_OF_RANGE
-
-  """Для старта расчётов заполните ячейку таблицы"""
   CELL_VALUE_IS_NULL
-
-  """Вероятность может иметь значение в пределах от 0.0 до 1.0"""
   INVALID_PROBABILITY_VALUE
+  INCORRECT_PARAMETER_VALUE_FOR_DEFINITION
+  QUANTILES_MUST_BE_DESCENDING
+  QUANTILE_RANKS_MUST_BE_ASCENDING
+  CONCEPTION_PROBABILITY_IS_NONE
+  DUPLICATING_CONCEPTIONS_NAMES
 }
 
-"""Интерфейс ошибок, отображаемых пользователю."""
 interface RBErrorInterface {
-  """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
   code: RBErrorCodes!
-
-  """
-  Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
-  """
   message: String!
 }
 
-"""Мутации данных ресурсной базы."""
-type ResourceBaseMutations {
-  updateRiskValue(projectStructure: ProjectStructureInput!): UpdateRiskValueResult
-  calculateProject(projectStructureInput: ProjectStructureInput!): CalculationResult
+type RBProject {
+  version: String!
+  conceptions: [Conception!]!
 }
 
-"""Запросы к данным ресурсной базы."""
-type ResourceBaseQueries {
-  """Пространство имен для работы с проектом."""
-  project: ProjectQueries
+input RBProjectInput {
+  version: String!
+  conceptions: [ConceptionInput!]!
+}
 
-  """Пространство имен для работы с распределениями."""
+type ResourceBaseMutations {
+  updateRiskValue(projectStructure: ProjectStructureInput!): UpdateRiskValueResult
+  calculateProject(projectInput: RBProjectInput!): CalculatedOrError
+  saveProject(projectInput: RBProjectInput!): SavedOrError
+}
+
+type ResourceBaseQueries {
+  project: ProjectQueries
   distribution: DistributionQueries
 }
 
 type Risk {
-  """Кодовое обозначение риска"""
   code: String!
-
-  """Наименование риска"""
   name: String!
 }
 
 input RiskInput {
-  """Кодовое обозначение риска"""
   code: String!
-
-  """Наименование риска"""
   name: String!
 }
 
-"""
-Ошибка данных таблицы с информацией о расположении строк или ячеек повлекших ошибку.
-"""
+union SavedOrError = TableErrors | DistributionDefinitionErrors
+
 type TableError implements RBErrorInterface {
-  """Код ошибки, соответствующий человекочитаемому сообщению об ошибке"""
   code: RBErrorCodes!
-
-  """
-  Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте
-  """
   message: String!
-
-  """Имя таблицы, содержащей строки или ячейки, повлекшие ошибку"""
   tableName: TableNames!
-
-  """Индекс ячейки в строке таблицы, повлекшей ошибку"""
   column: Int
-
-  """Индекс строки таблицы, повлекшей ошибку"""
   row: Int
 }
 
@@ -448,8 +284,8 @@ type TableErrors {
   errors: [TableError!]!
 }
 
-"""Имена таблиц в структуре проекта."""
 enum TableNames {
+  CONCEPTIONS
   DOMAIN_ENTITIES
   ATTRIBUTES
   RISKS
@@ -457,3 +293,8 @@ enum TableNames {
 
 union UpdateRiskValueResult = GCoSCalculationResult | DetailError
 
+input VisibleInput {
+  table: Boolean!
+  tree: Boolean!
+  calc: Boolean!
+}

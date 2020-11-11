@@ -59,24 +59,24 @@ const distributionParametersMap: DistributionParametersMap = {
   [DistributionTypes.Lognormal]: {
     types: [
       {
-        type: DistributionDefinitionTypes.LocationMeanlogSdlog,
+        type: DistributionDefinitionTypes.LocationLogmeanLogsd,
         title: 'Расположение, лог. среднее, лог. станд. отклонение',
       },
     ],
     fieldsByType: {
-      [DistributionDefinitionTypes.LocationMeanlogSdlog]: [
+      [DistributionDefinitionTypes.LocationLogmeanLogsd]: [
         {
           key: DistributionParameterTypes.Location,
           title: 'Расположение',
           defaultValue: '',
         },
         {
-          key: DistributionParameterTypes.Meanlog,
+          key: DistributionParameterTypes.Logmean,
           title: 'Лог. среднее',
           defaultValue: '',
         },
         {
-          key: DistributionParameterTypes.Sdlog,
+          key: DistributionParameterTypes.Logsd,
           title: 'Лог. стандартное',
           defaultValue: '',
         },
@@ -120,7 +120,7 @@ const distributionParametersMap: DistributionParametersMap = {
           defaultValue: '',
         },
         {
-          key: DistributionParameterTypes.StandardDeviation,
+          key: DistributionParameterTypes.Sd,
           title: 'Стандартное',
           defaultValue: '',
         },

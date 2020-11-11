@@ -5,14 +5,14 @@ import {
   GridRow,
   TableEntities,
 } from 'components/ExcelTable/types';
-import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
 import {
-  CalculationParam,
-  GeoCategory,
-  ProjectStructure,
-  Risk,
-  TableStructures,
-} from 'types';
+  AttributeInput,
+  DistributionInput,
+  Maybe,
+  ProjectStructureInput,
+} from 'generated/graphql';
+import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
+import { CalculationParam, GeoCategory, Risk, TableStructures } from 'types';
 
 const getCalculationColumn = (
   prev: GridColumn[],
@@ -67,6 +67,23 @@ function structureParamsReducer(list: TableStructures[]): GridColumn[] {
     }
   }, []);
 }
+const prepareCalculationParamsToGridRow = (
+  attributes: AttributeInput[],
+  attributesValues: Array<Maybe<DistributionInput>>,
+  calculationResultList?: number[],
+) => {
+  return attributes
+    .map(({ name }) => name)
+    .reduce((prev, name, idx) => {
+      return {
+        ...prev,
+        [name]: {
+          value: 'none',
+          args: attributesValues[idx],
+        },
+      };
+    }, {});
+};
 
 function convertCellsDataToGridRow(
   cells: string[],
@@ -87,9 +104,9 @@ function convertCellsDataToGridRow(
 
 function constructColumns({
   domainEntities = [],
-  calculationParameters = [],
+  attributes = [],
   risks = [],
-}: ProjectStructure): GridColumn[] {
+}: ProjectStructureInput): GridColumn[] {
   return [
     new GridColumnEntity(SpecialColumns.ID, undefined, TableEntities.ID),
     ...structureParamsReducer(domainEntities),
@@ -103,7 +120,7 @@ function constructColumns({
       undefined,
       TableEntities.SPLITTER,
     ),
-    ...structureParamsReducer(calculationParameters),
+    ...structureParamsReducer(attributes),
     new GridColumnEntity(
       SpecialColumns.SPLITTER_RISKS,
       undefined,
@@ -119,13 +136,25 @@ function createEmptyRows(count: number): Array<GridRow> {
   }));
 }
 
-function constructRows({
-  domainEntities = [],
-  domainObjects = [],
-}: ProjectStructure): GridRow[] {
+function constructRows(
+  {
+    domainEntities = [],
+    domainObjects = [],
+    attributes = [],
+  }: ProjectStructureInput,
+  calculationResultList?: number[][],
+): GridRow[] {
   return [
     ...domainObjects.map(({ domainObjectPath }, idx) => ({
       ...convertCellsDataToGridRow(domainObjectPath, domainEntities),
+      id: { value: idx },
+    })),
+    ...domainObjects.map(({ attributeValues }, idx) => ({
+      ...prepareCalculationParamsToGridRow(
+        attributes,
+        attributeValues,
+        calculationResultList?.[idx],
+      ),
       id: { value: idx },
     })),
     ...createEmptyRows(1000 - domainObjects.length),
@@ -133,13 +162,19 @@ function constructRows({
 }
 
 export function unpackTableData(
-  projectStructure: ProjectStructure,
-): GridCollection {
+  projectStructure: ProjectStructureInput,
+  version: number,
+  calculationResultList?: number[][],
+): GridCollection & { version: number } {
   const columns: GridColumn[] = constructColumns(projectStructure);
-  const rows: GridRow[] = constructRows(projectStructure);
+  const rows: GridRow[] = constructRows(
+    projectStructure,
+    calculationResultList,
+  );
 
   return {
     columns,
     rows,
+    version,
   };
 }

@@ -1,8 +1,11 @@
+import { GridCollection, TableEntities } from 'components/ExcelTable/types';
 import {
-  CategoryIcon,
-  GridCollection,
-  TableEntities,
-} from 'components/ExcelTable/types';
+  Distribution,
+  GeoObjectCategories,
+  Maybe,
+  ProjectStructureInput,
+  RbDomainEntityIcons,
+} from 'generated/graphql';
 import { CalculationParam, ProjectStructure, Risk } from 'types';
 
 import { getColumnsByType } from './getColumnsByType';
@@ -10,7 +13,7 @@ import { getColumnsByType } from './getColumnsByType';
 export function packTableData(
   data: GridCollection,
   template: ProjectStructure,
-): ProjectStructure {
+): ProjectStructureInput {
   const domainEntitiesKeys = getColumnsByType(
     data.columns,
     TableEntities.GEO_CATEGORY,
@@ -28,20 +31,25 @@ export function packTableData(
   const domainObjects = rows
     .filter((row) => domainEntitiesKeys.some(({ key }) => row[key]?.value))
     .map((row) => ({
+      visible: true,
       domainObjectPath: domainEntitiesKeys.map(({ key }) =>
         String(row[key]?.value || ''),
       ),
       risksValues: [0.7, 0.7],
-      geoObjectCategory: 'RESERVES',
+      geoObjectCategory: GeoObjectCategories.Reserves,
       attributeValues: calculationParametersKeys.map(
-        ({ key }) => row[key]?.args,
+        ({ key }) => row[key]?.args as Maybe<Distribution>,
       ),
     }));
 
   const domainEntities = domainEntitiesKeys.map(({ name, type }) => ({
     name,
-    icon: CategoryIcon.FORMATION_ICON,
-    __typename: type,
+    icon: RbDomainEntityIcons.FormationIcon,
+    visible: {
+      tree: true,
+      table: true,
+      calc: true,
+    },
   }));
 
   const calculationParameters = calculationParametersKeys.map(
@@ -51,11 +59,16 @@ export function packTableData(
       } as CalculationParam),
   );
 
-  const risks: Risk[] = [];
+  const risks: Risk[] = [
+    { code: 'PARENT_MATERIAL', name: 'Мат. порода' },
+    { code: 'MIGRATION', name: 'Миграция' },
+  ];
 
   return {
     domainEntities,
-    calculationParameters,
+    attributes: calculationParameters.map(
+      ({ __typename, ...params }) => params,
+    ),
     risks,
     domainObjects,
   };
