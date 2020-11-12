@@ -25,13 +25,14 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
     domain: number[] | { valueOf(): number }[],
     position: number[],
   ) => d3.scaleLinear().domain(domain).nice().range(position);
-  const xScalePosition = [margin.left, width - margin.right];
-  const yScalePosition = [height - margin.bottom, margin.top];
+
   const getDomain = (points: Point[], func: (d: Point) => number) => [
     d3.min(points, func) as number,
     d3.max(points, func) as number,
   ];
   const draw = useCallback(() => {
+    const xScalePosition = [margin.left, width - margin.right];
+    const yScalePosition = [height - margin.bottom, margin.top];
     const svg = d3.select(d3Container.current);
 
     svg.selectAll('*').remove();
@@ -190,7 +191,7 @@ const DistributionChart: React.FC<DistributionChartProps> = ({
           .x((d) => cumulativeXScale(getX(d)) as number)
           .y((d) => cumulativeYScale(getY(d)) as number),
       );
-  }, [sf, xScalePosition, yScalePosition, pdf, percentiles]);
+  }, [sf, pdf, percentiles]);
 
   useEffect(() => {
     if (d3Container.current) {

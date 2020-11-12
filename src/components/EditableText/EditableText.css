@@ -4,7 +4,7 @@
 
   height: 25px;
 
-  &:hover &__Icon_Wrap {
+  &:hover &__IconWrapper {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -31,7 +31,7 @@
     height: 15px;
   }
 
-  &__Icon_Wrap {
+  &__IconWrapper {
     margin-left: 5px;
 
     padding: 5px;

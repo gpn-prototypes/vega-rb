@@ -7,15 +7,6 @@ import { GridColumn, HeaderRendererProps, TableEntities } from '../types';
 
 import styles from './DraggableHeader.module.css';
 
-interface IProps {
-  column: GridColumn;
-  onColumnsReorder: (sourceKey: string, targetKey: string) => void;
-  onDoubleClick: () => void;
-  editor: ComponentType | ReactElement;
-  className?: string;
-  beforeContent?: ComponentType | ReactElement;
-}
-
 interface ColumnDragObject extends DragObjectWithType {
   key: string;
   name: ReactText;
@@ -34,12 +25,21 @@ function wrapRefs<T>(...refs: React.Ref<T>[]) {
   };
 }
 
+interface IProps {
+  column: GridColumn;
+  onColumnsReorder: (sourceKey: string, targetKey: string) => void;
+  onDoubleClick: () => void;
+  editor: ComponentType | ReactElement;
+  className?: string;
+  beforeContent?: ComponentType | ReactElement;
+}
+
 export function DraggableHeader({
   onColumnsReorder,
   onDoubleClick,
   editor,
+  className = '',
   beforeContent,
-  className,
   ...props
 }: IProps & HeaderRendererProps): JSX.Element {
   const { isRenaming, name } = props.column;

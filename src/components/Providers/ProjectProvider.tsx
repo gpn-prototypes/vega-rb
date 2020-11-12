@@ -6,6 +6,8 @@ const ROUTE_MATCH_PROJECT_ID = '/projects/show/:projectId';
 
 type MatchedData = { projectId: string };
 
+const ProjectContext = React.createContext<MatchedData>({ projectId: '' });
+
 const ProjectProvider: React.FC = ({ children }) => {
   const matchedData = defaultTo<MatchedData>(
     useRouteMatch<MatchedData>(ROUTE_MATCH_PROJECT_ID)?.params,
@@ -20,7 +22,5 @@ const ProjectProvider: React.FC = ({ children }) => {
     </ProjectContext.Provider>
   );
 };
-
-const ProjectContext = React.createContext<MatchedData>({ projectId: '' });
 
 export { ProjectProvider, ProjectContext };

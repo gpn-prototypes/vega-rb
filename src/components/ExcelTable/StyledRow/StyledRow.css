@@ -1,3 +1,4 @@
+/* You haven't to change colors to rgba, because it create bug with alpha channel at ID column */
 .StyledRow {
   text-overflow: ellipsis;
 
@@ -8,10 +9,10 @@
   }
 
   &__Odd {
-    background-color: var(--color-bg-stripe);
+    background-color: rgb(60, 64, 67);
   }
 }
 
 .StyledRow:hover {
-  background-color: var(--color-bg-ghost);
+  background-color: rgb(75, 81, 84);
 }
