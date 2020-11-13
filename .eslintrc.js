@@ -17,6 +17,7 @@ module.exports = {
         '@typescript-eslint/no-non-null-assertion': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
         '@typescript-eslint/interface-name-prefix': 'off',
+        'react/require-default-props': 'off',
         'no-unused-vars': 'off',
         'no-underscore-dangle': 'off',
       },

@@ -52,7 +52,7 @@ const EditableText: React.FC<EditableTextProps> = ({
       />
       <button
         type="button"
-        className={cnEditableText('Icon_Wrap')
+        className={cnEditableText('IconWrapper')
           .state({ edit: isEditing })
           .toString()}
         onClick={onClick}

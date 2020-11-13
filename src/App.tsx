@@ -20,7 +20,7 @@ const App: React.FC<AppProps> = (props) => {
       <ErrorBoundary>
         <Root defaultTheme="dark">
           <Providers graphqlClient={graphqlClient}>
-            <div className={classNames('App')}>
+            <div className={classNames('RB-App')}>
               <SchemePage />
             </div>
           </Providers>
