@@ -41,12 +41,12 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
             },
           })
           .then((res) => {
-            const { project } = res.data.resourceBase.project.loadFromDatabase;
-            if (project) {
+            if (res.data.resourceBase.project.loadFromDatabase) {
               dispatch(
                 tableDuck.actions.init(
                   unpackTableData(
-                    project.conceptions[0].structure,
+                    res.data.resourceBase.project.loadFromDatabase
+                      .conceptions[0].structure,
                     versionRes.data.project.version,
                     [],
                   ),
