@@ -1,10 +1,12 @@
 import { Conception, RbProjectInput } from 'generated/graphql';
 
+const baseApi = process.env.BASE_API_URL;
+
 export const getGraphqlUri = (projectId: string): string =>
-  `${process.env.BASE_API_URL}/graphql/${projectId}`;
+  `${baseApi}/graphql/${projectId}`;
 
 export const getDownloadResultUri = (id: string): string =>
-  `${process.env.BASE_API_URL}/files/calculation_result/${id}`;
+  `${baseApi}/files/calculation_result/${id}`;
 
 export const getMockConceptions = (conception: Conception): RbProjectInput => {
   return {

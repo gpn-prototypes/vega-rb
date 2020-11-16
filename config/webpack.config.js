@@ -252,6 +252,7 @@ module.exports = function (webpackEnv) {
       'react-dom',
       'single-spa',
       /^@vega\//,
+      '@gpn-prototypes/vega-ui',
     ],
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
