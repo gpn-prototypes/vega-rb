@@ -5,6 +5,7 @@ export const GET_VERSION = gql`
     project(vid: $vid) {
       __typename
       ... on Project {
+        vid
         version
       }
       ... on Error {

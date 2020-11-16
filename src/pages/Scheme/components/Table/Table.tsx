@@ -32,7 +32,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
         variables: {
           vid: projectId,
         },
-        fetchPolicy: 'network-only',
+        fetchPolicy: 'no-cache',
       })
       .then((versionRes) => {
         client
@@ -41,7 +41,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
             context: {
               uri: getGraphqlUri(projectId),
             },
-            fetchPolicy: 'network-only',
+            fetchPolicy: 'no-cache',
           })
           .then((res) => {
             if (res.data.resourceBase.project.loadFromDatabase) {
@@ -70,7 +70,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
                   context: {
                     uri: getGraphqlUri(projectId),
                   },
-                  fetchPolicy: 'network-only',
+                  fetchPolicy: 'no-cache',
                 })
                 .then((templateRes) => {
                   dispatch(

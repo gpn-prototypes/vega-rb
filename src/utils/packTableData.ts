@@ -41,7 +41,6 @@ export function packTableData(
         ({ key }) => row[key]?.args as Maybe<Distribution>,
       ),
     }));
-
   const domainEntities = domainEntitiesKeys.map(({ name, type }) => ({
     name,
     icon: RbDomainEntityIcons.FormationIcon,
