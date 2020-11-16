@@ -133,7 +133,7 @@ function constructColumns({
 
 function createEmptyRows(count: number): Array<GridRow> {
   return Array.from({ length: count }, (val, index) => ({
-    id: { value: count === 1000 ? index : index + 1 },
+    id: { value: count === 1000 ? index + 1 : index },
   }));
 }
 
@@ -157,10 +157,7 @@ function constructRows(
   }: ProjectStructureInput,
   calculationResultList?: number[][],
 ): GridRow[] {
-  const emptyRowsLength =
-    1000 -
-    domainObjects[0].domainObjectPath.length -
-    domainObjects[0].attributeValues.length;
+  const emptyRowsLength = 1000 - domainObjects.length;
   return [
     ...domainObjects.map(({ domainObjectPath, geoObjectCategory }, idx) => ({
       ...convertCellsDataToGridRow(domainObjectPath, domainEntities),
@@ -177,7 +174,7 @@ function constructRows(
       ),
       id: { value: idx },
     })),
-    ...createEmptyRows(1000 - emptyRowsLength),
+    ...createEmptyRows(emptyRowsLength),
   ];
 }
 
