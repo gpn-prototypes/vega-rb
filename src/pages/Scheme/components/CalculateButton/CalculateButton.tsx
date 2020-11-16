@@ -73,7 +73,7 @@ export const CalculateButton: React.FC = () => {
             );
           }
           const errors =
-            res.data.calculateProject.errors?.filter(
+            res.data.resourceBase.calculateProject.errors?.filter(
               (error: TableError) => error.tableName,
             ) || [];
           dispatch(tableDuck.actions.updateErrors(errors));
