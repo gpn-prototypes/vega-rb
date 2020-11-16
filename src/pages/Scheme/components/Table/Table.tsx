@@ -5,6 +5,7 @@ import ExcelTable from 'components/ExcelTable';
 import { SelectedCell, TableEntities } from 'components/ExcelTable/types';
 import { ProjectContext } from 'components/Providers';
 import {
+  GET_TABLE_TEMPLATE,
   GET_VERSION,
   LOAD_PROJECT,
 } from 'pages/Scheme/components/Table/queries';
@@ -31,6 +32,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
         variables: {
           vid: projectId,
         },
+        fetchPolicy: 'network-only',
       })
       .then((versionRes) => {
         client
@@ -39,19 +41,49 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
             context: {
               uri: getGraphqlUri(projectId),
             },
+            fetchPolicy: 'network-only',
           })
           .then((res) => {
             if (res.data.resourceBase.project.loadFromDatabase) {
+              const {
+                structure,
+              } = res.data.resourceBase.project.loadFromDatabase.conceptions[0];
+
               dispatch(
                 tableDuck.actions.init(
                   unpackTableData(
-                    res.data.resourceBase.project.loadFromDatabase
-                      .conceptions[0].structure,
+                    structure,
                     versionRes.data.project.version,
                     [],
                   ),
                 ),
               );
+            } else if (
+              res.data.resourceBase.project.loadFromDatabase === null
+            ) {
+              client
+                .query({
+                  query: GET_TABLE_TEMPLATE,
+                  variables: {
+                    vid: projectId,
+                  },
+                  context: {
+                    uri: getGraphqlUri(projectId),
+                  },
+                  fetchPolicy: 'network-only',
+                })
+                .then((templateRes) => {
+                  dispatch(
+                    tableDuck.actions.init(
+                      unpackTableData(
+                        templateRes.data.resourceBase.project.template
+                          .conceptions[0].structure,
+                        versionRes.data.project.version,
+                        [],
+                      ),
+                    ),
+                  );
+                });
             }
           });
       });

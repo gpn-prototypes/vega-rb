@@ -8,6 +8,7 @@ import {
 import {
   AttributeInput,
   DistributionInput,
+  GeoObjectCategories,
   Maybe,
   ProjectStructureInput,
 } from 'generated/graphql';
@@ -132,8 +133,20 @@ function constructColumns({
 
 function createEmptyRows(count: number): Array<GridRow> {
   return Array.from({ length: count }, (val, index) => ({
-    id: { value: index },
+    id: { value: count === 1000 ? index : index + 1 },
   }));
+}
+
+function getGeoObjectCategoryCellValue(category?: GeoObjectCategories) {
+  if (!category) {
+    return {
+      value: '',
+    };
+  }
+  return {
+    value: category,
+    text: category === GeoObjectCategories.Reserves ? 'Р' : 'З',
+  };
 }
 
 function constructRows(
@@ -144,9 +157,16 @@ function constructRows(
   }: ProjectStructureInput,
   calculationResultList?: number[][],
 ): GridRow[] {
+  const emptyRowsLength =
+    1000 -
+    domainObjects[0].domainObjectPath.length -
+    domainObjects[0].attributeValues.length;
   return [
-    ...domainObjects.map(({ domainObjectPath }, idx) => ({
+    ...domainObjects.map(({ domainObjectPath, geoObjectCategory }, idx) => ({
       ...convertCellsDataToGridRow(domainObjectPath, domainEntities),
+      [SpecialColumns.GEO_CATEGORY]: getGeoObjectCategoryCellValue(
+        geoObjectCategory,
+      ),
       id: { value: idx },
     })),
     ...domainObjects.map(({ attributeValues }, idx) => ({
@@ -157,7 +177,7 @@ function constructRows(
       ),
       id: { value: idx },
     })),
-    ...createEmptyRows(1000 - domainObjects.length),
+    ...createEmptyRows(1000 - emptyRowsLength),
   ];
 }
 

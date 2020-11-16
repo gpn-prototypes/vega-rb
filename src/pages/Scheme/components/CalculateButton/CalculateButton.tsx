@@ -13,7 +13,6 @@ import {
 } from 'pages/Scheme/helpers';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
-import { ProjectStructure } from 'types';
 import { packTableData } from 'utils';
 
 import { CALCULATION_PROJECT } from '../../mutations';
@@ -36,8 +35,7 @@ export const CalculateButton: React.FC = () => {
     if (data) {
       const { domainEntities, attributes, domainObjects = [] } = packTableData(
         tableData,
-        data?.resourceBase.project.template.conceptions[0]
-          .structure as ProjectStructure,
+        data?.resourceBase.project.template.conceptions[0].structure,
       );
 
       client

@@ -1,4 +1,4 @@
-import { ProjectStructure } from 'types';
+import { ProjectStructureInput } from 'generated/graphql';
 
 export interface TemplateProjectData {
   resourceBase: {
@@ -8,7 +8,7 @@ export interface TemplateProjectData {
         conceptions: {
           name?: string;
           probability: string | null;
-          structure: ProjectStructure;
+          structure: ProjectStructureInput;
         }[];
       };
     };

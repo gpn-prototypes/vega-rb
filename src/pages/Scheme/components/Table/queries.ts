@@ -89,7 +89,7 @@ export const GET_TABLE_TEMPLATE = gql`
                 name
                 __typename
               }
-              calculationParameters: attributes {
+              attributes {
                 __typename
                 code
                 name

@@ -6,13 +6,13 @@ import {
   ProjectStructureInput,
   RbDomainEntityIcons,
 } from 'generated/graphql';
-import { CalculationParam, ProjectStructure, Risk } from 'types';
+import { CalculationParam, Risk } from 'types';
 
 import { getColumnsByType } from './getColumnsByType';
 
 export function packTableData(
   data: GridCollection,
-  template: ProjectStructure,
+  template: ProjectStructureInput,
 ): ProjectStructureInput {
   const domainEntitiesKeys = getColumnsByType(
     data.columns,
@@ -55,7 +55,7 @@ export function packTableData(
   const calculationParameters = calculationParametersKeys.map(
     ({ key }) =>
       ({
-        ...template.calculationParameters.find(({ code }) => code === key),
+        ...template.attributes.find(({ code }) => code === key),
       } as CalculationParam),
   );
 

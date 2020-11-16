@@ -68,7 +68,6 @@ function getClientEnvironment(publicUrl) {
         return env;
       },
       {
-
         APP_MODE: process.env.APP_MODE || 'standalone',
         NODE_ENV: process.env.NODE_ENV || 'development',
         PUBLIC_URL: publicUrl,

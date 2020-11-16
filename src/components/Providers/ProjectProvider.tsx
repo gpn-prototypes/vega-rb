@@ -24,8 +24,10 @@ const ProjectProvider: React.FC<ProjectProviderProps> = ({
   );
 
   useEffect(() => {
-    projectsApi.setClient(graphqlClient as ApolloClient<NormalizedCacheObject>);
-    projectsApi.setProjectId(matchedData.projectId);
+    projectsApi.init({
+      client: graphqlClient as ApolloClient<NormalizedCacheObject>,
+      projectId: matchedData.projectId,
+    });
   }, [graphqlClient, matchedData]);
 
   return (

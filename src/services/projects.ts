@@ -1,28 +1,25 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
+interface ProjectServiceApi {
+  client: ApolloClient<NormalizedCacheObject>;
+  projectId: string;
+}
+
 class ProjectsAPI {
-  _client: ApolloClient<NormalizedCacheObject> | null;
+  _client: ApolloClient<NormalizedCacheObject> | null = null;
 
-  _projectId;
+  _projectId = '';
 
-  constructor() {
-    this._client = null;
-    this._projectId = '';
-  }
-
-  getClient(): ApolloClient<NormalizedCacheObject> | null {
-    return this._client;
-  }
-
-  setClient(graphQlClient: ApolloClient<NormalizedCacheObject>): void {
-    this._client = graphQlClient;
-  }
-
-  setProjectId(projectId: string): void {
+  init({ client, projectId }: ProjectServiceApi) {
+    this._client = client;
     this._projectId = projectId;
   }
 
-  getProjectId(): string {
+  getClient() {
+    return this._client;
+  }
+
+  getProjectId() {
     return this._projectId;
   }
 }

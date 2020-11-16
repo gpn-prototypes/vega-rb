@@ -1,6 +1,11 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
-import { GridCell, GridColumn, GridRow } from 'components/ExcelTable/types';
-import { TableError } from 'generated/graphql';
+import {
+  GridCell,
+  GridColumn,
+  GridRow,
+  TableEntities,
+} from 'components/ExcelTable/types';
+import { TableError, TableNames } from 'generated/graphql';
 import { ofAction } from 'operators/ofAction';
 import {
   GET_TABLE_TEMPLATE,
@@ -59,6 +64,7 @@ const reducer = reducerWithInitialState<TableState>(initialState)
   }))
   .case(actions.updateCell, (state, { selectedCell, cellData }) => {
     const rows = [...state.rows];
+    const errors = [...state.errors];
 
     if (selectedCell && Number.isInteger(selectedCell.rowIdx)) {
       rows.splice(selectedCell.rowIdx, 1, {
@@ -68,10 +74,28 @@ const reducer = reducerWithInitialState<TableState>(initialState)
           ...cellData,
         },
       } as GridRow);
+
+      errors.filter(({ row: rowIdx, column: columnIdx, tableName }) => {
+        const tableColumnIdx = state.columns
+          .filter((c) => c.type === (selectedCell.column as GridColumn).type)
+          .findIndex((c) => c.key === (selectedCell.column as GridColumn).key);
+        const isSameTableType =
+          (selectedCell.column.key === TableEntities.GEO_CATEGORY &&
+            tableName === TableNames.DomainEntities) ||
+          ((selectedCell.column as GridColumn).type ===
+            TableEntities.CALC_PARAM &&
+            tableName === TableNames.Attributes);
+        const isSameColumn = tableColumnIdx === columnIdx;
+        const isSameRow = rowIdx === selectedCell.rowIdx;
+
+        return isSameRow && isSameColumn && isSameTableType;
+      });
     }
+
     return {
       ...state,
       rows,
+      errors,
     };
   });
 
