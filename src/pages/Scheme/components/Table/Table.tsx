@@ -77,7 +77,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
             structure.attributes
               .map((_, colIdx) => attributeValues[colIdx])
               .map((distribution) => {
-                if (distribution !== null) {
+                if (distribution) {
                   return getDistributionValue(distribution);
                 }
                 return distribution;

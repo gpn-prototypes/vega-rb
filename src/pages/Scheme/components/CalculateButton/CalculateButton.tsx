@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
-import { Button } from '@gpn-prototypes/vega-button';
+import { Button } from '@gpn-prototypes/vega-ui';
 import { ProjectContext } from 'components/Providers';
 import { TableError } from 'generated/graphql';
 import { conceptionStructureIsNotEmpty } from 'pages/Scheme/components/DistributionSettings/helpers';

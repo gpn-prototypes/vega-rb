@@ -1,10 +1,10 @@
 .DistributionSettingsForm {
-  margin: var(--space-l) 0;
+  margin-top: var(--space-l);
 
   &__Grid {
     position: relative;
 
-    margin-bottom: var(--space-4xl);
+    margin-bottom: var(--space-s);
 
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));

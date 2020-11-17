@@ -1,4 +1,4 @@
-import { TextFieldProps } from '@gpn-prototypes/vega-text-field/dist/src/TextField';
+import { TextField } from '@gpn-prototypes/vega-ui';
 import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
@@ -6,6 +6,8 @@ import {
 } from 'generated/graphql';
 
 const textFieldFormPropertyName = 'form';
+
+type TextFieldProps = React.ComponentProps<typeof TextField>;
 
 export type TextFieldFormProperty = TextFieldProps[typeof textFieldFormPropertyName];
 

@@ -10,7 +10,7 @@ import React, {
 import { CellRendererProps } from 'react-data-grid/lib/common/types';
 import { preventDefault, wrapEvent } from 'react-data-grid/lib/utils';
 import { useSelector } from 'react-redux';
-import { Tooltip } from '@gpn-prototypes/vega-tooltip';
+import { Tooltip } from '@gpn-prototypes/vega-ui';
 import cn from 'classnames';
 import { TableNames } from 'generated/graphql';
 import useCombinedRefs from 'hooks/useCombinedRefs';
