@@ -64,6 +64,7 @@ export interface GridRow {
 
 export interface GridColumn extends Column<GridRow> {
   type?: TableEntities;
+  code?: string;
   hasIcon?: boolean;
   isRenaming?: boolean;
   before?: JSX.Element;

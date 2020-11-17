@@ -25,11 +25,13 @@ export function packTableData(
   );
 
   const rows = data.rows.filter((row) =>
-    domainEntitiesKeys.every(({ key }) => row[key]),
+    domainEntitiesKeys.every(({ code }) => code && row[code]),
   );
 
   const domainObjects = rows
-    .filter((row) => domainEntitiesKeys.some(({ key }) => row[key]?.value))
+    .filter((row) =>
+      domainEntitiesKeys.some(({ code }) => code && row[code]?.value),
+    )
     .map((row) => ({
       visible: true,
       domainObjectPath: domainEntitiesKeys.map(({ key }) =>

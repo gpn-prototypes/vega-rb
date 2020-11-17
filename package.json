@@ -157,6 +157,7 @@
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.1",
     "url-loader": "2.3.0",
+    "uuid": "^8.3.1",
     "webpack": "4.42.0",
     "webpack-dev-server": "3.10.3",
     "webpack-manifest-plugin": "2.2.0",
