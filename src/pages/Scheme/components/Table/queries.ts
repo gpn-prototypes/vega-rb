@@ -41,6 +41,7 @@ export const LOAD_PROJECT = gql`
               }
               domainEntities {
                 name
+                code
                 icon
               }
               risks {

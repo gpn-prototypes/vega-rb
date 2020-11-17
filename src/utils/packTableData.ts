@@ -14,38 +14,47 @@ export function packTableData(
   data: GridCollection,
   template: ProjectStructureInput,
 ): ProjectStructureInput {
-  const domainEntitiesKeys = getColumnsByType(
+  const domainEntitiesColumns = getColumnsByType(
     data.columns,
     TableEntities.GEO_CATEGORY,
   );
 
-  const calculationParametersKeys = getColumnsByType(
+  const calculationParametersColumns = getColumnsByType(
     data.columns,
     TableEntities.CALC_PARAM,
   );
 
+  const riskColumns = getColumnsByType(data.columns, TableEntities.RISK);
+
+  const risks: Risk[] = riskColumns.map(({ key, name }) => ({
+    code: key,
+    name,
+  }));
   const rows = data.rows.filter((row) =>
-    domainEntitiesKeys.every(({ code }) => code && row[code]),
+    domainEntitiesColumns.every(({ key }) => key && row[key]),
   );
 
   const domainObjects = rows
     .filter((row) =>
-      domainEntitiesKeys.some(({ code }) => code && row[code]?.value),
+      domainEntitiesColumns.some(({ key }) => key && row[key]?.value),
     )
     .map((row) => ({
       visible: true,
-      domainObjectPath: domainEntitiesKeys.map(({ key }) =>
+      domainObjectPath: domainEntitiesColumns.map(({ key }) =>
         String(row[key]?.value || ''),
       ),
-      risksValues: [0.7, 0.7],
+      risksValues: riskColumns.map(
+        ({ key }) => (row[key]?.value as number) ?? null,
+      ),
       geoObjectCategory: GeoObjectCategories.Reserves,
-      attributeValues: calculationParametersKeys.map(
+      attributeValues: calculationParametersColumns.map(
         ({ key }) => row[key]?.args as Maybe<Distribution>,
       ),
     }));
-  const domainEntities = domainEntitiesKeys.map(({ name, type }) => ({
+  const domainEntities = domainEntitiesColumns.map(({ name, type, key }) => ({
     name,
     icon: RbDomainEntityIcons.FormationIcon,
+    code: key,
     visible: {
       tree: true,
       table: true,
@@ -53,17 +62,12 @@ export function packTableData(
     },
   }));
 
-  const calculationParameters = calculationParametersKeys.map(
+  const calculationParameters = calculationParametersColumns.map(
     ({ key }) =>
       ({
         ...template.attributes.find(({ code }) => code === key),
       } as CalculationParam),
   );
-
-  const risks: Risk[] = [
-    { code: 'PARENT_MATERIAL', name: 'Мат. порода' },
-    { code: 'MIGRATION', name: 'Миграция' },
-  ];
 
   return {
     domainEntities,

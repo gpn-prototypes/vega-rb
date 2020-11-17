@@ -39,6 +39,13 @@ const defaultDistributionChartValue: IDistributionChart = {
   sf: [],
   pdf: [],
   percentiles: [],
+  visiblePercentile: {
+    point: {
+      x: 0,
+      y: 0,
+    },
+    rank: 90,
+  },
 };
 
 interface DistributionSettingsProps {

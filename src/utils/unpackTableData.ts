@@ -12,6 +12,8 @@ import {
   GeoObjectCategories,
   Maybe,
   ProjectStructureInput,
+  RbDomainEntityInput,
+  RiskInput,
 } from 'generated/graphql';
 import { omit } from 'lodash';
 import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
@@ -99,12 +101,29 @@ const prepareCalculationParamsToGridRow = (
     }, {});
 };
 
-function convertCellsDataToGridRow(
+function prepareRiskParamsToGridRow(
+  riskValues: Array<number | null>,
+  risk: RiskInput[],
+): GridRow {
+  return risk
+    .map(({ code }) => code)
+    .reduce(
+      (prev, name, idx) => ({
+        ...prev,
+        [name]: {
+          value: riskValues[idx],
+        },
+      }),
+      {},
+    );
+}
+
+function prepareDomainEntityParamsToGridRow(
   cells: string[],
-  domainEntities: GeoCategory[],
+  domainEntities: RbDomainEntityInput[],
 ): GridRow {
   return domainEntities
-    .map(({ name }) => CATEGORIES_TYPES.get(name)!)
+    .map(({ code }) => code)
     .reduce(
       (prev, name, idx) => ({
         ...prev,
@@ -169,18 +188,23 @@ function constructRows(
     domainEntities = [],
     domainObjects = [],
     attributes = [],
+    risks = [],
   }: ProjectStructureInput,
   calculationResultList?: TableDistributionResultList,
 ): GridRow[] {
   return [
     ...domainObjects.map(
-      ({ domainObjectPath, geoObjectCategory, attributeValues }, idx) => ({
-        ...convertCellsDataToGridRow(domainObjectPath, domainEntities),
+      (
+        { domainObjectPath, geoObjectCategory, attributeValues, risksValues },
+        idx,
+      ) => ({
+        ...prepareDomainEntityParamsToGridRow(domainObjectPath, domainEntities),
         ...prepareCalculationParamsToGridRow(
           attributes,
           attributeValues,
           calculationResultList?.[idx],
         ),
+        ...prepareRiskParamsToGridRow(risksValues, risks),
         id: { value: idx + 1 },
         [SpecialColumns.GEO_CATEGORY]: getGeoObjectCategoryCellValue(
           geoObjectCategory,

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
@@ -5,7 +7,8 @@ import {
 } from 'generated/graphql';
 
 import { DistributionParametersMap } from './types';
-
+// TODO: добавить оставшиеся распределения
+// @ts-ignore
 const distributionParametersMap: DistributionParametersMap = {
   [DistributionTypes.Uniform]: {
     types: [
