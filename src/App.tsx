@@ -5,21 +5,26 @@ import classNames from 'classnames';
 import ErrorBoundary from 'components/ErrorBoundary';
 import { Providers } from 'components/Providers';
 import { SchemePage } from 'pages/Scheme';
+import { Identity } from 'types';
 
 import './App.css';
 
 interface AppProps {
   graphqlClient?: ApolloClient<NormalizedCacheObject>;
+  identity?: Identity;
 }
 
 const App: React.FC<AppProps> = (props) => {
-  const { graphqlClient } = props;
+  const { graphqlClient, identity } = props;
 
   return (
     <React.StrictMode>
       <ErrorBoundary>
         <Root defaultTheme="dark">
-          <Providers graphqlClient={graphqlClient}>
+          <Providers
+            graphqlClient={graphqlClient as ApolloClient<NormalizedCacheObject>}
+            identity={identity as Identity}
+          >
             <div className={classNames('RB-App')}>
               <SchemePage />
             </div>

@@ -15,7 +15,6 @@ class GraphQlAPI {
   }
 
   setClient(graphQlClient: ApolloClient<NormalizedCacheObject>) {
-    console.log(graphQlClient);
     this._client = graphQlClient;
   }
 

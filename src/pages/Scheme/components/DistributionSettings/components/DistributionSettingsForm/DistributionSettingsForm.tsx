@@ -120,6 +120,7 @@ export const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> =
 
     return (
       <DistributionSettingsFormField
+        key={key}
         label={Label}
         fieldType={getFormFieldType(position, fields.length)}
         onChange={handleChange(key)}

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
 import { Button } from '@gpn-prototypes/vega-button';
 import { ProjectContext } from 'components/Providers';
-import { saveAs } from 'file-saver';
 import { TableError } from 'generated/graphql';
 import { TemplateProjectData } from 'pages/Scheme/components/Table/types';
 import {
@@ -20,7 +19,7 @@ import { GET_TABLE_TEMPLATE } from '../Table/queries';
 
 export const CalculateButton: React.FC = () => {
   const client = useApolloClient();
-  const { projectId } = useContext(ProjectContext);
+  const { projectId, identity } = useContext(ProjectContext);
   const dispatch = useDispatch();
   const tableData = useSelector((state: RootState) => state.table);
 
@@ -63,12 +62,27 @@ export const CalculateButton: React.FC = () => {
         })
         .then((res) => {
           if (res.data.resourceBase.calculateProject.resultId) {
-            saveAs(
+            fetch(
               getDownloadResultUri(
                 res.data.resourceBase.calculateProject.resultId,
               ),
-              'result.zip',
-            );
+              {
+                headers: {
+                  Authorization: `Bearer ${identity?.getToken()}`,
+                },
+              },
+            )
+              .then((resp) => resp.blob())
+              .then((blob) => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'result.zip';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+              });
           }
           const errors =
             res.data.resourceBase.calculateProject.errors?.filter(

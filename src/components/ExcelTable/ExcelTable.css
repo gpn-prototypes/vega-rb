@@ -38,10 +38,6 @@
 
     &__Value.is-error {
       color: var(--color-typo-alert);
-
-      &::after {
-        content: '—';
-      }
     }
 
     &__Id {

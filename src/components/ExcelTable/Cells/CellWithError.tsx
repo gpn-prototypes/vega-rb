@@ -118,7 +118,14 @@ const CellWithError: React.ForwardRefExoticComponent<
       {React.createElement(column.formatter, {
         column,
         rowIdx: currentRowIdx,
-        row,
+        row: {
+          ...row,
+          [column.key]: error
+            ? {
+                value: '—',
+              }
+            : row[column.key],
+        },
         isRowSelected,
         onRowSelectionChange,
       })}

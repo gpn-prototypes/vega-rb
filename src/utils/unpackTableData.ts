@@ -8,12 +8,16 @@ import {
 import {
   AttributeInput,
   DistributionInput,
+  DistributionParameter,
   GeoObjectCategories,
   Maybe,
   ProjectStructureInput,
 } from 'generated/graphql';
+import { omit } from 'lodash';
 import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
 import { CalculationParam, GeoCategory, Risk, TableStructures } from 'types';
+
+type TableDistributionResultList = Array<null | number>[];
 
 const getCalculationColumn = (
   prev: GridColumn[],
@@ -71,16 +75,25 @@ function structureParamsReducer(list: TableStructures[]): GridColumn[] {
 const prepareCalculationParamsToGridRow = (
   attributes: AttributeInput[],
   attributesValues: Array<Maybe<DistributionInput>>,
-  calculationResultList?: number[],
+  calculationResultList?: Array<number | null>,
 ) => {
   return attributes
-    .map(({ name }) => name)
-    .reduce((prev, name, idx) => {
+    .map(({ code }) => code)
+    .reduce((prev, key, idx) => {
       return {
         ...prev,
-        [name]: {
-          value: 'none',
-          args: attributesValues[idx],
+        [key]: {
+          value: calculationResultList?.[idx],
+          args:
+            attributesValues[idx] !== null
+              ? {
+                  ...omit(attributesValues[idx], '__typename'),
+                  parameters: (attributesValues[idx]
+                    ?.parameters as DistributionParameter[]).map(
+                    ({ __typename, ...parameter }) => parameter,
+                  ),
+                }
+              : attributesValues[idx],
         },
       };
     }, {});
@@ -133,7 +146,9 @@ function constructColumns({
 
 function createEmptyRows(count: number): Array<GridRow> {
   return Array.from({ length: count }, (val, index) => ({
-    id: { value: count === 1000 ? index + 1 : index },
+    id: {
+      value: count === 1000 ? index + 1 : Math.abs(count - 1000 - index - 1),
+    },
   }));
 }
 
@@ -155,33 +170,31 @@ function constructRows(
     domainObjects = [],
     attributes = [],
   }: ProjectStructureInput,
-  calculationResultList?: number[][],
+  calculationResultList?: TableDistributionResultList,
 ): GridRow[] {
-  const emptyRowsLength = 1000 - domainObjects.length;
   return [
-    ...domainObjects.map(({ domainObjectPath, geoObjectCategory }, idx) => ({
-      ...convertCellsDataToGridRow(domainObjectPath, domainEntities),
-      [SpecialColumns.GEO_CATEGORY]: getGeoObjectCategoryCellValue(
-        geoObjectCategory,
-      ),
-      id: { value: idx },
-    })),
-    ...domainObjects.map(({ attributeValues }, idx) => ({
-      ...prepareCalculationParamsToGridRow(
-        attributes,
-        attributeValues,
-        calculationResultList?.[idx],
-      ),
-      id: { value: idx },
-    })),
-    ...createEmptyRows(emptyRowsLength),
+    ...domainObjects.map(
+      ({ domainObjectPath, geoObjectCategory, attributeValues }, idx) => ({
+        ...convertCellsDataToGridRow(domainObjectPath, domainEntities),
+        ...prepareCalculationParamsToGridRow(
+          attributes,
+          attributeValues,
+          calculationResultList?.[idx],
+        ),
+        id: { value: idx + 1 },
+        [SpecialColumns.GEO_CATEGORY]: getGeoObjectCategoryCellValue(
+          geoObjectCategory,
+        ),
+      }),
+    ),
+    ...createEmptyRows(1000 - domainObjects.length),
   ];
 }
 
 export function unpackTableData(
   projectStructure: ProjectStructureInput,
   version: number,
-  calculationResultList?: number[][],
+  calculationResultList?: TableDistributionResultList,
 ): GridCollection & { version: number } {
   const columns: GridColumn[] = constructColumns(projectStructure);
   const rows: GridRow[] = constructRows(

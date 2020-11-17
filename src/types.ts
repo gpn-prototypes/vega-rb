@@ -1,5 +1,9 @@
 import { DomainObject, RbDomainEntityIcons } from 'generated/graphql';
 
+export interface Identity {
+  getToken(): string;
+}
+
 interface Structure {
   __typename?: string;
 }

@@ -3,18 +3,25 @@ import { useRouteMatch } from 'react-router';
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { defaultTo } from 'lodash';
 import projectsApi from 'services/projects';
+import { Identity } from 'types';
 
 const ROUTE_MATCH_PROJECT_ID = '/projects/show/:projectId';
 
 type MatchedData = { projectId: string };
 
+interface ProjectContextProps extends MatchedData {
+  identity?: Identity;
+}
+
 interface ProjectProviderProps {
-  graphqlClient?: ApolloClient<NormalizedCacheObject>;
+  graphqlClient: ApolloClient<NormalizedCacheObject>;
+  identity: Identity;
 }
 
 const ProjectProvider: React.FC<ProjectProviderProps> = ({
   children,
   graphqlClient,
+  identity,
 }) => {
   const matchedData = defaultTo<MatchedData>(
     useRouteMatch<MatchedData>(ROUTE_MATCH_PROJECT_ID)?.params,
@@ -31,12 +38,19 @@ const ProjectProvider: React.FC<ProjectProviderProps> = ({
   }, [graphqlClient, matchedData]);
 
   return (
-    <ProjectContext.Provider value={matchedData}>
+    <ProjectContext.Provider
+      value={{
+        ...matchedData,
+        identity,
+      }}
+    >
       {children}
     </ProjectContext.Provider>
   );
 };
 
-const ProjectContext = React.createContext<MatchedData>({ projectId: '' });
+const ProjectContext = React.createContext<ProjectContextProps>({
+  projectId: '',
+});
 
 export { ProjectProvider, ProjectContext };

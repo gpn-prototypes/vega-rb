@@ -100,7 +100,6 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "faker": "^4.1.0",
     "file-loader": "4.3.0",
-    "file-saver": "^2.0.2",
     "fp-ts": "^2.5.3",
     "fs-extra": "^8.1.0",
     "graphql": "^15.3.0",
