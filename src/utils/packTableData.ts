@@ -45,23 +45,21 @@ export function packTableData(
     domainEntitiesColumns.some(({ key }) => row[key]),
   );
 
-  const domainObjects = rows
-    .filter((row) => domainEntitiesColumns.some(({ key }) => row[key]?.value))
-    .map((row) => ({
-      visible: true,
-      domainObjectPath: domainEntitiesColumns.map(({ key }) =>
-        String(row[key]?.value || ''),
-      ),
-      risksValues: riskColumns.map(
-        ({ key }) => (row[key]?.value as number) ?? null,
-      ),
-      geoObjectCategory: getGeoObjectCategoryParamsFromOption(
-        row[SpecialColumns.GEO_CATEGORY]?.value as OptionEntity,
-      ),
-      attributeValues: calculationParametersColumns.map(
-        ({ key }) => row[key]?.args as Maybe<Distribution>,
-      ),
-    }));
+  const domainObjects = rows.map((row) => ({
+    visible: true,
+    domainObjectPath: domainEntitiesColumns.map(({ key }) =>
+      String(row[key]?.value || ''),
+    ),
+    risksValues: riskColumns.map(
+      ({ key }) => (row[key]?.value as number) ?? null,
+    ),
+    geoObjectCategory: getGeoObjectCategoryParamsFromOption(
+      row[SpecialColumns.GEO_CATEGORY]?.value as OptionEntity,
+    ),
+    attributeValues: calculationParametersColumns.map(
+      ({ key }) => row[key]?.args as Maybe<Distribution>,
+    ),
+  }));
   const domainEntities = domainEntitiesColumns.map(({ name, type, key }) => ({
     name,
     icon: RbDomainEntityIcons.FormationIcon,

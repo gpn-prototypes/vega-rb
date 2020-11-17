@@ -89,6 +89,7 @@ export const GET_TABLE_TEMPLATE = gql`
             structure {
               domainEntities {
                 name
+                code
                 __typename
               }
               attributes {
