@@ -1,10 +1,11 @@
 import {
+  Conception,
   DistributionDefinitionTypes,
   DistributionParameterInput,
   DistributionParameterTypes,
   DistributionTypes,
 } from 'generated/graphql';
-import { eq, isFinite, isString, toNumber, toPairs } from 'lodash';
+import { toPairs } from 'lodash';
 import {
   DefaultField,
   DistributionParameterPercentileRank,
@@ -15,8 +16,13 @@ import {
 import { percentileFieldRankTypes, percentileFieldTypes } from './constants';
 import distributionParametersMap from './data';
 
-export const isNumeric = (value: number | string | undefined): boolean =>
-  isFinite(toNumber(value) || (isString(value) && !eq(value.trim(), '')));
+export const conceptionStructureIsNotEmpty = (
+  conception: Conception,
+): boolean => conception.structure.domainObjects.length > 0;
+
+const isNumeric = (num?: string | number) =>
+  (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) &&
+  !Number.isNaN(num as number);
 
 export const checkDistributionValidation = (
   parameters: Partial<DistributionSettingsParameters>,
