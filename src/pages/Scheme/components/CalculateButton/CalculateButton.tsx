@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
-import { Button } from '@gpn-prototypes/vega-button';
+import { Button } from '@gpn-prototypes/vega-ui';
 import { saveAs } from 'file-saver';
 import { TableError } from 'generated/graphql';
 import tableDuck from 'store/tableDuck';

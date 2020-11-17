@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router';
-import { Button } from '@gpn-prototypes/vega-button';
+import { Button } from '@gpn-prototypes/vega-ui';
 
 import style from './Projects.module.css';
 

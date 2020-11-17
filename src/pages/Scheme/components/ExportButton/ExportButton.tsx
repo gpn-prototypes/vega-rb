@@ -3,7 +3,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
-import { Button } from '@gpn-prototypes/vega-button';
+import { Button } from '@gpn-prototypes/vega-ui';
 import { RootState } from 'store/types';
 import { packTableData } from 'utils';
 

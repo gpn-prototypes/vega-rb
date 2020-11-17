@@ -1,6 +1,5 @@
 import React from 'react';
-import { Form } from '@gpn-prototypes/vega-form';
-import { TextField } from '@gpn-prototypes/vega-text-field';
+import { Form, TextField } from '@gpn-prototypes/vega-ui';
 
 import { cnDistributionSettingsFormField } from './cn-distribution-settings-form-field';
 

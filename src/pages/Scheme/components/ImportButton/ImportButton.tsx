@@ -1,10 +1,14 @@
 import React, { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
-import { Button } from '@gpn-prototypes/vega-button';
-import { FileInput } from '@gpn-prototypes/vega-file-input';
-import { IconAlert, IconAttach, IconProps } from '@gpn-prototypes/vega-icons';
-import { SnackBar } from '@gpn-prototypes/vega-snack-bar';
+import {
+  Button,
+  FileInput,
+  IconAlert,
+  IconAttach,
+  IconProps,
+  SnackBar,
+} from '@gpn-prototypes/vega-ui';
 import { Maybe } from 'generated/graphql';
 import useAsyncError from 'hooks/useAsyncError';
 import tableDuck from 'store/tableDuck';

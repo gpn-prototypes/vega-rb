@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form } from '@gpn-prototypes/vega-form';
+import { Form } from '@gpn-prototypes/vega-ui';
 import EditableText from 'components/EditableText';
 import {
   DistributionDefinitionError,

@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from 'react';
-import { IconCheck, IconEdit } from '@gpn-prototypes/vega-icons';
+import { IconCheck, IconEdit } from '@gpn-prototypes/vega-ui';
 import { cnEditableText } from 'components/EditableText/cn-editable-text';
 
 import './EditableText.css';
