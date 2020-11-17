@@ -1,3 +1,4 @@
+import { OptionEntity } from 'components/ExcelTable/Models/OptionEntity';
 import { GridCollection, TableEntities } from 'components/ExcelTable/types';
 import {
   Distribution,
@@ -6,9 +7,19 @@ import {
   ProjectStructureInput,
   RbDomainEntityIcons,
 } from 'generated/graphql';
+import { SpecialColumns } from 'model/Table';
 import { CalculationParam, Risk } from 'types';
 
 import { getColumnsByType } from './getColumnsByType';
+
+function getGeoObjectCategoryParamsFromOption(option?: OptionEntity) {
+  if (option) {
+    return option.text === 'Р'
+      ? GeoObjectCategories.Resources
+      : GeoObjectCategories.Reserves;
+  }
+  return GeoObjectCategories.Reserves;
+}
 
 export function packTableData(
   data: GridCollection,
@@ -31,13 +42,11 @@ export function packTableData(
     name,
   }));
   const rows = data.rows.filter((row) =>
-    domainEntitiesColumns.every(({ key }) => key && row[key]),
+    domainEntitiesColumns.some(({ key }) => row[key]),
   );
 
   const domainObjects = rows
-    .filter((row) =>
-      domainEntitiesColumns.some(({ key }) => key && row[key]?.value),
-    )
+    .filter((row) => domainEntitiesColumns.some(({ key }) => row[key]?.value))
     .map((row) => ({
       visible: true,
       domainObjectPath: domainEntitiesColumns.map(({ key }) =>
@@ -46,7 +55,9 @@ export function packTableData(
       risksValues: riskColumns.map(
         ({ key }) => (row[key]?.value as number) ?? null,
       ),
-      geoObjectCategory: GeoObjectCategories.Reserves,
+      geoObjectCategory: getGeoObjectCategoryParamsFromOption(
+        row[SpecialColumns.GEO_CATEGORY]?.value as OptionEntity,
+      ),
       attributeValues: calculationParametersColumns.map(
         ({ key }) => row[key]?.args as Maybe<Distribution>,
       ),

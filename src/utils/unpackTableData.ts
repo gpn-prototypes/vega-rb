@@ -5,6 +5,7 @@ import {
   GridRow,
   TableEntities,
 } from 'components/ExcelTable/types';
+import { options } from 'components/ExcelTable/utils/getEditor';
 import {
   AttributeInput,
   DistributionInput,
@@ -16,7 +17,7 @@ import {
   RiskInput,
 } from 'generated/graphql';
 import { omit } from 'lodash';
-import { CATEGORIES_TYPES, SpecialColumns } from 'model/Table';
+import { SpecialColumns } from 'model/Table';
 import { CalculationParam, GeoCategory, Risk, TableStructures } from 'types';
 
 type TableDistributionResultList = Array<null | number>[];
@@ -35,14 +36,10 @@ const getCalculationColumn = (
 
 const getCategoryColumn = (
   prev: GridColumn[],
-  { name }: GeoCategory,
+  { code, name }: GeoCategory,
 ): GridColumn[] => [
   ...prev,
-  new GridColumnEntity(
-    CATEGORIES_TYPES.get(name)!,
-    name,
-    TableEntities.GEO_CATEGORY,
-  ),
+  new GridColumnEntity(code, name, TableEntities.GEO_CATEGORY),
 ];
 
 const getRiskColumn = (
@@ -61,10 +58,7 @@ function structureParamsReducer(list: TableStructures[]): GridColumn[] {
         return getCalculationColumn(prev, curr as CalculationParam);
 
       case TableEntities.GEO_CATEGORY:
-        if (CATEGORIES_TYPES.has(curr.name)) {
-          return getCategoryColumn(prev, curr as GeoCategory);
-        }
-        return prev;
+        return getCategoryColumn(prev, curr as GeoCategory);
 
       case TableEntities.RISK:
         return getRiskColumn(prev, curr as Risk);
@@ -172,15 +166,12 @@ function createEmptyRows(count: number): Array<GridRow> {
 }
 
 function getGeoObjectCategoryCellValue(category?: GeoObjectCategories) {
-  if (!category) {
-    return {
-      value: '',
-    };
+  if (category) {
+    return category === GeoObjectCategories.Reserves
+      ? options.reef
+      : options.resource;
   }
-  return {
-    value: category,
-    text: category === GeoObjectCategories.Reserves ? 'Р' : 'З',
-  };
+  return options.reef;
 }
 
 function constructRows(

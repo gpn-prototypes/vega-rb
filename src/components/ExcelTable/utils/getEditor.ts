@@ -4,7 +4,7 @@ import { OptionEntity } from 'components/ExcelTable/Models/OptionEntity';
 import { DropDownEditor, SimpleTextEditor } from '../Editors';
 import { EditorResult, TableEntities } from '../types';
 
-const options = {
+export const options = {
   resource: new OptionEntity('resource', 'Р'),
   reef: new OptionEntity('reef', 'З'),
 };

@@ -49,7 +49,7 @@ interface GridCellArguments {
 }
 
 export interface GridCellProperties {
-  value: ReactText;
+  value: ReactText | DropdownOption;
   args?: GridCellArguments;
 }
 

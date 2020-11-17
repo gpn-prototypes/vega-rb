@@ -44,7 +44,7 @@ function DropDownEditor<TRow>(
       <select
         ref={selectRef}
         className={cnDropDownEditor.toString()}
-        defaultValue={value?.value}
+        defaultValue={value?.value as string}
         onBlur={onCommit}
         size={size(options)}
       >
