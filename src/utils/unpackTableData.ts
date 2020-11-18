@@ -29,7 +29,7 @@ const getCalculationColumn = (
   ...prev,
   new GridColumnEntity(
     code,
-    `${shortName}, ${units}`,
+    units.trim().length ? `${shortName}, ${units}` : shortName,
     TableEntities.CALC_PARAM,
   ),
 ];

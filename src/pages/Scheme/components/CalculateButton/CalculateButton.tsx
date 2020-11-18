@@ -4,7 +4,6 @@ import { useApolloClient } from '@apollo/client';
 import { Button } from '@gpn-prototypes/vega-ui';
 import { ProjectContext } from 'components/Providers';
 import { TableError } from 'generated/graphql';
-import { conceptionStructureIsNotEmpty } from 'pages/Scheme/components/DistributionSettings/helpers';
 import { TemplateProjectData } from 'pages/Scheme/components/Table/types';
 import {
   getDownloadResultUri,
@@ -25,14 +24,16 @@ export const CalculateButton: React.FC = () => {
   const tableData = useSelector((state: RootState) => state.table);
 
   const handleClick = async () => {
-    const { data } = await client.query<TemplateProjectData>({
+    const { data: responseData } = await client.query<TemplateProjectData>({
       query: GET_TABLE_TEMPLATE,
       context: {
         uri: getGraphqlUri(projectId),
       },
     });
+    // TODO: conceptions mock
+    // const getStructure = (conceptions) => head(conceptions).structure;
 
-    if (data) {
+    if (responseData) {
       const {
         domainEntities,
         attributes,
@@ -40,7 +41,7 @@ export const CalculateButton: React.FC = () => {
         risks,
       } = packTableData(
         tableData,
-        data?.resourceBase.project.template.conceptions[0].structure,
+        responseData?.resourceBase.project.template.conceptions[0].structure,
       );
       const conception = {
         name: 'conception_1',
@@ -53,7 +54,8 @@ export const CalculateButton: React.FC = () => {
           risks,
         },
       };
-      if (conceptionStructureIsNotEmpty(conception)) {
+
+      if (conception) {
         client
           .mutate({
             mutation: CALCULATION_PROJECT,

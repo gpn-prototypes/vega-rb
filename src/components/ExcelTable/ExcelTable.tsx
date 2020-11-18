@@ -7,14 +7,12 @@ import ReactDataGrid, {
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { AutoSizer } from 'react-virtualized';
-import CalculationParamsHeaderContextMenu from 'components/ExcelTable/ContextMenu/CalculationParamsHeaderContextMenu';
 
 import { renderColumns } from './Columns/renderColumns';
 import { cnExcelTable } from './cn-excel-table';
 import { HeaderContextMenu } from './ContextMenu';
 import StyledRow from './StyledRow';
 import {
-  CALCULATION_PARAMS_HEADER_CONTEXT_ID,
   GridCollection,
   GridColumn,
   GridRow,
@@ -134,10 +132,6 @@ export const ExcelTable: React.FC<IProps> = ({
         onDelete={onColumnDelete}
         onInsertLeft={onColumnInsertLeft}
         onInsertRight={onColumnInsertRight}
-      />
-      <CalculationParamsHeaderContextMenu
-        id={CALCULATION_PARAMS_HEADER_CONTEXT_ID}
-        onDelete={onColumnDelete}
       />
     </>
   );

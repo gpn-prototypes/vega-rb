@@ -7,6 +7,7 @@ import {
   ProjectStructureInput,
   RbDomainEntityIcons,
 } from 'generated/graphql';
+import { defaultTo } from 'lodash';
 import { SpecialColumns } from 'model/Table';
 import { CalculationParam, Risk } from 'types';
 
@@ -64,6 +65,7 @@ export function packTableData(
       ({ key }) => row[key]?.args as Maybe<Distribution>,
     ),
   }));
+
   const domainEntities = domainEntitiesColumns.map(({ name, type, key }) => ({
     name,
     icon: RbDomainEntityIcons.FormationIcon,
@@ -75,11 +77,20 @@ export function packTableData(
     },
   }));
 
+  const removeCommas = (str: string) =>
+    str.split(',').filter(Boolean).join(',');
+
   const calculationParameters = calculationParametersColumns.map(
-    ({ key }) =>
-      ({
-        ...template.attributes.find(({ code }) => code === key),
-      } as CalculationParam),
+    ({ key, name }) => {
+      const el = template.attributes.find(({ code }) => code === key);
+      const nameWithoutCommas = removeCommas(name);
+      return defaultTo(el, {
+        code: key,
+        name: nameWithoutCommas,
+        shortName: nameWithoutCommas,
+        units: '',
+      }) as CalculationParam;
+    },
   );
 
   return {
