@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
+import { useUnmount } from '@gpn-prototypes/vega-hooks';
 import ExcelTable from 'components/ExcelTable';
 import { SelectedCell, TableEntities } from 'components/ExcelTable/types';
 import { ProjectContext } from 'components/Providers';
@@ -151,6 +152,10 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
           });
       });
   }, [client, dispatch, projectId]);
+
+  useUnmount(() => {
+    dispatch(tableDuck.actions.reset());
+  });
 
   return (
     <ExcelTable

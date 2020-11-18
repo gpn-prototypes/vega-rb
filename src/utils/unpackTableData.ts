@@ -80,16 +80,15 @@ const prepareCalculationParamsToGridRow = (
         ...prev,
         [key]: {
           value: calculationResultList?.[idx],
-          args:
-            attributesValues[idx] !== null
-              ? {
-                  ...omit(attributesValues[idx], '__typename'),
-                  parameters: (attributesValues[idx]
-                    ?.parameters as DistributionParameter[]).map(
-                    ({ __typename, ...parameter }) => parameter,
-                  ),
-                }
-              : attributesValues[idx],
+          args: attributesValues[idx]
+            ? {
+                ...omit(attributesValues[idx], '__typename'),
+                parameters: (attributesValues[idx]
+                  ?.parameters as DistributionParameter[]).map(
+                  ({ __typename, ...parameter }) => parameter,
+                ),
+              }
+            : attributesValues[idx],
         },
       };
     }, {});

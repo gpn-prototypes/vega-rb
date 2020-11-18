@@ -34,6 +34,7 @@ const actions = {
   updateRows: factory<GridRow[]>('UPDATE_ROWS'),
   updateCell: factory<GridCell>('UPDATE_CELL'),
   updateErrors: factory<TableError[]>('UPDATE_ERRORS'),
+  reset: factory('RESET_TABLE'),
 };
 
 const initialState: TableState = {
@@ -44,6 +45,7 @@ const initialState: TableState = {
 };
 
 const reducer = reducerWithInitialState<TableState>(initialState)
+  .case(actions.reset, () => initialState)
   .case(actions.init, (state, payload) => ({
     ...state,
     rows: payload.rows,
