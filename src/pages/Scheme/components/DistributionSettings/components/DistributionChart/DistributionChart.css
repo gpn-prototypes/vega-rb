@@ -1,4 +1,6 @@
 .DistributionChart {
+  margin-bottom: 60px;
+
   background-color: var(--color-bg-secondary);
 
   &__Percentiles {
@@ -9,11 +11,10 @@
   }
 
   &__ProjectionLines {
+    opacity: 0.3;
     fill: none;
     stroke: var(--color-typo-warning);
     stroke-width: 1;
-
-    opacity: 0.3;
   }
 
   &__Grid {
