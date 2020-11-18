@@ -7,7 +7,7 @@ import { Data, Point } from './types';
 import './DistributionChart.css';
 
 const height = 224;
-const width = 400;
+const width = 376;
 const margin = { top: 18, right: 20, bottom: 28, left: 45 };
 
 interface DistributionChartProps {

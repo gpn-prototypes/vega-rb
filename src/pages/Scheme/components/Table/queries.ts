@@ -66,6 +66,22 @@ export const SAVE_PROJECT = gql`
   mutation SaveProject($projectInput: RBProjectInput!, $version: Int!) {
     resourceBase {
       saveProject(projectInput: $projectInput, version: $version) {
+        ... on TableErrors {
+          errors {
+            code
+            message
+            tableName
+            column
+            row
+          }
+        }
+        ... on DistributionDefinitionErrors {
+          errors {
+            code
+            message
+            fields
+          }
+        }
         ... on Error {
           code
           details
