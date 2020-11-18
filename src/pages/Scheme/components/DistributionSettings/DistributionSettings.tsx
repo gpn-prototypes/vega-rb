@@ -24,7 +24,7 @@ import DistributionChart from './components/DistributionChart';
 import DistributionSettingsForm from './components/DistributionSettingsForm';
 import { percentileFieldRankTypes } from './constants';
 import {
-  checkDistributionValidation,
+  checkDistributionParametersIsValid,
   getDistributionFormDataParams,
   mapEntries,
   prepareDistributionParams,
@@ -102,7 +102,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
             ...defaultParameters,
           },
         };
-        const isValid = checkDistributionValidation(result.parameters);
+        const isValid = checkDistributionParametersIsValid(result.parameters);
 
         return {
           ...result,
@@ -140,19 +140,22 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
       }: DistributionSettingsFormData,
       cell,
     ) => {
-      dispatch(
-        tableDuck.actions.updateCell({
-          selectedCell: cell,
-          cellData: {
-            args: {
-              parameters: mapEntries(parameters, prepareDistributionParams),
-              type: distributionType,
-              definition: distributionDefinitionType,
+      const isValid = checkDistributionParametersIsValid(parameters);
+      if (isValid) {
+        dispatch(
+          tableDuck.actions.updateCell({
+            selectedCell: cell,
+            cellData: {
+              args: {
+                parameters: mapEntries(parameters, prepareDistributionParams),
+                type: distributionType,
+                definition: distributionDefinitionType,
+              },
+              value,
             },
-            value,
-          },
-        }),
-      );
+          }),
+        );
+      }
     },
     [dispatch],
   );
@@ -193,7 +196,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
 
   const handleChange = (distributionProps: DistributionSettingsFormData) => {
     setFormData(distributionProps);
-    if (checkDistributionValidation(distributionProps.parameters)) {
+    if (checkDistributionParametersIsValid(distributionProps.parameters)) {
       getChart(distributionProps).then((data) => {
         if (data.errors) {
           setErrors(data.errors);
@@ -222,7 +225,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
     if (selectedCell) {
       const result = getFormDataFromTableCell(selectedCell);
       setFormData(result);
-      if (checkDistributionValidation(result.parameters)) {
+      if (checkDistributionParametersIsValid(result.parameters)) {
         getChart(result).then(
           ({ distributionChart, errors: distributionDefinitionErrors }) => {
             if (distributionDefinitionErrors) {

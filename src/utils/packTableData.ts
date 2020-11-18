@@ -14,7 +14,7 @@ import { getColumnsByType } from './getColumnsByType';
 
 function getGeoObjectCategoryParamsFromOption(option?: OptionEntity) {
   if (option) {
-    return option.text === 'resource'
+    return option.toString() === 'resource'
       ? GeoObjectCategories.Resources
       : GeoObjectCategories.Reserves;
   }
