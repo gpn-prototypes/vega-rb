@@ -33,7 +33,12 @@ export const CalculateButton: React.FC = () => {
     });
 
     if (data) {
-      const { domainEntities, attributes, domainObjects = [] } = packTableData(
+      const {
+        domainEntities,
+        attributes,
+        domainObjects = [],
+        risks,
+      } = packTableData(
         tableData,
         data?.resourceBase.project.template.conceptions[0].structure,
       );
@@ -45,10 +50,7 @@ export const CalculateButton: React.FC = () => {
           domainEntities,
           attributes,
           domainObjects,
-          risks: [
-            { code: 'PARENT_MATERIAL', name: 'Мат. порода' },
-            { code: 'MIGRATION', name: 'Миграция' },
-          ],
+          risks,
         },
       };
       if (conceptionStructureIsNotEmpty(conception)) {

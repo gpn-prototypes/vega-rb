@@ -14,7 +14,7 @@ import { getColumnsByType } from './getColumnsByType';
 
 function getGeoObjectCategoryParamsFromOption(option?: OptionEntity) {
   if (option) {
-    return option.text === 'Р'
+    return option.text === 'resource'
       ? GeoObjectCategories.Resources
       : GeoObjectCategories.Reserves;
   }
@@ -41,8 +41,12 @@ export function packTableData(
     code: key,
     name,
   }));
-  const rows = data.rows.filter((row) =>
-    domainEntitiesColumns.some(({ key }) => row[key]),
+
+  const rows = data.rows.filter(
+    (row) =>
+      domainEntitiesColumns.some(({ key }) => row[key]) ||
+      riskColumns.some(({ key }) => row[key]) ||
+      calculationParametersColumns.some(({ key }) => row[key]),
   );
 
   const domainObjects = rows.map((row) => ({

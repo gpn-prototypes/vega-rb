@@ -5,10 +5,8 @@ export function getInsertableType(
   columnsList: GridColumn[],
   insertIdx: number,
 ): TableEntities {
-  const prevIdx =
-    isNoneColumnType(columnsList[insertIdx].type!) ||
-    TableEntities.GEO_CATEGORY_TYPE
-      ? insertIdx - 1
-      : insertIdx;
+  const prevIdx = isNoneColumnType(columnsList[insertIdx].type!)
+    ? insertIdx - 1
+    : insertIdx;
   return columnsList[prevIdx].type || TableEntities.NONE;
 }
