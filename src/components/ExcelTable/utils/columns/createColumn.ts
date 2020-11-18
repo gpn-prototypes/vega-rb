@@ -10,7 +10,7 @@ export function createColumn(
   const key = uuidv4();
   return {
     key,
-    name: '',
+    name: 'Новый столбец',
     code: key,
     editable: true,
     resizable: true,
