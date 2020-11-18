@@ -52,12 +52,8 @@ const CellWithError: React.ForwardRefExoticComponent<
           .filter((c) => c.type === (column as GridColumn).type)
           .findIndex((c) => c.key === (column as GridColumn).key);
         const isSameTableType =
-          ((column as GridColumn).type === TableEntities.GEO_CATEGORY &&
-            tableName === TableNames.DomainEntities) ||
-          ((column as GridColumn).type === TableEntities.CALC_PARAM &&
-            tableName === TableNames.Attributes) ||
-          ((column as GridColumn).type === TableEntities.RISK &&
-            tableName === TableNames.Risks);
+          (column as GridColumn).type === TableEntities.CALC_PARAM &&
+          tableName === TableNames.Attributes;
         const isSameColumn = tableColumnIdx === columnIdx;
         const isSameRow = rowIdx === currentRowIdx;
         return isSameRow && isSameColumn && isSameTableType;
