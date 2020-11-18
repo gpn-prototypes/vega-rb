@@ -12,8 +12,6 @@ import {
 } from 'generated/graphql';
 
 export const HEADER_CONTEXT_ID = 'header-context-menu';
-export const CALCULATION_PARAMS_HEADER_CONTEXT_ID =
-  'calculation-params-header-context-menu';
 
 export enum CategoryIcon {
   LICENSING_ROUND_ICON = 'LICENSING_ROUND_ICON',

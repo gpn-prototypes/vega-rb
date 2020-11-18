@@ -15,8 +15,8 @@ class ProjectsAPI {
     this._projectId = projectId;
   }
 
-  getClient() {
-    return this._client;
+  getClient(): ApolloClient<NormalizedCacheObject> {
+    return this._client as ApolloClient<NormalizedCacheObject>;
   }
 
   getProjectId() {
