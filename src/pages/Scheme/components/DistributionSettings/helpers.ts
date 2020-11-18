@@ -24,7 +24,7 @@ const isNumeric = (num?: string | number) =>
   (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) &&
   !Number.isNaN(num as number);
 
-export const checkDistributionValidation = (
+export const checkDistributionParametersIsValid = (
   parameters: Partial<DistributionSettingsParameters>,
 ): boolean => {
   return (Object.keys(

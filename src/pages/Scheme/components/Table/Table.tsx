@@ -46,6 +46,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
           context: {
             uri: getGraphqlUri(projectId),
           },
+          fetchPolicy: 'no-cache',
           variables: {
             distribution: {
               parameters: (parameters as DistributionParameter[]).map(
@@ -103,6 +104,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
             context: {
               uri: getGraphqlUri(projectId),
             },
+            fetchPolicy: 'no-cache',
           })
           .then((res) => {
             if (res.data.resourceBase.project.loadFromDatabase) {
