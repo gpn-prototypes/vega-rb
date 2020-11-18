@@ -50,24 +50,16 @@
       background-color: var(--color-bg-secondary);
       border-right: solid 3px var(--color-bg-border);
     }
+
+    &__Tooltip {
+      --tooltip-bg-color: var(--color-bg-alert);
+      --color-typo-primary: #fafafa;
+      color: var(--color-typo-primary);
+      font-size: var(--size-text-xs);
+    }
   }
 }
 
 .HeaderBefore {
   opacity: 0.7;
-}
-
-/* TODO: fix it */
-.Tooltip {
-  .Tooltip-Background {
-    background: var(--color-bg-alert);
-  }
-
-  .Tooltip-Arrow {
-    border-right-color: var(--color-bg-alert);
-  }
-
-  .Tooltip-Content {
-    color: var(--color-typo-primary);
-  }
 }

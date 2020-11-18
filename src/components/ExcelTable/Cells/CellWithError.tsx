@@ -16,7 +16,7 @@ import { TableNames } from 'generated/graphql';
 import useCombinedRefs from 'hooks/useCombinedRefs';
 import { RootState } from 'store/types';
 
-import { cnCellValueError } from '../cn-excel-table';
+import { cnCellTooltip, cnCellValueError } from '../cn-excel-table';
 import { GridColumn, GridRow, TableEntities } from '../types';
 
 interface IProps extends CellRendererProps<GridRow> {
@@ -55,10 +55,11 @@ const CellWithError: React.ForwardRefExoticComponent<
           (column.key === TableEntities.GEO_CATEGORY &&
             tableName === TableNames.DomainEntities) ||
           ((column as GridColumn).type === TableEntities.CALC_PARAM &&
-            tableName === TableNames.Attributes);
+            tableName === TableNames.Attributes) ||
+          ((column as GridColumn).type === TableEntities.RISK &&
+            tableName === TableNames.Risks);
         const isSameColumn = tableColumnIdx === columnIdx;
         const isSameRow = rowIdx === currentRowIdx;
-
         return isSameRow && isSameColumn && isSameTableType;
       }),
     [column, columns, currentRowIdx, errors],
@@ -134,6 +135,7 @@ const CellWithError: React.ForwardRefExoticComponent<
           size="s"
           anchorRef={innerRef as RefObject<HTMLDivElement>}
           direction="rightCenter"
+          className={cnCellTooltip.toString()}
         >
           {error.message}
         </Tooltip>
