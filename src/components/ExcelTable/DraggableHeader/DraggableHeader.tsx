@@ -73,9 +73,10 @@ export function DraggableHeader({
         isDragging && styles.IsDragging,
         isOver && styles.IsOver,
       )}
+      onDoubleClick={onDoubleClick}
     >
       {beforeContent}
-      <div className={styles.WrapperText} onDoubleClick={onDoubleClick}>
+      <div className={styles.WrapperText}>
         {isRenaming ? editor : <span>{name}</span>}
       </div>
     </div>
