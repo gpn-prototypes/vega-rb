@@ -52,7 +52,7 @@ const CellWithError: React.ForwardRefExoticComponent<
           .filter((c) => c.type === (column as GridColumn).type)
           .findIndex((c) => c.key === (column as GridColumn).key);
         const isSameTableType =
-          (column.key === TableEntities.GEO_CATEGORY &&
+          ((column as GridColumn).type === TableEntities.GEO_CATEGORY &&
             tableName === TableNames.DomainEntities) ||
           ((column as GridColumn).type === TableEntities.CALC_PARAM &&
             tableName === TableNames.Attributes) ||
