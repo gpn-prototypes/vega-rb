@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   GridCell,
   GridColumn,
@@ -14,7 +13,13 @@ import {
 } from 'pages/Scheme/components/Table/queries';
 import { getGraphqlUri, getMockConceptions } from 'pages/Scheme/helpers';
 import { Epic } from 'redux-observable';
-import { distinctUntilChanged, tap } from 'rxjs/operators';
+import { forkJoin, from, of } from 'rxjs';
+import {
+  distinctUntilChanged,
+  ignoreElements,
+  mergeMap,
+  switchMap,
+} from 'rxjs/operators';
 import projectsApi from 'services/projects';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
@@ -111,45 +116,61 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
   action$.pipe(
     ofAction(actions.updateColumns, actions.updateRows, actions.updateCell),
     distinctUntilChanged(),
-    tap(async () => {
-      const client = projectsApi.getClient() as ApolloClient<
-        NormalizedCacheObject
-      >;
-      const projectId = projectsApi.getProjectId();
-      const result = await client.query({
-        query: GET_TABLE_TEMPLATE,
-        context: {
-          uri: getGraphqlUri(projectId),
-        },
-      });
-      const versionResult = await client.query({
-        query: GET_VERSION,
-        variables: {
-          vid: projectId,
-        },
-        fetchPolicy: 'network-only',
-      });
-
-      client.mutate({
-        mutation: SAVE_PROJECT,
-        context: {
-          uri: getGraphqlUri(projectId),
-        },
-        variables: {
-          projectInput: getMockConceptions({
-            name: 'conception_1',
-            description: '',
-            probability: 0.6,
-            structure: packTableData(
-              state$.value.table,
-              result?.data.resourceBase.project.template.conceptions[0]
-                .structure,
+    mergeMap((_) =>
+      of({
+        client: projectsApi.getClient(),
+        projectId: projectsApi.getProjectId(),
+      }),
+    ),
+    switchMap(({ client, projectId }) =>
+      forkJoin([
+        of({ client, projectId }),
+        from(
+          client
+            .query({
+              query: GET_TABLE_TEMPLATE,
+              context: {
+                uri: getGraphqlUri(projectId),
+              },
+            })
+            .then(
+              ({ data }) =>
+                data.resourceBase.project.template.conceptions[0].structure,
             ),
-          }),
-          version: versionResult.data.project.version,
-        },
-      });
-    }),
+        ),
+        from(
+          client
+            .query({
+              query: GET_VERSION,
+              variables: {
+                vid: projectId,
+              },
+              fetchPolicy: 'no-cache',
+            })
+            .then(({ data }) => data.project.version),
+        ),
+      ]),
+    ),
+    switchMap(([{ client, projectId }, structure, version]) =>
+      from(
+        client.mutate({
+          mutation: SAVE_PROJECT,
+          context: {
+            uri: getGraphqlUri(projectId),
+          },
+          variables: {
+            projectInput: getMockConceptions({
+              name: 'conception_1',
+              description: '',
+              probability: 0.6,
+              structure: packTableData(state$.value.table, structure),
+            }),
+            version,
+          },
+        }),
+      ),
+    ),
+    ignoreElements(),
   );
 
 export default {
