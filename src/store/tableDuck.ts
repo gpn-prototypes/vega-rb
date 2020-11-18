@@ -1,3 +1,4 @@
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   GridCell,
   GridColumn,
@@ -120,7 +121,7 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
     distinctUntilChanged(),
     mergeMap((_) =>
       of({
-        client: projectsApi.getClient(),
+        client: projectsApi.getClient() as ApolloClient<NormalizedCacheObject>,
         projectId: projectsApi.getProjectId(),
       }),
     ),
