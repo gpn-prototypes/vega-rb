@@ -1,39 +1,56 @@
-import React from 'react';
-// import { Editor } from 'react-data-grid';
+import React, { ChangeEvent } from 'react';
 import { EditorProps } from 'react-data-grid';
-import { GridCellProperties, GridRow } from 'components/ExcelTable/types';
-import { Nullable } from 'types';
+import { GridRow } from 'components/ExcelTable/types';
 
-type IProps = EditorProps<GridCellProperties | undefined>;
+type Props = EditorProps<GridRow | undefined>;
 
-export class SimpleTextEditor
-  extends React.Component<IProps>
-  implements Editor<GridRow> {
-  private readonly input: React.RefObject<Nullable<HTMLInputElement>>;
+export const SimpleTextEditor: React.FC<Props> = ({
+  row,
+  column,
+  onRowChange,
+  onClose,
+}) => {
+  // private readonly input: React.RefObject<Nullable<HTMLInputElement>>;
 
-  constructor(props: IProps) {
-    super(props);
-    this.input = React.createRef();
-  }
+  // constructor(props: IProps) {
+  //   super(props);
+  //   this.input = React.createRef();
+  // }
 
-  getInputNode(): HTMLInputElement | null {
-    return this.input.current;
-  }
+  // getInputNode(): HTMLInputElement | null {
+  //   return this.input.current;
+  // };
 
-  getValue(): GridRow {
+  // getValue(): GridRow {
+  //   return {
+  //     [this.props.column.key]: {
+  //       value: this.input.current?.value || '',
+  //     },
+  //   };
+  // }
+
+  // return React.createElement('input', {
+  //   className: 'rdg-text-editor',
+  //   ref: inputRef,
+  //   defaultValue: this.props.value?.value,
+  //   onBlur: onRowChange,
+  // });
+
+  const onCommit = (event: ChangeEvent<HTMLInputElement>) => {
     return {
-      [this.props.column.key]: {
-        value: this.input.current?.value || '',
+      ...row,
+      [column.key]: {
+        value: event.target.value || '',
       },
     };
-  }
+  };
 
-  render(): React.ReactElement {
-    return React.createElement('input', {
-      className: 'rdg-text-editor',
-      ref: this.input,
-      defaultValue: this.props.value?.value,
-      onBlur: this.props.onCommit,
-    });
-  }
-}
+  return (
+    <input
+      className="rdg-text-editor"
+      defaultValue=""
+      onChange={(event) => onRowChange(onCommit(event))}
+      onBlur={() => onClose(true)}
+    />
+  );
+};
