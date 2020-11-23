@@ -1,11 +1,19 @@
+.RB-App-Wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+
+  width: 100%;
+}
+
 .RB-App {
   display: flex;
   overflow: hidden;
-
   flex-direction: column;
+  flex-grow: 1;
 
   width: 100vw;
-  height: 100vh;
+  min-height: 100%;
 
   color: var(--color-typo-primary);
   background-color: var(--color-bg-default);

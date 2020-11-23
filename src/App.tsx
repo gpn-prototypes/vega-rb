@@ -20,7 +20,7 @@ const App: React.FC<AppProps> = (props) => {
   return (
     <React.StrictMode>
       <ErrorBoundary>
-        <Root defaultTheme="dark">
+        <Root defaultTheme="dark" className={classNames('RB-App-Wrapper')}>
           <Providers
             graphqlClient={graphqlClient as ApolloClient<NormalizedCacheObject>}
             identity={identity as Identity}
