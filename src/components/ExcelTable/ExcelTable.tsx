@@ -1,9 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import ReactDataGrid, {
-  CalculatedColumn,
-  DataGridHandle,
-  RowsUpdateEvent,
-} from 'react-data-grid';
+import ReactDataGrid, { DataGridHandle } from 'react-data-grid';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { AutoSizer } from 'react-virtualized';
@@ -17,7 +13,9 @@ import {
   GridColumn,
   GridRow,
   HEADER_CONTEXT_ID,
+  SelectedCell,
   TableEntities,
+  UniColumn,
 } from './types';
 import { createColumn, getInsertableType } from './utils';
 
@@ -25,17 +23,12 @@ import './ExcelTable.css';
 
 const cnExcelTableClass = cnExcelTable();
 
-type CommonTableColumn = GridColumn & CalculatedColumn<GridRow>;
-
 interface IProps {
   data: GridCollection;
+  selectedCell?: SelectedCell | null;
   setColumns?: (data: GridColumn[]) => void;
   setRows?: (data: GridRow[]) => void;
-  onRowClick?: (
-    rowIdx: number,
-    row: GridRow,
-    column: CommonTableColumn,
-  ) => void;
+  onRowClick?: (rowIdx: number, row: GridRow, column: UniColumn) => void;
 }
 
 export const ExcelTable: React.FC<IProps> = ({
@@ -43,12 +36,13 @@ export const ExcelTable: React.FC<IProps> = ({
   setColumns = (): void => {},
   setRows = (): void => {},
   onRowClick = (): void => {},
+  selectedCell = null,
 }) => {
   const { columns, rows } = data;
   const gridRef = useRef<DataGridHandle>(null);
 
   const handleRowClick = useCallback(
-    (rowIdx: number, row: GridRow, column: CommonTableColumn) => {
+    (rowIdx: number, row: GridRow, column: UniColumn) => {
       if (column.type === TableEntities.GEO_CATEGORY_TYPE) {
         gridRef.current?.selectCell({ rowIdx, idx: column.idx }, true);
       } else {
@@ -59,7 +53,7 @@ export const ExcelTable: React.FC<IProps> = ({
   );
 
   const handleRowsUpdate = useCallback(
-    ({ fromRow, toRow, updated }: RowsUpdateEvent<Partial<GridRow>>) => {
+    ({ fromRow, toRow, updated }) => {
       const newRows = [...rows];
       for (let i = fromRow; i <= toRow; i += 1) {
         newRows[i] = {
@@ -110,18 +104,17 @@ export const ExcelTable: React.FC<IProps> = ({
         <AutoSizer className={cnExcelTableClass}>
           {({ height, width }): JSX.Element => (
             <ReactDataGrid
+              style={{ width, height }}
               ref={gridRef}
               columns={columnsList}
               rows={rows}
-              width={width}
-              height={height}
               rowHeight={32}
               onRowClick={handleRowClick}
-              onRowsUpdate={handleRowsUpdate}
+              onRowsChange={handleRowsUpdate}
               rowRenderer={StyledRow}
-              enableCellCopyPaste
-              enableCellDragAndDrop
-              enableCellAutoFocus
+              // enableCellCopyPaste
+              // enableCellDragAndDrop
+              // enableCellAutoFocus
             />
           )}
         </AutoSizer>

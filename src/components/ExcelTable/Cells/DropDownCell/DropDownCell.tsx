@@ -1,6 +1,6 @@
 import React, { forwardRef, PropsWithChildren } from 'react';
 import { CellRendererProps } from 'react-data-grid';
-import { preventDefault, wrapEvent } from 'react-data-grid/lib/utils';
+import { preventDefault, wrapEvent } from 'react-data-grid/lib/utils/domUtils';
 import { IconSelect } from '@gpn-prototypes/vega-ui';
 import classNames from 'classnames';
 import { GridRow } from 'components/ExcelTable/types';

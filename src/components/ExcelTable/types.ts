@@ -4,7 +4,7 @@ import {
   CellRendererProps,
   FormatterProps as BaseFormatterProps,
   HeaderRendererProps as BaseHeaderRendererProps,
-} from 'react-data-grid/lib/common/types';
+} from 'react-data-grid/lib/types';
 import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,

@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { CellRendererProps } from 'react-data-grid/lib/common/types';
+import { CellRendererProps } from 'react-data-grid';
 import { preventDefault, wrapEvent } from 'react-data-grid/lib/utils';
 import { useSelector } from 'react-redux';
 import { Tooltip } from '@gpn-prototypes/vega-ui';
@@ -31,14 +31,17 @@ const CellWithError: React.ForwardRefExoticComponent<
     column,
     rowIdx: currentRowIdx,
     row,
-    lastFrozenColumnIndex,
-    eventBus,
+    // lastFrozenColumnIndex,
+    selectCell: selectCellDataGrid,
+    selectRow: selectRowDataGrid,
+    isCellSelected,
     onRowClick,
     onClick,
     onDoubleClick,
     onContextMenu,
     onDragOver,
     isRowSelected,
+    onRowChange,
   } = props;
   const innerRef = useRef<HTMLDivElement>(null);
   const combinedRef = useCombinedRefs(ref, innerRef);
@@ -65,11 +68,7 @@ const CellWithError: React.ForwardRefExoticComponent<
   );
 
   function selectCell(openEditor?: boolean) {
-    eventBus.dispatch(
-      'SELECT_CELL',
-      { idx: column.idx, rowIdx: currentRowIdx },
-      openEditor,
-    );
+    selectCellDataGrid({ idx: column.idx, rowIdx: currentRowIdx }, openEditor);
   }
 
   function handleCellClick() {
@@ -87,19 +86,19 @@ const CellWithError: React.ForwardRefExoticComponent<
     selectCell(true);
   }
 
+  function handleRowChange(newRow: GridRow) {
+    onRowChange(currentRowIdx, newRow);
+  }
+
   function onRowSelectionChange(checked: boolean, isShiftClick: boolean) {
-    eventBus.dispatch('SELECT_ROW', {
-      rowIdx: currentRowIdx,
-      checked,
-      isShiftClick,
-    });
+    selectRowDataGrid({ rowIdx: currentRowIdx, checked, isShiftClick });
   }
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
     <div
       className={cn('rdg-cell', column.cellClass, {
         'rdg-cell-frozen': column.frozen,
-        'rdg-cell-frozen-last': column.idx === lastFrozenColumnIndex,
+        // 'rdg-cell-frozen-last': column.idx === lastFrozenColumnIndex,
         [cnCellValueError]: !!error,
       })}
       style={{
@@ -120,6 +119,8 @@ const CellWithError: React.ForwardRefExoticComponent<
         row,
         isRowSelected,
         onRowSelectionChange,
+        isCellSelected,
+        onRowChange: handleRowChange,
       })}
       {isShowError && error && (
         <Tooltip
