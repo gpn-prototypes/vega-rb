@@ -8,7 +8,6 @@ import React, {
   useState,
 } from 'react';
 import { CellRendererProps } from 'react-data-grid';
-import { preventDefault, wrapEvent } from 'react-data-grid/lib/utils';
 import { useSelector } from 'react-redux';
 import { Tooltip } from '@gpn-prototypes/vega-ui';
 import cn from 'classnames';
@@ -18,6 +17,10 @@ import { RootState } from 'store/types';
 
 import { cnCellValueError } from '../cn-excel-table';
 import { GridColumn, GridRow, TableEntities } from '../types';
+import {
+  preventDefault,
+  wrapEvent,
+} from '../utils/eventUtilsReplacementsDataGrid';
 
 interface IProps extends CellRendererProps<GridRow> {
   columns: GridColumn[];
