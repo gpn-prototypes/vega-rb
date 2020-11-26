@@ -1,11 +1,11 @@
-import React, { KeyboardEvent, useState } from 'react';
+import React, { KeyboardEvent, ReactElement, useState } from 'react';
 import { GridColumn, SetColumnProperty } from 'components/ExcelTable/types';
 
 import Input from '../Input';
 
 interface IProps<T> {
   idx: number;
-  name: string;
+  name: string | ReactElement;
   setColumnProps: SetColumnProperty<T>;
   onBlurHandler: (idx: number) => void;
 }

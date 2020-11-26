@@ -35,7 +35,9 @@ const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 
-const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || '10000');
+const imageInlineSizeLimit = parseInt(
+  process.env.IMAGE_INLINE_SIZE_LIMIT || '10000',
+);
 
 // Check if TypeScript is setup
 const useTypeScript = fs.existsSync(paths.appTsConfig);
@@ -54,7 +56,8 @@ module.exports = function (webpackEnv) {
 
   // Variable used for enabling profiling in Production
   // passed into alias object. Uses a flag if passed into the build command
-  const isEnvProductionProfile = isEnvProduction && process.argv.includes('--profile');
+  const isEnvProductionProfile =
+    isEnvProduction && process.argv.includes('--profile');
 
   // We will provide `paths.publicUrlOrPath` to our app
   // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
@@ -140,7 +143,9 @@ module.exports = function (webpackEnv) {
       // the line below with these two lines if you prefer the stock client:
       // require.resolve('webpack-dev-server/client') + '?/',
       // require.resolve('webpack/hot/dev-server'),
-      isStandaloneMode && isEnvDevelopment && require.resolve('react-dev-utils/webpackHotDevClient'),
+      isStandaloneMode &&
+        isEnvDevelopment &&
+        require.resolve('react-dev-utils/webpackHotDevClient'),
       // Finally, this is your app's code:
       isStandaloneMode && paths.appIndexJs,
 
@@ -156,9 +161,10 @@ module.exports = function (webpackEnv) {
       pathinfo: isEnvDevelopment,
       // There will be one main bundle, and one file per asynchronous chunk.
       // In development, it does not produce real files.
-      filename: isEnvProduction || isShellMode
-        ? 'vega-rb.js'
-        : isEnvDevelopment && 'static/js/bundle.js',
+      filename:
+        isEnvProduction || isShellMode
+          ? 'vega-rb.js'
+          : isEnvDevelopment && 'static/js/bundle.js',
       // TODO: remove this when upgrading to webpack 5
       futureEmitAssets: true,
       // There are also additional JS chunk files if you use code splitting.
@@ -171,9 +177,13 @@ module.exports = function (webpackEnv) {
       publicPath: paths.publicUrlOrPath,
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: isEnvProduction
-        ? (info) => path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, '/')
+        ? (info) =>
+            path
+              .relative(paths.appSrc, info.absoluteResourcePath)
+              .replace(/\\/g, '/')
         : isEnvDevelopment &&
-          ((info) => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
+          ((info) =>
+            path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
       // Prevents conflicts when multiple webpack runtimes (from different apps)
       // are used on the same page.
       jsonpFunction: `webpackJsonp${appPackageJson.name}`,
@@ -247,19 +257,23 @@ module.exports = function (webpackEnv) {
         }),
       ],
     },
-    externals: isStandaloneMode ? [] : [
-      'react',
-      'react-dom',
-      'single-spa',
-      /^@vega\//,
-      '@gpn-prototypes/vega-ui',
-    ],
+    externals: isStandaloneMode
+      ? []
+      : [
+          'react',
+          'react-dom',
+          'single-spa',
+          /^@vega\//,
+          '@gpn-prototypes/vega-ui',
+        ],
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: ['node_modules', paths.appNodeModules].concat(modules.additionalModulePaths || []),
+      modules: ['node_modules', paths.appNodeModules].concat(
+        modules.additionalModulePaths || [],
+      ),
       // These are the reasonable defaults supported by the Node ecosystem.
       // We also include JSX as a common component filename extension to support
       // some tools, although we do not recommend using it, see:
@@ -346,7 +360,9 @@ module.exports = function (webpackEnv) {
               include: paths.appSrc,
               loader: require.resolve('babel-loader'),
               options: {
-                customize: require.resolve('babel-preset-react-app/webpack-overrides'),
+                customize: require.resolve(
+                  'babel-preset-react-app/webpack-overrides',
+                ),
 
                 plugins: [
                   [
@@ -354,7 +370,8 @@ module.exports = function (webpackEnv) {
                     {
                       loaderMap: {
                         svg: {
-                          ReactComponent: '@svgr/webpack?-svgo,+titleProp,+ref![path]',
+                          ReactComponent:
+                            '@svgr/webpack?-svgo,+titleProp,+ref![path]',
                         },
                       },
                     },
@@ -380,7 +397,10 @@ module.exports = function (webpackEnv) {
                 configFile: false,
                 compact: false,
                 presets: [
-                  [require.resolve('babel-preset-react-app/dependencies'), { helpers: true }],
+                  [
+                    require.resolve('babel-preset-react-app/dependencies'),
+                    { helpers: true },
+                  ],
                 ],
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
@@ -484,35 +504,38 @@ module.exports = function (webpackEnv) {
     plugins: [
       new CleanWebpackPlugin(),
       // Generates an `index.html` file with the <script> injected.
-      isStandaloneMode && new HtmlWebpackPlugin(
-        Object.assign(
-          {},
-          {
-            inject: true,
-            template: paths.appHtml,
-          },
-          isEnvProduction
-            ? {
-                minify: {
-                  removeComments: true,
-                  collapseWhitespace: true,
-                  removeRedundantAttributes: true,
-                  useShortDoctype: true,
-                  removeEmptyAttributes: true,
-                  removeStyleLinkTypeAttributes: true,
-                  keepClosingSlash: true,
-                  minifyJS: true,
-                  minifyCSS: true,
-                  minifyURLs: true,
-                },
-              }
-            : undefined,
+      isStandaloneMode &&
+        new HtmlWebpackPlugin(
+          Object.assign(
+            {},
+            {
+              inject: true,
+              template: paths.appHtml,
+            },
+            isEnvProduction
+              ? {
+                  minify: {
+                    removeComments: true,
+                    collapseWhitespace: true,
+                    removeRedundantAttributes: true,
+                    useShortDoctype: true,
+                    removeEmptyAttributes: true,
+                    removeStyleLinkTypeAttributes: true,
+                    keepClosingSlash: true,
+                    minifyJS: true,
+                    minifyCSS: true,
+                    minifyURLs: true,
+                  },
+                }
+              : undefined,
+          ),
         ),
-      ),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       // https://github.com/facebook/create-react-app/issues/5358
-      isStandaloneMode && isEnvProduction && shouldInlineRuntimeChunk &&
+      isStandaloneMode &&
+        isEnvProduction &&
+        shouldInlineRuntimeChunk &&
         new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
       // Makes some environment variables available in index.html.
       // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
@@ -530,7 +553,9 @@ module.exports = function (webpackEnv) {
       // Otherwise React will be compiled in the very slow development mode.
       new webpack.DefinePlugin(env.stringified),
       // This is necessary to emit hot updates (currently CSS only):
-      isStandaloneMode && isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
+      isStandaloneMode &&
+        isEnvDevelopment &&
+        new webpack.HotModuleReplacementPlugin(),
       // Watcher doesn't work well if you mistype casing in a path so we use
       // a plugin that prints an error when you attempt to do this.
       // See https://github.com/facebook/create-react-app/issues/240
@@ -539,29 +564,33 @@ module.exports = function (webpackEnv) {
       // to restart the development server for webpack to discover it. This plugin
       // makes the discovery automatic so you don't have to restart.
       // See https://github.com/facebook/create-react-app/issues/186
-      isEnvDevelopment && new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+      isEnvDevelopment &&
+        new WatchMissingNodeModulesPlugin(paths.appNodeModules),
       // Generate an asset manifest file with the following content:
       // - "files" key: Mapping of all asset filenames to their corresponding
       //   output file so that tools can pick it up without having to parse
       //   `index.html`
       // - "entrypoints" key: Array of files which are included in `index.html`,
       //   can be used to reconstruct the HTML if necessary
-      isStandaloneMode && new ManifestPlugin({
-        fileName: 'asset-manifest.json',
-        publicPath: paths.publicUrlOrPath,
-        generate: (seed, files, entrypoints) => {
-          const manifestFiles = files.reduce((manifest, file) => {
-            manifest[file.name] = file.path;
-            return manifest;
-          }, seed);
-          const entrypointFiles = entrypoints.main.filter((fileName) => !fileName.endsWith('.map'));
+      isStandaloneMode &&
+        new ManifestPlugin({
+          fileName: 'asset-manifest.json',
+          publicPath: paths.publicUrlOrPath,
+          generate: (seed, files, entrypoints) => {
+            const manifestFiles = files.reduce((manifest, file) => {
+              manifest[file.name] = file.path;
+              return manifest;
+            }, seed);
+            const entrypointFiles = entrypoints.main.filter(
+              (fileName) => !fileName.endsWith('.map'),
+            );
 
-          return {
-            files: manifestFiles,
-            entrypoints: entrypointFiles,
-          };
-        },
-      }),
+            return {
+              files: manifestFiles,
+              entrypoints: entrypointFiles,
+            };
+          },
+        }),
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how webpack interprets its code. This is a practical
       // solution that requires the user to opt into importing specific locales.
@@ -577,7 +606,9 @@ module.exports = function (webpackEnv) {
           async: isEnvDevelopment,
           useTypescriptIncrementalApi: true,
           checkSyntacticErrors: true,
-          resolveModuleNameModule: process.versions.pnp ? `${__dirname}/pnpTs.js` : undefined,
+          resolveModuleNameModule: process.versions.pnp
+            ? `${__dirname}/pnpTs.js`
+            : undefined,
           resolveTypeReferenceDirectiveModule: process.versions.pnp
             ? `${__dirname}/pnpTs.js`
             : undefined,
@@ -593,20 +624,21 @@ module.exports = function (webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
-      isShellMode && new ImportMapPlugin({
-        fileName: 'import-map.json',
-        baseUrl: process.env.BASE_URL,
-        filter(x) {
-          return ['main.js'].includes(x.name);
-        },
-        transformKeys(filename) {
-          if (filename === 'main.js') {
-            return '@vega/rb';
-          }
+      isShellMode &&
+        new ImportMapPlugin({
+          fileName: 'import-map.json',
+          baseUrl: process.env.BASE_URL,
+          filter(x) {
+            return ['main.js'].includes(x.name);
+          },
+          transformKeys(filename) {
+            if (filename === 'main.js') {
+              return '@vega/rb';
+            }
 
-          return undefined;
-        },
-      }),
+            return undefined;
+          },
+        }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell webpack to provide empty mocks for them so importing them works.

@@ -1,10 +1,12 @@
 import React, { ComponentType, ReactText } from 'react';
-import { CalculatedColumn, Column, EditorProps } from 'react-data-grid';
 import {
+  CalculatedColumn,
   CellRendererProps,
+  Column,
+  EditorProps,
   FormatterProps as BaseFormatterProps,
   HeaderRendererProps as BaseHeaderRendererProps,
-} from 'react-data-grid/lib/types';
+} from 'react-data-grid';
 import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,

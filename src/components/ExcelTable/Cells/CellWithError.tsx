@@ -101,7 +101,7 @@ const CellWithError: React.ForwardRefExoticComponent<
     <div
       className={cn('rdg-cell', column.cellClass, {
         'rdg-cell-frozen': column.frozen,
-        // 'rdg-cell-frozen-last': column.idx === lastFrozenColumnIndex,
+        'rdg-cell-frozen-last': !!column.isLastFrozenColumn,
         [cnCellValueError]: !!error,
       })}
       style={{

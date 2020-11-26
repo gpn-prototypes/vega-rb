@@ -1,5 +1,5 @@
-import React, { forwardRef, useImperativeHandle, useRef } from 'react';
-import { Editor, EditorProps } from 'react-data-grid';
+import React, { forwardRef, useRef } from 'react';
+import { EditorProps } from 'react-data-grid';
 import { presetGpnDark, Theme } from '@gpn-prototypes/vega-ui';
 import {
   cnDropDownEditor,
@@ -17,9 +17,15 @@ import './DropDownEditor.css';
 interface DropDownEditorProps<TRow>
   extends EditorProps<GridCellProperties | undefined, TRow> {
   options: { [index: string]: DropdownOption };
+  value: { value?: string | number } | undefined;
+  onCommit: (
+    event:
+      | React.MouseEvent<HTMLOptionElement, MouseEvent>
+      | React.FocusEvent<HTMLSelectElement>,
+  ) => void | undefined;
 }
 
-type DropDownEditorHandle = Editor<GridRow>;
+type DropDownEditorHandle = EditorProps<GridRow | undefined>;
 
 function DropDownEditor<TRow>(
   { column, value, onCommit, options }: DropDownEditorProps<TRow>,
@@ -27,17 +33,17 @@ function DropDownEditor<TRow>(
 ) {
   const selectRef = useRef<HTMLSelectElement>(null);
 
-  useImperativeHandle(ref, () => ({
-    getInputNode() {
-      return selectRef.current;
-    },
-    getValue() {
-      const key = selectRef.current!.value;
-      return {
-        [column.key]: options[key] || { value: '' },
-      };
-    },
-  }));
+  // useImperativeHandle(ref, () => ({
+  //   getInputNode() {
+  //     return selectRef.current;
+  //   },
+  //   getValue() {
+  //     const key = selectRef.current!.value;
+  //     return {
+  //       [column.key]: options[key] || { value: '' },
+  //     };
+  //   },
+  // }));
 
   return (
     <Theme preset={presetGpnDark}>

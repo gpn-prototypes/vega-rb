@@ -30,19 +30,26 @@ function DropDownCell(
     className,
     column,
     isRowSelected,
-    lastFrozenColumnIndex,
+    // lastFrozenColumnIndex,
     row,
     rowIdx,
-    eventBus,
+    selectCell: selectCellDataGrid,
+    selectRow: selectRowDataGrid,
     onRowClick,
     onClick,
     onDoubleClick,
     onContextMenu,
     onDragOver,
+    onRowChange,
     ...rest
   } = props;
 
-  const { frozen, idx: columnIdx, cellClass } = column;
+  const {
+    frozen,
+    // idx: columnIdx,
+    cellClass,
+    isLastFrozenColumn,
+  } = column;
 
   const style = {
     width: column.width,
@@ -51,15 +58,15 @@ function DropDownCell(
 
   const cellClassName = classNames(
     'rdg-cell',
-    getClassNames(frozen, columnIdx === lastFrozenColumnIndex),
+    getClassNames(frozen, !!isLastFrozenColumn),
     typeof cellClass === 'function' ? cellClass(row) : cellClass,
     cnDropDownCell.toString(),
     className,
   );
 
   const selectCell = () => {
-    const cellPosition = { rowIdx, idx: column.idx };
-    eventBus.dispatch('SELECT_CELL', cellPosition);
+    // const cellPosition = { rowIdx, idx: column.idx };
+    selectCellDataGrid({ idx: column.idx, rowIdx });
   };
 
   const handleCellClick = () => {
@@ -74,8 +81,12 @@ function DropDownCell(
   };
 
   const onRowSelectionChange = (checked: boolean, isShiftClick: boolean) => {
-    eventBus.dispatch('SELECT_ROW', { rowIdx, checked, isShiftClick });
+    // eventBus.dispatch('SELECT_ROW', { rowIdx, checked, isShiftClick });
+    selectRowDataGrid({ rowIdx, checked, isShiftClick });
   };
+  function handleRowChange(newRow: GridRow) {
+    onRowChange(rowIdx, newRow);
+  }
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
@@ -94,6 +105,8 @@ function DropDownCell(
         column={column}
         isRowSelected={isRowSelected}
         onRowSelectionChange={onRowSelectionChange}
+        isCellSelected
+        onRowChange={handleRowChange}
       />
       <div className={cnDropDownCell('IconWrapper')}>
         <IconSelect size="xs" />
