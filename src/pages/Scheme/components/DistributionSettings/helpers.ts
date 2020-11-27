@@ -20,7 +20,7 @@ export const conceptionStructureIsNotEmpty = (
   conception: Conception,
 ): boolean => conception.structure.domainObjects.length > 0;
 
-const isNumeric = (num?: string | number) =>
+export const isNumeric = (num?: string | number) =>
   (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) &&
   !Number.isNaN(num as number);
 

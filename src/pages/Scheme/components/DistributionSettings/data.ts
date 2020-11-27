@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
@@ -8,6 +6,7 @@ import {
 
 import { DistributionParametersMap } from './types';
 // TODO: добавить оставшиеся распределения
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 const distributionParametersMap: DistributionParametersMap = {
   [DistributionTypes.Uniform]: {
@@ -32,23 +31,52 @@ const distributionParametersMap: DistributionParametersMap = {
       ],
     },
   },
-  [DistributionTypes.Triangular]: {
+  [DistributionTypes.Normal]: {
     types: [
       {
-        type: DistributionDefinitionTypes.ModeMinMax,
-        title: 'Минимум, наиболее вероятное, максимум',
+        type: DistributionDefinitionTypes.MeanSd,
+        title: 'Среднее, станд. отклонение',
+      },
+      {
+        type: DistributionDefinitionTypes.TwoPercentiles,
+        title: 'Р90, Р10',
+      },
+      {
+        type: DistributionDefinitionTypes.MinMax,
+        title: 'Минимум, максимум',
       },
     ],
     fieldsByType: {
-      [DistributionDefinitionTypes.ModeMinMax]: [
+      [DistributionDefinitionTypes.TwoPercentiles]: [
         {
-          key: DistributionParameterTypes.Min,
-          title: 'Минимум',
+          key: DistributionParameterTypes.Q2Value,
+          rankKey: DistributionParameterTypes.Q2Rank,
+          defaultRankValue: '90',
           defaultValue: '',
         },
         {
-          key: DistributionParameterTypes.Mode,
-          title: 'Наиболее вероятное',
+          key: DistributionParameterTypes.Q1Value,
+          rankKey: DistributionParameterTypes.Q1Rank,
+          defaultRankValue: '10',
+          defaultValue: '',
+        },
+      ],
+      [DistributionDefinitionTypes.MeanSd]: [
+        {
+          key: DistributionParameterTypes.Mean,
+          title: 'Среднее',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Sd,
+          title: 'Стандартное',
+          defaultValue: '',
+        },
+      ],
+      [DistributionDefinitionTypes.MinMax]: [
+        {
+          key: DistributionParameterTypes.Min,
+          title: 'Минимум',
           defaultValue: '',
         },
         {
@@ -86,52 +114,23 @@ const distributionParametersMap: DistributionParametersMap = {
       ],
     },
   },
-  [DistributionTypes.Normal]: {
+  [DistributionTypes.Triangular]: {
     types: [
       {
-        type: DistributionDefinitionTypes.MeanSd,
-        title: 'Среднее, станд. отклонение',
-      },
-      {
-        type: DistributionDefinitionTypes.MinMax,
-        title: 'Минимум, максимум',
-      },
-      {
-        type: DistributionDefinitionTypes.TwoPercentiles,
-        title: 'Р90, Р10',
+        type: DistributionDefinitionTypes.ModeMinMax,
+        title: 'Минимум, наиболее вероятное, максимум',
       },
     ],
     fieldsByType: {
-      [DistributionDefinitionTypes.TwoPercentiles]: [
-        {
-          key: DistributionParameterTypes.Q2Value,
-          rankKey: DistributionParameterTypes.Q2Rank,
-          defaultRankValue: '90',
-          defaultValue: '',
-        },
-        {
-          key: DistributionParameterTypes.Q1Value,
-          rankKey: DistributionParameterTypes.Q1Rank,
-          defaultRankValue: '10',
-          defaultValue: '',
-        },
-      ],
-      [DistributionDefinitionTypes.MeanSd]: [
-        {
-          key: DistributionParameterTypes.Mean,
-          title: 'Среднее',
-          defaultValue: '',
-        },
-        {
-          key: DistributionParameterTypes.Sd,
-          title: 'Стандартное',
-          defaultValue: '',
-        },
-      ],
-      [DistributionDefinitionTypes.MinMax]: [
+      [DistributionDefinitionTypes.ModeMinMax]: [
         {
           key: DistributionParameterTypes.Min,
           title: 'Минимум',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Mode,
+          title: 'Наиболее вероятное',
           defaultValue: '',
         },
         {

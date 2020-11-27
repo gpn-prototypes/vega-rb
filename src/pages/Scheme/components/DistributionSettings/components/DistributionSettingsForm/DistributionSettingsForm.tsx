@@ -21,25 +21,30 @@ import distributionParametersMap from '../../data';
 import { getDistributionFormDataParams } from '../../helpers';
 import DistributionSettingsFormField from '../DistributionSettingsFormField';
 
-import { cnDistributionSettingsForm } from './cn-distribution-settings-form';
+import { cnForm } from './cn-distribution-settings-form';
+import { options } from './data';
 
 import './DistributionSettingsForm.css';
 
-const options = [
-  { value: DistributionTypes.Normal, label: 'Нормальное' },
-  { value: DistributionTypes.Triangular, label: 'Треугольное' },
-  { value: DistributionTypes.Uniform, label: 'Равномерное' },
-  { value: DistributionTypes.Lognormal, label: 'Логнормальное' },
-  { value: DistributionTypes.Beta, label: 'Бета' },
-  { value: DistributionTypes.Pert, label: 'PERT' },
-];
+const getFormFieldType = (index: number, length: number) => {
+  const isLast = index === length - 1;
+  const isFirst = index === 0;
+  if (isFirst) {
+    return length <= 2 ? 'defaultClear' : 'defaultBrick';
+  }
+  if (isLast) {
+    return 'brickDefault';
+  }
+  return 'brick';
+};
 
-interface DistributionSettingsFormProps {
+interface IProps {
   onChange: (distributionData: DistributionSettingsFormData) => void;
   formData: DistributionSettingsFormData;
   errors?: DistributionDefinitionError[];
 }
-export const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> = ({
+
+export const DistributionSettingsForm: React.FC<IProps> = ({
   onChange,
   formData,
   errors,
@@ -85,18 +90,6 @@ export const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> =
     });
   };
 
-  const getFormFieldType = (index: number, length: number) => {
-    const isLast = index === length - 1;
-    const isFirst = index === 0;
-    if (isFirst) {
-      return length <= 2 ? 'defaultClear' : 'defaultBrick';
-    }
-    if (isLast) {
-      return 'brickDefault';
-    }
-    return 'brick';
-  };
-
   const getErrorMessage = (key: string) =>
     errors?.find(({ fields }) => fields?.includes(key))?.message;
 
@@ -107,12 +100,13 @@ export const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> =
       defaultValue,
       defaultRankValue,
     } = field as PercentileField;
+
     const Label = percentileFieldTypes.includes(key) ? (
       <EditableText
         value={formData.parameters[rankKey] ?? defaultRankValue}
         onSubmit={handleChange(rankKey)}
         prefix="P"
-        className={cnDistributionSettingsForm('Field', 'Label')}
+        className={cnForm('Field', 'Label')}
       />
     ) : (
       <Form.Label>{(field as DefaultField).title}</Form.Label>
@@ -131,7 +125,7 @@ export const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> =
   };
 
   return (
-    <Form className={cnDistributionSettingsForm()}>
+    <Form className={cnForm()}>
       <Form.Row>
         <Form.Field>
           <Form.Label>Распределение</Form.Label>
@@ -159,11 +153,9 @@ export const DistributionSettingsForm: React.FC<DistributionSettingsFormProps> =
         </Form.Field>
       </Form.Row>
       <Form.Row>
-        <div className={cnDistributionSettingsForm('Grid')}>
-          {fieldsByType[
-            formData.distributionDefinitionType
-          ]?.map((field, index, fields) =>
-            renderFormField(field, index, fields),
+        <div className={cnForm('Grid')}>
+          {fieldsByType[formData.distributionDefinitionType]?.map(
+            renderFormField,
           )}
         </div>
       </Form.Row>
