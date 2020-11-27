@@ -22,7 +22,7 @@ const COMMON_COLUMN_PROPS = {
   editable: true,
   resizable: true,
   sortable: true,
-  minWidth: 112,
+  minWidth: 124,
 };
 
 const SUPPORT_COLUMN_PROPS = {
