@@ -1,15 +1,15 @@
 import React, { Component, useMemo } from 'react';
 import { ContextMenu, ContextMenuProps, MenuItem } from 'react-contextmenu';
-import { usePortalRender } from '@gpn-prototypes/vega-ui';
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconEye,
+  IconFunnel,
+  IconTrash,
+  usePortalRender,
+} from '@gpn-prototypes/vega-ui';
 import { noop } from 'utils';
 
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  EyeIcon,
-  FilterIcon,
-  ThrashIcon,
-} from '../Icons';
 import { ContextHandler } from '../types';
 
 import { cnContextMenu } from './cn-context-menu';
@@ -18,7 +18,7 @@ import './react-context.css';
 import './ContextMenu.css';
 
 const cnMenuItem = cnContextMenu('Item');
-const cnMenuIcon = cnContextMenu('Icon');
+const cnMenuIcon = cnContextMenu('Icon').toString();
 const cnMenuTitle = cnContextMenu('Title');
 
 interface IProps {
@@ -39,24 +39,24 @@ export default React.forwardRef<Component<ContextMenuProps>, IProps>(
         {
           title: 'Фильтр и сортировка',
           onClick: noop,
-          Icon: FilterIcon,
+          Icon: IconFunnel,
           disabled: true,
         },
         {
           title: 'Добавить столбец слева',
           onClick: onInsertLeft,
-          Icon: ArrowLeftIcon,
+          Icon: IconArrowLeft,
         },
 
         {
           title: 'Добавить столбец справа',
           onClick: onInsertRight,
-          Icon: ArrowRightIcon,
+          Icon: IconArrowRight,
         },
         {
           title: 'Скрыть столбец',
           onClick: noop,
-          Icon: EyeIcon,
+          Icon: IconEye,
           disabled: true,
         },
         {
@@ -84,13 +84,13 @@ export default React.forwardRef<Component<ContextMenuProps>, IProps>(
             className={cnMenuItem.toString()}
             disabled={disabled}
           >
-            {Icon && <Icon className={cnMenuIcon} />}
+            {Icon && <Icon className={cnMenuIcon} size="s" />}
             <span className={cnMenuTitle}>{itemTitle}</span>
           </MenuItem>
         ))}
         <div className={cnContextMenu('Splitter')} />
         <MenuItem onClick={onDelete} className={cnMenuItem.toString()}>
-          <ThrashIcon className={cnMenuIcon} />
+          <IconTrash className={cnMenuIcon} size="s" />
           <span className={cnMenuTitle}>Удалить</span>
         </MenuItem>
       </ContextMenu>,

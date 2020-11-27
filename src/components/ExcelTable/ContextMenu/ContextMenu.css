@@ -14,10 +14,10 @@
   &__Icon {
     position: absolute;
 
-    padding: 0 var(--space-xs);
+    margin-left: var(--space-xs);
   }
 
   &__Title {
-    padding: var(--space-s) var(--space-2xl);
+    padding: var(--space-s) var(--space-3xl);
   }
 }
