@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useApolloClient } from '@apollo/client';
-import { useUnmount } from '@gpn-prototypes/vega-hooks';
+import { useUnmount } from '@gpn-prototypes/vega-ui';
 import ExcelTable from 'components/ExcelTable';
 import { SelectedCell, TableEntities } from 'components/ExcelTable/types';
 import { ProjectContext } from 'components/Providers';

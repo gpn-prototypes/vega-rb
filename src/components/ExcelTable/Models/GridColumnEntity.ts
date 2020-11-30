@@ -1,4 +1,4 @@
-import { GridColumn, TableEntities } from '../types';
+import { GridColumn, TableEntities, VisibilityProperties } from '../types';
 
 export default class GridColumnEntity implements GridColumn {
   readonly key: string;
@@ -6,6 +6,12 @@ export default class GridColumnEntity implements GridColumn {
   name: string;
 
   type: TableEntities;
+
+  visible: VisibilityProperties = {
+    calculation: true,
+    table: true,
+    tree: true,
+  };
 
   constructor(
     key: string,

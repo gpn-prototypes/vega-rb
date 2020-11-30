@@ -30,13 +30,23 @@ import { RootState, TableState } from './types';
 
 const factory = actionCreatorFactory('table');
 
+type UpdateColumnsByTypePayload = {
+  columns: GridColumn[];
+  type: TableEntities;
+};
+
+type InitTablePayload = {
+  columns: GridColumn[];
+  rows: GridRow[];
+  version: number;
+};
+
 const actions = {
-  init: factory<{
-    columns: GridColumn[];
-    rows: GridRow[];
-    version: number;
-  }>('INIT'),
+  init: factory<InitTablePayload>('INIT_TABLE'),
   updateColumns: factory<GridColumn[]>('UPDATE_COLUMNS'),
+  updateColumnsByType: factory<UpdateColumnsByTypePayload>(
+    'UPDATE_COLUMNS_BY_TYPE',
+  ),
   updateRows: factory<GridRow[]>('UPDATE_ROWS'),
   updateCell: factory<GridCell>('UPDATE_CELL'),
   updateErrors: factory<TableError[]>('UPDATE_ERRORS'),
@@ -62,6 +72,26 @@ const reducer = reducerWithInitialState<TableState>(initialState)
     ...state,
     columns: payload,
   }))
+  .case(actions.updateColumnsByType, (state, payload) => {
+    const { columns: newColumns, type } = payload;
+    const columnsTypes = state.columns.map(({ type: t }) => t);
+    const lastIndex = columnsTypes.lastIndexOf(type);
+    const firstIndex = columnsTypes.findIndex((t) => t === type);
+    const columns = [...state.columns];
+    if (lastIndex !== -1 && firstIndex !== -1) {
+      columns.splice(
+        firstIndex,
+        columnsTypes.filter((t) => t === type).length,
+        ...newColumns,
+      );
+    } else if (firstIndex !== -1) {
+      columns.splice(firstIndex, 1, ...newColumns);
+    }
+    return {
+      ...state,
+      columns,
+    };
+  })
   .case(actions.updateRows, (state, payload) => ({
     ...state,
     rows: payload,
@@ -117,7 +147,12 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
   state$,
 ) =>
   action$.pipe(
-    ofAction(actions.updateColumns, actions.updateRows, actions.updateCell),
+    ofAction(
+      actions.updateColumns,
+      actions.updateRows,
+      actions.updateCell,
+      actions.updateColumnsByType,
+    ),
     distinctUntilChanged(),
     mergeMap((_) =>
       of({

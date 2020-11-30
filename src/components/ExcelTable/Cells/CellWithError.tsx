@@ -15,7 +15,7 @@ import useCombinedRefs from 'hooks/useCombinedRefs';
 import { RootState } from 'store/types';
 
 import { cnCellTooltip, cnCellValueError } from '../cn-excel-table';
-import { GridColumn, GridRow, TableEntities } from '../types';
+import { GridColumn, GridRow, TableEntities, UniColumn } from '../types';
 
 type Props = PropsWithChildren<CellRendererProps<GridRow>> & {
   columns: GridColumn[];
@@ -44,12 +44,15 @@ function CellWithError(props: Props, ref: React.Ref<HTMLDivElement>) {
     () =>
       // TODO: поправить условие после обновления API(заменить columnIdx на columnKey)
       errors.find(({ row: rowIdx, column: columnIdx, tableName }) => {
+        const { key, type } = column as UniColumn;
         const tableColumnIdx = columns
-          .filter((c) => c.type === (column as GridColumn).type)
-          .findIndex((c) => c.key === (column as GridColumn).key);
+          .filter((c) => c.type === type)
+          .findIndex((c) => c.key === key);
         const isSameTableType =
-          (column as GridColumn).type === TableEntities.CALC_PARAM &&
-          tableName === TableNames.Attributes;
+          (column.key === TableEntities.GEO_CATEGORY &&
+            tableName === TableNames.DomainEntities) ||
+          ((column as GridColumn).type === TableEntities.CALC_PARAM &&
+            tableName === TableNames.Attributes);
         const isSameColumn = tableColumnIdx === columnIdx;
         const isSameRow = rowIdx === currentRowIdx;
 

@@ -1,5 +1,4 @@
 import {
-  Conception,
   DistributionDefinitionTypes,
   DistributionParameterInput,
   DistributionParameterTypes,
@@ -16,13 +15,9 @@ import {
 import { percentileFieldRankTypes, percentileFieldTypes } from './constants';
 import distributionParametersMap from './data';
 
-export const conceptionStructureIsNotEmpty = (
-  conception: Conception,
-): boolean => conception.structure.domainObjects.length > 0;
-
-export const isNumeric = (num?: string | number) =>
+export const isNumeric = (num?: string | number): boolean =>
   (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) &&
-  !Number.isNaN(num as number);
+  !Number.isNaN(parseFloat(num as string));
 
 export const checkDistributionParametersIsValid = (
   parameters: Partial<DistributionSettingsParameters>,

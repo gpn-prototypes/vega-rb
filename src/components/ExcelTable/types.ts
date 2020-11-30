@@ -27,6 +27,16 @@ export type SelectedCell = {
   column: GridColumn;
 };
 
+export enum VisibleKeys {
+  CALCULATION = 'calculation',
+  TABLE = 'table',
+  TREE = 'tree',
+}
+
+export type VisibilityProperties = {
+  [key in VisibleKeys]: boolean;
+};
+
 export enum TableEntities {
   GEO_CATEGORY = 'RBDomainEntity',
   CALC_PARAM = 'Attribute',
@@ -65,11 +75,13 @@ export interface GridRow {
 export interface GridColumn extends Column<GridRow> {
   type?: TableEntities;
   code?: string;
+  icon?: CategoryIcon;
   hasIcon?: boolean;
   isRenaming?: boolean;
   before?: JSX.Element;
   headerId?: string;
   notRemovable?: boolean;
+  visible?: VisibilityProperties;
   cellRenderer?: React.ComponentType<CellRendererProps<GridRow>>;
 }
 

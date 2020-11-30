@@ -85,7 +85,9 @@ export const ExcelTable: React.FC<IProps> = ({
   const pushColumn = (insertIdx: number): void => {
     setColumns([
       ...columns.slice(0, insertIdx),
-      createColumn(getInsertableType(columns, insertIdx)),
+      createColumn({
+        type: getInsertableType(columns, insertIdx),
+      }),
       ...columns.slice(insertIdx),
     ]);
   };
@@ -104,7 +106,6 @@ export const ExcelTable: React.FC<IProps> = ({
     columns,
     setColumns,
   ]);
-
   return (
     <>
       <DndProvider backend={HTML5Backend}>
