@@ -30,9 +30,9 @@ const actions = {
   updateColumnsByType: factory<TypedColumnsList>('UPDATE_COLUMNS_BY_TYPE'),
   updateRows: factory<GridRow[]>('UPDATE_ROWS'),
   updateCell: factory<GridCell>('UPDATE_CELL'),
-  updateErrors: factory<TableError[]>('UPDATE_ERRORS'),
-  replaceState: factory<TableState>('REPLACE_STATE'),
-  resetState: factory('RESET_STATE')
+  updateErrors: factory<ColumnErrors>('UPDATE_ERRORS'),
+  replaceState: factory<GridCollection>('REPLACE_STATE'),
+  resetState: factory('RESET_STATE'),
 };
 
 const initialState: GridCollection = {
@@ -111,9 +111,9 @@ const reducer = reducerWithInitialState<GridCollection>(initialState)
       errors,
     };
   })
-  .case(actions.replaceTableState, (state, payload) => ({
+  .case(actions.replaceState, (state, payload) => ({
     ...state,
-    ...payload
+    ...payload,
   }));
 
 const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
@@ -125,7 +125,7 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
       actions.updateColumns,
       actions.updateRows,
       actions.updateCell,
-      actions.replaceTableState,
+      actions.replaceState,
       actions.updateColumnsByType,
     ),
     distinctUntilChanged(),

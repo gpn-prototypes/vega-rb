@@ -1,3 +1,3 @@
-import TreeEditor from 'pages/Scheme/components/TreeEditor/TreeEditor';
+import TreeEditor from './TreeEditor';
 
-export default TreeEditor;
+export { TreeEditor };

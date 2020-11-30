@@ -1,3 +1,4 @@
+import { GridCollection } from 'components/ExcelTable/types';
 import { unset } from 'lodash/fp';
 import { ConceptionEntity } from 'model/ConceptionEntity';
 import { ofAction } from 'operators/ofAction';
@@ -13,17 +14,17 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import tableDuck from 'store/tableDuck';
-import {
-  ConceptionsState,
-  RootState,
-  SavedStates,
-  TableState,
-} from 'store/types';
+import { ConceptionsState, RootState, SavedStates } from 'store/types';
 import { Conception } from 'types';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 
-const emptyTable: TableState = { columns: [], rows: [], errors: [] };
+const emptyTable: GridCollection = {
+  columns: [],
+  rows: [],
+  errors: {},
+  version: 0,
+};
 
 const loadState = (): ConceptionsState | undefined => {
   try {
@@ -131,7 +132,7 @@ const setActiveEpic: Epic<AnyAction, AnyAction, RootState> = (
           },
         }),
         of({
-          ...tableDuck.actions.replaceTableState,
+          ...tableDuck.actions.replaceState,
           payload: {
             ...emptyTable,
             ...newState.conceptions.savedStates[newState.conceptions.active],

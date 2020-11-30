@@ -1,37 +1,33 @@
-import React, { useState } from 'react';
-import { SplitPanes } from '@gpn-prototypes/vega-ui';
-import { Conceptions } from 'components/Conceptions';
-import { SelectedCell } from 'components/ExcelTable/types';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ApolloClient,
   NormalizedCacheObject,
-  useApolloClient
+  useApolloClient,
 } from '@apollo/client';
 import {
   Button,
   SplitPanes,
   useInterval,
-  useSidebar
+  useSidebar,
 } from '@gpn-prototypes/vega-ui';
+import { RecentlyEditedAlert } from 'components/CompetitiveAccess/RecentlyEditedAlert';
+import { Conceptions } from 'components/Conceptions';
 import { DistributionSettings } from 'components/DistributionSettings';
 import {
   GridColumn,
   SelectedCell,
-  TableEntities
+  TableEntities,
 } from 'components/ExcelTable/types';
 import { HierarchyLevelList } from 'components/HierarchyLevelList';
 import { ProjectContext } from 'components/Providers';
-import TreeEditor from 'pages/Scheme/components/TreeEditor';
+import { TreeEditor } from 'pages/Scheme/components/TreeEditor';
 import projectService from 'services/ProjectService';
+import competitiveAccessDuck from 'store/competitiveAccessDuck';
 import projectDuck from 'store/projectDuck';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { Nullable } from 'types';
-
-import { RecentlyEditedAlert } from 'components/CompetitiveAccess/RecentlyEditedAlert';
-import competitiveAccessDuck from 'store/competitiveAccessDuck';
 
 import CalculateButton from './components/CalculateButton';
 import Table from './components/Table';
@@ -41,12 +37,13 @@ import './Scheme.css';
 
 const PANELS_SIZE = {
   left: '190px',
-  right: '400px'
+  right: '400px',
 };
 
 const SchemePage: React.FC = () => {
   const [selectedCell, setSelectedCell] = useState<Nullable<SelectedCell>>(
-    null
+    null,
+  );
   const [isShownTree, setIsShownTree] = useState(true);
 
   const dispatch = useDispatch();
@@ -63,28 +60,28 @@ const SchemePage: React.FC = () => {
   };
 
   const isRecentlyEdited = useSelector(
-    ({ competitiveAccess }: RootState) => competitiveAccess.isRecentlyEdited
+    ({ competitiveAccess }: RootState) => competitiveAccess.isRecentlyEdited,
   );
 
   const geoCategoryColumns = data.columns.filter(
-    ({ type }) => type === TableEntities.GEO_CATEGORY
+    ({ type }) => type === TableEntities.GEO_CATEGORY,
   );
 
   const {
     state: { isOpen },
     close: handleClose,
-    open: handleOpen
+    open: handleOpen,
   } = useSidebar({
     isOpen: false,
-    isMinimized: false
+    isMinimized: false,
   });
 
   const updateColumns = (columns: GridColumn[]) => {
     dispatch(
       tableDuck.actions.updateColumnsByType({
         columns,
-        type: TableEntities.GEO_CATEGORY
-      })
+        type: TableEntities.GEO_CATEGORY,
+      }),
     );
     handleClose();
   };
@@ -92,12 +89,12 @@ const SchemePage: React.FC = () => {
   useEffect(() => {
     projectService.init({
       client,
-      projectId
+      projectId,
     });
     projectService
       .getProjectName()
       .then((projectName) =>
-        dispatch(projectDuck.actions.updateProjectName(projectName))
+        dispatch(projectDuck.actions.updateProjectName(projectName)),
       );
   }, [client, dispatch, projectId]);
 
@@ -110,7 +107,7 @@ const SchemePage: React.FC = () => {
         }
 
         dispatch(
-          competitiveAccessDuck.actions.setRecentlyEdited(recentlyEdited)
+          competitiveAccessDuck.actions.setRecentlyEdited(recentlyEdited),
         );
       })
       .catch(() => competitiveAccessDuck.actions.setRecentlyEdited(false));
@@ -124,7 +121,7 @@ const SchemePage: React.FC = () => {
           label="Настройка уровней иерархии"
           view="ghost"
           onClick={handleOpen}
-          className={style.ButtonStructure}
+          className={cnScheme('ButtonStructure')}
         />
       </div>
       <SplitPanes
@@ -156,11 +153,11 @@ const SchemePage: React.FC = () => {
               />
             </SplitPanes.Pane>
             <SplitPanes.Pane aria-label="table">
-              <div className={style.Content}>
-                <div className={style.LeftPanel}>
+              <div className={cnScheme('Content')}>
+                <div className={cnScheme('LeftPanel')}>
                   <Table onSelect={setSelectedCell} />
                 </div>
-                <div className={style.RightPanel} hidden={!selectedCell}>
+                <div className={cnScheme('RightPanel')} hidden={!selectedCell}>
                   {selectedCell && (
                     <DistributionSettings selectedCell={selectedCell} />
                   )}

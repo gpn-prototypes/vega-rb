@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import alertDuck from 'store/alertDuck';
+import competitiveAccessDuck from 'store/competitiveAccessDuck';
 import conceptionsDuck from 'store/conceptionsDuck';
 import projectDuck from 'store/projectDuck';
 import tableDuck from 'store/tableDuck';
 import treeDuck from 'store/treeDuck';
-import competitiveAccessDuck from 'store/competitiveAccessDuck';
 
 import { RootState } from './types';
 

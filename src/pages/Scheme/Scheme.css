@@ -25,16 +25,16 @@
   &__DistributionSettings {
     padding: var(--space-m);
   }
-}
 
-.Tabs {
-  padding: var(--space-xs);
-}
+  &__Tabs {
+    padding: var(--space-xs);
+  }
 
-.ButtonStructure {
-  margin-right: var(--space-s);
-}
+  &__ButtonStructure {
+    margin-right: var(--space-s);
+  }
 
-.ButtonData {
-  margin-right: var(--space-s);
+  &__ButtonData {
+    margin-right: var(--space-s);
+  }
 }

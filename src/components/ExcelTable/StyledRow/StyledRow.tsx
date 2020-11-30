@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
 import { CellRendererProps, Row, RowRendererProps } from 'react-data-grid';
 import { classnames } from '@bem-react/classnames';
+import { withContextMenu } from 'components/ContextMenu/withContextMenu';
 
 import { CellWithError, DropDownCell } from '../Cells';
-import { withContextMenu } from '../ContextMenu';
 import { GridColumn, GridRow, TableEntities } from '../types';
 
 import { cnRow } from './cn-row';

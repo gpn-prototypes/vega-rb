@@ -6,7 +6,7 @@ import {
 import { Param } from 'model/Param';
 import { Conception } from 'types';
 
-export type SavedStates = { [index: string]: TableState };
+export type SavedStates = { [index: string]: GridCollection };
 export type ProbabilityStates = { [index: string]: 'string' };
 
 export interface CompetitiveAccess {

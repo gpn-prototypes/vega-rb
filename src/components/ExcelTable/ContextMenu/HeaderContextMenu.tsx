@@ -1,6 +1,5 @@
-import React, { Component, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { MenuItem } from 'react-contextmenu';
-import { ContextMenu } from 'components/ContextMenu';
 import {
   IconArrowLeft,
   IconArrowRight,
@@ -9,6 +8,13 @@ import {
   IconTrash,
   usePortalRender,
 } from '@gpn-prototypes/vega-ui';
+import { ContextMenu } from 'components/ContextMenu';
+import {
+  cnContextMenu,
+  cnMenuIcon,
+  cnMenuItem,
+  cnMenuTitle,
+} from 'components/ContextMenu/cn-context-menu';
 import { ContextHandler } from 'components/types';
 import { noop } from 'utils';
 
@@ -21,11 +27,11 @@ interface IProps {
 }
 
 const HeaderContextMenu: React.FC<IProps> = ({
-                                               id,
-                                               onDelete,
-                                               onInsertLeft,
-                                               onInsertRight
-                                             }) => {
+  id,
+  onDelete,
+  onInsertLeft,
+  onInsertRight,
+}) => {
   const items = useMemo(
     () => [
       {
@@ -33,47 +39,47 @@ const HeaderContextMenu: React.FC<IProps> = ({
         title: 'Фильтр и сортировка',
         onClick: noop,
         Icon: IconFunnel,
-        disabled: true
+        disabled: true,
       },
       {
         id: 'header:add_left',
         title: 'Добавить столбец слева',
         onClick: onInsertLeft,
-        Icon: IconArrowLeft
+        Icon: IconArrowLeft,
       },
       {
         id: 'header:add_right',
         title: 'Добавить столбец справа',
         onClick: onInsertRight,
-        Icon: IconArrowRight
+        Icon: IconArrowRight,
       },
       {
         id: 'header:hide',
         title: 'Скрыть столбец',
         onClick: noop,
         Icon: IconEye,
-        disabled: true
+        disabled: true,
       },
       {
         id: 'header:pin',
         title: 'Закрепить столбец',
         onClick: noop,
-        disabled: true
+        disabled: true,
       },
       {
         id: 'header:rename',
         title: 'Переименовать',
         onClick: noop,
-        disabled: true
-      }
+        disabled: true,
+      },
     ],
-    [onInsertLeft, onInsertRight]
+    [onInsertLeft, onInsertRight],
   );
 
   const { renderPortalWithTheme } = usePortalRender();
 
   return renderPortalWithTheme(
-    <ContextMenu id={id} ref={contextRef}>
+    <ContextMenu id={id} hideOnLeave>
       {items.map(({ title: itemTitle, onClick, Icon, disabled }) => (
         <MenuItem
           key={itemTitle}
@@ -91,7 +97,7 @@ const HeaderContextMenu: React.FC<IProps> = ({
         <span className={cnMenuTitle}>Удалить</span>
       </MenuItem>
     </ContextMenu>,
-    document.body
+    document.body,
   );
 };
 
