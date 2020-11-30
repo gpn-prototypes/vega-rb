@@ -20,19 +20,24 @@ export const InputEditor: React.FC<IProps<GridColumn>> = ({
 
   return (
     <Input
-      value={state}
+      value={state as string}
       onKeyPress={(event: KeyboardEvent): void => {
         if (event.key === 'Enter') {
           setColumnProps(
             idx,
             'name',
-            !state.trim().length ? 'Новая колонка' : state,
+            (() => {
+              if (typeof state === 'string') {
+                return !state.trim().length ? 'Новая колонка' : state;
+              }
+              return (state as unknown) as string;
+            })(),
           );
           setColumnProps(idx, 'isRenaming', false);
         }
       }}
       onBlur={(): void => {
-        setColumnProps(idx, 'name', state);
+        setColumnProps(idx, 'name', state as string);
         onBlurHandler(idx);
       }}
       onChange={({ target }: React.ChangeEvent<HTMLInputElement>): void => {

@@ -14,8 +14,8 @@ import { size } from 'lodash/fp';
 
 import './DropDownEditor.css';
 
-interface DropDownEditorProps<TRow>
-  extends EditorProps<GridCellProperties | undefined, TRow> {
+export interface DropDownEditorProps
+  extends EditorProps<GridCellProperties | undefined> {
   options: { [index: string]: DropdownOption };
   value: { value?: string | number } | undefined;
   onCommit: (
@@ -23,14 +23,19 @@ interface DropDownEditorProps<TRow>
       | React.MouseEvent<HTMLOptionElement, MouseEvent>
       | React.FocusEvent<HTMLSelectElement>,
   ) => void | undefined;
+  ref?: React.Ref<DropDownEditorHandle>;
 }
 
-type DropDownEditorHandle = EditorProps<GridRow | undefined>;
+export type DropDownEditorHandle = EditorProps<GridRow | undefined>;
 
-function DropDownEditor<TRow>(
-  { column, value, onCommit, options }: DropDownEditorProps<TRow>,
-  ref: React.Ref<DropDownEditorHandle>,
-) {
+function DropDownEditor<TRow>({
+  column,
+  value,
+  onCommit,
+  options,
+  ref,
+}: DropDownEditorProps) {
+  // ref: React.Ref<DropDownEditorHandle>,
   const selectRef = useRef<HTMLSelectElement>(null);
 
   // useImperativeHandle(ref, () => ({
@@ -70,5 +75,5 @@ function DropDownEditor<TRow>(
 }
 
 export default forwardRef(DropDownEditor) as <R>(
-  props: DropDownEditorProps<R> & React.RefAttributes<DropDownEditorHandle>,
+  props: DropDownEditorProps & React.RefAttributes<DropDownEditorHandle>,
 ) => JSX.Element;

@@ -1,15 +1,18 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, ComponentType } from 'react';
 import { EditorProps } from 'react-data-grid';
-import { GridRow } from 'components/ExcelTable/types';
+import { GridCellProperties } from 'components/ExcelTable/types';
 
-type Props = EditorProps<GridRow | undefined>;
+// type Props = EditorProps<GridRow | undefined>;
+export type SimpleTextEditorType = ComponentType<
+  EditorProps<GridCellProperties>
+>;
 
-export const SimpleTextEditor: React.FC<Props> = ({
+export const SimpleTextEditor: SimpleTextEditorType = ({
   row,
   column,
   onRowChange,
   onClose,
-}) => {
+}): JSX.Element => {
   // private readonly input: React.RefObject<Nullable<HTMLInputElement>>;
 
   // constructor(props: IProps) {

@@ -41,7 +41,8 @@ export function onBlurCell(
 ): void {
   const nextColumns = [...columns];
   const column = nextColumns[idx];
-  if (!column.name.trim().length) column.name = 'Новый столбец';
+  if (typeof column.name === 'string' && !column.name.trim().length)
+    column.name = 'Новый столбец';
 
   column.isRenaming = false;
   setColumns(nextColumns);
