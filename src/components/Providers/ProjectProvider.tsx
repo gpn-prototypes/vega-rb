@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { useRouteMatch } from 'react-router';
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import { GraphQLClient, Identity } from '@gpn-prototypes/vega-sdk';
 import { defaultTo } from 'lodash';
 import projectService from 'services/ProjectService';
-import { Identity } from 'types';
 
 const ROUTE_MATCH_PROJECT_ID = '/projects/show/:projectId';
 
@@ -14,7 +13,7 @@ interface ProjectContextProps extends MatchedData {
 }
 
 interface ProjectProviderProps {
-  graphqlClient: ApolloClient<NormalizedCacheObject>;
+  graphqlClient: GraphQLClient;
   identity: Identity;
 }
 
