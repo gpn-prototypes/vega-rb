@@ -2,19 +2,18 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@gpn-prototypes/vega-button';
 import { useSidebar } from '@gpn-prototypes/vega-sidebar';
+import { DistributionSettings } from 'components/DistributionSettings';
 import {
   GridColumn,
   SelectedCell,
   TableEntities,
 } from 'components/ExcelTable/types';
+import { HierarchyLevelList } from 'components/HierarchyLevelList';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { Nullable } from 'types';
 
-import DistributionSettings from '../../components/DistributionSettings';
-
 import CalculateButton from './components/CalculateButton';
-import HierarchyLevelList from './components/HierarchyLevelList';
 import Table from './components/Table';
 
 import style from './Scheme.module.css';

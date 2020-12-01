@@ -12,10 +12,10 @@ import {
   VisibleKeys,
 } from 'components/ExcelTable/types';
 import { createColumn } from 'components/ExcelTable/utils';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
-import HierarchyLevelItem from './components/HierarchyLevelListItem';
-import { cnHierarchyLevelList } from './cn-hierarchy-level-list';
+import { cnHierarchy } from './cn-hierarchy';
+import HierarchyLevelItem from './HierarchyLevelItem';
 import { Icons } from './types';
 
 import './HierarchyLevelList.css';
@@ -31,7 +31,7 @@ interface HierarchyLevelListProps {
 const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
   items: innerItems,
   icons = {
-    [CategoryIcon.FIELD_ICON]: <ResourceIcon />,
+    [CategoryIcon.FIELD_ICON]: <ResourceIcon className={cnHierarchy('Icon')} />,
   },
   onSubmit,
   isOpen,
@@ -73,25 +73,31 @@ const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
         ...columns[index].visible,
         [visibleProperty]: isChecked,
       } as VisibilityProperties;
+
       const column = {
         ...columns[index],
         visible: visibleProps,
       };
-      return columns.splice(index, 1, column);
+      columns.splice(index, 1, column);
+
+      return columns;
     });
   };
 
   const onDelete = (index: number) => {
-    const arr = [...items];
-    arr.splice(index, 1);
-    setItems(arr);
+    setItems((prevState) => {
+      const arr = [...prevState];
+      arr.splice(index, 1);
+
+      return arr;
+    });
   };
 
   const onAddItem = () => {
     const arr = [
       ...items,
       createColumn({
-        key: uuidv4(),
+        key: uuid(),
         type: TableEntities.GEO_CATEGORY,
         name: 'Новый уровень',
         icon: CategoryIcon.FORMATION_ICON,
@@ -103,12 +109,15 @@ const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
   };
 
   const onChangeName = (index: number, name: string) => {
-    const arr = [...items];
-    arr.splice(index, 1, {
-      ...items[index],
-      name,
+    setItems((prevState) => {
+      const arr = [...prevState];
+      arr.splice(index, 1, {
+        ...items[index],
+        name,
+      });
+
+      return arr;
     });
-    setItems(arr);
   };
 
   useEffect(() => {
@@ -117,52 +126,50 @@ const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
 
   return (
     <Sidebar isOpen={isOpen} onClose={handleClose}>
-      <>
-        <Sidebar.Header hasMinimizeButton={false}>
-          Настройка уровней иерархии
-        </Sidebar.Header>
-        <Sidebar.Body>
-          <div className={cnHierarchyLevelList()}>
-            <div className={cnHierarchyLevelList('Content')}>
-              <DndProvider backend={HTML5Backend}>
-                {items.map((item, index) => (
-                  <HierarchyLevelItem
-                    {...item}
-                    index={index}
-                    icons={icons}
-                    key={item.key}
-                    moveItemDown={moveItemDown}
-                    moveItemUp={moveItemUp}
-                    moveItem={moveItem}
-                    onDelete={onDelete}
-                    onEdit={onEdit}
-                    onClickTag={onClickTag}
-                    canDrag={editItemIndex === null}
-                    onChangeName={onChangeName}
-                    isEditing={index === editItemIndex}
-                  />
-                ))}
-              </DndProvider>
-            </div>
-            <Button
-              label="Добавить уровень иерархии"
-              type="button"
-              iconLeft={IconAdd}
-              view="clear"
-              onClick={onAddItem}
-            />
-            <div className={cnHierarchyLevelList('Footer')}>
-              <Button
-                label="Готово"
-                type="button"
-                view="primary"
-                size="s"
-                onClick={() => onSubmit(items)}
-              />
-            </div>
+      <Sidebar.Header hasMinimizeButton={false}>
+        Настройка уровней иерархии
+      </Sidebar.Header>
+      <Sidebar.Body>
+        <div className={cnHierarchy()}>
+          <div className={cnHierarchy('Content')}>
+            <DndProvider backend={HTML5Backend}>
+              {items.map((item, index) => (
+                <HierarchyLevelItem
+                  {...item}
+                  index={index}
+                  icons={icons}
+                  key={item.key}
+                  moveItemDown={moveItemDown}
+                  moveItemUp={moveItemUp}
+                  moveItem={moveItem}
+                  onDelete={onDelete}
+                  onEdit={onEdit}
+                  onClickTag={onClickTag}
+                  canDrag={editItemIndex === null}
+                  onChangeName={onChangeName}
+                  isEditing={index === editItemIndex}
+                />
+              ))}
+            </DndProvider>
           </div>
-        </Sidebar.Body>
-      </>
+          <Button
+            label="Добавить уровень иерархии"
+            type="button"
+            iconLeft={IconAdd}
+            view="clear"
+            onClick={onAddItem}
+          />
+          <div className={cnHierarchy('Footer')}>
+            <Button
+              label="Готово"
+              type="button"
+              view="primary"
+              size="s"
+              onClick={() => onSubmit(items)}
+            />
+          </div>
+        </div>
+      </Sidebar.Body>
     </Sidebar>
   );
 };

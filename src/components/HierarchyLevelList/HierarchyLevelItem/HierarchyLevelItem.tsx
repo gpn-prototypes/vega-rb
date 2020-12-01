@@ -18,26 +18,18 @@ import {
   VisibleKeys,
 } from 'components/ExcelTable/types';
 
-import { cnHierarchyLevelList } from '../../cn-hierarchy-level-list';
-import { Icons } from '../../types';
+import { cnHierarchy } from '../cn-hierarchy';
 import ContentEditableField from '../ContentEditable';
-import HierarchyLevelItemContextMenu from '../HierarchyLevelListItemContextMenu';
+import HierarchyContextMenu from '../HierarchyContextMenu';
+import { Icons } from '../types';
 
-import { DragItemTypes } from './types';
+import { cnItem } from './cn-item';
+import { HIERARCHY_TAGS } from './data';
+import { DragItem, DragItemTypes } from './types';
 
-const tags = {
-  calculation: {
-    title: 'Расчет',
-  },
-  tree: {
-    title: 'Дерево',
-  },
-  table: {
-    title: 'Таблица',
-  },
-};
+import './HierarchyLevelItem.css';
 
-interface HierarchyLevelItemProps {
+interface IProps {
   name: string;
   index: number;
   moveItem: (dragIndex: number, hoverIndex: number) => void;
@@ -54,13 +46,7 @@ interface HierarchyLevelItemProps {
   visible?: VisibilityProperties;
 }
 
-interface DragItem {
-  index: number;
-  id: string;
-  type: string;
-}
-
-const HierarchyLevelItem: React.FC<HierarchyLevelItemProps> = ({
+const HierarchyLevelItem: React.FC<IProps> = ({
   name,
   iconId = CategoryIcon.FIELD_ICON,
   icons,
@@ -133,7 +119,7 @@ const HierarchyLevelItem: React.FC<HierarchyLevelItemProps> = ({
 
   const renderEditActions = () => {
     return (
-      <div className={cnHierarchyLevelList('Item', 'Buttons')}>
+      <div className={cnHierarchy('Item', 'Buttons')}>
         <Button
           label="Готово"
           type="button"
@@ -159,7 +145,7 @@ const HierarchyLevelItem: React.FC<HierarchyLevelItemProps> = ({
   };
   const renderSettingsActions = () => {
     return (
-      <div className={cnHierarchyLevelList('Item', 'Controls')}>
+      <div className={cnHierarchy('Item', 'Controls')}>
         <Button
           size="xs"
           view="clear"
@@ -178,7 +164,7 @@ const HierarchyLevelItem: React.FC<HierarchyLevelItemProps> = ({
             }}
             onClickOutside={closeContextMenu}
           >
-            <HierarchyLevelItemContextMenu
+            <HierarchyContextMenu
               index={index}
               title={name}
               onEdit={() => {
@@ -192,7 +178,7 @@ const HierarchyLevelItem: React.FC<HierarchyLevelItemProps> = ({
             />
           </Popover>
         )}
-        <div className={cnHierarchyLevelList('Item', 'Controls', 'Order')}>
+        <div className={cnHierarchy('Item', 'Controls', 'Order')}>
           <Button
             size="xs"
             view="clear"
@@ -211,9 +197,10 @@ const HierarchyLevelItem: React.FC<HierarchyLevelItemProps> = ({
       </div>
     );
   };
+
   return (
     <div
-      className={cnHierarchyLevelList('Item').state({
+      className={cnHierarchy('Item').state({
         dragging: isDragging,
         over: isOver,
         editing: isEditing,
@@ -221,33 +208,30 @@ const HierarchyLevelItem: React.FC<HierarchyLevelItemProps> = ({
       ref={ref}
     >
       <div
-        className={cnHierarchyLevelList('Item', 'DndControl').state({
+        className={cnHierarchy('Item', 'DndControl').state({
           editing: !canDrag,
         })}
         ref={drag}
       >
         <IconHamburger />
       </div>
-      <div className={cnHierarchyLevelList('Item', 'Body')}>
-        <div className={cnHierarchyLevelList('Item', 'Title')}>
+      <div className={cnHierarchy('Item', 'Body')}>
+        <div className={cnHierarchy('Item', 'Title')}>
           {iconId && icons ? icons[iconId] : null}
           <ContentEditableField
             value={value}
             disabled={!isEditing}
             onChange={(newName) => setValue(newName)}
-            className={cnHierarchyLevelList(
-              'Item',
-              'Title',
-              'Input',
-            ).toString()}
+            className={cnHierarchy('Item', 'Title', 'Input').toString()}
           />
         </div>
-        <div className={cnHierarchyLevelList('Item', 'Options')}>
+        <div className={cnHierarchy('Item', 'Options')}>
           {visible &&
             (Object.keys(visible) as VisibleKeys[]).map((key) => (
               <Tag
                 key={key}
-                label={tags[key].title}
+                className={cnItem('Tag')}
+                label={HIERARCHY_TAGS[key].title}
                 mode="check"
                 size="m"
                 checked={visible[key]}

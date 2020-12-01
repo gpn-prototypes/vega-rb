@@ -4,6 +4,10 @@
 
   height: 100%;
 
+  &__Icon {
+    color: var(--color-bg-success);
+  }
+
   &__Content {
     margin-bottom: var(--space-2xs);
   }

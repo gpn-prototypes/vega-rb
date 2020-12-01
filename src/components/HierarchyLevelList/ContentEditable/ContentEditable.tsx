@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import ContentEditable from 'react-contenteditable';
 
-interface ContentEditableFieldProps {
+interface IProps {
   onChange: (value: string) => void;
   disabled?: boolean;
   tag?: string;
@@ -9,7 +9,7 @@ interface ContentEditableFieldProps {
   value?: string;
 }
 
-const ContentEditableField: React.FC<ContentEditableFieldProps> = ({
+const ContentEditableField: React.FC<IProps> = ({
   value = '',
   disabled,
   tag = 'span',

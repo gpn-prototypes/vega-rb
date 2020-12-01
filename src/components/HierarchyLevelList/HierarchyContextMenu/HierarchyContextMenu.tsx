@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Button, IconEdit, IconTrash } from '@gpn-prototypes/vega-ui';
 
-import { cnHierarchyLevelList } from '../../cn-hierarchy-level-list';
+import { cnHierarchy } from '../cn-hierarchy';
 
 interface IProps {
   index: number;
@@ -10,7 +10,7 @@ interface IProps {
   onDelete: (index: number) => void;
 }
 
-const HierarchyLevelItemContextMenu: React.FC<IProps> = ({
+const HierarchyContextMenu: React.FC<IProps> = ({
   index,
   onEdit,
   onDelete,
@@ -32,7 +32,7 @@ const HierarchyLevelItemContextMenu: React.FC<IProps> = ({
     [onEdit, onDelete],
   );
   return (
-    <div className={cnHierarchyLevelList('Item', 'ContextMenu')}>
+    <div className={cnHierarchy('Item', 'ContextMenu')}>
       {data.map(({ Icon, title, onClick }) => (
         <Button
           key={title}
@@ -42,11 +42,7 @@ const HierarchyLevelItemContextMenu: React.FC<IProps> = ({
           type="button"
           view="clear"
           label={title}
-          className={cnHierarchyLevelList(
-            'Item',
-            'ContextMenu',
-            'Item',
-          ).toString()}
+          className={cnHierarchy('Item', 'ContextMenu', 'Item').toString()}
           iconLeft={Icon}
           size="s"
         />
@@ -55,4 +51,4 @@ const HierarchyLevelItemContextMenu: React.FC<IProps> = ({
   );
 };
 
-export default HierarchyLevelItemContextMenu;
+export default HierarchyContextMenu;
