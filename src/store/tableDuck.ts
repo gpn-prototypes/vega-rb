@@ -22,27 +22,19 @@ import { RootState, TableState } from './types';
 
 const factory = actionCreatorFactory('table');
 
-type UpdateColumnsByTypePayload = {
+type TypedColumnsList = {
   columns: GridColumn[];
   type: TableEntities;
 };
 
-type InitTablePayload = {
-  columns: GridColumn[];
-  rows: GridRow[];
-  version: number;
-};
-
 const actions = {
-  init: factory<InitTablePayload>('INIT_TABLE'),
+  initState: factory<TableState>('INIT_STATE'),
   updateColumns: factory<GridColumn[]>('UPDATE_COLUMNS'),
-  updateColumnsByType: factory<UpdateColumnsByTypePayload>(
-    'UPDATE_COLUMNS_BY_TYPE',
-  ),
+  updateColumnsByType: factory<TypedColumnsList>('UPDATE_COLUMNS_BY_TYPE'),
   updateRows: factory<GridRow[]>('UPDATE_ROWS'),
   updateCell: factory<GridCell>('UPDATE_CELL'),
   updateErrors: factory<TableError[]>('UPDATE_ERRORS'),
-  reset: factory('RESET_TABLE'),
+  resetState: factory('RESET_STATE'),
 };
 
 const initialState: TableState = {
@@ -53,8 +45,8 @@ const initialState: TableState = {
 };
 
 const reducer = reducerWithInitialState<TableState>(initialState)
-  .case(actions.reset, () => initialState)
-  .case(actions.init, (state, payload) => ({
+  .case(actions.resetState, () => initialState)
+  .case(actions.initState, (state, payload) => ({
     ...state,
     rows: payload.rows,
     columns: payload.columns,

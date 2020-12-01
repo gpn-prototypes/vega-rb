@@ -182,6 +182,8 @@ function constructRows(
   }: ProjectStructureInput,
   calculationResultList?: TableDistributionResultList,
 ): GridRow[] {
+  const emptyRowsLength = 1000 - domainObjects.length;
+
   return [
     ...domainObjects.map(
       (
@@ -201,7 +203,7 @@ function constructRows(
         ),
       }),
     ),
-    ...createEmptyRows(1000 - domainObjects.length),
+    ...createEmptyRows(emptyRowsLength),
   ];
 }
 
@@ -209,7 +211,7 @@ export function unpackTableData(
   projectStructure: ProjectStructureInput,
   version: number,
   calculationResultList?: TableDistributionResultList,
-): GridCollection & { version: number } {
+): GridCollection {
   const columns: GridColumn[] = constructColumns(projectStructure);
   const rows: GridRow[] = constructRows(
     projectStructure,
@@ -219,6 +221,7 @@ export function unpackTableData(
   return {
     columns,
     rows,
+    errors: [],
     version,
   };
 }

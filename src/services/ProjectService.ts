@@ -1,4 +1,5 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import { GET_DISTRIBUTION_VALUE } from 'components/DistributionSettings/queries';
 import { GridCollection } from 'components/ExcelTable/types';
 import {
   Distribution,
@@ -10,7 +11,6 @@ import {
   ProjectStructureInput,
   Query,
 } from 'generated/graphql';
-import { GET_DISTRIBUTION_VALUE } from 'pages/Scheme/components/DistributionSettings/queries';
 import {
   GET_TABLE_TEMPLATE,
   GET_VERSION,
@@ -37,9 +37,21 @@ type ProjectServiceProps = {
 class ProjectService {
   private _client: ApolloClient<NormalizedCacheObject> | undefined;
 
+  get client() {
+    return this._client as ApolloClient<NormalizedCacheObject>;
+  }
+
   private _projectId = '';
 
+  get projectId() {
+    return this._projectId;
+  }
+
   private _identity: Identity | undefined;
+
+  get identity() {
+    return this._identity as Identity;
+  }
 
   static getDistributionValue({
     distributionChart,
@@ -178,7 +190,7 @@ class ProjectService {
       })
       .then((response) => {
         const distributionChart =
-          response?.data?.resourceBase.distribution?.distributionChart;
+          response.data?.resourceBase.distribution?.distributionChart;
         const errors = (distributionChart as DistributionDefinitionErrors)
           ?.errors;
         return {
@@ -186,9 +198,13 @@ class ProjectService {
           distributionChart,
         };
       })
-      .catch(({ message }) => ({
-        errors: [message] as DistributionDefinitionError[],
-      }));
+      .catch((error) => {
+        console.log('GET_DISTRIBUTION_VALUE', error);
+
+        return {
+          errors: [error.message] as DistributionDefinitionError[],
+        };
+      });
   }
 
   getDistributionValues(structure: ProjectStructure) {
@@ -208,18 +224,6 @@ class ProjectService {
         ),
       ),
     );
-  }
-
-  get client() {
-    return this._client as ApolloClient<NormalizedCacheObject>;
-  }
-
-  get projectId() {
-    return this._projectId;
-  }
-
-  get identity() {
-    return this._identity as Identity;
   }
 }
 

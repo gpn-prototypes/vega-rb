@@ -39,7 +39,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
             .getDistributionValues(structure)
             .then((distributionResultValues) =>
               dispatch(
-                tableDuck.actions.init(
+                tableDuck.actions.initState(
                   unpackTableData(structure, version, distributionResultValues),
                 ),
               ),
@@ -47,7 +47,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
         } else if (loadFromDatabase === null) {
           projectService.getTableTemplate().then((structureTemplate) => {
             dispatch(
-              tableDuck.actions.init(
+              tableDuck.actions.initState(
                 unpackTableData(structureTemplate, version, []),
               ),
             );
@@ -58,7 +58,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   });
 
   useUnmount(() => {
-    dispatch(tableDuck.actions.reset());
+    dispatch(tableDuck.actions.resetState());
   });
 
   return (

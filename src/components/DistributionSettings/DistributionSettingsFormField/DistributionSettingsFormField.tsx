@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { Form, TextField } from '@gpn-prototypes/vega-ui';
-import { cnField } from 'pages/Scheme/components/DistributionSettings/components/DistributionSettingsFormField/cn-field';
+import { cnField } from 'components/DistributionSettings/DistributionSettingsFormField/cn-field';
 
-import './DistributionSettingsFormField.css';
+import 'components/DistributionSettings/DistributionSettingsFormField/DistributionSettingsFormField.css';
 
-type TextFieldProps = React.ComponentProps<typeof TextField>;
+type TextFieldProps = ComponentProps<typeof TextField>;
 
 interface IProps {
   label: React.ReactNode;

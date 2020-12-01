@@ -1,10 +1,9 @@
+import { DistributionParametersMap } from 'components/DistributionSettings/types';
 import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
 } from 'generated/graphql';
-
-import { DistributionParametersMap } from './types';
 // TODO: добавить оставшиеся распределения
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

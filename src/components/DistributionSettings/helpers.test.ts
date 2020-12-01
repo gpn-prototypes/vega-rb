@@ -1,4 +1,4 @@
-import { isNumeric } from './helpers';
+import { isNumeric } from 'components/DistributionSettings/helpers';
 
 describe('isNumeric', () => {
   test('пустая строка не может быть числом', () => {

@@ -1,19 +1,21 @@
 import {
+  percentileFieldRankTypes,
+  percentileFieldTypes,
+} from 'components/DistributionSettings/constants';
+import distributionParametersMap from 'components/DistributionSettings/data';
+import {
+  DefaultField,
+  DistributionParameterPercentileRank,
+  DistributionSettingsParameters,
+  PercentileField,
+} from 'components/DistributionSettings/types';
+import {
   DistributionDefinitionTypes,
   DistributionParameterInput,
   DistributionParameterTypes,
   DistributionTypes,
 } from 'generated/graphql';
 import { toPairs } from 'lodash';
-import {
-  DefaultField,
-  DistributionParameterPercentileRank,
-  DistributionSettingsParameters,
-  PercentileField,
-} from 'pages/Scheme/components/DistributionSettings/types';
-
-import { percentileFieldRankTypes, percentileFieldTypes } from './constants';
-import distributionParametersMap from './data';
 
 export const isNumeric = (num?: string | number): boolean =>
   (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) &&

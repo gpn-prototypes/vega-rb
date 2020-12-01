@@ -1,5 +1,17 @@
 import React from 'react';
 import { Form } from '@gpn-prototypes/vega-ui';
+import { percentileFieldTypes } from 'components/DistributionSettings/constants';
+import distributionParametersMap from 'components/DistributionSettings/data';
+import { cnForm } from 'components/DistributionSettings/DistributionSettingsForm/cn-form';
+import { options } from 'components/DistributionSettings/DistributionSettingsForm/data';
+import { DistributionSettingsFormField } from 'components/DistributionSettings/DistributionSettingsFormField';
+import { getDistributionFormDataParams } from 'components/DistributionSettings/helpers';
+import {
+  DefaultField,
+  DistributionSettingsFormData,
+  Field,
+  PercentileField,
+} from 'components/DistributionSettings/types';
 import EditableText from 'components/EditableText';
 import {
   DistributionDefinitionError,
@@ -8,23 +20,9 @@ import {
   DistributionTypes,
 } from 'generated/graphql';
 import { Just } from 'monet';
-import {
-  DefaultField,
-  DistributionSettingsFormData,
-  Field,
-  PercentileField,
-} from 'pages/Scheme/components/DistributionSettings/types';
 import { Dropdown, Option } from 'pages/Scheme/components/Dropdown';
 
-import { percentileFieldTypes } from '../../constants';
-import distributionParametersMap from '../../data';
-import { getDistributionFormDataParams } from '../../helpers';
-import DistributionSettingsFormField from '../DistributionSettingsFormField';
-
-import { cnForm } from './cn-form';
-import { options } from './data';
-
-import './DistributionSettingsForm.css';
+import 'components/DistributionSettings/DistributionSettingsForm/DistributionSettingsForm.css';
 
 const getFormFieldType = (index: number, length: number) => {
   const isLast = index === length - 1;

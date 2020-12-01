@@ -12,9 +12,9 @@ import {
 import projectService from 'services/ProjectService';
 import tableDuck from 'store/tableDuck';
 
-import DistributionChart from './components/DistributionChart';
-import DistributionSettingsForm from './components/DistributionSettingsForm';
 import { percentileFieldRankTypes } from './constants';
+import DistributionChart from './DistributionChart';
+import DistributionSettingsForm from './DistributionSettingsForm';
 import {
   checkDistributionParametersIsValid,
   getDistributionFormDataParams,
@@ -39,21 +39,18 @@ const defaultDistributionChartValue: IDistributionChart = {
   },
 };
 
-interface DistributionSettingsProps {
+interface IProps {
   selectedCell: SelectedCell;
 }
 
-const DistributionSettings: React.FC<DistributionSettingsProps> = ({
-  selectedCell,
-}) => {
+const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
   const dispatch = useDispatch();
-  // const client = useApolloClient();
-  // const { projectId } = useContext(ProjectContext);
   const getFormDataFromTableCell = useCallback(
     (
       cell: SelectedCell,
     ): DistributionSettingsFormData & { isValid: boolean } => {
       const cellProps = cell.row[cell.column.key];
+
       function getDefaultParams(
         type: DistributionParameterTypes,
         value: string | number,
@@ -66,6 +63,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
           [type]: paramsValue,
         };
       }
+
       if (cellProps?.args?.type) {
         const cellArgs = cellProps.args;
         const defaultParameters = cellArgs?.parameters.reduce(
@@ -80,6 +78,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
 
         const distributionDefinitionType =
           cellArgs?.definition || DistributionDefinitionTypes.MeanSd;
+
         const parameters = getDistributionFormDataParams(
           distributionType,
           distributionDefinitionType,
@@ -166,6 +165,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
 
   const handleChange = (distributionProps: DistributionSettingsFormData) => {
     setFormData(distributionProps);
+
     if (checkDistributionParametersIsValid(distributionProps.parameters)) {
       getChart(distributionProps).then((data) => {
         if (data.errors) {

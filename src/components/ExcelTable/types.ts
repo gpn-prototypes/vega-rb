@@ -9,6 +9,7 @@ import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
+  TableError,
 } from 'generated/graphql';
 
 export const HEADER_CONTEXT_ID = 'header-context-menu';
@@ -88,6 +89,8 @@ export interface GridColumn extends Column<GridRow> {
 export interface GridCollection {
   columns: GridColumn[];
   rows: GridRow[];
+  errors: TableError[];
+  version: number;
 }
 
 export type ContextHandler = (

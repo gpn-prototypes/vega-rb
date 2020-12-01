@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useRef } from 'react';
+import { cnChart } from 'components/DistributionSettings/DistributionChart/cn-chart';
+import {
+  ChartData,
+  Point,
+} from 'components/DistributionSettings/DistributionChart/types';
 import * as d3 from 'd3';
 
-import { cnDistributionChart } from './cn-distribution-chart';
-import { ChartData, Point } from './types';
-
-import './DistributionChart.css';
+import 'components/DistributionSettings/DistributionChart/DistributionChart.css';
 
 const height = 224;
 const width = 376;
@@ -55,7 +57,7 @@ const DistributionChart: React.FC<IProps> = ({
           point,
           { x: point.x, y: d3.min(data, getY) as number },
         ])
-        .attr('class', cnDistributionChart('ProjectionLines'))
+        .attr('class', cnChart('ProjectionLines'))
         .attr(
           'd',
           d3
@@ -68,7 +70,7 @@ const DistributionChart: React.FC<IProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(0,${height - margin.bottom})`)
-        .attr('class', cnDistributionChart('Axis'))
+        .attr('class', cnChart('Axis'))
         .call(
           d3
             .axisBottom(probabilityDensityXScale)
@@ -81,7 +83,7 @@ const DistributionChart: React.FC<IProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(0,${height - margin.bottom})`)
-        .attr('class', cnDistributionChart('Grid'))
+        .attr('class', cnChart('Grid'))
         .call(
           d3.axisBottom(probabilityDensityXScale).ticks(5).tickSize(-height),
         ),
@@ -90,7 +92,7 @@ const DistributionChart: React.FC<IProps> = ({
     svg.append('g').call((g) =>
       g
         .attr('transform', `translate(${margin.left},0)`)
-        .attr('class', cnDistributionChart('Axis', { position: 'left' }))
+        .attr('class', cnChart('Axis', { position: 'left' }))
         .call(
           d3
             .axisLeft(cumulativeYScale)
@@ -107,7 +109,7 @@ const DistributionChart: React.FC<IProps> = ({
         .enter()
         .append('text')
         .text((d) => `${Number.parseFloat(getX(d).toFixed(3))}`)
-        .attr('class', cnDistributionChart('Percentiles', 'Text'))
+        .attr('class', cnChart('Percentiles', 'Text'))
         .attr('x', (d) => cumulativeXScale(getX(d)) as number)
         .attr('y', (d) => cumulativeYScale(getY(d)) as number)
         .attr('transform', `translate(5, 0)`);
@@ -200,7 +202,7 @@ const DistributionChart: React.FC<IProps> = ({
   }, [draw]);
 
   return (
-    <div className={cnDistributionChart()}>
+    <div className={cnChart()}>
       <svg width={width} height={height} ref={d3Container} />
     </div>
   );

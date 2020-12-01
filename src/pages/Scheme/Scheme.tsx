@@ -11,8 +11,9 @@ import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { Nullable } from 'types';
 
+import DistributionSettings from '../../components/DistributionSettings';
+
 import CalculateButton from './components/CalculateButton';
-import DistributionSettings from './components/DistributionSettings';
 import HierarchyLevelList from './components/HierarchyLevelList';
 import Table from './components/Table';
 
