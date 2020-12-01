@@ -1,3 +1,3 @@
-import DistributionChart from 'components/DistributionSettings/DistributionChart/DistributionChart';
+import DistributionChart from './DistributionChart';
 
 export default DistributionChart;

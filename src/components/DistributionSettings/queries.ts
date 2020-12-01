@@ -5,13 +5,6 @@ export const GET_DISTRIBUTION_VALUE = gql`
     resourceBase {
       distribution {
         distributionChart(distribution: $distribution) {
-          ... on DistributionDefinitionErrors {
-            errors {
-              code
-              message
-              fields
-            }
-          }
           ... on DistributionChart {
             pdf {
               x
@@ -27,6 +20,19 @@ export const GET_DISTRIBUTION_VALUE = gql`
                 x
                 y
               }
+            }
+          }
+          ... on DistributionDefinitionErrors {
+            errors {
+              code
+              message
+              fields
+            }
+          }
+          ... on CommonErrors {
+            errors {
+              code
+              message
             }
           }
         }

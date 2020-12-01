@@ -1,27 +1,28 @@
 import {
-  percentileFieldRankTypes,
-  percentileFieldTypes,
-} from 'components/DistributionSettings/constants';
-import distributionParametersMap from 'components/DistributionSettings/data';
-import {
-  DefaultField,
-  DistributionParameterPercentileRank,
-  DistributionSettingsParameters,
-  PercentileField,
-} from 'components/DistributionSettings/types';
-import {
   DistributionDefinitionTypes,
   DistributionParameterInput,
   DistributionParameterTypes,
   DistributionTypes,
 } from 'generated/graphql';
 import { toPairs } from 'lodash';
+import { DistributionError } from 'services/types';
+
+import { percentileFieldRankTypes, percentileFieldTypes } from './constants';
+import distributionParametersMap from './data';
+import {
+  DefaultField,
+  DistributionPairsCallback,
+  DistributionParameterPercentileRank,
+  DistributionSettingsParameters,
+  Error,
+  PercentileField,
+} from './types';
 
 export const isNumeric = (num?: string | number): boolean =>
   (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) &&
   !Number.isNaN(parseFloat(num as string));
 
-export const checkDistributionParametersIsValid = (
+export const validateDistributionParams = (
   parameters: Partial<DistributionSettingsParameters>,
 ): boolean => {
   return (Object.keys(
@@ -84,10 +85,26 @@ export function prepareDistributionParams([
 
 export const mapEntries = (
   parameters: Partial<DistributionSettingsParameters>,
-  callback: (
-    value: Array<DistributionParameterTypes | string>,
-  ) => { type: DistributionParameterTypes; value: number },
-): DistributionParameterInput[] =>
-  toPairs<NonNullable<DistributionParameterTypes | string>>(parameters).map(
-    callback,
-  );
+  callback: DistributionPairsCallback,
+): DistributionParameterInput[] => {
+  return toPairs<NonNullable<DistributionParameterTypes | string>>(
+    parameters,
+  ).map(callback);
+};
+
+export const getErrorMessage = (
+  errorList: DistributionError[],
+  codeField?: string,
+): DistributionError | Error =>
+  errorList.find((error) => {
+    let result;
+    const hasCodeField = codeField !== undefined && codeField.trim().length;
+
+    if (error.__typename === 'DistributionDefinitionError' && hasCodeField) {
+      result = error.fields.includes(codeField!);
+    } else if (error.__typename === 'CommonError' && !hasCodeField) {
+      result = error;
+    }
+
+    return result;
+  }) || { message: undefined };

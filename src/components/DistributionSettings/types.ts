@@ -58,3 +58,9 @@ export type DistributionSettingsFormData = {
   distributionDefinitionType: DistributionDefinitionTypes;
   parameters: Partial<DistributionSettingsParameters>;
 };
+
+export type DistributionPairsCallback = (
+  value: Array<DistributionParameterTypes | string>,
+) => { type: DistributionParameterTypes; value: number };
+
+export type Error = { message: string | undefined };

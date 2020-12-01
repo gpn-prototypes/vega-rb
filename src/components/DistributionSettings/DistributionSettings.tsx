@@ -3,23 +3,23 @@ import { useDispatch } from 'react-redux';
 import { SelectedCell } from 'components/ExcelTable/types';
 import {
   DistributionChart as IDistributionChart,
-  DistributionDefinitionError,
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
   Percentile,
 } from 'generated/graphql';
 import projectService from 'services/ProjectService';
+import { DistributionError } from 'services/types';
 import tableDuck from 'store/tableDuck';
 
 import { percentileFieldRankTypes } from './constants';
 import DistributionChart from './DistributionChart';
 import DistributionSettingsForm from './DistributionSettingsForm';
 import {
-  checkDistributionParametersIsValid,
   getDistributionFormDataParams,
   mapEntries,
   prepareDistributionParams,
+  validateDistributionParams,
 } from './helpers';
 import {
   DistributionSettingsFormData,
@@ -92,7 +92,7 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
             ...defaultParameters,
           },
         };
-        const isValid = checkDistributionParametersIsValid(result.parameters);
+        const isValid = validateDistributionParams(result.parameters);
 
         return {
           ...result,
@@ -115,7 +115,7 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
   const [formData, setFormData] = useState({
     isValid: false,
   } as DistributionSettingsFormData & { isValid?: boolean });
-  const [errors, setErrors] = useState<DistributionDefinitionError[]>([]);
+  const [errors, setErrors] = useState<DistributionError[]>([]);
   const [chartData, setChartData] = useState<IDistributionChart>(
     defaultDistributionChartValue,
   );
@@ -123,15 +123,16 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
   const updateTable = useCallback(
     (
       value: ReactText,
-      {
+      distributionProps: DistributionSettingsFormData,
+      cell,
+    ) => {
+      const {
         parameters,
         distributionType,
         distributionDefinitionType,
-      }: DistributionSettingsFormData,
-      cell,
-    ) => {
-      const isValid = checkDistributionParametersIsValid(parameters);
-      if (isValid) {
+      } = distributionProps;
+
+      if (validateDistributionParams(parameters)) {
         dispatch(
           tableDuck.actions.updateCell({
             selectedCell: cell,
@@ -149,6 +150,7 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
     },
     [dispatch],
   );
+
   const getChart = useCallback(
     ({
       parameters,
@@ -166,15 +168,15 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
   const handleChange = (distributionProps: DistributionSettingsFormData) => {
     setFormData(distributionProps);
 
-    if (checkDistributionParametersIsValid(distributionProps.parameters)) {
+    if (validateDistributionParams(distributionProps.parameters)) {
       getChart(distributionProps).then((data) => {
-        if (data.errors) {
+        if (data.errors?.length) {
           setErrors(data.errors);
           setChartData(defaultDistributionChartValue);
           updateTable('', distributionProps, selectedCell);
         } else if (data.distributionChart) {
-          setChartData(data.distributionChart);
           setErrors([]);
+          setChartData(data.distributionChart);
           updateTable(
             data.distributionChart.percentiles?.find(
               (percentile: Percentile) => percentile.rank === 50,
@@ -195,7 +197,7 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
     if (selectedCell) {
       const result = getFormDataFromTableCell(selectedCell);
       setFormData(result);
-      if (checkDistributionParametersIsValid(result.parameters)) {
+      if (validateDistributionParams(result.parameters)) {
         getChart(result).then(
           ({ distributionChart, errors: distributionDefinitionErrors }) => {
             if (distributionDefinitionErrors) {

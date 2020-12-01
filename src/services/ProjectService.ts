@@ -4,7 +4,6 @@ import { GridCollection } from 'components/ExcelTable/types';
 import {
   Distribution,
   DistributionDefinitionError,
-  DistributionDefinitionErrors,
   DistributionParameter,
   Percentile,
   ProjectStructure,
@@ -188,19 +187,17 @@ class ProjectService {
           },
         },
       })
-      .then((response) => {
+      .then(({ data }) => {
         const distributionChart =
-          response.data?.resourceBase.distribution?.distributionChart;
-        const errors = (distributionChart as DistributionDefinitionErrors)
-          ?.errors;
+          data?.resourceBase.distribution?.distributionChart;
+        const errors = distributionChart?.errors;
+
         return {
-          errors,
           distributionChart,
+          errors,
         };
       })
       .catch((error) => {
-        console.log('GET_DISTRIBUTION_VALUE', error);
-
         return {
           errors: [error.message] as DistributionDefinitionError[],
         };

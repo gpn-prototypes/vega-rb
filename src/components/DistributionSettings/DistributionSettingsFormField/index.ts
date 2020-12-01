@@ -1,3 +1,3 @@
-import DistributionSettingsFormField from 'components/DistributionSettings/DistributionSettingsFormField/DistributionSettingsFormField';
+import DistributionSettingsFormField from './DistributionSettingsFormField';
 
 export { DistributionSettingsFormField };

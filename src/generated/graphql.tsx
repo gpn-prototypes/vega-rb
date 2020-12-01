@@ -1,4 +1,3 @@
-/* eslint-disable */
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
@@ -14,14 +13,14 @@ export type Scalars = {
    * Leverages the internal Python implmeentation of UUID (uuid.UUID) to provide native UUID objects
    * in fields, resolvers and input.
    */
-  UUID: any;
+  UUID: unknown;
   /**
    * The `DateTime` scalar type represents a DateTime
    * value as specified by
    * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
    */
-  DateTime: any;
-  DictType: any;
+  DateTime: unknown;
+  DictType: unknown;
 };
 
 export type Query = {
@@ -356,7 +355,7 @@ export enum RbErrorCodes {
   DistributionParameterOutOfRange = 'DISTRIBUTION_PARAMETER_OUT_OF_RANGE',
   /** Для старта расчётов заполните ячейку таблицы */
   CellValueIsNull = 'CELL_VALUE_IS_NULL',
-  /** Вероятность может иметь значение в пределах от 0.0 до 1.0 */
+  /** Вероятность может иметь значение в пределах 0.0 < p <= 1.0 */
   InvalidProbabilityValue = 'INVALID_PROBABILITY_VALUE',
   /** Некорректное значение параметра для этого способа задания */
   IncorrectParameterValueForDefinition = 'INCORRECT_PARAMETER_VALUE_FOR_DEFINITION',
@@ -370,8 +369,18 @@ export enum RbErrorCodes {
   ConceptionProbabilityIsNone = 'CONCEPTION_PROBABILITY_IS_NONE',
   /** Найдены концепции с не уникальными наименованиями */
   DuplicatingConceptionsNames = 'DUPLICATING_CONCEPTIONS_NAMES',
+  /** Сумма вероятностей всех концепций не равна 1 */
+  InvalidConceptionsProbabilitiesSum = 'INVALID_CONCEPTIONS_PROBABILITIES_SUM',
+  /** Распределение не может быть восстановлено */
+  DistributionCannotBeRestored = 'DISTRIBUTION_CANNOT_BE_RESTORED',
   /** Параметр version не найден. */
   VersionParamNotFound = 'VERSION_PARAM_NOT_FOUND',
+  /** Значения доверительного интервала отрицательны */
+  ConfidenceIntervalIsNegative = 'CONFIDENCE_INTERVAL_IS_NEGATIVE',
+  /** В проекте отсутствуют доменные сущности */
+  EmptyDomainEntities = 'EMPTY_DOMAIN_ENTITIES',
+  /** Дублируются имена колонок */
+  DuplicatingColumns = 'DUPLICATING_COLUMNS',
 }
 
 export type RbProjectInput = {
@@ -488,6 +497,7 @@ export type DistributionQueriesDistributionChartArgs = {
 
 export type DistributionChartResult =
   | DistributionChart
+  | CommonErrors
   | DistributionDefinitionErrors;
 
 /** Результаты вычисления заданного распределения. */
@@ -516,6 +526,21 @@ export type Percentile = {
   point: Point;
   /** Процентильный ранг (1-99) */
   rank: Scalars['Int'];
+};
+
+/** Список ошибок. */
+export type CommonErrors = {
+  __typename?: 'CommonErrors';
+  errors: Array<CommonError>;
+};
+
+/** Общая ошибка. */
+export type CommonError = RbErrorInterface & {
+  __typename?: 'CommonError';
+  /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
+  code: RbErrorCodes;
+  /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
+  message: Scalars['String'];
 };
 
 /** Список ошибок задания распределения. */
@@ -578,6 +603,7 @@ export type ScenarioStep = {
 export type ScenarioStepItem = {
   __typename?: 'ScenarioStepItem';
   object?: Maybe<DomainObjectInterface>;
+  objectGroup?: Maybe<Scalars['UUID']>;
   vid?: Maybe<Scalars['ID']>;
   code?: Maybe<Scalars['String']>;
   activity?: Maybe<ProjectActivity>;
@@ -814,6 +840,8 @@ export enum ErrorCodes {
   EmptyProjectName = 'EMPTY_PROJECT_NAME',
   /** Имя проекта превышает лимит в 256 символов */
   TooLongProjectName = 'TOO_LONG_PROJECT_NAME',
+  /** Имя проекта должно содержать минимум 2 символа */
+  TooShortProjectName = 'TOO_SHORT_PROJECT_NAME',
   /** Год начала планирования не может быть меньше текущего календарного года */
   YearStartError = 'YEAR_START_ERROR',
   /** Отрицательное число лет планирования недопустимо */
@@ -824,6 +852,8 @@ export enum ErrorCodes {
   ObjectNotFound = 'OBJECT_NOT_FOUND',
   /** Отсутствует роль */
   EmptyAttendeeRole = 'EMPTY_ATTENDEE_ROLE',
+  /** Удаляемый участник не найден в проекте  */
+  NoAttendeeToRemove = 'NO_ATTENDEE_TO_REMOVE',
   /** Некорректный формат UUID */
   IncorrectUuid = 'INCORRECT_UUID',
   /** Отсутствует тип проекта */
@@ -1151,27 +1181,12 @@ export type CapexGlobalValueOrError = CapexGlobalValue | Error;
 
 export type DomainObjectQuery = {
   __typename?: 'DomainObjectQuery';
-  geoEconomicAppraisalProject?: Maybe<GeoEconomicAppraisalProject_Type>;
-  geoEconomicAppraisalProjectList?: Maybe<
-    Array<Maybe<GeoEconomicAppraisalProject_Type>>
-  >;
   domainObject?: Maybe<DomainObjectInterface>;
-  project?: Maybe<Project_Union>;
   objectGroup?: Maybe<DomainObjectsGroup>;
   objectGroupList?: Maybe<Array<Maybe<DomainObjectsGroup>>>;
 };
 
-export type DomainObjectQueryGeoEconomicAppraisalProjectArgs = {
-  vid?: Maybe<Scalars['UUID']>;
-  name?: Maybe<Scalars['String']>;
-};
-
 export type DomainObjectQueryDomainObjectArgs = {
-  vid?: Maybe<Scalars['UUID']>;
-  name?: Maybe<Scalars['String']>;
-};
-
-export type DomainObjectQueryProjectArgs = {
   vid?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
 };
@@ -1180,14 +1195,6 @@ export type DomainObjectQueryObjectGroupArgs = {
   vid?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
 };
-
-export type GeoEconomicAppraisalProject_Type = DomainObjectInterface & {
-  __typename?: 'GeoEconomicAppraisalProject_Type';
-  vid?: Maybe<Scalars['UUID']>;
-  name?: Maybe<Scalars['String']>;
-};
-
-export type Project_Union = GeoEconomicAppraisalProject_Type;
 
 export type DomainObjectsGroup = {
   __typename?: 'DomainObjectsGroup';
@@ -1774,24 +1781,30 @@ export type LogicMutations = {
   canvas?: Maybe<CanvasMutations>;
 };
 
+/** Мутации для шагов сценария. */
 export type ScenarioStepMutations = {
   __typename?: 'ScenarioStepMutations';
+  /** Создание шага сценария. */
   create?: Maybe<CreateScenarioStep>;
+  /** Обновление шага сценария. */
   update?: Maybe<UpdateScenarioStep>;
+  /** Удаление шага сценария. */
   delete?: Maybe<DeleteScenarioStep>;
   itemEffects?: Maybe<ActivityEffectMutations>;
 };
 
+/** Мутации для шагов сценария. */
 export type ScenarioStepMutationsCreateArgs = {
-  activity: Scalars['UUID'];
+  activity?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
   objectGroup?: Maybe<Scalars['UUID']>;
   objects?: Maybe<Array<Maybe<Scalars['UUID']>>>;
   version: Scalars['Int'];
 };
 
+/** Мутации для шагов сценария. */
 export type ScenarioStepMutationsUpdateArgs = {
-  activity: Scalars['UUID'];
+  activity?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
   objectGroup?: Maybe<Scalars['UUID']>;
   objects?: Maybe<Array<Maybe<Scalars['UUID']>>>;
@@ -1799,21 +1812,25 @@ export type ScenarioStepMutationsUpdateArgs = {
   vid: Scalars['UUID'];
 };
 
+/** Мутации для шагов сценария. */
 export type ScenarioStepMutationsDeleteArgs = {
   version: Scalars['Int'];
   vid: Scalars['UUID'];
 };
 
+/** Создание шага сценария. */
 export type CreateScenarioStep = {
   __typename?: 'CreateScenarioStep';
   result?: Maybe<ScenarioStep>;
 };
 
+/** Обновление шага сценария. */
 export type UpdateScenarioStep = {
   __typename?: 'UpdateScenarioStep';
   result?: Maybe<ScenarioStep>;
 };
 
+/** Удаление шага сценария. */
 export type DeleteScenarioStep = {
   __typename?: 'DeleteScenarioStep';
   ok?: Maybe<Scalars['Boolean']>;
@@ -3030,26 +3047,8 @@ export type CapexOrDiffOrError = Capex | Error | UpdateProjectDiff;
 
 export type DomainMutations = {
   __typename?: 'DomainMutations';
-  geoEconomicAppraisalProject?: Maybe<GeoEconomicAppraisalProjectMutations>;
   object?: Maybe<DomainObjectMutations>;
   objectGroup?: Maybe<DomainObjectGroupMutations>;
-};
-
-export type GeoEconomicAppraisalProjectMutations = {
-  __typename?: 'GeoEconomicAppraisalProjectMutations';
-  create?: Maybe<GeoEconomicAppraisalProject_Type>;
-  update?: Maybe<GeoEconomicAppraisalProject_Type>;
-};
-
-export type GeoEconomicAppraisalProjectMutationsCreateArgs = {
-  name?: Maybe<Scalars['String']>;
-  version: Scalars['Int'];
-};
-
-export type GeoEconomicAppraisalProjectMutationsUpdateArgs = {
-  vid: Scalars['UUID'];
-  name?: Maybe<Scalars['String']>;
-  version: Scalars['Int'];
 };
 
 export type DomainObjectMutations = {

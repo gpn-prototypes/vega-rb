@@ -18,14 +18,9 @@ import projectService from 'services/ProjectService';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 
-import { RootState, TableState } from './types';
+import { RootState, TableState, TypedColumnsList } from './types';
 
 const factory = actionCreatorFactory('table');
-
-type TypedColumnsList = {
-  columns: GridColumn[];
-  type: TableEntities;
-};
 
 const actions = {
   initState: factory<TableState>('INIT_STATE'),
@@ -56,26 +51,30 @@ const reducer = reducerWithInitialState<TableState>(initialState)
     ...state,
     columns: payload,
   }))
-  .case(actions.updateColumnsByType, (state, payload) => {
-    const { columns: newColumns, type } = payload;
-    const columnsTypes = state.columns.map(({ type: t }) => t);
-    const lastIndex = columnsTypes.lastIndexOf(type);
-    const firstIndex = columnsTypes.findIndex((t) => t === type);
-    const columns = [...state.columns];
-    if (lastIndex !== -1 && firstIndex !== -1) {
-      columns.splice(
-        firstIndex,
-        columnsTypes.filter((t) => t === type).length,
-        ...newColumns,
-      );
-    } else if (firstIndex !== -1) {
-      columns.splice(firstIndex, 1, ...newColumns);
-    }
-    return {
-      ...state,
-      columns,
-    };
-  })
+  .case(
+    actions.updateColumnsByType,
+    (state, { columns: newColumns, type: columnsType }) => {
+      const columnsTypes = state.columns.map(({ type }) => type);
+      const lastIndex = columnsTypes.lastIndexOf(columnsType);
+      const firstIndex = columnsTypes.findIndex((type) => type === columnsType);
+      const columns = [...state.columns];
+
+      if (lastIndex !== -1 && firstIndex !== -1) {
+        columns.splice(
+          firstIndex,
+          columnsTypes.filter((type) => type === columnsType).length,
+          ...newColumns,
+        );
+      } else if (firstIndex !== -1) {
+        columns.splice(firstIndex, 1, ...newColumns);
+      }
+
+      return {
+        ...state,
+        columns,
+      };
+    },
+  )
   .case(actions.updateRows, (state, payload) => ({
     ...state,
     rows: payload,

@@ -2,10 +2,11 @@ import React from 'react';
 import { Form } from '@gpn-prototypes/vega-ui';
 import { percentileFieldTypes } from 'components/DistributionSettings/constants';
 import distributionParametersMap from 'components/DistributionSettings/data';
-import { cnForm } from 'components/DistributionSettings/DistributionSettingsForm/cn-form';
-import { options } from 'components/DistributionSettings/DistributionSettingsForm/data';
 import { DistributionSettingsFormField } from 'components/DistributionSettings/DistributionSettingsFormField';
-import { getDistributionFormDataParams } from 'components/DistributionSettings/helpers';
+import {
+  getDistributionFormDataParams,
+  getErrorMessage,
+} from 'components/DistributionSettings/helpers';
 import {
   DefaultField,
   DistributionSettingsFormData,
@@ -14,32 +15,24 @@ import {
 } from 'components/DistributionSettings/types';
 import EditableText from 'components/EditableText';
 import {
-  DistributionDefinitionError,
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
 } from 'generated/graphql';
 import { Just } from 'monet';
 import { Dropdown, Option } from 'pages/Scheme/components/Dropdown';
+import { DistributionError } from 'services/types';
 
-import 'components/DistributionSettings/DistributionSettingsForm/DistributionSettingsForm.css';
+import { cnForm } from './cn-form';
+import { options } from './data';
+import { getFieldStyleType } from './getInputStyleType';
 
-const getFormFieldType = (index: number, length: number) => {
-  const isLast = index === length - 1;
-  const isFirst = index === 0;
-  if (isFirst) {
-    return length <= 2 ? 'defaultClear' : 'defaultBrick';
-  }
-  if (isLast) {
-    return 'brickDefault';
-  }
-  return 'brick';
-};
+import './DistributionSettingsForm.css';
 
 interface IProps {
   onChange: (distributionData: DistributionSettingsFormData) => void;
   formData: DistributionSettingsFormData;
-  errors?: DistributionDefinitionError[];
+  errors: DistributionError[];
 }
 
 export const DistributionSettingsForm: React.FC<IProps> = ({
@@ -88,9 +81,6 @@ export const DistributionSettingsForm: React.FC<IProps> = ({
     });
   };
 
-  const getErrorMessage = (key: string) =>
-    errors?.find(({ fields }) => fields?.includes(key))?.message;
-
   const renderFormField = (field: Field, position: number, fields: Field[]) => {
     const {
       key,
@@ -114,10 +104,10 @@ export const DistributionSettingsForm: React.FC<IProps> = ({
       <DistributionSettingsFormField
         key={key}
         label={Label}
-        fieldType={getFormFieldType(position, fields.length)}
+        fieldType={getFieldStyleType(position, fields.length)}
         onChange={handleChange(key)}
         value={formData.parameters[key] ?? defaultValue}
-        errorMessage={getErrorMessage(key)}
+        errorMessage={getErrorMessage(errors, key).message}
       />
     );
   };

@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { cnChart } from 'components/DistributionSettings/DistributionChart/cn-chart';
-import {
-  ChartData,
-  Point,
-} from 'components/DistributionSettings/DistributionChart/types';
 import * as d3 from 'd3';
 
-import 'components/DistributionSettings/DistributionChart/DistributionChart.css';
+import { cnChart } from './cn-chart';
+import { ChartData, Point } from './types';
+
+import './DistributionChart.css';
 
 const height = 224;
 const width = 376;
@@ -32,6 +30,7 @@ const DistributionChart: React.FC<IProps> = ({
     d3.min(points, func) as number,
     d3.max(points, func) as number,
   ];
+
   const draw = useCallback(() => {
     const xScalePosition = [margin.left, width - margin.right];
     const yScalePosition = [height - margin.bottom, margin.top];
@@ -41,14 +40,17 @@ const DistributionChart: React.FC<IProps> = ({
 
     const cumulativeXScale = getScale(getDomain(sf, getX), xScalePosition);
     const cumulativeYScale = getScale(getDomain(sf, getY), yScalePosition);
+
     const probabilityDensityXScale = getScale(
       getDomain(pdf, getX),
       xScalePosition,
     );
+
     const probabilityDensityYScale = getScale(
       getDomain(pdf, getY),
       yScalePosition,
     );
+
     const projectionLinesFromPoint = (point: Point, data: Point[]) => {
       svg
         .append('path')

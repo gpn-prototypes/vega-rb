@@ -30,6 +30,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
       client,
       projectId,
     });
+
     projectService.getProjectVersion().then((version) =>
       projectService.getResourceBaseData().then((loadFromDatabase) => {
         if (loadFromDatabase) {
@@ -58,7 +59,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   });
 
   useUnmount(() => {
-    dispatch(tableDuck.actions.resetState());
+    // dispatch(tableDuck.actions.resetState());
   });
 
   return (

@@ -128,6 +128,8 @@ const mockData: GridCollection = {
       value: faker.random.number(100).toString(),
     },
   })),
+  errors: [],
+  version: 1,
 };
 
 export const Default: React.FC = () => {
@@ -137,7 +139,12 @@ export const Default: React.FC = () => {
   return (
     <div style={{ height: '100vh' }}>
       <ExcelTable
-        data={{ columns, rows }}
+        data={{
+          columns,
+          rows,
+          errors: mockData.errors,
+          version: mockData.version,
+        }}
         setColumns={setColumns}
         setRows={setRows}
       />
