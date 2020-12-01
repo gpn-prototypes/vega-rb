@@ -28,7 +28,7 @@ const DistributionSettingsFormField: React.FC<IProps> = ({
         width="full"
         size="s"
         form={fieldType}
-        value={value}
+        value={value.toString()}
         onChange={onChange}
         className={cnField.state({
           error: !!errorMessage,
