@@ -1,23 +1,15 @@
-import React, {
-  ReactText,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ReactText, useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useApolloClient } from '@apollo/client';
 import { SelectedCell } from 'components/ExcelTable/types';
-import { ProjectContext } from 'components/Providers';
 import {
   DistributionChart as IDistributionChart,
   DistributionDefinitionError,
-  DistributionDefinitionErrors,
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
+  Percentile,
 } from 'generated/graphql';
-import { getGraphqlUri } from 'pages/Scheme/helpers';
+import projectService from 'services/ProjectService';
 import tableDuck from 'store/tableDuck';
 
 import DistributionChart from './components/DistributionChart';
@@ -29,7 +21,6 @@ import {
   mapEntries,
   prepareDistributionParams,
 } from './helpers';
-import { GET_DISTRIBUTION_VALUE } from './queries';
 import {
   DistributionSettingsFormData,
   DistributionSettingsParameters,
@@ -56,8 +47,8 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
   selectedCell,
 }) => {
   const dispatch = useDispatch();
-  const client = useApolloClient();
-  const { projectId } = useContext(ProjectContext);
+  // const client = useApolloClient();
+  // const { projectId } = useContext(ProjectContext);
   const getFormDataFromTableCell = useCallback(
     (
       cell: SelectedCell,
@@ -165,33 +156,12 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
       distributionType,
       distributionDefinitionType,
     }: DistributionSettingsFormData) =>
-      client
-        .query({
-          query: GET_DISTRIBUTION_VALUE,
-          context: {
-            uri: getGraphqlUri(projectId),
-          },
-          variables: {
-            distribution: {
-              parameters: mapEntries(parameters, prepareDistributionParams),
-              type: distributionType,
-              definition: distributionDefinitionType,
-            },
-          },
-        })
-        .then((response) => {
-          const distributionChart =
-            response?.data?.resourceBase.distribution?.distributionChart;
-
-          return {
-            distributionChart: distributionChart as IDistributionChart,
-            errors: (distributionChart as DistributionDefinitionErrors)?.errors,
-          };
-        })
-        .catch(({ message }) => {
-          return { distributionChart: undefined, errors: [message] };
-        }),
-    [client, projectId],
+      projectService.getDistribution({
+        parameters: mapEntries(parameters, prepareDistributionParams),
+        type: distributionType,
+        definition: distributionDefinitionType,
+      }),
+    [],
   );
 
   const handleChange = (distributionProps: DistributionSettingsFormData) => {
@@ -207,7 +177,7 @@ const DistributionSettings: React.FC<DistributionSettingsProps> = ({
           setErrors([]);
           updateTable(
             data.distributionChart.percentiles?.find(
-              (percentile) => percentile.rank === 50,
+              (percentile: Percentile) => percentile.rank === 50,
             )?.point.x as number,
             distributionProps,
             selectedCell,

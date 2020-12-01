@@ -66,7 +66,7 @@ export function packTableData(
     ),
   }));
 
-  const domainEntities = domainEntitiesColumns.map(({ name, type, key }) => ({
+  const domainEntities = domainEntitiesColumns.map(({ name, key }) => ({
     name,
     icon: RbDomainEntityIcons.FormationIcon,
     code: key,

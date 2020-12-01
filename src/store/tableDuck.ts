@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   GridCell,
   GridColumn,
@@ -7,12 +6,6 @@ import {
 } from 'components/ExcelTable/types';
 import { TableError, TableNames } from 'generated/graphql';
 import { ofAction } from 'operators/ofAction';
-import {
-  GET_TABLE_TEMPLATE,
-  GET_VERSION,
-  SAVE_PROJECT,
-} from 'pages/Scheme/components/Table/queries';
-import { getGraphqlUri, getMockConceptions } from 'pages/Scheme/helpers';
 import { Epic } from 'redux-observable';
 import { forkJoin, from, of } from 'rxjs';
 import {
@@ -21,10 +14,9 @@ import {
   mergeMap,
   switchMap,
 } from 'rxjs/operators';
-import projectsApi from 'services/projects';
+import projectService from 'services/ProjectService';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { packTableData } from 'utils';
 
 import { RootState, TableState } from './types';
 
@@ -154,59 +146,16 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
       actions.updateColumnsByType,
     ),
     distinctUntilChanged(),
-    mergeMap((_) =>
-      of({
-        client: projectsApi.getClient() as ApolloClient<NormalizedCacheObject>,
-        projectId: projectsApi.getProjectId(),
-      }),
-    ),
-    switchMap(({ client, projectId }) =>
+    mergeMap((_) => of(projectService)),
+    switchMap((service) =>
       forkJoin([
-        of({ client, projectId }),
-        from(
-          client
-            .query({
-              query: GET_TABLE_TEMPLATE,
-              context: {
-                uri: getGraphqlUri(projectId),
-              },
-            })
-            .then(
-              ({ data }) =>
-                data.resourceBase.project.template.conceptions[0].structure,
-            ),
-        ),
-        from(
-          client
-            .query({
-              query: GET_VERSION,
-              variables: {
-                vid: projectId,
-              },
-              fetchPolicy: 'no-cache',
-            })
-            .then(({ data }) => data.project.version),
-        ),
+        of(service),
+        from(service.getTableTemplate()),
+        from(service.getProjectVersion()),
       ]),
     ),
-    switchMap(([{ client, projectId }, structure, version]) =>
-      from(
-        client.mutate({
-          mutation: SAVE_PROJECT,
-          context: {
-            uri: getGraphqlUri(projectId),
-          },
-          variables: {
-            projectInput: getMockConceptions({
-              name: 'conception_1',
-              description: '',
-              probability: 0.6,
-              structure: packTableData(state$.value.table, structure),
-            }),
-            version,
-          },
-        }),
-      ),
+    switchMap(([service, structure, version]) =>
+      from(service.saveProject(state$.value.table, structure, version)),
     ),
     ignoreElements(),
   );

@@ -1,13 +1,15 @@
+export interface Percentile {
+  rank: number;
+  point: Point;
+}
+
 export interface Point {
   x: number;
   y: number;
 }
 
-export interface Data {
+export interface ChartData {
   sf: Point[];
   pdf: Point[];
-  percentiles: {
-    rank: number;
-    point: Point;
-  }[];
+  percentiles: Percentile[];
 }

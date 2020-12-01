@@ -1,105 +1,42 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useApolloClient } from '@apollo/client';
-import { Button } from '@gpn-prototypes/vega-ui';
-import { ProjectContext } from 'components/Providers';
+import { Button } from '@gpn-prototypes/vega-button';
 import { TableError } from 'generated/graphql';
-import { TemplateProjectData } from 'pages/Scheme/components/Table/types';
-import {
-  getDownloadResultUri,
-  getGraphqlUri,
-  getMockConceptions,
-} from 'pages/Scheme/helpers';
+import projectService from 'services/ProjectService';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
-import { packTableData } from 'utils';
-
-import { CALCULATION_PROJECT } from '../../mutations';
-import { GET_TABLE_TEMPLATE } from '../Table/queries';
 
 export const CalculateButton: React.FC = () => {
-  const client = useApolloClient();
-  const { projectId, identity } = useContext(ProjectContext);
   const dispatch = useDispatch();
   const tableData = useSelector((state: RootState) => state.table);
 
-  const handleClick = async () => {
-    const { data: responseData } = await client.query<TemplateProjectData>({
-      query: GET_TABLE_TEMPLATE,
-      context: {
-        uri: getGraphqlUri(projectId),
-      },
-    });
-    // TODO: conceptions mock
-    // const getStructure = (conceptions) => head(conceptions).structure;
-
-    if (responseData) {
-      const {
-        domainEntities,
-        attributes,
-        domainObjects = [],
-        risks,
-      } = packTableData(
-        tableData,
-        responseData?.resourceBase.project.template.conceptions[0].structure,
-      );
-      const conception = {
-        name: 'conception_1',
-        description: 'описание',
-        probability: 1,
-        structure: {
-          domainEntities,
-          attributes,
-          domainObjects,
-          risks,
-        },
-      };
-
-      if (conception) {
-        client
-          .mutate({
-            mutation: CALCULATION_PROJECT,
-            context: {
-              uri: getGraphqlUri(projectId),
-            },
-            variables: {
-              projectInput: getMockConceptions(conception),
-            },
-          })
-          .then((res) => {
-            if (res.data.resourceBase.calculateProject.resultId) {
-              fetch(
-                getDownloadResultUri(
-                  res.data.resourceBase.calculateProject.resultId,
-                ),
-                {
-                  headers: {
-                    Authorization: `Bearer ${identity?.getToken()}`,
-                  },
-                },
-              )
-                .then((resp) => resp.blob())
-                .then((blob) => {
-                  const url = window.URL.createObjectURL(blob);
-                  const a = document.createElement('a');
-                  a.style.display = 'none';
-                  a.href = url;
-                  a.download = 'result.zip';
-                  document.body.appendChild(a);
-                  a.click();
-                  window.URL.revokeObjectURL(url);
-                });
-            }
-            const errors =
-              res.data.resourceBase.calculateProject.errors?.filter(
-                (error: TableError) => error.tableName,
-              ) || [];
-            dispatch(tableDuck.actions.updateErrors(errors));
-          })
-          // eslint-disable-next-line no-console
-          .catch((e) => console.error(e));
-      }
-    }
+  const handleClick = () => {
+    projectService.getTableTemplate().then((templateStructure) =>
+      projectService
+        .getCalculationResultFileId(tableData, templateStructure)
+        .then(({ resultId, errors }) => {
+          if (resultId) {
+            projectService.getCalculationArchive(resultId).then((blob) => {
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.style.display = 'none';
+              a.href = url;
+              a.download = 'result.zip';
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+            });
+          } else if (errors?.length) {
+            dispatch(
+              tableDuck.actions.updateErrors(
+                errors.filter((error: TableError) => error.tableName) || [],
+              ),
+            );
+          }
+        })
+        // eslint-disable-next-line no-console
+        .catch((e) => console.error(e)),
+    );
   };
 
   return <Button label="Рассчитать" view="ghost" onClick={handleClick} />;

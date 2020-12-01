@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
 import { cnDistributionChart } from './cn-distribution-chart';
-import { Data, Point } from './types';
+import { ChartData, Point } from './types';
 
 import './DistributionChart.css';
 
@@ -10,11 +10,11 @@ const height = 224;
 const width = 376;
 const margin = { top: 18, right: 20, bottom: 28, left: 45 };
 
-interface DistributionChartProps {
-  data: Data;
+interface IProps {
+  data: ChartData;
 }
 
-const DistributionChart: React.FC<DistributionChartProps> = ({
+const DistributionChart: React.FC<IProps> = ({
   data: { pdf, sf, percentiles },
 }) => {
   const getX = (d: Point) => d.x;

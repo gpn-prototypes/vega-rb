@@ -21,7 +21,7 @@ import distributionParametersMap from '../../data';
 import { getDistributionFormDataParams } from '../../helpers';
 import DistributionSettingsFormField from '../DistributionSettingsFormField';
 
-import { cnForm } from './cn-distribution-settings-form';
+import { cnForm } from './cn-form';
 import { options } from './data';
 
 import './DistributionSettingsForm.css';
@@ -154,8 +154,10 @@ export const DistributionSettingsForm: React.FC<IProps> = ({
       </Form.Row>
       <Form.Row>
         <div className={cnForm('Grid')}>
-          {fieldsByType[formData.distributionDefinitionType]?.map(
-            renderFormField,
+          {fieldsByType[
+            formData.distributionDefinitionType
+          ]?.map((field, index, fields) =>
+            renderFormField(field, index, fields),
           )}
         </div>
       </Form.Row>

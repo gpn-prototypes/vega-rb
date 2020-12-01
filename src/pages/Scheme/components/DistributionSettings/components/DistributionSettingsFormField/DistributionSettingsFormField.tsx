@@ -1,7 +1,6 @@
 import React from 'react';
 import { Form, TextField } from '@gpn-prototypes/vega-ui';
-
-import { cnDistributionSettingsFormField } from './cn-distribution-settings-form-field';
+import { cnField } from 'pages/Scheme/components/DistributionSettings/components/DistributionSettingsFormField/cn-field';
 
 import './DistributionSettingsFormField.css';
 
@@ -23,7 +22,7 @@ const DistributionSettingsFormField: React.FC<IProps> = ({
   label,
 }) => {
   return (
-    <Form.Field className={cnDistributionSettingsFormField()}>
+    <Form.Field className={cnField()}>
       {label}
       <TextField
         width="full"
@@ -31,14 +30,12 @@ const DistributionSettingsFormField: React.FC<IProps> = ({
         form={fieldType}
         value={value}
         onChange={onChange}
-        className={cnDistributionSettingsFormField.state({
+        className={cnField.state({
           error: !!errorMessage,
         })}
       />
       {errorMessage && (
-        <div className={cnDistributionSettingsFormField('ErrorMessage')}>
-          {errorMessage}
-        </div>
+        <div className={cnField('ErrorMessage')}>{errorMessage}</div>
       )}
     </Form.Field>
   );
