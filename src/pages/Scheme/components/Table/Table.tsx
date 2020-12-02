@@ -79,7 +79,11 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
 
   return (
     <ExcelTable
-      data={filteredData}
+      data={{
+        ...filteredData,
+        errors: reduxTableData.errors,
+        version: reduxTableData.version,
+      }}
       setColumns={(data): void => {
         dispatch(tableDuck.actions.updateColumns(data));
       }}

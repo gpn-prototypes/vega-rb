@@ -11,6 +11,7 @@ import { defaultTo } from 'lodash';
 import { toNumber } from 'lodash/fp';
 import { SpecialColumns } from 'model/Table';
 import { CalculationParam, Risk } from 'types';
+import { isEmpty } from 'utils/isEmpty';
 
 import { getColumnsByType } from './getColumnsByType';
 
@@ -57,7 +58,7 @@ export function packTableData(
       String(row[key]?.value || ''),
     ),
     risksValues: riskColumns.map(({ key }) => {
-      return row[key]?.value !== '' ? toNumber(row[key]?.value) : null;
+      return !isEmpty(row[key]?.value) ? toNumber(row[key]?.value) : null;
     }),
     geoObjectCategory: getGeoObjectCategoryParamsFromOption(
       row[SpecialColumns.GEO_CATEGORY]?.value as OptionEntity,

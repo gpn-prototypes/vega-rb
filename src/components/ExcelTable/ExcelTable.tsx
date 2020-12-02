@@ -12,7 +12,13 @@ import { renderColumns } from './Columns/renderColumns';
 import { cnExcelTable } from './cn-excel-table';
 import { HeaderContextMenu } from './ContextMenu';
 import StyledRow from './StyledRow';
-import { GridColumn, GridRow, HEADER_CONTEXT_ID, TableEntities } from './types';
+import {
+  GridCollection,
+  GridColumn,
+  GridRow,
+  HEADER_CONTEXT_ID,
+  TableEntities,
+} from './types';
 import { createColumn, getInsertableType } from './utils';
 
 import './ExcelTable.css';
@@ -22,10 +28,7 @@ const cnExcelTableClass = cnExcelTable();
 type CommonTableColumn = GridColumn & CalculatedColumn<GridRow>;
 
 interface IProps {
-  data: {
-    columns: GridColumn[];
-    rows: GridRow[];
-  };
+  data: GridCollection;
   setColumns?: (data: GridColumn[]) => void;
   setRows?: (data: GridRow[]) => void;
   onRowClick?: (

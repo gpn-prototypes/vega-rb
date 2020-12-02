@@ -1,8 +1,8 @@
 overwrite: true
 schema:
-  - http://localhost:8080/graphql/a3333333-b111-c111-d111-e00000000022:
+  - ${SCHEMA_PATH}:
       headers:
-        Authorization: `Bearer ${token}`
+        Authorization: Bearer ${AUTH_TOKEN}
 # documents: "src/**/*.graphql"
 generates:
   src/generated/graphql.tsx:

@@ -68,7 +68,8 @@ function structureParamsReducer(list: TableStructures[]): GridColumn[] {
     }
   }, []);
 }
-const prepareCalculationParamsToGridRow = (
+
+const prepareCalculativeProperties = (
   attributes: AttributeInput[],
   attributesValues: Array<Maybe<DistributionInput>>,
   calculationResultList?: Array<number | null>,
@@ -94,7 +95,7 @@ const prepareCalculationParamsToGridRow = (
     }, {});
 };
 
-function prepareRiskParamsToGridRow(
+function prepareRisks(
   riskValues: Array<number | null>,
   risk: RiskInput[],
 ): GridRow {
@@ -111,7 +112,7 @@ function prepareRiskParamsToGridRow(
     );
 }
 
-function prepareDomainEntityParamsToGridRow(
+function prepareDomainEntities(
   cells: string[],
   domainEntities: RbDomainEntityInput[],
 ): GridRow {
@@ -178,7 +179,7 @@ function constructRows(
     domainEntities = [],
     domainObjects = [],
     attributes = [],
-    risks = [],
+    risks: risksEntities = [],
   }: ProjectStructureInput,
   calculationResultList?: TableDistributionResultList,
 ): GridRow[] {
@@ -190,17 +191,17 @@ function constructRows(
         { domainObjectPath, geoObjectCategory, attributeValues, risksValues },
         idx,
       ) => ({
-        ...prepareDomainEntityParamsToGridRow(domainObjectPath, domainEntities),
-        ...prepareCalculationParamsToGridRow(
-          attributes,
-          attributeValues,
-          calculationResultList?.[idx],
-        ),
-        ...prepareRiskParamsToGridRow(risksValues, risks),
         id: { value: idx + 1 },
         [SpecialColumns.GEO_CATEGORY]: getGeoObjectCategoryCellValue(
           geoObjectCategory,
         ),
+        ...prepareDomainEntities(domainObjectPath, domainEntities),
+        ...prepareCalculativeProperties(
+          attributes,
+          attributeValues,
+          calculationResultList?.[idx],
+        ),
+        ...prepareRisks(risksValues, risksEntities),
       }),
     ),
     ...createEmptyRows(emptyRowsLength),
@@ -217,11 +218,12 @@ export function unpackTableData(
     projectStructure,
     calculationResultList,
   );
+  // const errors: TableError[] = [];
 
   return {
     columns,
     rows,
-    errors: [],
+    errors: {},
     version,
   };
 }

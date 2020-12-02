@@ -3,9 +3,8 @@ import {
   GridCollection,
   GridColumn,
   GridRow,
-  TableEntities,
 } from 'components/ExcelTable/types';
-import { TableError, TableNames } from 'generated/graphql';
+import { unset } from 'lodash/fp';
 import { ofAction } from 'operators/ofAction';
 import { Epic } from 'redux-observable';
 import { forkJoin, from, of } from 'rxjs';
@@ -16,6 +15,7 @@ import {
   switchMap,
 } from 'rxjs/operators';
 import projectService from 'services/ProjectService';
+import { ColumnErrors } from 'types';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 
@@ -29,22 +29,21 @@ const actions = {
   updateColumnsByType: factory<TypedColumnsList>('UPDATE_COLUMNS_BY_TYPE'),
   updateRows: factory<GridRow[]>('UPDATE_ROWS'),
   updateCell: factory<GridCell>('UPDATE_CELL'),
-  updateErrors: factory<TableError[]>('UPDATE_ERRORS'),
+  updateErrors: factory<ColumnErrors>('UPDATE_ERRORS'),
   resetState: factory('RESET_STATE'),
   setRowsFilter: factory<number[]>('SET_ROWS_FILTER'),
   setColumnsFilter: factory<string[]>('SET_COLUMNS_FILTER'),
-  reset: factory('RESET_TABLE'),
 };
 
 const initialState: TableState = {
   columns: [],
   rows: [],
-  errors: [],
+  errors: {},
+  version: 0,
   filter: {
     rows: [],
     columns: [],
   },
-  version: 0,
 };
 
 const reducer = reducerWithInitialState<TableState>(initialState)
@@ -54,10 +53,6 @@ const reducer = reducerWithInitialState<TableState>(initialState)
     rows: payload.rows,
     columns: payload.columns,
     version: payload.version,
-    filteredData: {
-      rows: payload.rows,
-      columns: payload.columns,
-    },
   }))
   .case(actions.setColumnsFilter, (state, payload) => ({
     ...state,
@@ -111,37 +106,21 @@ const reducer = reducerWithInitialState<TableState>(initialState)
   }))
   .case(actions.updateCell, (state, { selectedCell, cellData }) => {
     const rows = [...state.rows];
-    const errors = [...state.errors];
-    if (selectedCell && Number.isInteger(selectedCell.rowIdx)) {
-      rows.splice(selectedCell.rowIdx, 1, {
-        ...rows[selectedCell.rowIdx],
-        [selectedCell.column.key]: {
-          ...rows[selectedCell.rowIdx][selectedCell.column.key],
+    let errors = { ...state.errors };
+
+    const selectedColumnKey = selectedCell.column.key;
+    const selectedRowIdx = selectedCell.rowIdx;
+
+    if (selectedCell && Number.isInteger(selectedRowIdx)) {
+      rows.splice(selectedRowIdx, 1, {
+        ...rows[selectedRowIdx],
+        [selectedColumnKey]: {
+          ...rows[selectedRowIdx][selectedColumnKey],
           ...cellData,
         },
       } as GridRow);
 
-      const errorIdx = errors.findIndex(
-        ({ row: rowIdx, column: columnIdx, tableName }) => {
-          const tableColumnIdx = state.columns
-            .filter((c) => c.type === (selectedCell.column as GridColumn).type)
-            .findIndex(
-              (c) => c.key === (selectedCell.column as GridColumn).key,
-            );
-          const isSameRow = rowIdx === selectedCell.rowIdx;
-          const isSameTableType =
-            (selectedCell.column.key === TableEntities.GEO_CATEGORY &&
-              tableName === TableNames.DomainEntities) ||
-            ((selectedCell.column as GridColumn).type ===
-              TableEntities.CALC_PARAM &&
-              tableName === TableNames.Attributes);
-          const isSameColumn = tableColumnIdx === columnIdx;
-          return isSameRow && isSameColumn && isSameTableType;
-        },
-      );
-      if (errorIdx !== -1) {
-        errors.splice(errorIdx, 1);
-      }
+      errors = unset([selectedColumnKey, selectedRowIdx], errors);
     }
 
     return {

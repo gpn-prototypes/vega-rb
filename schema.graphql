@@ -57,6 +57,8 @@ union DiffOrError = Error | UpdateProjectDiff
 
 union DistributionChartResult = CommonErrors | DistributionChart | DistributionDefinitionErrors
 
+union LicensingRound_Union = LicensingRound_A_Type
+
 union MacroparameterGroupListOrError = Error | MacroparameterGroupList
 
 union MacroparameterGroupOrDiffOrError = Error | MacroparameterGroup | UpdateProjectDiff
@@ -96,6 +98,10 @@ union OpexSdfOrDiffOrError = Error | OpexSdf | UpdateProjectDiff
 union ProductOrDiffOrError = Error | Product | UpdateProjectDiff
 
 union ProductTypeOrDiffOrError = Error | ProductType | UpdateProjectDiff
+
+union Project_Union = GeoEconomicAppraisalProject_Type
+
+union Prospect_Union = Prospect_A_Type
 
 "Результат сохранения проекта."
 union SavedOrError = DistributionDefinitionErrors | Error | TableErrors
@@ -624,8 +630,11 @@ type DomainEntityImage {
 }
 
 type DomainMutations {
+  geoEconomicAppraisalProject: GeoEconomicAppraisalProjectMutations
+  licensingRoundA: LicensingRound_AMutations
   object: DomainObjectMutations
   objectGroup: DomainObjectGroupMutations
+  prospectA: Prospect_AMutations
 }
 
 type DomainObject {
@@ -653,8 +662,17 @@ type DomainObjectMutations {
 
 type DomainObjectQuery {
   domainObject(name: String, vid: UUID): DomainObjectInterface
+  geoEconomicAppraisalProject(name: String, vid: UUID): GeoEconomicAppraisalProject_Type
+  geoEconomicAppraisalProjectList: [GeoEconomicAppraisalProject_Type]
+  licensingRound(name: String, vid: UUID): LicensingRound_Union
+  licensingRoundA(name: String, vid: UUID): LicensingRound_A_Type
+  licensingRoundAList: [LicensingRound_A_Type]
   objectGroup(name: String, vid: UUID): DomainObjectsGroup
   objectGroupList: [DomainObjectsGroup]
+  project(name: String, vid: UUID): Project_Union
+  prospect(name: String, vid: UUID): Prospect_Union
+  prospectA(name: String, vid: UUID): Prospect_A_Type
+  prospectAList: [Prospect_A_Type]
 }
 
 type DomainObjectsGroup {
@@ -683,6 +701,33 @@ type GCoSCalculationResult {
   "Список значений GCoS геологических объектов"
   GCoSValues: [Float]
   errors: [TableError!]
+}
+
+type GeoEconomicAppraisalProjectMutations {
+  create(correlationType: [Int], licensingRounds: [UUID], name: String, projectStartYear: Int, shelfProductionParameter: Float, version: Int!): GeoEconomicAppraisalProject_Type
+  update(correlationType: [Int], licensingRounds: [UUID], name: String, projectStartYear: Int, shelfProductionParameter: Float, version: Int!, vid: UUID!): GeoEconomicAppraisalProject_Type
+}
+
+type GeoEconomicAppraisalProject_Type implements DomainObjectInterface {
+  correlationType: [Int]
+  licensingRounds: [LicensingRound_Union]
+  name: String
+  projectStartYear: Int
+  shelfProductionParameter: Float
+  vid: UUID
+}
+
+type LicensingRound_AMutations {
+  create(geoEconomicAppraisalProject: UUID, initialInventory: [Int], name: String, prospects: [UUID], version: Int!): LicensingRound_A_Type
+  update(geoEconomicAppraisalProject: UUID, initialInventory: [Int], name: String, prospects: [UUID], version: Int!, vid: UUID!): LicensingRound_A_Type
+}
+
+type LicensingRound_A_Type implements DomainObjectInterface {
+  geoEconomicAppraisalProject: Project_Union
+  initialInventory: [Int]
+  name: String
+  prospects: [Prospect_Union]
+  vid: UUID
 }
 
 "Модель логики проекта - хранение внутри сущности проекта."
@@ -1023,7 +1068,6 @@ type Project {
   isFavorite: Boolean
   myRoles: [ProjectRole]
   name: String
-  planningHorizon: String
   region: Region
   resourceId: String
   rootEntity: String
@@ -1099,6 +1143,18 @@ type PropertyMeta {
   title: String
   unit: String
   validationRules: ValidationRules
+}
+
+type Prospect_AMutations {
+  create(geoEconomicAppraisalProject: UUID, initialInv: Float, name: String, version: Int!): Prospect_A_Type
+  update(geoEconomicAppraisalProject: UUID, initialInv: Float, name: String, version: Int!, vid: UUID!): Prospect_A_Type
+}
+
+type Prospect_A_Type implements DomainObjectInterface {
+  geoEconomicAppraisalProject: Project_Union
+  initialInv: Float
+  name: String
+  vid: UUID
 }
 
 type Query {
@@ -1325,6 +1381,8 @@ type TableError implements RBErrorInterface {
   code: RBErrorCodes!
   "Индекс ячейки в строке таблицы, повлекшей ошибку"
   column: Int
+  "Идентификатор сущности в колонке."
+  columnKey: String
   "Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте"
   message: String!
   "Индекс строки таблицы, повлекшей ошибку"
@@ -1603,12 +1661,12 @@ enum ErrorCodes {
   PROJECT_NOT_FOUND
   "Статус проекта нельзя очистить"
   PROJECT_STATUS_CANNOT_BE_NULL
-  "Отсутствует тип проекта"
-  PROJECT_TYPE_CANNOT_BE_NULL
   "Ошибка при обновлении проекта"
   PROJECT_UPDATE_ERROR
   "Расхождение версий проекта"
   PROJECT_VERSION_DIFF_ERROR
+  "Отсутствует год начала планирования проекта"
+  PROJECT_YEARSTART_CANNOT_BE_NULL
   "Объект справочника не найден"
   REFERENCE_ITEM_NOT_FOUND
   "Имя проекта превышает лимит в 256 символов"

@@ -128,7 +128,7 @@ const mockData: GridCollection = {
       value: faker.random.number(100).toString(),
     },
   })),
-  errors: [],
+  errors: {},
   version: 1,
 };
 
@@ -142,6 +142,8 @@ export const Default: React.FC = () => {
         data={{
           columns,
           rows,
+          errors: mockData.errors,
+          version: mockData.version,
         }}
         setColumns={setColumns}
         setRows={setRows}

@@ -25,6 +25,12 @@ const SchemePage: React.FC = () => {
   );
   const treeEditorRef = useRef<HTMLDivElement>(null);
   const [isShownTree, setIsShownTree] = useState(false);
+  const handleEndResize = (): void => {
+    if (treeEditorRef?.current?.clientWidth) {
+      setIsShownTree(Number(treeEditorRef?.current?.clientWidth) > 100);
+    }
+  };
+
   const data = useSelector(({ table }: RootState) => table);
   const geoCategoryColumns = data.columns.filter(
     ({ type }) => type === TableEntities.GEO_CATEGORY,
@@ -38,11 +44,7 @@ const SchemePage: React.FC = () => {
     isOpen: false,
     isMinimized: false,
   });
-  const handleEndResize = (): void => {
-    if (treeEditorRef?.current?.clientWidth) {
-      setIsShownTree(Number(treeEditorRef?.current?.clientWidth) > 100);
-    }
-  };
+
   const updateColumns = (columns: GridColumn[]) => {
     dispatch(
       tableDuck.actions.updateColumnsByType({
