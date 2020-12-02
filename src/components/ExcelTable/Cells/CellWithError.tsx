@@ -13,6 +13,7 @@ import cn from 'classnames';
 import useCombinedRefs from 'hooks/useCombinedRefs';
 import { get } from 'lodash/fp';
 import { RootState } from 'store/types';
+import { isEmpty } from 'utils';
 
 import { cnCellTooltip, cnCellValueError } from '../cn-excel-table';
 import { GridRow, UniColumn } from '../types';
@@ -44,11 +45,11 @@ function CellWithError(props: Props, ref: React.Ref<HTMLDivElement>) {
     [column.key, currentRowIdx],
   );
 
-  function selectCell(openEditor?: boolean) {
+  function selectCell(shouldOpenEditor?: boolean) {
     eventBus.dispatch(
       'SELECT_CELL',
       { idx: column.idx, rowIdx: currentRowIdx },
-      openEditor,
+      shouldOpenEditor,
     );
   }
 
@@ -79,11 +80,10 @@ function CellWithError(props: Props, ref: React.Ref<HTMLDivElement>) {
 
   const rowObject = {
     ...row,
-    [column.key]: error
-      ? {
-          value: '—',
-        }
-      : row[column.key],
+    [column.key]:
+      error && isEmpty(row[column.key]?.value)
+        ? { value: '—' }
+        : row[column.key],
   };
 
   return (

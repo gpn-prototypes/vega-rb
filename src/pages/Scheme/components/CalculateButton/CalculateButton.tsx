@@ -27,11 +27,6 @@ export const CalculateButton: React.FC = () => {
               window.URL.revokeObjectURL(url);
             });
           } else if (errors?.length) {
-            console.log(
-              'errors by calculation',
-              errors,
-              assembleErrors(errors),
-            );
             dispatch(tableDuck.actions.updateErrors(assembleErrors(errors)));
           }
         })
