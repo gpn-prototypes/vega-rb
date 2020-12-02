@@ -230,7 +230,7 @@ const HierarchyLevelItem: React.FC<IProps> = ({
             (Object.keys(visible) as VisibleKeys[]).map((key) => (
               <Tag
                 key={key}
-                className={cnItem('Tag')}
+                className={cnItem('Tag').toString()}
                 label={HIERARCHY_TAGS[key].title}
                 mode="check"
                 size="m"
