@@ -19,7 +19,14 @@
     transform: rotate(-90deg) translate(-40px, -42px);
 
     &.is-open {
-      display: none;
+      padding-left: var(--space-s);
+      padding-bottom: var(--space-2xs);
+
+      width: 100%;
+
+      border-bottom: 1px solid var(--color-bg-secondary);
+
+      transform: none;
     }
   }
 }
