@@ -40,23 +40,59 @@ const actions = {
   updateRows: factory<GridRow[]>('UPDATE_ROWS'),
   updateCell: factory<GridCell>('UPDATE_CELL'),
   updateErrors: factory<TableError[]>('UPDATE_ERRORS'),
+  setRowsFilter: factory<number[]>('SET_ROWS_FILTER'),
+  setColumnsFilter: factory<string[]>('SET_COLUMNS_FILTER'),
   reset: factory('RESET_TABLE'),
 };
 
 const initialState: TableState = {
   columns: [],
   rows: [],
+  filteredData: {
+    columns: [],
+    rows: [],
+  },
   errors: [],
+  filter: {
+    rows: [],
+    columns: [],
+  },
   version: 0,
 };
 
 const reducer = reducerWithInitialState<TableState>(initialState)
   .case(actions.reset, () => initialState)
+  .case(actions.setColumnsFilter, (state, payload) => ({
+    ...state,
+    filter: {
+      ...state.filter,
+      columns: payload,
+    },
+    filteredData: {
+      ...state.filteredData,
+      columns: state.columns.filter((column) => !payload.includes(column.key)),
+    },
+  }))
+  .case(actions.setRowsFilter, (state, payload) => ({
+    ...state,
+    filter: {
+      ...state.filter,
+      rows: payload,
+    },
+    filteredData: {
+      ...state.filteredData,
+      rows: state.rows.filter((row, idx) => !payload.includes(idx)),
+    },
+  }))
   .case(actions.init, (state, payload) => ({
     ...state,
     rows: payload.rows,
     columns: payload.columns,
     version: payload.version,
+    filteredData: {
+      rows: payload.rows,
+      columns: payload.columns,
+    },
   }))
   .case(actions.updateColumns, (state, payload) => ({
     ...state,

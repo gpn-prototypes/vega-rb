@@ -30,7 +30,9 @@ interface IProps {
 
 export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   const { projectId } = useContext(ProjectContext);
-  const reduxTableData = useSelector(({ table }: RootState) => table);
+  const reduxTableData = useSelector(
+    ({ table }: RootState) => table.filteredData,
+  );
   const dispatch = useDispatch();
   const client = useApolloClient();
 

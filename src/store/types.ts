@@ -4,6 +4,11 @@ import { Param } from 'model/Param';
 
 export interface TableState extends GridCollection {
   errors: TableError[];
+  filter: {
+    rows: number[];
+    columns: string[];
+  };
+  filteredData: GridCollection;
   version: number;
 }
 export interface AlertState {
