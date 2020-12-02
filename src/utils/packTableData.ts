@@ -8,6 +8,7 @@ import {
   RbDomainEntityIcons,
 } from 'generated/graphql';
 import { defaultTo } from 'lodash';
+import { toNumber } from 'lodash/fp';
 import { SpecialColumns } from 'model/Table';
 import { CalculationParam, Risk } from 'types';
 
@@ -55,9 +56,9 @@ export function packTableData(
     domainObjectPath: domainEntitiesColumns.map(({ key }) =>
       String(row[key]?.value || ''),
     ),
-    risksValues: riskColumns.map(
-      ({ key }) => (row[key]?.value as number) ?? null,
-    ),
+    risksValues: riskColumns.map(({ key }) => {
+      return row[key]?.value !== '' ? toNumber(row[key]?.value) : null;
+    }),
     geoObjectCategory: getGeoObjectCategoryParamsFromOption(
       row[SpecialColumns.GEO_CATEGORY]?.value as OptionEntity,
     ),

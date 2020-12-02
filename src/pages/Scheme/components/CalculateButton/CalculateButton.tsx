@@ -35,7 +35,9 @@ export const CalculateButton: React.FC = () => {
           }
         })
         // eslint-disable-next-line no-console
-        .catch((e) => console.error(e)),
+        .catch((e) =>
+          console.error('Something went wrong by calculating...', e),
+        ),
     );
   };
 
