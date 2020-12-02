@@ -24,7 +24,7 @@ const SchemePage: React.FC = () => {
     null,
   );
   const treeEditorRef = useRef<HTMLDivElement>(null);
-  const [isShownTree, setIsShownTree] = useState(false);
+  const [isShownTree, setIsShownTree] = useState(true);
   const handleEndResize = (): void => {
     if (treeEditorRef?.current?.clientWidth) {
       setIsShownTree(Number(treeEditorRef?.current?.clientWidth) > 100);
@@ -67,7 +67,7 @@ const SchemePage: React.FC = () => {
         />
       </div>
       <SplitPanes split="vertical" onResizeEnd={handleEndResize}>
-        <SplitPanes.Pane aria-label="tree" initialSize="24px" min="24px">
+        <SplitPanes.Pane aria-label="tree" initialSize="180px" min="24px">
           <TreeEditor
             rows={data.rows}
             columns={data.columns}

@@ -19,10 +19,11 @@ import { getColumnsByType } from 'utils/getColumnsByType';
 import './TreeEditor.css';
 
 const icons = {
-  'blue-line': <ResourceIcon />,
-  'orange-line': <ResourceIcon />,
-  'red-line': <ResourceIcon />,
+  'blue-line': <ResourceIcon color="#00eeaa" />,
+  'orange-line': <ResourceIcon color="#00eeaa" />,
+  'red-line': <ResourceIcon color="#00eeaa" />,
 };
+
 interface StructureTreeEditorProps {
   columns: GridColumn[];
   rows: GridRow[];

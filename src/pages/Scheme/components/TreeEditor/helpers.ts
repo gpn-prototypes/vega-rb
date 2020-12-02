@@ -95,7 +95,9 @@ export function getNodeListFromTableData(data: {
       const map = groupBy(
         filledRows.map((row, rowIdx) => {
           return {
-            name: row[columnKey]?.value,
+            name: row[columnKey]?.value
+              ? row[columnKey]?.value
+              : '? (заглушка)',
             data: {
               position: [
                 {
@@ -140,7 +142,7 @@ export function getNodeListFromTableData(data: {
         };
 
         return {
-          name: row[columnKey]?.value,
+          name: row[columnKey]?.value ? row[columnKey]?.value : '? (заглушка)',
           data: {
             position: [
               {
