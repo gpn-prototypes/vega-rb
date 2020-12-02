@@ -11,6 +11,7 @@ export const CALCULATION_PROJECT = gql`
             column
             row
             tableName
+            columnKey
           }
         }
         ... on CalculationResult {

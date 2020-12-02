@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+// generated file
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
@@ -13,14 +16,14 @@ export type Scalars = {
    * Leverages the internal Python implmeentation of UUID (uuid.UUID) to provide native UUID objects
    * in fields, resolvers and input.
    */
-  UUID: unknown;
+  UUID: any;
   /**
    * The `DateTime` scalar type represents a DateTime
    * value as specified by
    * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
    */
-  DateTime: unknown;
-  DictType: unknown;
+  DateTime: any;
+  DictType: any;
 };
 
 export type Query = {
@@ -856,8 +859,6 @@ export enum ErrorCodes {
   NoAttendeeToRemove = 'NO_ATTENDEE_TO_REMOVE',
   /** Некорректный формат UUID */
   IncorrectUuid = 'INCORRECT_UUID',
-  /** Отсутствует тип проекта */
-  ProjectTypeCannotBeNull = 'PROJECT_TYPE_CANNOT_BE_NULL',
   /** Статус проекта нельзя очистить */
   ProjectStatusCannotBeNull = 'PROJECT_STATUS_CANNOT_BE_NULL',
   /** Участник проекта не найден */
@@ -870,6 +871,8 @@ export enum ErrorCodes {
   ProjectManagerNotFound = 'PROJECT_MANAGER_NOT_FOUND',
   /** Проект нельзя возвращать в статус заготовки. */
   CannotBringBlankBack = 'CANNOT_BRING_BLANK_BACK',
+  /** Отсутствует год начала планирования проекта */
+  ProjectYearstartCannotBeNull = 'PROJECT_YEARSTART_CANNOT_BE_NULL',
 }
 
 export type TaxDnsProfileType = {
@@ -1181,12 +1184,53 @@ export type CapexGlobalValueOrError = CapexGlobalValue | Error;
 
 export type DomainObjectQuery = {
   __typename?: 'DomainObjectQuery';
+  geoEconomicAppraisalProject?: Maybe<GeoEconomicAppraisalProject_Type>;
+  geoEconomicAppraisalProjectList?: Maybe<
+    Array<Maybe<GeoEconomicAppraisalProject_Type>>
+  >;
+  licensingRoundA?: Maybe<LicensingRound_A_Type>;
+  licensingRoundAList?: Maybe<Array<Maybe<LicensingRound_A_Type>>>;
+  prospectA?: Maybe<Prospect_A_Type>;
+  prospectAList?: Maybe<Array<Maybe<Prospect_A_Type>>>;
   domainObject?: Maybe<DomainObjectInterface>;
+  project?: Maybe<Project_Union>;
+  licensingRound?: Maybe<LicensingRound_Union>;
+  prospect?: Maybe<Prospect_Union>;
   objectGroup?: Maybe<DomainObjectsGroup>;
   objectGroupList?: Maybe<Array<Maybe<DomainObjectsGroup>>>;
 };
 
+export type DomainObjectQueryGeoEconomicAppraisalProjectArgs = {
+  vid?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type DomainObjectQueryLicensingRoundAArgs = {
+  vid?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type DomainObjectQueryProspectAArgs = {
+  vid?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+};
+
 export type DomainObjectQueryDomainObjectArgs = {
+  vid?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type DomainObjectQueryProjectArgs = {
+  vid?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type DomainObjectQueryLicensingRoundArgs = {
+  vid?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type DomainObjectQueryProspectArgs = {
   vid?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
 };
@@ -1195,6 +1239,39 @@ export type DomainObjectQueryObjectGroupArgs = {
   vid?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
 };
+
+export type GeoEconomicAppraisalProject_Type = DomainObjectInterface & {
+  __typename?: 'GeoEconomicAppraisalProject_Type';
+  vid?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+  projectStartYear?: Maybe<Scalars['Int']>;
+  shelfProductionParameter?: Maybe<Scalars['Float']>;
+  correlationType?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  licensingRounds?: Maybe<Array<Maybe<LicensingRound_Union>>>;
+};
+
+export type LicensingRound_Union = LicensingRound_A_Type;
+
+export type LicensingRound_A_Type = DomainObjectInterface & {
+  __typename?: 'LicensingRound_A_Type';
+  vid?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+  initialInventory?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  prospects?: Maybe<Array<Maybe<Prospect_Union>>>;
+  geoEconomicAppraisalProject?: Maybe<Project_Union>;
+};
+
+export type Prospect_Union = Prospect_A_Type;
+
+export type Prospect_A_Type = DomainObjectInterface & {
+  __typename?: 'Prospect_A_Type';
+  vid?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+  initialInv?: Maybe<Scalars['Float']>;
+  geoEconomicAppraisalProject?: Maybe<Project_Union>;
+};
+
+export type Project_Union = GeoEconomicAppraisalProject_Type;
 
 export type DomainObjectsGroup = {
   __typename?: 'DomainObjectsGroup';
@@ -1745,6 +1822,8 @@ export type TableError = RbErrorInterface & {
   column?: Maybe<Scalars['Int']>;
   /** Индекс строки таблицы, повлекшей ошибку */
   row?: Maybe<Scalars['Int']>;
+  /** Идентификатор сущности в колонке. */
+  columnKey?: Maybe<Scalars['String']>;
 };
 
 /** Имена таблиц в структуре проекта. */
@@ -1982,7 +2061,6 @@ export type Project = {
   rootEntity?: Maybe<Scalars['String']>;
   status?: Maybe<ProjectStatusEnum>;
   resourceId?: Maybe<Scalars['String']>;
-  planningHorizon?: Maybe<Scalars['String']>;
   yearStart?: Maybe<Scalars['Int']>;
   years?: Maybe<Scalars['Int']>;
   version?: Maybe<Scalars['Int']>;
@@ -3047,8 +3125,80 @@ export type CapexOrDiffOrError = Capex | Error | UpdateProjectDiff;
 
 export type DomainMutations = {
   __typename?: 'DomainMutations';
+  geoEconomicAppraisalProject?: Maybe<GeoEconomicAppraisalProjectMutations>;
+  licensingRoundA?: Maybe<LicensingRound_AMutations>;
+  prospectA?: Maybe<Prospect_AMutations>;
   object?: Maybe<DomainObjectMutations>;
   objectGroup?: Maybe<DomainObjectGroupMutations>;
+};
+
+export type GeoEconomicAppraisalProjectMutations = {
+  __typename?: 'GeoEconomicAppraisalProjectMutations';
+  create?: Maybe<GeoEconomicAppraisalProject_Type>;
+  update?: Maybe<GeoEconomicAppraisalProject_Type>;
+};
+
+export type GeoEconomicAppraisalProjectMutationsCreateArgs = {
+  name?: Maybe<Scalars['String']>;
+  projectStartYear?: Maybe<Scalars['Int']>;
+  shelfProductionParameter?: Maybe<Scalars['Float']>;
+  correlationType?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  licensingRounds?: Maybe<Array<Maybe<Scalars['UUID']>>>;
+  version: Scalars['Int'];
+};
+
+export type GeoEconomicAppraisalProjectMutationsUpdateArgs = {
+  vid: Scalars['UUID'];
+  name?: Maybe<Scalars['String']>;
+  projectStartYear?: Maybe<Scalars['Int']>;
+  shelfProductionParameter?: Maybe<Scalars['Float']>;
+  correlationType?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  licensingRounds?: Maybe<Array<Maybe<Scalars['UUID']>>>;
+  version: Scalars['Int'];
+};
+
+export type LicensingRound_AMutations = {
+  __typename?: 'LicensingRound_AMutations';
+  create?: Maybe<LicensingRound_A_Type>;
+  update?: Maybe<LicensingRound_A_Type>;
+};
+
+export type LicensingRound_AMutationsCreateArgs = {
+  name?: Maybe<Scalars['String']>;
+  initialInventory?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  prospects?: Maybe<Array<Maybe<Scalars['UUID']>>>;
+  geoEconomicAppraisalProject?: Maybe<Scalars['UUID']>;
+  version: Scalars['Int'];
+};
+
+export type LicensingRound_AMutationsUpdateArgs = {
+  vid: Scalars['UUID'];
+  name?: Maybe<Scalars['String']>;
+  initialInventory?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  prospects?: Maybe<Array<Maybe<Scalars['UUID']>>>;
+  geoEconomicAppraisalProject?: Maybe<Scalars['UUID']>;
+  version: Scalars['Int'];
+};
+
+export type Prospect_AMutations = {
+  __typename?: 'Prospect_AMutations';
+  create?: Maybe<Prospect_A_Type>;
+  update?: Maybe<Prospect_A_Type>;
+};
+
+export type Prospect_AMutationsCreateArgs = {
+  name?: Maybe<Scalars['String']>;
+  initialInv?: Maybe<Scalars['Float']>;
+  geoEconomicAppraisalProject?: Maybe<Scalars['UUID']>;
+  version: Scalars['Int'];
+};
+
+export type Prospect_AMutationsUpdateArgs = {
+  vid: Scalars['UUID'];
+  name?: Maybe<Scalars['String']>;
+  initialInv?: Maybe<Scalars['Float']>;
+  geoEconomicAppraisalProject?: Maybe<Scalars['UUID']>;
+  version: Scalars['Int'];
 };
 
 export type DomainObjectMutations = {

@@ -128,7 +128,7 @@ const mockData: GridCollection = {
       value: faker.random.number(100).toString(),
     },
   })),
-  errors: [],
+  errors: {},
   version: 1,
 };
 

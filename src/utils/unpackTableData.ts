@@ -218,11 +218,12 @@ export function unpackTableData(
     projectStructure,
     calculationResultList,
   );
+  // const errors: TableError[] = [];
 
   return {
     columns,
     rows,
-    errors: [],
+    errors: {},
     version,
   };
 }

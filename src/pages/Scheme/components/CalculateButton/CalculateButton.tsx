@@ -1,10 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@gpn-prototypes/vega-button';
-import { TableError } from 'generated/graphql';
 import projectService from 'services/ProjectService';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
+import { assembleErrors } from 'utils';
 
 export const CalculateButton: React.FC = () => {
   const dispatch = useDispatch();
@@ -27,11 +27,12 @@ export const CalculateButton: React.FC = () => {
               window.URL.revokeObjectURL(url);
             });
           } else if (errors?.length) {
-            dispatch(
-              tableDuck.actions.updateErrors(
-                errors.filter((error: TableError) => error.tableName) || [],
-              ),
+            console.log(
+              'errors by calculation',
+              errors,
+              assembleErrors(errors),
             );
+            dispatch(tableDuck.actions.updateErrors(assembleErrors(errors)));
           }
         })
         .catch((e) =>

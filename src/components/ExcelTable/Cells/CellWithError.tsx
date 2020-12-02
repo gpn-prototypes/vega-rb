@@ -1,7 +1,7 @@
 import React, {
   forwardRef,
   PropsWithChildren,
-  useMemo,
+  useCallback,
   useRef,
   useState,
 } from 'react';
@@ -10,21 +10,17 @@ import { preventDefault, wrapEvent } from 'react-data-grid/lib/utils';
 import { useSelector } from 'react-redux';
 import { Tooltip } from '@gpn-prototypes/vega-ui';
 import cn from 'classnames';
-import { TableNames } from 'generated/graphql';
 import useCombinedRefs from 'hooks/useCombinedRefs';
+import { get } from 'lodash/fp';
 import { RootState } from 'store/types';
 
 import { cnCellTooltip, cnCellValueError } from '../cn-excel-table';
-import { GridColumn, GridRow, TableEntities, UniColumn } from '../types';
+import { GridRow, UniColumn } from '../types';
 
-type Props = PropsWithChildren<CellRendererProps<GridRow>> & {
-  columns: GridColumn[];
-};
+type Props = PropsWithChildren<CellRendererProps<GridRow>>;
 
 function CellWithError(props: Props, ref: React.Ref<HTMLDivElement>) {
   const {
-    columns,
-    column,
     rowIdx: currentRowIdx,
     row,
     lastFrozenColumnIndex,
@@ -36,29 +32,16 @@ function CellWithError(props: Props, ref: React.Ref<HTMLDivElement>) {
     onDragOver,
     isRowSelected,
   } = props;
+  const column = props.column as UniColumn;
+
   const innerRef = useRef<HTMLDivElement>(null);
   const combinedRef = useCombinedRefs(ref, innerRef);
   const [isShowError, setIsShowError] = useState(false);
   const errors = useSelector(({ table }: RootState) => table.errors);
-  const error = useMemo(
-    () =>
-      // TODO: поправить условие после обновления API(заменить columnIdx на columnKey)
-      errors.find(({ row: rowIdx, column: columnIdx, tableName }) => {
-        const { key, type } = column as UniColumn;
-        const tableColumnIdx = columns
-          .filter((c) => c.type === type)
-          .findIndex((c) => c.key === key);
-        const isSameTableType =
-          (column.key === TableEntities.GEO_CATEGORY &&
-            tableName === TableNames.DomainEntities) ||
-          ((column as GridColumn).type === TableEntities.CALC_PARAM &&
-            tableName === TableNames.Attributes);
-        const isSameColumn = tableColumnIdx === columnIdx;
-        const isSameRow = rowIdx === currentRowIdx;
 
-        return isSameRow && isSameColumn && isSameTableType;
-      }),
-    [column, columns, currentRowIdx, errors],
+  const getError = useCallback(
+    (errorsList) => get([column.key, currentRowIdx], errorsList),
+    [column.key, currentRowIdx],
   );
 
   function selectCell(openEditor?: boolean) {
@@ -91,6 +74,8 @@ function CellWithError(props: Props, ref: React.Ref<HTMLDivElement>) {
       isShiftClick,
     });
   }
+
+  const error = getError(errors);
 
   const rowObject = {
     ...row,

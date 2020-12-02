@@ -1,4 +1,8 @@
-import { DomainObject, RbDomainEntityIcons } from 'generated/graphql';
+import {
+  DomainObject,
+  RbDomainEntityIcons,
+  TableError,
+} from 'generated/graphql';
 
 export interface Identity {
   getToken(): string;
@@ -41,3 +45,7 @@ export interface ProjectStructure {
 export type TableStructures = GeoCategory | CalculationParam | Risk;
 
 export type Nullable<T> = T | null;
+
+type RowError = { [index: number]: TableError[] };
+
+export type ColumnErrors = { [index: string]: RowError };
