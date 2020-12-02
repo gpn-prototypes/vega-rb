@@ -1,1 +1,3 @@
-export { TreeEditor as default } from 'pages/Scheme/components/TreeEditor/TreeEditor';
+import TreeEditor from 'pages/Scheme/components/TreeEditor/TreeEditor';
+
+export default TreeEditor;

@@ -20,7 +20,7 @@
 }
 
 .ButtonStructure {
-  margin-right: var(--space-s);
+  margin: 0 var(--space-s);
 }
 
 .ButtonData {

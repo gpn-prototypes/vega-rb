@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useRouteMatch } from 'react-router';
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { defaultTo } from 'lodash';
-import projectsApi from 'services/projects';
+import projectService from 'services/ProjectService';
 import { Identity } from 'types';
 
 const ROUTE_MATCH_PROJECT_ID = '/projects/show/:projectId';
@@ -31,11 +31,12 @@ const ProjectProvider: React.FC<ProjectProviderProps> = ({
   );
 
   useEffect(() => {
-    projectsApi.init({
-      client: graphqlClient as ApolloClient<NormalizedCacheObject>,
+    projectService.init({
+      client: graphqlClient,
       projectId: matchedData.projectId,
+      identity,
     });
-  }, [graphqlClient, matchedData]);
+  }, [identity, graphqlClient, matchedData]);
 
   return (
     <ProjectContext.Provider

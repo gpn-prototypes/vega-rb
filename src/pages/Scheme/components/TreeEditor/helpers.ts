@@ -1,6 +1,10 @@
-import { TreeItem } from '@gpn-prototypes/vega-tree/dist/src/types';
+import { TreeItem } from '@gpn-prototypes/vega-ui';
 import arrayToTree from 'array-to-tree';
-import { GridCollection, TableEntities } from 'components/ExcelTable/types';
+import {
+  GridColumn,
+  GridRow,
+  TableEntities,
+} from 'components/ExcelTable/types';
 import { get, groupBy, mergeWith } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -67,9 +71,10 @@ export function mergeObjectsInUnique<T>(array: T[], properties: string[]): T[] {
   });
   return Array.from(newArray.values());
 }
-export function getNodeListFromTableData(
-  data: GridCollection,
-): TreeItem<TreeItemData>[] {
+export function getNodeListFromTableData(data: {
+  columns: GridColumn[];
+  rows: GridRow[];
+}): TreeItem<TreeItemData>[] {
   const { rows, columns } = data;
 
   const structureColumnsKeys = columns

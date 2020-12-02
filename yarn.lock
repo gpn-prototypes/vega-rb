@@ -1775,10 +1775,10 @@
   dependencies:
     bem-cn "^3.0.1"
 
-"@gpn-prototypes/vega-page-banner@^0.2.4":
-  version "0.2.4"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-page-banner/0.2.4/be2e0a03fa9dff3e80bb134b1994ceb1d1a8775f5756606bd2f75237a26785d2#006be5a4664efc04a29a335eba262494c39f27da"
-  integrity sha512-6Joul9eYlAsz+Hf7OzOn9Xzr1PZOX+lEjLHr0cDheHPa+fiAi34mAj4dKyei8zjFAbVudvMov09lSsPJUAX2uA==
+"@gpn-prototypes/vega-page-banner@^0.2.5":
+  version "0.2.5"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-page-banner/0.2.5/cb47273ca2d399aeec0ce42eaa11d7bc119e013444369c7c55406f3fdb132d0c#9cf68623e650d5099ec50feb52ece6440f883511"
+  integrity sha512-i/Hd2LdQpigKad8HPSESSfzX2g1xKL09qImK4Rw9Oke7jM7sPgHiC+vaBAOGjQpbsgVAZrKLQRqBAKO6Yg+b4Q==
   dependencies:
     bem-cn "^3.0.1"
 
@@ -1931,10 +1931,10 @@
   dependencies:
     "@consta/uikit" "^1.10.8"
 
-"@gpn-prototypes/vega-tree@^0.0.8-alpha.0":
-  version "0.0.8-alpha.1"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-tree/0.0.8-alpha.1/2386e006305824c89aae2a56b2e56e934f1451565be08291cb4f47091998db31#90438a08ec2fd7e9ec65d572cdb2059f32785275"
-  integrity sha512-m+rKoZsyuWefJlXAEAFUUFnlD1tcRLcwjTuK9vphYcbrvRnmq6ZRENy5f5gPceG38CubL2xVvMIsacpgGE7z8Q==
+"@gpn-prototypes/vega-tree@^0.0.8":
+  version "0.0.8"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-tree/0.0.8/7a56c4774a08e7326a8fe23d2d0d72dd9e7a90051cb11dec28bc75be7ca6959f#581ba72e0771e1c56c05be8fb7864c33f3d79941"
+  integrity sha512-XsFv6pXBi2XwVEoRQfq+WB6MSAftnl1IwhPzn8bM8l8KXAaXKqs/jfKPkTdhSVEuER2o7BRrUvmIS+xKAMjIsA==
   dependencies:
     "@gpn-prototypes/vega-button" "^0.2.4"
     "@gpn-prototypes/vega-hooks" "^0.5.4"
@@ -1944,10 +1944,10 @@
     "@gpn-prototypes/vega-tooltip" "^0.0.4"
     bem-cn "^3.0.1"
 
-"@gpn-prototypes/vega-ui@2.15.6-alpha.0":
-  version "2.15.6-alpha.0"
-  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-ui/2.15.6-alpha.0/e68266580b256b369d7c1c9e085b59137ddf20d7d27aa2b43df411a93be2bdc0#80c2455e6c3f98ed3da6fa974b017b02419de170"
-  integrity sha512-W5dWUawa2RlXDS8HYBW47jaqKe6M6R4nwYHpI9YCbP9VkTMo9Vw/20lbxunwnxp9npXiUmZ8eHG4lllwL5ACcg==
+"@gpn-prototypes/vega-ui@2.15.7":
+  version "2.15.7"
+  resolved "https://npm.pkg.github.com/download/@gpn-prototypes/vega-ui/2.15.7/0d8d70769750edc2c32d039857d5a4e67aa91e0f411050e312a956e6083d2175#6ca355855fdf6dfd5ae12b496d999534b2a52e71"
+  integrity sha512-yLNwaiTrA08UA+Y1iMMSbY4DnBP3T1ZID7ttNfcOUg4hlN8Air3AY8Annjh48soBS5baY7mBsDKxMJPtHRiKKw==
   dependencies:
     "@gpn-prototypes/vega-animation" "^0.0.3"
     "@gpn-prototypes/vega-attach" "^0.1.7"
@@ -1974,7 +1974,7 @@
     "@gpn-prototypes/vega-logo" "^0.0.8"
     "@gpn-prototypes/vega-modal" "^0.3.14"
     "@gpn-prototypes/vega-navigation-list" "^1.0.4"
-    "@gpn-prototypes/vega-page-banner" "^0.2.4"
+    "@gpn-prototypes/vega-page-banner" "^0.2.5"
     "@gpn-prototypes/vega-page-footer" "^0.2.7"
     "@gpn-prototypes/vega-popover" "^0.0.6"
     "@gpn-prototypes/vega-progress-spin" "^0.1.7"
@@ -1994,7 +1994,7 @@
     "@gpn-prototypes/vega-theme" "^0.0.8"
     "@gpn-prototypes/vega-timer" "^0.1.7"
     "@gpn-prototypes/vega-tooltip" "^0.0.4"
-    "@gpn-prototypes/vega-tree" "^0.0.8-alpha.0"
+    "@gpn-prototypes/vega-tree" "^0.0.8"
     "@gpn-prototypes/vega-user" "^0.1.9"
 
 "@gpn-prototypes/vega-user@^0.1.9":
@@ -5082,6 +5082,11 @@ array-includes@^3.0.3, array-includes@^3.1.1:
     define-properties "^1.1.3"
     es-abstract "^1.17.0"
     is-string "^1.0.5"
+
+array-move@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/array-move/-/array-move-3.0.1.tgz#179645cc0987b65953a4fc06b6df9045e4ba9618"
+  integrity sha512-H3Of6NIn2nNU1gsVDqDnYKY/LCdWvCMMOWifNGhKcVQgiZ6nOek39aESOvro6zmueP07exSl93YLvkN4fZOkSg==
 
 array-to-tree@^3.3.2:
   version "3.3.2"
@@ -9055,6 +9060,11 @@ faker@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/faker/-/faker-4.1.0.tgz#1e45bbbecc6774b3c195fad2835109c6d748cc3f"
   integrity sha1-HkW7vsxndLPBlfrSg1EJxtdIzD8=
+
+fast-deep-equal@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
+  integrity sha1-ewUhjd+WZ79/Nwv3/bLLFf3Qqkk=
 
 fast-deep-equal@^3.1.1:
   version "3.1.3"
@@ -15360,7 +15370,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.0.0, prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.0.0, prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.1, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -15568,6 +15578,14 @@ react-color@^2.17.0:
     prop-types "^15.5.10"
     reactcss "^1.2.0"
     tinycolor2 "^1.4.1"
+
+react-contenteditable@^3.3.5:
+  version "3.3.5"
+  resolved "https://registry.yarnpkg.com/react-contenteditable/-/react-contenteditable-3.3.5.tgz#febff7a46570fdb2f5ff199e506c512e5924e22e"
+  integrity sha512-38A7hlRQfb2KQAQT0kIJC2YlQUU7jcyYM4eh1fj6kAYb3Hmk6hHlr0snelyxVSpPXjPdFllrnSsPkzUS5AtrEA==
+  dependencies:
+    fast-deep-equal "^2.0.1"
+    prop-types "^15.7.1"
 
 react-contextmenu@^2.13.0, react-contextmenu@^2.14.0:
   version "2.14.0"

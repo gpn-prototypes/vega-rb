@@ -1,15 +1,15 @@
-import { GridCollection } from 'components/ExcelTable/types';
-import { TableError } from 'generated/graphql';
+import {
+  GridCollection,
+  GridColumn,
+  TableEntities,
+} from 'components/ExcelTable/types';
 import { Param } from 'model/Param';
 
 export interface TableState extends GridCollection {
-  errors: TableError[];
   filter: {
     rows: number[];
     columns: string[];
   };
-  filteredData: GridCollection;
-  version: number;
 }
 export interface AlertState {
   text: string;
@@ -26,3 +26,8 @@ export interface RootState {
   project: ProjectState;
   table: TableState;
 }
+
+export type TypedColumnsList = {
+  columns: GridColumn[];
+  type: TableEntities;
+};

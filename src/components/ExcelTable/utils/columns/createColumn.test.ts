@@ -6,26 +6,38 @@ describe('createColumn function', () => {
   test('default', () => {
     const column = createColumn();
     expect(column).toMatchObject({
-      name: '',
+      name: 'Новый столбец',
       editable: true,
       resizable: true,
       sortable: true,
       type: TableEntities.NONE,
       hasIcon: false,
       isRenaming: true,
+      visible: {
+        calculation: true,
+        table: true,
+        tree: true,
+      },
     });
   });
 
   test('column with icon', () => {
-    const column = createColumn(TableEntities.GEO_CATEGORY);
+    const column = createColumn({
+      type: TableEntities.GEO_CATEGORY,
+    });
     expect(column).toMatchObject({
-      name: '',
+      name: 'Новый столбец',
       editable: true,
       resizable: true,
       sortable: true,
       type: TableEntities.GEO_CATEGORY,
       hasIcon: true,
       isRenaming: true,
+      visible: {
+        calculation: true,
+        table: true,
+        tree: true,
+      },
     });
   });
 });

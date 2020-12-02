@@ -9,6 +9,7 @@ import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
+  TableError,
 } from 'generated/graphql';
 
 export const HEADER_CONTEXT_ID = 'header-context-menu';
@@ -25,6 +26,16 @@ export type SelectedCell = {
   rowIdx: number;
   row: GridRow;
   column: GridColumn;
+};
+
+export enum VisibleKeys {
+  CALCULATION = 'calculation',
+  TABLE = 'table',
+  TREE = 'tree',
+}
+
+export type VisibilityProperties = {
+  [key in VisibleKeys]: boolean;
 };
 
 export enum TableEntities {
@@ -65,17 +76,21 @@ export interface GridRow {
 export interface GridColumn extends Column<GridRow> {
   type?: TableEntities;
   code?: string;
+  icon?: CategoryIcon;
   hasIcon?: boolean;
   isRenaming?: boolean;
   before?: JSX.Element;
   headerId?: string;
   notRemovable?: boolean;
+  visible?: VisibilityProperties;
   cellRenderer?: React.ComponentType<CellRendererProps<GridRow>>;
 }
 
 export interface GridCollection {
   columns: GridColumn[];
   rows: GridRow[];
+  errors: TableError[];
+  version: number;
 }
 
 export type ContextHandler = (

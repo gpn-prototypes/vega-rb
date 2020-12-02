@@ -12,13 +12,7 @@ import { renderColumns } from './Columns/renderColumns';
 import { cnExcelTable } from './cn-excel-table';
 import { HeaderContextMenu } from './ContextMenu';
 import StyledRow from './StyledRow';
-import {
-  GridCollection,
-  GridColumn,
-  GridRow,
-  HEADER_CONTEXT_ID,
-  TableEntities,
-} from './types';
+import { GridColumn, GridRow, HEADER_CONTEXT_ID, TableEntities } from './types';
 import { createColumn, getInsertableType } from './utils';
 
 import './ExcelTable.css';
@@ -28,7 +22,10 @@ const cnExcelTableClass = cnExcelTable();
 type CommonTableColumn = GridColumn & CalculatedColumn<GridRow>;
 
 interface IProps {
-  data: GridCollection;
+  data: {
+    columns: GridColumn[];
+    rows: GridRow[];
+  };
   setColumns?: (data: GridColumn[]) => void;
   setRows?: (data: GridRow[]) => void;
   onRowClick?: (
@@ -85,7 +82,9 @@ export const ExcelTable: React.FC<IProps> = ({
   const pushColumn = (insertIdx: number): void => {
     setColumns([
       ...columns.slice(0, insertIdx),
-      createColumn(getInsertableType(columns, insertIdx)),
+      createColumn({
+        type: getInsertableType(columns, insertIdx),
+      }),
       ...columns.slice(insertIdx),
     ]);
   };
@@ -104,7 +103,6 @@ export const ExcelTable: React.FC<IProps> = ({
     columns,
     setColumns,
   ]);
-
   return (
     <>
       <DndProvider backend={HTML5Backend}>

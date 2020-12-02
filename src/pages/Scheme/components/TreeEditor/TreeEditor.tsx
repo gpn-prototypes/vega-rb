@@ -1,8 +1,13 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { PropsWithChildren, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { Tree } from '@gpn-prototypes/vega-tree';
+import { Tree } from '@gpn-prototypes/vega-ui';
 import { ResourceIcon } from 'components/ExcelTable/Icons';
-import { GridCollection, TableEntities } from 'components/ExcelTable/types';
+import {
+  GridColumn,
+  GridRow,
+  TableEntities,
+} from 'components/ExcelTable/types';
+import { cnTreeEditor } from 'pages/Scheme/components/TreeEditor/cn-tree-editor';
 import {
   getNodeListFromTableData,
   searchInTree,
@@ -11,24 +16,34 @@ import { TargetData } from 'pages/Scheme/components/TreeEditor/types';
 import tableDuck from 'store/tableDuck';
 import { getColumnsByType } from 'utils/getColumnsByType';
 
+import './TreeEditor.css';
+
 const icons = {
   'blue-line': <ResourceIcon />,
   'orange-line': <ResourceIcon />,
   'red-line': <ResourceIcon />,
 };
 interface StructureTreeEditorProps {
-  data: GridCollection;
+  columns: GridColumn[];
+  rows: GridRow[];
+  isOpen: boolean;
 }
 
-export const TreeEditor: React.FC<StructureTreeEditorProps> = ({ data }) => {
-  const dispatch = useDispatch();
-  const tree = useMemo(() => getNodeListFromTableData(data), [data]);
-  const domainEntitiesColumns = useMemo(
-    () => getColumnsByType(data.columns, TableEntities.GEO_CATEGORY),
-    [data.columns],
-  );
-  const onSelect = useCallback(
-    (selectedItems: TargetData[]) => {
+export default React.forwardRef<HTMLDivElement, StructureTreeEditorProps>(
+  function TreeEditor(
+    { rows, columns, isOpen }: PropsWithChildren<StructureTreeEditorProps>,
+    ref,
+  ): React.ReactElement {
+    const dispatch = useDispatch();
+    const tree = useMemo(() => getNodeListFromTableData({ rows, columns }), [
+      rows,
+      columns,
+    ]);
+    const domainEntitiesColumns = useMemo(
+      () => getColumnsByType(columns, TableEntities.GEO_CATEGORY),
+      [columns],
+    );
+    const onSelect = (selectedItems: TargetData[]) => {
       if (selectedItems.length) {
         const node = searchInTree(tree, selectedItems[0].id);
         if (node) {
@@ -44,19 +59,33 @@ export const TreeEditor: React.FC<StructureTreeEditorProps> = ({ data }) => {
       } else {
         dispatch(tableDuck.actions.setColumnsFilter([]));
       }
-    },
-    [domainEntitiesColumns, dispatch, tree],
-  );
+    };
 
-  return (
-    <Tree
-      nodeList={tree}
-      icons={icons}
-      isDndEnable={false}
-      isContextMenuEnable
-      onSelectItem={onSelect}
-      withVisibilitySwitcher
-      withMultiSelect={false}
-    />
-  );
-};
+    return (
+      <div
+        className={cnTreeEditor()}
+        ref={(el) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          // eslint-disable-next-line no-param-reassign
+          ref.current = el;
+        }}
+      >
+        <div className={cnTreeEditor('Placeholder').state({ open: isOpen })}>
+          Дерево проекта
+        </div>
+        <div className={cnTreeEditor('Content').state({ open: isOpen })}>
+          <Tree
+            nodeList={tree}
+            icons={icons}
+            isDndEnable={false}
+            isContextMenuEnable={false}
+            onSelectItem={onSelect}
+            withVisibilitySwitcher={false}
+            withMultiSelect={false}
+          />
+        </div>
+      </div>
+    );
+  },
+);

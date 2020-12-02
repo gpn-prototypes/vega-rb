@@ -18,7 +18,7 @@ import { createColumn } from './createColumn';
 let HeaderRenderer: ComponentType<HeaderRendererProps<GridRow>>;
 
 const mockColumn = jest.fn((type) => ({
-  ...createColumn(type),
+  ...createColumn({ type }),
   isRenaming: false,
 }));
 
@@ -36,7 +36,7 @@ describe('CALC_PARAM column', () => {
       editable: false,
       resizable: true,
       sortable: true,
-      minWidth: 112,
+      minWidth: 124,
     } as GridColumn);
   });
   test('correct headerCellClass', () => {
@@ -60,7 +60,7 @@ describe('RISK column', () => {
       editable: true,
       resizable: true,
       sortable: true,
-      minWidth: 112,
+      minWidth: 124,
       notRemovable: false,
     } as GridColumn);
   });
@@ -143,7 +143,7 @@ describe('DEFAULT column', () => {
       editable: true,
       resizable: true,
       sortable: true,
-      minWidth: 112,
+      minWidth: 124,
     } as GridColumn);
   });
   test('correct headerCellClass', () => {

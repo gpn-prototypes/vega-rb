@@ -1,8 +1,6 @@
 import React, {
   forwardRef,
-  PropsWithoutRef,
-  RefAttributes,
-  RefObject,
+  PropsWithChildren,
   useMemo,
   useRef,
   useState,
@@ -17,15 +15,13 @@ import useCombinedRefs from 'hooks/useCombinedRefs';
 import { RootState } from 'store/types';
 
 import { cnCellTooltip, cnCellValueError } from '../cn-excel-table';
-import { GridColumn, GridRow, TableEntities } from '../types';
+import { GridColumn, GridRow, TableEntities, UniColumn } from '../types';
 
-interface IProps extends CellRendererProps<GridRow> {
+type Props = PropsWithChildren<CellRendererProps<GridRow>> & {
   columns: GridColumn[];
-}
+};
 
-const CellWithError: React.ForwardRefExoticComponent<
-  PropsWithoutRef<IProps> & RefAttributes<HTMLDivElement>
-> = forwardRef((props, ref) => {
+function CellWithError(props: Props, ref: React.Ref<HTMLDivElement>) {
   const {
     columns,
     column,
@@ -48,14 +44,18 @@ const CellWithError: React.ForwardRefExoticComponent<
     () =>
       // TODO: поправить условие после обновления API(заменить columnIdx на columnKey)
       errors.find(({ row: rowIdx, column: columnIdx, tableName }) => {
+        const { key, type } = column as UniColumn;
         const tableColumnIdx = columns
-          .filter((c) => c.type === (column as GridColumn).type)
-          .findIndex((c) => c.key === (column as GridColumn).key);
+          .filter((c) => c.type === type)
+          .findIndex((c) => c.key === key);
         const isSameTableType =
-          (column as GridColumn).type === TableEntities.CALC_PARAM &&
-          tableName === TableNames.Attributes;
+          (column.key === TableEntities.GEO_CATEGORY &&
+            tableName === TableNames.DomainEntities) ||
+          ((column as GridColumn).type === TableEntities.CALC_PARAM &&
+            tableName === TableNames.Attributes);
         const isSameColumn = tableColumnIdx === columnIdx;
         const isSameRow = rowIdx === currentRowIdx;
+
         return isSameRow && isSameColumn && isSameTableType;
       }),
     [column, columns, currentRowIdx, errors],
@@ -92,6 +92,15 @@ const CellWithError: React.ForwardRefExoticComponent<
     });
   }
 
+  const rowObject = {
+    ...row,
+    [column.key]: error
+      ? {
+          value: '—',
+        }
+      : row[column.key],
+  };
+
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
     <div
@@ -115,21 +124,14 @@ const CellWithError: React.ForwardRefExoticComponent<
       {React.createElement(column.formatter, {
         column,
         rowIdx: currentRowIdx,
-        row: {
-          ...row,
-          [column.key]: error
-            ? {
-                value: '—',
-              }
-            : row[column.key],
-        },
+        row: rowObject,
         isRowSelected,
         onRowSelectionChange,
       })}
       {isShowError && error && (
         <Tooltip
           size="s"
-          anchorRef={innerRef as RefObject<HTMLDivElement>}
+          anchorRef={innerRef}
           direction="rightCenter"
           className={cnCellTooltip.toString()}
         >
@@ -138,6 +140,6 @@ const CellWithError: React.ForwardRefExoticComponent<
       )}
     </div>
   );
-});
+}
 
-export default CellWithError;
+export default React.memo(forwardRef<HTMLDivElement, Props>(CellWithError));

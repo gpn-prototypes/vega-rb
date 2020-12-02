@@ -30,5 +30,7 @@ export const renderColumns = (
     );
   };
 
-  return columns.map((column) => columnsFactory(column, HeaderRenderer));
+  return columns
+    .filter((column) => column?.visible?.table)
+    .map((column) => columnsFactory(column, HeaderRenderer));
 };

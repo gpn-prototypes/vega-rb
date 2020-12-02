@@ -1,13 +1,13 @@
 import { cnCell, cnHeader } from 'components/ExcelTable/cn-excel-table';
 import { GridColumn, TableEntities } from 'components/ExcelTable/types';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 const hasIcon = (type: TableEntities) => type === TableEntities.GEO_CATEGORY;
 
-export function createColumn(
-  genType: TableEntities = TableEntities.NONE,
-): GridColumn {
-  const key = uuidv4();
+export function createColumn(props?: Partial<GridColumn>): GridColumn {
+  const type = props?.type ?? TableEntities.NONE;
+  const key = uuid();
+
   return {
     key,
     name: 'Новый столбец',
@@ -17,8 +17,14 @@ export function createColumn(
     sortable: true,
     cellClass: cnCell,
     headerCellClass: cnHeader,
-    type: genType,
-    hasIcon: hasIcon(genType),
+    hasIcon: hasIcon(type),
     isRenaming: true,
-  };
+    visible: {
+      calculation: true,
+      table: true,
+      tree: true,
+    },
+    ...props,
+    type,
+  } as GridColumn;
 }

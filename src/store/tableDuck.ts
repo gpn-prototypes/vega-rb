@@ -1,18 +1,12 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import {
   GridCell,
+  GridCollection,
   GridColumn,
   GridRow,
   TableEntities,
 } from 'components/ExcelTable/types';
 import { TableError, TableNames } from 'generated/graphql';
 import { ofAction } from 'operators/ofAction';
-import {
-  GET_TABLE_TEMPLATE,
-  GET_VERSION,
-  SAVE_PROJECT,
-} from 'pages/Scheme/components/Table/queries';
-import { getGraphqlUri, getMockConceptions } from 'pages/Scheme/helpers';
 import { Epic } from 'redux-observable';
 import { forkJoin, from, of } from 'rxjs';
 import {
@@ -21,25 +15,22 @@ import {
   mergeMap,
   switchMap,
 } from 'rxjs/operators';
-import projectsApi from 'services/projects';
+import projectService from 'services/ProjectService';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import { packTableData } from 'utils';
 
-import { RootState, TableState } from './types';
+import { RootState, TableState, TypedColumnsList } from './types';
 
 const factory = actionCreatorFactory('table');
 
 const actions = {
-  init: factory<{
-    columns: GridColumn[];
-    rows: GridRow[];
-    version: number;
-  }>('INIT'),
+  initState: factory<GridCollection>('INIT_STATE'),
   updateColumns: factory<GridColumn[]>('UPDATE_COLUMNS'),
+  updateColumnsByType: factory<TypedColumnsList>('UPDATE_COLUMNS_BY_TYPE'),
   updateRows: factory<GridRow[]>('UPDATE_ROWS'),
   updateCell: factory<GridCell>('UPDATE_CELL'),
   updateErrors: factory<TableError[]>('UPDATE_ERRORS'),
+  resetState: factory('RESET_STATE'),
   setRowsFilter: factory<number[]>('SET_ROWS_FILTER'),
   setColumnsFilter: factory<string[]>('SET_COLUMNS_FILTER'),
   reset: factory('RESET_TABLE'),
@@ -48,10 +39,6 @@ const actions = {
 const initialState: TableState = {
   columns: [],
   rows: [],
-  filteredData: {
-    columns: [],
-    rows: [],
-  },
   errors: [],
   filter: {
     rows: [],
@@ -61,30 +48,8 @@ const initialState: TableState = {
 };
 
 const reducer = reducerWithInitialState<TableState>(initialState)
-  .case(actions.reset, () => initialState)
-  .case(actions.setColumnsFilter, (state, payload) => ({
-    ...state,
-    filter: {
-      ...state.filter,
-      columns: payload,
-    },
-    filteredData: {
-      ...state.filteredData,
-      columns: state.columns.filter((column) => !payload.includes(column.key)),
-    },
-  }))
-  .case(actions.setRowsFilter, (state, payload) => ({
-    ...state,
-    filter: {
-      ...state.filter,
-      rows: payload,
-    },
-    filteredData: {
-      ...state.filteredData,
-      rows: state.rows.filter((row, idx) => !payload.includes(idx)),
-    },
-  }))
-  .case(actions.init, (state, payload) => ({
+  .case(actions.resetState, () => initialState)
+  .case(actions.initState, (state, payload) => ({
     ...state,
     rows: payload.rows,
     columns: payload.columns,
@@ -94,10 +59,48 @@ const reducer = reducerWithInitialState<TableState>(initialState)
       columns: payload.columns,
     },
   }))
+  .case(actions.setColumnsFilter, (state, payload) => ({
+    ...state,
+    filter: {
+      ...state.filter,
+      columns: payload,
+    },
+  }))
+  .case(actions.setRowsFilter, (state, payload) => ({
+    ...state,
+    filter: {
+      ...state.filter,
+      rows: payload,
+    },
+  }))
   .case(actions.updateColumns, (state, payload) => ({
     ...state,
     columns: payload,
   }))
+  .case(
+    actions.updateColumnsByType,
+    (state, { columns: newColumns, type: columnsType }) => {
+      const columnsTypes = state.columns.map(({ type }) => type);
+      const lastIndex = columnsTypes.lastIndexOf(columnsType);
+      const firstIndex = columnsTypes.findIndex((type) => type === columnsType);
+      const columns = [...state.columns];
+
+      if (lastIndex !== -1 && firstIndex !== -1) {
+        columns.splice(
+          firstIndex,
+          columnsTypes.filter((type) => type === columnsType).length,
+          ...newColumns,
+        );
+      } else if (firstIndex !== -1) {
+        columns.splice(firstIndex, 1, ...newColumns);
+      }
+
+      return {
+        ...state,
+        columns,
+      };
+    },
+  )
   .case(actions.updateRows, (state, payload) => ({
     ...state,
     rows: payload,
@@ -153,61 +156,23 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
   state$,
 ) =>
   action$.pipe(
-    ofAction(actions.updateColumns, actions.updateRows, actions.updateCell),
-    distinctUntilChanged(),
-    mergeMap((_) =>
-      of({
-        client: projectsApi.getClient() as ApolloClient<NormalizedCacheObject>,
-        projectId: projectsApi.getProjectId(),
-      }),
+    ofAction(
+      actions.updateColumns,
+      actions.updateRows,
+      actions.updateCell,
+      actions.updateColumnsByType,
     ),
-    switchMap(({ client, projectId }) =>
+    distinctUntilChanged(),
+    mergeMap((_) => of(projectService)),
+    switchMap((service) =>
       forkJoin([
-        of({ client, projectId }),
-        from(
-          client
-            .query({
-              query: GET_TABLE_TEMPLATE,
-              context: {
-                uri: getGraphqlUri(projectId),
-              },
-            })
-            .then(
-              ({ data }) =>
-                data.resourceBase.project.template.conceptions[0].structure,
-            ),
-        ),
-        from(
-          client
-            .query({
-              query: GET_VERSION,
-              variables: {
-                vid: projectId,
-              },
-              fetchPolicy: 'no-cache',
-            })
-            .then(({ data }) => data.project.version),
-        ),
+        of(service),
+        from(service.getTableTemplate()),
+        from(service.getProjectVersion()),
       ]),
     ),
-    switchMap(([{ client, projectId }, structure, version]) =>
-      from(
-        client.mutate({
-          mutation: SAVE_PROJECT,
-          context: {
-            uri: getGraphqlUri(projectId),
-          },
-          variables: {
-            projectInput: getMockConceptions({
-              name: 'conception_1',
-              description: '',
-              probability: 0.6,
-              structure: packTableData(state$.value.table, structure),
-            }),
-            version,
-          },
-        }),
-      ),
+    switchMap(([service, structure, version]) =>
+      from(service.saveProject(state$.value.table, structure, version)),
     ),
     ignoreElements(),
   );

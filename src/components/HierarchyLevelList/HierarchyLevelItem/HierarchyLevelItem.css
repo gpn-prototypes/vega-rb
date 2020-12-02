@@ -1,0 +1,6 @@
+.HierarchyLevelItem {
+  &__Tag {
+    display: flex;
+    justify-content: center;
+  }
+}
