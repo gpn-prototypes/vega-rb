@@ -70,7 +70,7 @@ function getClientEnvironment(publicUrl) {
         WDS_SOCKET_HOST: process.env.WDS_SOCKET_HOST,
         WDS_SOCKET_PATH: process.env.WDS_SOCKET_PATH,
         WDS_SOCKET_PORT: process.env.WDS_SOCKET_PORT,
-        BASE_API_URL: process.env.BASE_API_URL || 'http://outsourcing.nat.tepkom.ru:38080',
+        BASE_API_URL: process.env.BASE_API_URL,
         API_PATH: process.env.API_PATH || '/',
         YC_DEPLOYMENT: process.env.YC_DEPLOYMENT === 'true'
       }
