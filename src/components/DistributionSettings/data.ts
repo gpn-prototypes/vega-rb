@@ -89,11 +89,53 @@ const distributionParametersMap: DistributionParametersMap = {
   [DistributionTypes.Lognormal]: {
     types: [
       {
+        type: DistributionDefinitionTypes.LocationArmeanArsd,
+        title: 'Расположение, среднее, станд. отклонение',
+      },
+      {
         type: DistributionDefinitionTypes.LocationLogmeanLogsd,
         title: 'Расположение, лог. среднее, лог. станд. отклонение',
       },
+      {
+        type: DistributionDefinitionTypes.LocationGeommeanGeomsd,
+        title: 'Расположение, геом. среднее, геом. станд.отклонение',
+      },
     ],
     fieldsByType: {
+      [DistributionDefinitionTypes.LocationArmeanArsd]: [
+        {
+          key: DistributionParameterTypes.Location,
+          title: 'Расположение',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Armean,
+          title: 'Среднее',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Arsd,
+          title: 'Стандартное',
+          defaultValue: '',
+        },
+      ],
+      [DistributionDefinitionTypes.LocationGeommeanGeomsd]: [
+        {
+          key: DistributionParameterTypes.Location,
+          title: 'Расположение',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Geommean,
+          title: 'Геом. среднее',
+          defaultValue: '',
+        },
+        {
+          key: DistributionParameterTypes.Geomsd,
+          title: 'Геом. стандартное',
+          defaultValue: '',
+        },
+      ],
       [DistributionDefinitionTypes.LocationLogmeanLogsd]: [
         {
           key: DistributionParameterTypes.Location,
