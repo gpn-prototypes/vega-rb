@@ -9,6 +9,9 @@ pipeline {
             image 'node:12.16.2-alpine'
         }
     }
+	environment {
+		CI = 'true'
+    }
     stages {
         stage('Build') {
             steps {
