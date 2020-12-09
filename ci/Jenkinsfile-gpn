@@ -27,6 +27,13 @@ pipeline {
                 }
             }
         }
+		stage('Linters') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'yarn lint'
+                }
+            }
+        }
         stage('Tests Coverage') {
             steps {
                 sh 'node_modules/.bin/jest --collect-coverage'
