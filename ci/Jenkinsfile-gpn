@@ -9,6 +9,9 @@ pipeline {
             image 'node:12.16.2-alpine'
         }
     }
+	environment {
+		CI = 'true'
+    }
     stages {
         stage('Build') {
             steps {
@@ -24,6 +27,13 @@ pipeline {
                 ])
                 withNPM(npmrcConfig: "${NPMRC_CONFIG}") {
                     sh 'yarn'
+                }
+            }
+        }
+		stage('Linters') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'yarn lint'
                 }
             }
         }
