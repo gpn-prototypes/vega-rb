@@ -4,7 +4,6 @@ import { Root } from '@gpn-prototypes/vega-ui';
 import classNames from 'classnames';
 import ErrorBoundary from 'components/ErrorBoundary';
 import { Providers } from 'components/Providers';
-import { History } from 'history';
 import { SchemePage } from 'pages/Scheme';
 import { Identity } from 'types';
 
@@ -13,11 +12,10 @@ import './App.css';
 interface AppProps {
   graphqlClient?: ApolloClient<NormalizedCacheObject>;
   identity?: Identity;
-  history: History;
 }
 
 const App: React.FC<AppProps> = (props) => {
-  const { graphqlClient, identity, history } = props;
+  const { graphqlClient, identity } = props;
 
   return (
     <React.StrictMode>
@@ -26,7 +24,6 @@ const App: React.FC<AppProps> = (props) => {
           <Providers
             graphqlClient={graphqlClient as ApolloClient<NormalizedCacheObject>}
             identity={identity as Identity}
-            history={history}
           >
             <div className={classNames('RB-App')}>
               <SchemePage />
