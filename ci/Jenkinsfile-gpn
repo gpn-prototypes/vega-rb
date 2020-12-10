@@ -1,0 +1,61 @@
+withFolderProperties {
+    FRONT_REPO_URL = "${env.FRONT_REPO_URL}"
+    NPMRC_CONFIG = "${env.NPMRC_CONFIG}"
+}
+
+pipeline {
+    agent {
+        docker {
+            image 'node:12.16.2-alpine'
+        }
+    }
+	environment {
+		CI = 'true'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                checkout([
+                        $class           : 'GitSCM',
+                        branches         : [[name: "${sha1}"]],
+                        extensions       : [[$class: 'WipeWorkspace']],
+                        userRemoteConfigs: [
+                                [name   : 'origin',
+                                 refspec: '+refs/pull/${ghprbPullId}/*:refs/remotes/origin/pr/${ghprbPullId}/*',
+                                 url    : "${FRONT_REPO_URL}"]
+                        ]
+                ])
+                withNPM(npmrcConfig: "${NPMRC_CONFIG}") {
+                    sh 'yarn'
+                }
+            }
+        }
+		stage('Linters') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'yarn lint'
+                }
+            }
+        }
+        stage('Tests Coverage') {
+            steps {
+                sh 'node_modules/.bin/jest --collect-coverage'
+                step([
+                        $class              : 'CloverPublisher',
+                        cloverReportDir     : 'coverage',
+                        cloverReportFileName: 'clover.xml',
+                ])
+            }
+        }
+        stage('Unit Tests') {
+            steps {
+                sh 'yarn test'
+            }
+        }
+    }
+    post {
+        always {
+            junit 'reports/*.xml'
+        }
+    }
+}

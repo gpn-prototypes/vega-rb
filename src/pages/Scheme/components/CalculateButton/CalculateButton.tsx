@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '@gpn-prototypes/vega-button';
+import { Button } from '@gpn-prototypes/vega-ui';
 import projectService from 'services/ProjectService';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';

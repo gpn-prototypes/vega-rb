@@ -5,7 +5,7 @@ import {
   NormalizedCacheObject,
   useApolloClient,
 } from '@apollo/client';
-import { useMount, useUnmount } from '@gpn-prototypes/vega-hooks';
+import { useMount, useUnmount } from '@gpn-prototypes/vega-ui';
 import ExcelTable from 'components/ExcelTable';
 import { SelectedCell, TableEntities } from 'components/ExcelTable/types';
 import { ProjectContext } from 'components/Providers';

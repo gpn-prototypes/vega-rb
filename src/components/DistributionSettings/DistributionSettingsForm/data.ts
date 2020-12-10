@@ -7,4 +7,5 @@ export const options = [
   { value: DistributionTypes.Lognormal, label: 'Логнормальное' },
   { value: DistributionTypes.Beta, label: 'Бета' },
   { value: DistributionTypes.Pert, label: 'PERT' },
+  { value: DistributionTypes.Constant, label: 'Константа' },
 ];
