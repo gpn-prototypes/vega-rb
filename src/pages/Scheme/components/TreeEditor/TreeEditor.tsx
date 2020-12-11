@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
-import { Tree } from '@gpn-prototypes/vega-ui';
+import { useDispatch, useSelector } from 'react-redux';
+import { Text, Tree } from '@gpn-prototypes/vega-ui';
 import { ResourceIcon } from 'components/ExcelTable/Icons';
 import {
   GridColumn,
@@ -13,7 +13,8 @@ import {
   searchInTree,
 } from 'pages/Scheme/components/TreeEditor/helpers';
 import { TargetData } from 'pages/Scheme/components/TreeEditor/types';
-import tableDuck from 'store/tableDuck';
+import treeFilterDuck from 'store/treeDuck';
+import { RootState } from 'store/types';
 import { getColumnsByType } from 'utils/getColumnsByType';
 
 import './TreeEditor.css';
@@ -36,10 +37,11 @@ export default React.forwardRef<HTMLDivElement, StructureTreeEditorProps>(
     ref,
   ): React.ReactElement {
     const dispatch = useDispatch();
-    const tree = useMemo(() => getNodeListFromTableData({ rows, columns }), [
-      rows,
-      columns,
-    ]);
+    const projectName = useSelector(({ project }: RootState) => project.name);
+    const tree = useMemo(
+      () => getNodeListFromTableData({ rows, columns }, projectName),
+      [rows, columns, projectName],
+    );
     const domainEntitiesColumns = useMemo(
       () => getColumnsByType(columns, TableEntities.GEO_CATEGORY),
       [columns],
@@ -47,34 +49,38 @@ export default React.forwardRef<HTMLDivElement, StructureTreeEditorProps>(
     const onSelect = (selectedItems: TargetData[]) => {
       if (selectedItems.length) {
         const node = searchInTree(tree, selectedItems[0].id);
-        if (node) {
-          const columnIdx = node.data?.position?.[0].columnIdx as number;
+        if (node && node.data) {
+          const { columnIdx } = node.data.position[0];
+          const rowsIds = node.data.position.map(({ rowIdx }) => rowIdx);
           dispatch(
-            tableDuck.actions.setColumnsFilter(
-              domainEntitiesColumns
-                .filter((_, idx) => columnIdx >= idx)
+            treeFilterDuck.actions.setFilter({
+              columns: domainEntitiesColumns
+                .filter(
+                  (_, idx) =>
+                    columnIdx >= idx &&
+                    idx !== domainEntitiesColumns.length - 1,
+                )
                 .map(({ key }) => key),
-            ),
+              rows: rowsIds,
+            }),
           );
+        } else {
+          dispatch(treeFilterDuck.actions.resetState());
         }
       } else {
-        dispatch(tableDuck.actions.setColumnsFilter([]));
+        dispatch(treeFilterDuck.actions.resetState());
       }
     };
 
     return (
-      <div
-        className={cnTreeEditor()}
-        ref={(el) => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          // eslint-disable-next-line no-param-reassign
-          ref.current = el;
-        }}
-      >
-        <div className={cnTreeEditor('Placeholder').state({ open: isOpen })}>
+      <div className={cnTreeEditor()} ref={ref}>
+        <Text
+          className={cnTreeEditor('Placeholder').state({ open: isOpen })}
+          color="ghost"
+          size="xs"
+        >
           Дерево проекта
-        </div>
+        </Text>
         <div className={cnTreeEditor('Content').state({ open: isOpen })}>
           <Tree
             nodeList={tree}

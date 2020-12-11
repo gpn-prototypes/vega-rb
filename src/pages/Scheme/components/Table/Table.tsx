@@ -7,7 +7,11 @@ import {
 } from '@apollo/client';
 import { useMount, useUnmount } from '@gpn-prototypes/vega-ui';
 import ExcelTable from 'components/ExcelTable';
-import { SelectedCell, TableEntities } from 'components/ExcelTable/types';
+import {
+  GridRow,
+  SelectedCell,
+  TableEntities,
+} from 'components/ExcelTable/types';
 import { ProjectContext } from 'components/Providers';
 import projectService from 'services/ProjectService';
 import tableDuck from 'store/tableDuck';
@@ -20,25 +24,37 @@ interface IProps {
 }
 
 export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
-  const { projectId } = useContext(ProjectContext);
-  const reduxTableData = useSelector(({ table }: RootState) => table);
-  const filteredData = useMemo(() => {
-    return {
-      columns: reduxTableData.columns.filter(
-        (column) => !reduxTableData.filter.columns.includes(column.key),
-      ),
-      rows: reduxTableData.rows.filter(
-        (row, idx) => !reduxTableData.filter.rows.includes(idx),
-      ),
-    };
-  }, [
-    reduxTableData.columns,
-    reduxTableData.filter.columns,
-    reduxTableData.filter.rows,
-    reduxTableData.rows,
-  ]);
   const dispatch = useDispatch();
   const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
+  const { projectId } = useContext(ProjectContext);
+  const reduxTableData = useSelector(({ table }: RootState) => table);
+  const treeFilterData = useSelector(({ tree }: RootState) => tree.filter);
+
+  const filteredData = useMemo(() => {
+    const rowIsFullfiled = (row: GridRow): boolean => {
+      const structureColumnsKeys = reduxTableData.columns
+        .filter(({ type }) => type === TableEntities.GEO_CATEGORY)
+        .map(({ key, name }) => ({
+          key,
+          name,
+        }));
+      return structureColumnsKeys.some(({ key }) => key !== 'id' && row[key]);
+    };
+
+    if (treeFilterData.rows.length && treeFilterData.columns.length) {
+      return {
+        ...reduxTableData,
+        columns: reduxTableData.columns.filter(
+          (column) => !treeFilterData.columns.includes(column.key),
+        ),
+        rows: reduxTableData.rows.filter(
+          (row, idx) =>
+            treeFilterData.rows.includes(idx) || !rowIsFullfiled(row),
+        ),
+      };
+    }
+    return reduxTableData;
+  }, [reduxTableData, treeFilterData.columns, treeFilterData.rows]);
 
   useMount(() => {
     projectService.init({
@@ -79,11 +95,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
 
   return (
     <ExcelTable
-      data={{
-        ...filteredData,
-        errors: reduxTableData.errors,
-        version: reduxTableData.version,
-      }}
+      data={filteredData}
       setColumns={(data): void => {
         dispatch(tableDuck.actions.updateColumns(data));
       }}

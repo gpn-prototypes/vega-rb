@@ -1,5 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  ApolloClient,
+  NormalizedCacheObject,
+  useApolloClient,
+} from '@apollo/client';
 import { Button, SplitPanes, useSidebar } from '@gpn-prototypes/vega-ui';
 import { DistributionSettings } from 'components/DistributionSettings';
 import {
@@ -8,7 +13,10 @@ import {
   TableEntities,
 } from 'components/ExcelTable/types';
 import { HierarchyLevelList } from 'components/HierarchyLevelList';
-import TreeEditor from 'pages/Scheme/components/TreeEditor/TreeEditor';
+import { ProjectContext } from 'components/Providers';
+import TreeEditor from 'pages/Scheme/components/TreeEditor';
+import projectService from 'services/ProjectService';
+import projectDuck from 'store/projectDuck';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { Nullable } from 'types';
@@ -20,6 +28,8 @@ import style from './Scheme.module.css';
 
 const SchemePage: React.FC = () => {
   const dispatch = useDispatch();
+  const { projectId } = useContext(ProjectContext);
+  const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
   const [selectedCell, setSelectedCell] = useState<Nullable<SelectedCell>>(
     null,
   );
@@ -55,6 +65,18 @@ const SchemePage: React.FC = () => {
     handleClose();
   };
 
+  useEffect(() => {
+    projectService.init({
+      client,
+      projectId,
+    });
+    projectService
+      .getProjectName()
+      .then((projectName) =>
+        dispatch(projectDuck.actions.updateProjectName(projectName)),
+      );
+  }, [client, dispatch, projectId]);
+
   return (
     <div className={style.SchemePage}>
       <div className={style.Header}>
@@ -67,7 +89,12 @@ const SchemePage: React.FC = () => {
         />
       </div>
       <SplitPanes split="vertical" onResizeEnd={handleEndResize}>
-        <SplitPanes.Pane aria-label="tree" initialSize="180px" min="24px">
+        <SplitPanes.Pane
+          aria-label="tree"
+          initialSize="180px"
+          min="24px"
+          max="240px"
+        >
           <TreeEditor
             rows={data.rows}
             columns={data.columns}

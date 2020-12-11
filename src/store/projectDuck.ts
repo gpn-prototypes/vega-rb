@@ -16,16 +16,23 @@ const factory = actionCreatorFactory('project');
 
 const actions = {
   fetchParams: factory.async<ProjectID, Param[]>('GET_PROJECT_PARAMS'),
+  updateProjectName: factory<string>('UPDATE_PROJECT_NAME'),
 };
 
 const initialState: ProjectState = {
   params: [] as Param[],
+  name: '',
 };
 
-const reducer = reducerWithInitialState<ProjectState>(initialState).case(
-  actions.fetchParams.done,
-  (state, payload) => ({ ...state, params: payload.result }),
-);
+const reducer = reducerWithInitialState<ProjectState>(initialState)
+  .case(actions.fetchParams.done, (state, payload) => ({
+    ...state,
+    params: payload.result,
+  }))
+  .case(actions.updateProjectName, (state, payload) => ({
+    ...state,
+    name: payload,
+  }));
 
 const fetchParamsEpic: Epic<AnyAction, AnyAction, RootState> = (action$) =>
   action$.pipe(
