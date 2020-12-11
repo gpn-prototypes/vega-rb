@@ -92,14 +92,6 @@ const distributionParametersMap: DistributionParametersMap = {
         type: DistributionDefinitionTypes.LocationLogmeanLogsd,
         title: 'Расположение, лог. среднее, лог. станд. отклонение',
       },
-      {
-        type: DistributionDefinitionTypes.LocationLogmeanLogsd,
-        title: 'Расположение, лог. среднее, лог. станд. отклонение',
-      },
-      {
-        type: DistributionDefinitionTypes.LocationLogmeanLogsd,
-        title: 'Расположение, лог. среднее, лог. станд. отклонение',
-      },
     ],
     fieldsByType: {
       [DistributionDefinitionTypes.LocationLogmeanLogsd]: [
@@ -202,23 +194,6 @@ const distributionParametersMap: DistributionParametersMap = {
         {
           key: DistributionParameterTypes.Max,
           title: 'Максимум',
-          defaultValue: '',
-        },
-      ],
-    },
-  },
-  [DistributionTypes.Constant]: {
-    types: [
-      {
-        type: DistributionDefinitionTypes.Constant,
-        title: 'Константа',
-      },
-    ],
-    fieldsByType: {
-      [DistributionDefinitionTypes.Constant]: [
-        {
-          key: DistributionParameterTypes.Constant,
-          title: 'Константа',
           defaultValue: '',
         },
       ],
