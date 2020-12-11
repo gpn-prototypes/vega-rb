@@ -16,7 +16,7 @@ export interface GeoCategory extends Structure {
   name: string;
   icon: RbDomainEntityIcons;
   code: string;
-  visible?: {
+  visible: {
     table: boolean;
     calc: boolean;
     tree: boolean;
