@@ -97,12 +97,8 @@ const distributionParametersMap: DistributionParametersMap = {
         title: 'Расположение, лог. среднее, лог. станд. отклонение',
       },
       {
-        type: DistributionDefinitionTypes.LocationLogmeanLogsd,
-        title: 'Расположение, лог. среднее, лог. станд. отклонение',
-      },
-      {
-        type: DistributionDefinitionTypes.LocationLogmeanLogsd,
-        title: 'Расположение, лог. среднее, лог. станд. отклонение',
+        type: DistributionDefinitionTypes.LocationGeommeanGeomsd,
+        title: 'Расположение, геом. среднее, геом. станд.отклонение',
       },
     ],
     fieldsByType: {
