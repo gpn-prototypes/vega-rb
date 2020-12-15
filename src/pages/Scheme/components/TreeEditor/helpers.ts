@@ -5,20 +5,71 @@ import {
   GridRow,
   TableEntities,
 } from 'components/ExcelTable/types';
-import { get, groupBy, mergeWith } from 'lodash';
+import { get, groupBy, mergeWith } from 'lodash/fp';
 import { v4 as uuidv4 } from 'uuid';
 
-import { TreeItemData } from './types';
+import { CellPosition, TreeItemData } from './types';
 
-export const structure = [
-  {
-    name: 'Концепция 1',
-    isDraggable: false,
-    id: 'root',
+const getTreeNodeItem = (
+  row: GridRow,
+  rowIdx: number,
+  columnKey: string,
+  columnIdx: number,
+  nodes?: TreeItem<TreeItemData>[],
+): TreeItem<TreeItemData> => {
+  const isRoot = columnIdx === 0;
+
+  const parentPos = isRoot
+    ? undefined
+    : ({
+        rowIdx,
+        columnIdx: columnIdx - 1,
+      } as CellPosition);
+
+  const parentId = isRoot
+    ? undefined
+    : nodes?.find((node) =>
+        node.data?.position.some(
+          (pos) =>
+            pos.rowIdx === parentPos?.rowIdx &&
+            pos.columnIdx === parentPos.columnIdx,
+        ),
+      )?.id;
+
+  const name = row[columnKey]?.value ? row[columnKey]?.value : '? (заглушка)';
+
+  return {
+    name: name as string,
+    data: {
+      position: [
+        {
+          rowIdx,
+          columnIdx,
+        },
+      ],
+    },
+    parentId,
     iconId: 'blue-line',
     nodeList: [],
-  },
-];
+    id: isRoot ? '' : uuidv4(),
+  };
+};
+
+const mergeCustomizer = (
+  objValue: string | number | Array<string | number>,
+  srcValue: string | number | Array<string | number>,
+  k: string,
+) => {
+  if (Array.isArray(objValue) && Array.isArray(srcValue)) {
+    return objValue.concat(srcValue);
+  }
+
+  if (k === 'id') {
+    return uuidv4();
+  }
+
+  return undefined;
+};
 
 export function searchInTree<T>(
   tree: TreeItem<T>[],
@@ -27,6 +78,7 @@ export function searchInTree<T>(
   reverse = false,
 ): TreeItem<T> | null {
   const stack = [tree[0]];
+
   while (stack.length) {
     const node = stack[reverse ? 'pop' : 'shift']();
     if (node) {
@@ -44,26 +96,13 @@ export function mergeObjectsInUnique<T>(array: T[], properties: string[]): T[] {
 
   array.forEach((item: T) => {
     const propertyValue = properties.reduce((prev, curr) => {
-      return `${prev}${get(item, curr)}`;
+      return `${prev}${get(curr, item)}`;
     }, '');
+
     if (newArray.has(propertyValue)) {
       newArray.set(
         propertyValue,
-        mergeWith(
-          item,
-          newArray.get(propertyValue),
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          // eslint-disable-next-line consistent-return
-          (objValue, srcValue, k) => {
-            if (Array.isArray(objValue)) {
-              return objValue.concat(srcValue);
-            }
-            if (k === 'id') {
-              return uuidv4();
-            }
-          },
-        ),
+        mergeWith(mergeCustomizer, item, newArray.get(propertyValue)),
       );
     } else {
       newArray.set(propertyValue, item);
@@ -71,14 +110,21 @@ export function mergeObjectsInUnique<T>(array: T[], properties: string[]): T[] {
   });
   return Array.from(newArray.values());
 }
-export function getNodeListFromTableData(data: {
-  columns: GridColumn[];
-  rows: GridRow[];
-}): TreeItem<TreeItemData>[] {
+
+export function getNodeListFromTableData(
+  data: {
+    columns: GridColumn[];
+    rows: GridRow[];
+  },
+  projectName: string,
+): TreeItem<TreeItemData>[] {
   const { rows, columns } = data;
 
   const structureColumnsKeys = columns
-    .filter(({ type }) => type === TableEntities.GEO_CATEGORY)
+    .filter(
+      ({ type, visible }) =>
+        type === TableEntities.GEO_CATEGORY && visible?.tree,
+    )
     .map(({ key, name }) => ({
       key,
       name,
@@ -93,77 +139,25 @@ export function getNodeListFromTableData(data: {
   structureColumnsKeys.forEach(({ key: columnKey }, columnIdx) => {
     if (columnIdx === 0) {
       const map = groupBy(
-        filledRows.map((row, rowIdx) => {
-          return {
-            name: row[columnKey]?.value
-              ? row[columnKey]?.value
-              : '? (заглушка)',
-            data: {
-              position: [
-                {
-                  rowIdx,
-                  columnIdx,
-                },
-              ],
-            },
-            parentId: null,
-            iconId: 'blue-line',
-            nodeList: [],
-            id: '',
-          };
-        }),
         (item) => item.name,
+        filledRows.map((row, rowIdx) =>
+          getTreeNodeItem(row, rowIdx, columnKey, columnIdx),
+        ),
       );
       const items = Object.keys(map)
         .map((key) =>
           map[key].reduce(
-            (prev, curr) =>
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              // eslint-disable-next-line consistent-return
-              mergeWith(prev, curr, (objValue, srcValue, k) => {
-                if (Array.isArray(objValue)) {
-                  return objValue.concat(srcValue);
-                }
-                if (k === 'id') {
-                  return uuidv4();
-                }
-              }),
+            (prev, curr) => mergeWith(mergeCustomizer, prev, curr),
             {},
           ),
         )
         .flat(1) as TreeItem<TreeItemData>[];
+
       nodes.push(...items);
     } else {
-      const items = filledRows.map((row, rowIdx) => {
-        const parentPos = {
-          rowIdx,
-          columnIdx: columnIdx - 1,
-        };
-
-        return {
-          name: row[columnKey]?.value ? row[columnKey]?.value : '? (заглушка)',
-          data: {
-            position: [
-              {
-                rowIdx,
-                columnIdx,
-              },
-            ],
-            parentPos,
-          },
-          parentId: nodes.find((node) =>
-            node.data?.position.some(
-              (pos) =>
-                pos.rowIdx === parentPos.rowIdx &&
-                pos.columnIdx === parentPos.columnIdx,
-            ),
-          )?.id,
-          iconId: 'blue-line',
-          nodeList: [],
-          id: uuidv4(),
-        } as TreeItem<TreeItemData>;
-      });
+      const items = filledRows.map((row, rowIdx) =>
+        getTreeNodeItem(row, rowIdx, columnKey, columnIdx, nodes),
+      );
 
       if (structureColumnsKeys.length - 1 === columnIdx) {
         nodes.push(...items);
@@ -177,13 +171,20 @@ export function getNodeListFromTableData(data: {
       }
     }
   });
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  structure[0].nodeList = arrayToTree(nodes, {
+
+  const nodeList = arrayToTree(nodes, {
     parentProperty: 'parentId',
     customID: 'id',
     childrenProperty: 'nodeList',
   });
 
-  return structure;
+  return [
+    {
+      name: projectName,
+      isDraggable: false,
+      id: 'root',
+      iconId: 'blue-line',
+      nodeList,
+    },
+  ];
 }

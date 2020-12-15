@@ -19,7 +19,7 @@ import { ColumnErrors } from 'types';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 
-import { RootState, TableState, TypedColumnsList } from './types';
+import { RootState, TypedColumnsList } from './types';
 
 const factory = actionCreatorFactory('table');
 
@@ -31,42 +31,22 @@ const actions = {
   updateCell: factory<GridCell>('UPDATE_CELL'),
   updateErrors: factory<ColumnErrors>('UPDATE_ERRORS'),
   resetState: factory('RESET_STATE'),
-  setRowsFilter: factory<number[]>('SET_ROWS_FILTER'),
-  setColumnsFilter: factory<string[]>('SET_COLUMNS_FILTER'),
 };
 
-const initialState: TableState = {
+const initialState: GridCollection = {
   columns: [],
   rows: [],
   errors: {},
   version: 0,
-  filter: {
-    rows: [],
-    columns: [],
-  },
 };
 
-const reducer = reducerWithInitialState<TableState>(initialState)
+const reducer = reducerWithInitialState<GridCollection>(initialState)
   .case(actions.resetState, () => initialState)
   .case(actions.initState, (state, payload) => ({
     ...state,
     rows: payload.rows,
     columns: payload.columns,
     version: payload.version,
-  }))
-  .case(actions.setColumnsFilter, (state, payload) => ({
-    ...state,
-    filter: {
-      ...state.filter,
-      columns: payload,
-    },
-  }))
-  .case(actions.setRowsFilter, (state, payload) => ({
-    ...state,
-    filter: {
-      ...state.filter,
-      rows: payload,
-    },
   }))
   .case(actions.updateColumns, (state, payload) => ({
     ...state,

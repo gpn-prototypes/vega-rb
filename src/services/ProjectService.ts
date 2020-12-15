@@ -11,6 +11,7 @@ import {
   Query,
 } from 'generated/graphql';
 import {
+  GET_PROJECT_NAME,
   GET_TABLE_TEMPLATE,
   GET_VERSION,
   LOAD_PROJECT,
@@ -23,7 +24,6 @@ import {
   getGraphqlUri,
   getMockConceptions,
 } from 'services/utils';
-import { TableState } from 'store/types';
 import { Identity } from 'types';
 import { packTableData } from 'utils';
 
@@ -119,7 +119,7 @@ class ProjectService {
   }
 
   getCalculationResultFileId(
-    tableData: TableState,
+    tableData: GridCollection,
     conceptionStructure: ProjectStructureInput,
   ) {
     return this.client
@@ -139,6 +139,18 @@ class ProjectService {
         },
       })
       .then(({ data }) => data.resourceBase.calculateProject);
+  }
+
+  getProjectName() {
+    return this.client
+      .query({
+        query: GET_PROJECT_NAME,
+        variables: {
+          vid: this.projectId,
+        },
+        fetchPolicy: 'no-cache',
+      })
+      .then(({ data }) => data.project.name);
   }
 
   getProjectVersion() {

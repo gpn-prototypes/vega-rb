@@ -1,5 +1,20 @@
 import { gql } from '@apollo/client';
 
+export const GET_PROJECT_NAME = gql`
+  query($vid: UUID) {
+    project(vid: $vid) {
+      __typename
+      ... on Project {
+        vid
+        name
+      }
+      ... on Error {
+        code
+      }
+    }
+  }
+`;
+
 export const GET_VERSION = gql`
   query($vid: UUID) {
     project(vid: $vid) {

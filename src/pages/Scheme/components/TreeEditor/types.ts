@@ -16,5 +16,4 @@ export type CellPosition = {
 
 export type TreeItemData = {
   position: CellPosition[];
-  parentPos: CellPosition;
 };
