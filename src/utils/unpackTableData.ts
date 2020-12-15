@@ -4,6 +4,7 @@ import {
   GridColumn,
   GridRow,
   TableEntities,
+  VisibilityProperties,
 } from 'components/ExcelTable/types';
 import { options } from 'components/ExcelTable/utils/getEditor';
 import {
@@ -16,7 +17,7 @@ import {
   RbDomainEntityInput,
   RiskInput,
 } from 'generated/graphql';
-import { omit } from 'lodash';
+import { omit } from 'lodash/fp';
 import { SpecialColumns } from 'model/Table';
 import { CalculationParam, GeoCategory, Risk, TableStructures } from 'types';
 
@@ -36,10 +37,15 @@ const getCalculationColumn = (
 
 const getCategoryColumn = (
   prev: GridColumn[],
-  { code, name }: GeoCategory,
+  { code, name, visible }: GeoCategory,
 ): GridColumn[] => [
   ...prev,
-  new GridColumnEntity(code, name, TableEntities.GEO_CATEGORY),
+  new GridColumnEntity(
+    code,
+    name,
+    TableEntities.GEO_CATEGORY,
+    omit('__typename', visible) as VisibilityProperties,
+  ),
 ];
 
 const getRiskColumn = (
@@ -83,7 +89,7 @@ const prepareCalculativeProperties = (
           value: calculationResultList?.[idx],
           args: attributesValues[idx]
             ? {
-                ...omit(attributesValues[idx], '__typename'),
+                ...omit('__typename', attributesValues[idx]),
                 parameters: (attributesValues[idx]
                   ?.parameters as DistributionParameter[]).map(
                   ({ __typename, ...parameter }) => parameter,

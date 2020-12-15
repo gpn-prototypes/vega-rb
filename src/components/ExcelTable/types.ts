@@ -29,7 +29,7 @@ export type SelectedCell = {
 };
 
 export enum VisibleKeys {
-  CALCULATION = 'calculation',
+  CALCULATION = 'calc',
   TABLE = 'table',
   TREE = 'tree',
 }
