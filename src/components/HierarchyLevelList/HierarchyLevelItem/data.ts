@@ -1,5 +1,5 @@
 export const HIERARCHY_TAGS = {
-  calc: {
+  calculation: {
     title: 'Расчет',
   },
   tree: {

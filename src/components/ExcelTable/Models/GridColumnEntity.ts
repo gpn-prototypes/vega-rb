@@ -7,21 +7,19 @@ export default class GridColumnEntity implements GridColumn {
 
   type: TableEntities;
 
-  visible: VisibilityProperties;
+  visible: VisibilityProperties = {
+    calculation: true,
+    table: true,
+    tree: true,
+  };
 
   constructor(
     key: string,
     name = '',
     type: TableEntities = TableEntities.NONE,
-    visible = {
-      calc: true,
-      table: true,
-      tree: true,
-    },
   ) {
     this.key = key;
     this.name = name;
     this.type = type;
-    this.visible = visible;
   }
 }
