@@ -113,11 +113,13 @@ class ProjectService {
   }
 
   getCalculationArchive(fileId: string) {
-    return fetch(getDownloadResultUri(fileId), {
-      headers: {
-        Authorization: `Bearer ${this.identity.getToken()}`,
-      },
-    }).then((resp) => resp.blob());
+    return this.identity.getToken().then((token) =>
+      fetch(getDownloadResultUri(fileId), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((resp) => resp.blob()),
+    );
   }
 
   getCalculationResultFileId(
