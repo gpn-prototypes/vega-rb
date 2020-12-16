@@ -5,7 +5,7 @@ import {
 } from 'generated/graphql';
 
 export interface Identity {
-  getToken(): string;
+  getToken(): Promise<string>;
 }
 
 interface Structure {
