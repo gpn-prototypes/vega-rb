@@ -58,11 +58,6 @@ export const LOAD_PROJECT = gql`
                 name
                 code
                 icon
-                visible {
-                  calc
-                  tree
-                  table
-                }
               }
               risks {
                 code

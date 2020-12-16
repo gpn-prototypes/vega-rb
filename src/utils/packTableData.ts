@@ -68,22 +68,16 @@ export function packTableData(
     ),
   }));
 
-  const domainEntities = domainEntitiesColumns.map(
-    ({
-      name,
-      key,
-      visible = {
-        tree: true,
-        table: true,
-        calc: true,
-      },
-    }) => ({
-      name,
-      icon: RbDomainEntityIcons.FormationIcon,
-      code: key,
-      visible,
-    }),
-  );
+  const domainEntities = domainEntitiesColumns.map(({ name, key }) => ({
+    name,
+    icon: RbDomainEntityIcons.FormationIcon,
+    code: key,
+    visible: {
+      tree: true,
+      table: true,
+      calc: true,
+    },
+  }));
 
   const removeCommas = (str: string) =>
     str.split(',').filter(Boolean).join(',');
