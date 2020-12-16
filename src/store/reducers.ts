@@ -4,6 +4,7 @@ import projectDuck from 'store/projectDuck';
 import tableDuck from 'store/tableDuck';
 import treeDuck from 'store/treeDuck';
 
+import competitiveAccessDuck from './competitiveAccessDuck';
 import { RootState } from './types';
 
 export default combineReducers<RootState>({
@@ -11,4 +12,5 @@ export default combineReducers<RootState>({
   project: projectDuck.reducer,
   table: tableDuck.reducer,
   tree: treeDuck.reducer,
+  competitiveAccess: competitiveAccessDuck.reducer,
 });

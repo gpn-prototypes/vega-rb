@@ -5,7 +5,12 @@ import {
   NormalizedCacheObject,
   useApolloClient,
 } from '@apollo/client';
-import { Button, SplitPanes, useSidebar } from '@gpn-prototypes/vega-ui';
+import {
+  Button,
+  SplitPanes,
+  useInterval,
+  useSidebar,
+} from '@gpn-prototypes/vega-ui';
 import { DistributionSettings } from 'components/DistributionSettings';
 import {
   GridColumn,
@@ -20,6 +25,9 @@ import projectDuck from 'store/projectDuck';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { Nullable } from 'types';
+
+import { RecentlyEditedAlert } from '../../components/CompetitiveAccess/RecentlyEditedAlert';
+import competitiveAccessDuck from '../../store/competitiveAccessDuck';
 
 import CalculateButton from './components/CalculateButton';
 import Table from './components/Table';
@@ -42,6 +50,9 @@ const SchemePage: React.FC = () => {
   };
 
   const data = useSelector(({ table }: RootState) => table);
+  const isRecentlyEdited = useSelector(
+    ({ competitiveAccess }: RootState) => competitiveAccess.isRecentlyEdited,
+  );
   const geoCategoryColumns = data.columns.filter(
     ({ type }) => type === TableEntities.GEO_CATEGORY,
   );
@@ -76,6 +87,21 @@ const SchemePage: React.FC = () => {
         dispatch(projectDuck.actions.updateProjectName(projectName)),
       );
   }, [client, dispatch, projectId]);
+
+  useInterval(30000, () => {
+    projectService
+      .getProjectRecentlyEdited()
+      .then((recentlyEdited) => {
+        if (recentlyEdited === isRecentlyEdited) {
+          return;
+        }
+
+        dispatch(
+          competitiveAccessDuck.actions.setRecentlyEdited(recentlyEdited),
+        );
+      })
+      .catch(() => competitiveAccessDuck.actions.setRecentlyEdited(false));
+  });
 
   return (
     <div className={style.SchemePage}>
@@ -121,6 +147,8 @@ const SchemePage: React.FC = () => {
         items={geoCategoryColumns}
         onSubmit={(columns) => updateColumns(columns)}
       />
+
+      {isRecentlyEdited && <RecentlyEditedAlert />}
     </div>
   );
 };

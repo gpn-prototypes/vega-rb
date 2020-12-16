@@ -27,6 +27,8 @@ import {
 import { Identity } from 'types';
 import { packTableData } from 'utils';
 
+import { GET_RECENTLY_EDITED } from '../components/CompetitiveAccess/queries';
+
 type ProjectServiceProps = {
   client: ApolloClient<NormalizedCacheObject>;
   projectId: string;
@@ -163,6 +165,18 @@ class ProjectService {
         fetchPolicy: 'no-cache',
       })
       .then(({ data }) => data.project.version);
+  }
+
+  getProjectRecentlyEdited() {
+    return this.client
+      .query({
+        query: GET_RECENTLY_EDITED,
+        variables: {
+          vid: this.projectId,
+        },
+        fetchPolicy: 'no-cache',
+      })
+      .then(({ data }) => data.project.recentlyEdited);
   }
 
   getResourceBaseData() {
