@@ -83,11 +83,14 @@ const SchemePage: React.FC = () => {
       client,
       projectId,
     });
-    projectService
-      .getProjectName()
-      .then((projectName) =>
-        dispatch(projectDuck.actions.updateProjectName(projectName)),
-      );
+
+    if (projectId.length > 0) {
+      projectService
+        .getProjectName()
+        .then((projectName) =>
+          dispatch(projectDuck.actions.updateProjectName(projectName)),
+        );
+    }
   }, [client, dispatch, projectId]);
 
   useInterval(30000, () => {
