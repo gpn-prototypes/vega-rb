@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ApolloClient,
@@ -11,6 +17,7 @@ import {
   useInterval,
   useSidebar,
 } from '@gpn-prototypes/vega-ui';
+import { RecentlyEditedAlert } from 'components/CompetitiveAccess/RecentlyEditedAlert';
 import { DistributionSettings } from 'components/DistributionSettings';
 import {
   GridColumn,
@@ -22,18 +29,19 @@ import { ProjectContext } from 'components/Providers';
 import { TableErrorAlert } from 'components/TableErrorAlert/TableErrorAlert';
 import TreeEditor from 'pages/Scheme/components/TreeEditor';
 import projectService from 'services/ProjectService';
+import competitiveAccessDuck from 'store/competitiveAccessDuck';
 import projectDuck from 'store/projectDuck';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { Nullable } from 'types';
 
-import { RecentlyEditedAlert } from '../../components/CompetitiveAccess/RecentlyEditedAlert';
-import competitiveAccessDuck from '../../store/competitiveAccessDuck';
-
 import CalculateButton from './components/CalculateButton';
 import Table from './components/Table';
 
 import style from './Scheme.module.css';
+
+const UPDATE_PROJECT_RECENTLY_EDITED_INTERVAL: number =
+  Number(process.env.UPDATE_PROJECT_RECENTLY_EDITED_INTERVAL) || 30000;
 
 const SchemePage: React.FC = () => {
   const dispatch = useDispatch();
@@ -52,7 +60,7 @@ const SchemePage: React.FC = () => {
 
   const data = useSelector(({ table }: RootState) => table);
 
-  const isRecentlyEdited = useSelector(
+  const isProjectRecentlyEdited = useSelector(
     ({ competitiveAccess }: RootState) => competitiveAccess.isRecentlyEdited,
   );
   const geoCategoryColumns = data.columns.filter(
@@ -67,6 +75,21 @@ const SchemePage: React.FC = () => {
     isOpen: false,
     isMinimized: false,
   });
+
+  const updateProjectRecentlyEdited = useCallback(() => {
+    projectService
+      .getProjectRecentlyEdited()
+      .then((recentlyEdited) => {
+        if (recentlyEdited === isProjectRecentlyEdited) {
+          return;
+        }
+
+        dispatch(
+          competitiveAccessDuck.actions.setRecentlyEdited(recentlyEdited),
+        );
+      })
+      .catch(() => competitiveAccessDuck.actions.setRecentlyEdited(false));
+  }, [dispatch, isProjectRecentlyEdited]);
 
   const updateColumns = (columns: GridColumn[]) => {
     dispatch(
@@ -83,26 +106,18 @@ const SchemePage: React.FC = () => {
       client,
       projectId,
     });
+
     projectService
       .getProjectName()
       .then((projectName) =>
         dispatch(projectDuck.actions.updateProjectName(projectName)),
       );
-  }, [client, dispatch, projectId]);
 
-  useInterval(30000, () => {
-    projectService
-      .getProjectRecentlyEdited()
-      .then((recentlyEdited) => {
-        if (recentlyEdited === isRecentlyEdited) {
-          return;
-        }
+    updateProjectRecentlyEdited();
+  }, [client, dispatch, projectId, updateProjectRecentlyEdited]);
 
-        dispatch(
-          competitiveAccessDuck.actions.setRecentlyEdited(recentlyEdited),
-        );
-      })
-      .catch(() => competitiveAccessDuck.actions.setRecentlyEdited(false));
+  useInterval(UPDATE_PROJECT_RECENTLY_EDITED_INTERVAL, () => {
+    updateProjectRecentlyEdited();
   });
 
   return (
@@ -115,6 +130,8 @@ const SchemePage: React.FC = () => {
           onClick={handleOpen}
           className={style.ButtonStructure}
         />
+
+        {isProjectRecentlyEdited && <RecentlyEditedAlert />}
       </div>
       <SplitPanes split="vertical" onResizeEnd={handleEndResize}>
         <SplitPanes.Pane
@@ -150,7 +167,6 @@ const SchemePage: React.FC = () => {
         onSubmit={(columns) => updateColumns(columns)}
       />
 
-      {isRecentlyEdited && <RecentlyEditedAlert />}
       <TableErrorAlert />
     </div>
   );

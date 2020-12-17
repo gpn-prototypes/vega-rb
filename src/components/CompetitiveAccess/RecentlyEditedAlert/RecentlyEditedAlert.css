@@ -1,8 +1,27 @@
 .RecentlyEditedAlert {
-  position: absolute;
   z-index: 2;
-  right: var(--space-xl);
-  bottom: var(--space-s);
 
-  width: 500px;
+  margin-left: auto;
+
+  max-width: 45%;
+
+  &__SnackBar {
+    height: 40px;
+
+    & .SnackBar-Item {
+      margin: 0;
+
+      padding: 8px;
+
+      height: 40px;
+    }
+
+    & .SnackBar-Message {
+      font-size: 12px;
+    }
+
+    & .SnackBar-Content {
+      align-self: center;
+    }
+  }
 }

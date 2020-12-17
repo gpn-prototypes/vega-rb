@@ -12,6 +12,8 @@
 
 .Header {
   padding: var(--space-xs) var(--space-m);
+
+  display: inline-flex;
 }
 
 .Content {

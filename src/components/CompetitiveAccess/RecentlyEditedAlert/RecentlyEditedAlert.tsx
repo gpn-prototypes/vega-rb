@@ -11,7 +11,7 @@ export const RecentlyEditedAlert: React.FC = () => {
     {
       key: 1,
       message:
-        '"В системе могут отобразиться данные вашего коллеги, который тоже сейчас работает над проектом. Мы работаем над улучшением механизма совместной работы.',
+        'В системе могут отобразиться данные вашего коллеги, который тоже сейчас работает над проектом. Мы работаем над улучшением механизма совместной работы.',
       icon: IconAlert,
       status: 'warning',
     },
@@ -19,7 +19,7 @@ export const RecentlyEditedAlert: React.FC = () => {
 
   return (
     <div className={cnAlert()}>
-      <SnackBar items={items} />
+      <SnackBar className={cnAlert('SnackBar').toString()} items={items} />
     </div>
   );
 };
