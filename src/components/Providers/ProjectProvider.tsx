@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouteMatch } from 'react-router';
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
-import { defaultTo } from 'lodash';
+import { defaultTo } from 'lodash/fp';
 import projectService from 'services/ProjectService';
 import { Identity } from 'types';
 
@@ -24,10 +24,10 @@ const ProjectProvider: React.FC<ProjectProviderProps> = ({
   identity,
 }) => {
   const matchedData = defaultTo<MatchedData>(
-    useRouteMatch<MatchedData>(ROUTE_MATCH_PROJECT_ID)?.params,
     {
       projectId: '',
     },
+    useRouteMatch<MatchedData>(ROUTE_MATCH_PROJECT_ID)?.params,
   );
 
   useEffect(() => {

@@ -1,5 +1,6 @@
 import GridColumnEntity from 'components/ExcelTable/Models/GridColumnEntity';
 import {
+  GridCellArguments,
   GridCollection,
   GridColumn,
   GridRow,
@@ -7,20 +8,18 @@ import {
 } from 'components/ExcelTable/types';
 import { options } from 'components/ExcelTable/utils/getEditor';
 import {
-  AttributeInput,
-  DistributionInput,
-  DistributionParameter,
+  Attribute,
+  AttributeValue,
   GeoObjectCategories,
   Maybe,
+  ProjectStructure,
   ProjectStructureInput,
   RbDomainEntityInput,
   RiskInput,
 } from 'generated/graphql';
-import { omit } from 'lodash';
+import { omitAll } from 'lodash/fp';
 import { SpecialColumns } from 'model/Table';
 import { CalculationParam, GeoCategory, Risk, TableStructures } from 'types';
-
-type TableDistributionResultList = Array<null | number>[];
 
 const getCalculationColumn = (
   prev: GridColumn[],
@@ -69,34 +68,40 @@ function structureParamsReducer(list: TableStructures[]): GridColumn[] {
   }, []);
 }
 
-const prepareCalculativeProperties = (
-  attributes: AttributeInput[],
-  attributesValues: Array<Maybe<DistributionInput>>,
-  calculationResultList?: Array<number | null>,
-) => {
+function collectAttributeValues(
+  attributes: Array<Attribute>,
+  attributesValues: Array<Maybe<AttributeValue>>,
+): GridRow {
+  const getArguments = (
+    attributeValue: Maybe<AttributeValue>,
+  ): GridCellArguments => {
+    if (attributeValue) {
+      return omitAll(
+        '__typename',
+        attributeValue.distribution,
+      ) as GridCellArguments;
+    }
+
+    return {} as GridCellArguments;
+  };
+
   return attributes
     .map(({ code }) => code)
     .reduce((prev, key, idx) => {
+      const attributeValue = attributesValues[idx];
+
       return {
         ...prev,
         [key]: {
-          value: calculationResultList?.[idx],
-          args: attributesValues[idx]
-            ? {
-                ...omit(attributesValues[idx], '__typename'),
-                parameters: (attributesValues[idx]
-                  ?.parameters as DistributionParameter[]).map(
-                  ({ __typename, ...parameter }) => parameter,
-                ),
-              }
-            : attributesValues[idx],
+          value: attributeValue?.visibleValue,
+          args: getArguments(attributeValue),
         },
       };
     }, {});
-};
+}
 
-function prepareRisks(
-  riskValues: Array<number | null>,
+function collectRisks(
+  riskValues: Array<Maybe<number>>,
   risk: RiskInput[],
 ): GridRow {
   return risk
@@ -112,7 +117,7 @@ function prepareRisks(
     );
 }
 
-function prepareDomainEntities(
+function collectDomainEntities(
   cells: string[],
   domainEntities: RbDomainEntityInput[],
 ): GridRow {
@@ -126,7 +131,7 @@ function prepareDomainEntities(
         },
       }),
       {},
-    ) as GridRow;
+    );
 }
 
 function constructColumns({
@@ -157,15 +162,19 @@ function constructColumns({
   ];
 }
 
-function createEmptyRows(count: number): Array<GridRow> {
+function generateEmptyRows(count: number): Array<GridRow> {
+  const getOrderNumber = (index: number) => {
+    return count === 1000 ? index + 1 : Math.abs(count - 1000 - index - 1);
+  };
+
   return Array.from({ length: count }, (val, index) => ({
     id: {
-      value: count === 1000 ? index + 1 : Math.abs(count - 1000 - index - 1),
+      value: getOrderNumber(index),
     },
   }));
 }
 
-function getGeoObjectCategoryCellValue(category?: GeoObjectCategories) {
+function getGeoObjectCategoryValue(category?: GeoObjectCategories) {
   if (category) {
     return category === GeoObjectCategories.Reserves
       ? options.reef
@@ -174,51 +183,52 @@ function getGeoObjectCategoryCellValue(category?: GeoObjectCategories) {
   return options.reef;
 }
 
-function constructRows(
-  {
-    domainEntities = [],
-    domainObjects = [],
-    attributes = [],
-    risks: risksEntities = [],
-  }: ProjectStructureInput,
-  calculationResultList?: TableDistributionResultList,
-): GridRow[] {
-  const emptyRowsLength = 1000 - domainObjects.length;
+function constructRows({
+  domainEntities = [],
+  domainObjects = [],
+  attributes = [],
+  risks: risksEntities = [],
+}: ProjectStructure): GridRow[] {
+  const rowsCount = 1000 - domainObjects.length;
 
   return [
     ...domainObjects.map(
       (
         { domainObjectPath, geoObjectCategory, attributeValues, risksValues },
         idx,
-      ) => ({
-        id: { value: idx + 1 },
-        [SpecialColumns.GEO_CATEGORY]: getGeoObjectCategoryCellValue(
+      ) => {
+        const geoObjectCategoryValue = getGeoObjectCategoryValue(
           geoObjectCategory,
-        ),
-        ...prepareDomainEntities(domainObjectPath, domainEntities),
-        ...prepareCalculativeProperties(
+        );
+        const domainEntitiesList = collectDomainEntities(
+          domainObjectPath,
+          domainEntities,
+        );
+        const attributeValuesList = collectAttributeValues(
           attributes,
           attributeValues,
-          calculationResultList?.[idx],
-        ),
-        ...prepareRisks(risksValues, risksEntities),
-      }),
+        );
+        const risksList = collectRisks(risksValues, risksEntities);
+
+        return {
+          id: { value: idx + 1 },
+          [SpecialColumns.GEO_CATEGORY]: geoObjectCategoryValue,
+          ...domainEntitiesList,
+          ...attributeValuesList,
+          ...risksList,
+        };
+      },
     ),
-    ...createEmptyRows(emptyRowsLength),
+    ...generateEmptyRows(rowsCount),
   ];
 }
 
 export function unpackTableData(
-  projectStructure: ProjectStructureInput,
+  projectStructure: ProjectStructure,
   version: number,
-  calculationResultList?: TableDistributionResultList,
 ): GridCollection {
   const columns: GridColumn[] = constructColumns(projectStructure);
-  const rows: GridRow[] = constructRows(
-    projectStructure,
-    calculationResultList,
-  );
-  // const errors: TableError[] = [];
+  const rows: GridRow[] = constructRows(projectStructure);
 
   return {
     columns,

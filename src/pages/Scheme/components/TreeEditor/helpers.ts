@@ -6,7 +6,7 @@ import {
   TableEntities,
 } from 'components/ExcelTable/types';
 import { get, groupBy, mergeWith } from 'lodash/fp';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 import { CellPosition, TreeItemData } from './types';
 
@@ -51,7 +51,7 @@ const getTreeNodeItem = (
     parentId,
     iconId: 'blue-line',
     nodeList: [],
-    id: isRoot ? '' : uuidv4(),
+    id: isRoot ? '' : uuid(),
   };
 };
 
@@ -65,7 +65,7 @@ const mergeCustomizer = (
   }
 
   if (k === 'id') {
-    return uuidv4();
+    return uuid();
   }
 
   return undefined;

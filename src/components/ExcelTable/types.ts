@@ -48,14 +48,14 @@ export enum TableEntities {
   NONE = 'None',
 }
 
-interface GridCellParameters {
+export interface GridCellParameters {
   value: ReactText;
   type: DistributionParameterTypes;
 }
 
-interface GridCellArguments {
-  definition: DistributionDefinitionTypes;
+export interface GridCellArguments {
   type: DistributionTypes;
+  definition: DistributionDefinitionTypes;
   parameters: GridCellParameters[];
 }
 

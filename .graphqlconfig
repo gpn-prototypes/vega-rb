@@ -1,15 +1,34 @@
 {
-  "name": "Default GraphQL Schema",
-  "schemaPath": "schema.graphql",
-  "extensions": {
-    "endpoints": {
-      "Default GraphQL Endpoint": {
-        "url": "${env:SCHEMA_PATH}",
-        "headers": {
-          "user-agent": "JS GraphQL",
-          "Authorization": "${env:AUTH_TOKEN}"
-        },
-        "introspect": false
+  "name": "Project GraphQL Schema",
+  "projects": {
+    "Default": {
+      "schemaPath": "./schemas/default.graphql",
+      "extensions": {
+        "endpoints": {
+          "Default GraphQL Endpoint": {
+            "url": "${env:SCHEMA_PATH}",
+            "headers": {
+              "user-agent": "JS GraphQL",
+              "Authorization": "${env:AUTH_TOKEN}"
+            },
+            "introspect": false
+          }
+        }
+      }
+    },
+    "Project": {
+      "schemaPath": "./schemas/project.graphql",
+      "extensions": {
+        "endpoints": {
+          "Project GraphQL Endpoint": {
+            "url": "${env:PROJECT_SCHEMA_PATH}",
+            "headers": {
+              "user-agent": "JS GraphQL",
+              "Authorization": "${env:AUTH_TOKEN}"
+            },
+            "introspect": false
+          }
+        }
       }
     }
   }

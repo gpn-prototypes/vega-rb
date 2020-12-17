@@ -106,27 +106,30 @@ export const ExcelTable: React.FC<IProps> = ({
     columns,
     setColumns,
   ]);
+
   return (
     <>
       <DndProvider backend={HTML5Backend}>
-        <AutoSizer className={cnExcelTableClass}>
-          {({ height, width }): JSX.Element => (
-            <ReactDataGrid
-              ref={gridRef}
-              columns={columnsList}
-              rows={rows}
-              width={width}
-              height={height}
-              rowHeight={32}
-              onRowClick={handleRowClick}
-              onRowsUpdate={handleRowsUpdate}
-              rowRenderer={StyledRow}
-              enableCellCopyPaste
-              enableCellDragAndDrop
-              enableCellAutoFocus
-            />
-          )}
-        </AutoSizer>
+        <div style={{ height: '100%', flex: 1 }}>
+          <AutoSizer className={cnExcelTableClass}>
+            {({ height, width }): JSX.Element => (
+              <ReactDataGrid
+                ref={gridRef}
+                columns={columnsList}
+                rows={rows}
+                width={width}
+                height={height}
+                rowHeight={32}
+                onRowClick={handleRowClick}
+                onRowsUpdate={handleRowsUpdate}
+                rowRenderer={StyledRow}
+                enableCellCopyPaste
+                enableCellDragAndDrop
+                enableCellAutoFocus
+              />
+            )}
+          </AutoSizer>
+        </div>
       </DndProvider>
       <HeaderContextMenu
         id={HEADER_CONTEXT_ID}

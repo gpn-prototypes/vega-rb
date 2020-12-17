@@ -4,7 +4,7 @@ import {
   DistributionParameterTypes,
   DistributionTypes,
 } from 'generated/graphql';
-import { toPairs } from 'lodash';
+import { toPairs } from 'lodash/fp';
 import { DistributionError } from 'services/types';
 
 import { percentileFieldRankTypes, percentileFieldTypes } from './constants';
@@ -74,6 +74,7 @@ export function prepareDistributionParams([
       value: Number.parseFloat(parameterValue) / 100,
     };
   }
+
   return {
     type: parameterType as Exclude<
       DistributionParameterTypes,

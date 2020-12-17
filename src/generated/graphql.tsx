@@ -1,6 +1,7 @@
 /* eslint-disable */
 // @ts-nocheck
 // generated file
+
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
@@ -185,7 +186,9 @@ export type DomainObject = {
   /** Отображения/Скрытие объекта в таблице */
   visible: Scalars['Boolean'];
   /** Список значений атрибутов геологического объекта */
-  attributeValues: Array<Maybe<Distribution>>;
+  attributeValues: Array<Maybe<AttributeValue>>;
+  /** Значение GCoS геологического объекта */
+  GCoS?: Maybe<Scalars['Float']>;
 };
 
 /** Список категорий геологического объекта. */
@@ -193,6 +196,13 @@ export enum GeoObjectCategories {
   Reserves = 'RESERVES',
   Resources = 'RESOURCES',
 }
+
+export type AttributeValue = {
+  __typename?: 'AttributeValue';
+  distribution: Distribution;
+  /** Отображаемый в ячейке 50-й процентиль (P50) */
+  visibleValue: Scalars['Float'];
+};
 
 /** Параметры распределения. */
 export type Distribution = {
@@ -203,6 +213,10 @@ export type Distribution = {
   definition: DistributionDefinitionTypes;
   /** Параметры распределения */
   parameters: Array<Maybe<DistributionParameter>>;
+  /** Нижняя граница усечения */
+  minBound?: Maybe<Scalars['Float']>;
+  /** Верхняя граница усечения */
+  maxBound?: Maybe<Scalars['Float']>;
 };
 
 /** Типы распределений. */
@@ -221,6 +235,8 @@ export enum DistributionTypes {
   Pert = 'PERT',
   /** Константа */
   Constant = 'CONSTANT',
+  /** Распределение Бернулли */
+  Bernoulli = 'BERNOULLI',
 }
 
 /** Способы задания распределений. */
@@ -263,6 +279,8 @@ export enum DistributionDefinitionTypes {
   MinMaxTwoPercentiles = 'MIN_MAX_TWO_PERCENTILES',
   /** Константа */
   Constant = 'CONSTANT',
+  /** Вероятность успеха */
+  Probability = 'PROBABILITY',
 }
 
 /** Параметр способа задания распределения. */
@@ -321,6 +339,8 @@ export enum DistributionParameterTypes {
   Q4Value = 'Q4_VALUE',
   /** Константа */
   Constant = 'CONSTANT',
+  /** Вероятность */
+  Probability = 'PROBABILITY',
 }
 
 /** Ошибка с дополнительной информацией. */
@@ -362,10 +382,10 @@ export enum RbErrorCodes {
   InvalidProbabilityValue = 'INVALID_PROBABILITY_VALUE',
   /** Некорректное значение параметра для этого способа задания */
   IncorrectParameterValueForDefinition = 'INCORRECT_PARAMETER_VALUE_FOR_DEFINITION',
-  /** Квантили должны убывать */
-  QuantilesMustBeDescending = 'QUANTILES_MUST_BE_DESCENDING',
-  /** Квантильные ранги должны возрастать */
-  QuantileRanksMustBeAscending = 'QUANTILE_RANKS_MUST_BE_ASCENDING',
+  /** Некорректный порядок значений процентилей */
+  IncorrectOrderOfPercentileValues = 'INCORRECT_ORDER_OF_PERCENTILE_VALUES',
+  /** Некорректный порядок рангов процентилей */
+  IncorrectOrderOfPercentileRanks = 'INCORRECT_ORDER_OF_PERCENTILE_RANKS',
   /** Квантиль должен быть больше расположения */
   QuantileMustBeMoreThanLocation = 'QUANTILE_MUST_BE_MORE_THAN_LOCATION',
   /** В концепции отсутствует поле "вероятность" */
@@ -461,7 +481,11 @@ export type DomainObjectInput = {
   /** Отображения/Скрытие объекта в таблице */
   visible: Scalars['Boolean'];
   /** Список значений атрибутов геологического объекта */
-  attributeValues: Array<Maybe<DistributionInput>>;
+  attributeValues: Array<Maybe<AttributeValueInput>>;
+};
+
+export type AttributeValueInput = {
+  distribution: DistributionInput;
 };
 
 /** Параметры распределения. */
@@ -500,10 +524,11 @@ export type DistributionQueriesDistributionChartArgs = {
 
 export type DistributionChartResult =
   | DistributionChart
+  | DiscreteDistributionChart
   | CommonErrors
   | DistributionDefinitionErrors;
 
-/** Результаты вычисления заданного распределения. */
+/** Результаты вычисления заданного непрерывного распределения. */
 export type DistributionChart = {
   __typename?: 'DistributionChart';
   /** График функции плотности распределения */
@@ -523,12 +548,19 @@ export type Point = {
   y: Scalars['Float'];
 };
 
-/** Точка на графике. */
+/** Процентиль распределения. */
 export type Percentile = {
   __typename?: 'Percentile';
   point: Point;
   /** Процентильный ранг (1-99) */
   rank: Scalars['Int'];
+};
+
+/** Результаты вычисления заданного дискретного распределения. */
+export type DiscreteDistributionChart = {
+  __typename?: 'DiscreteDistributionChart';
+  /** График функции вероятности распределения */
+  pmf: Array<Point>;
 };
 
 /** Список ошибок. */

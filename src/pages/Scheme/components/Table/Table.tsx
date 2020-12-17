@@ -66,21 +66,14 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
       projectService.getResourceBaseData().then((loadFromDatabase) => {
         if (loadFromDatabase) {
           const { structure } = loadFromDatabase.conceptions[0];
-
-          projectService
-            .getDistributionValues(structure)
-            .then((distributionResultValues) =>
-              dispatch(
-                tableDuck.actions.initState(
-                  unpackTableData(structure, version, distributionResultValues),
-                ),
-              ),
-            );
+          dispatch(
+            tableDuck.actions.initState(unpackTableData(structure, version)),
+          );
         } else if (loadFromDatabase === null) {
           projectService.getTableTemplate().then((structureTemplate) => {
             dispatch(
               tableDuck.actions.initState(
-                unpackTableData(structureTemplate, version, []),
+                unpackTableData(structureTemplate, version),
               ),
             );
           });

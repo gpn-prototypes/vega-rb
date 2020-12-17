@@ -18,6 +18,7 @@ interface ProvidersProps {
 
 export const Providers: React.FC<ProvidersProps> = (props) => {
   const { graphqlClient, identity, children } = props;
+
   return (
     <Provider store={store}>
       <ApolloProvider

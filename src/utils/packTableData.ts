@@ -1,19 +1,31 @@
 import { OptionEntity } from 'components/ExcelTable/Models/OptionEntity';
-import { GridCollection, TableEntities } from 'components/ExcelTable/types';
 import {
-  Distribution,
+  GridCollection,
+  GridColumn,
+  GridRow,
+  TableEntities,
+} from 'components/ExcelTable/types';
+import {
+  AttributeInput,
+  AttributeValueInput,
+  DistributionInput,
+  DomainObjectInput,
   GeoObjectCategories,
   Maybe,
   ProjectStructureInput,
   RbDomainEntityIcons,
+  RbDomainEntityInput,
+  RiskInput,
 } from 'generated/graphql';
-import { defaultTo } from 'lodash';
-import { toNumber } from 'lodash/fp';
+import { defaultTo, isEmpty, omitAll, toNumber } from 'lodash/fp';
 import { SpecialColumns } from 'model/Table';
-import { CalculationParam, Risk } from 'types';
-import { isEmpty } from 'utils/isEmpty';
+import { isEmpty as isEmptyUtil } from 'utils/isEmpty';
 
 import { getColumnsByType } from './getColumnsByType';
+
+const removeCommas = (str: string) => str.split(',').filter(Boolean).join(',');
+
+const omitTypename = omitAll('__typename');
 
 function getGeoObjectCategoryParamsFromOption(option?: OptionEntity) {
   if (option) {
@@ -24,9 +36,111 @@ function getGeoObjectCategoryParamsFromOption(option?: OptionEntity) {
   return GeoObjectCategories.Reserves;
 }
 
+type DomainObjectsProps = {
+  rows: GridRow[];
+  risks: GridColumn[];
+  calculationParams: GridColumn[];
+  domainEntities: GridColumn[];
+};
+
+function assembleDomainObjects({
+  rows: commonRows,
+  risks: riskColumns,
+  calculationParams: calculationParametersColumns,
+  domainEntities: domainEntitiesColumns,
+}: DomainObjectsProps): Array<DomainObjectInput> {
+  const rows = commonRows.filter(
+    (row) =>
+      domainEntitiesColumns.some(({ key }) => row[key]) ||
+      riskColumns.some(({ key }) => row[key]) ||
+      calculationParametersColumns.some(({ key }) => row[key]),
+  );
+
+  const collectAttributeValues = (
+    row: GridRow,
+  ): Array<Maybe<AttributeValueInput>> => {
+    return calculationParametersColumns.map(({ key }: GridColumn) => {
+      const distributionValues = row[key]?.args;
+      const parameters = defaultTo(
+        [],
+        distributionValues?.parameters?.map((parameter) =>
+          omitTypename(parameter),
+        ),
+      );
+
+      return !isEmpty(distributionValues)
+        ? {
+            distribution: {
+              ...distributionValues,
+              parameters,
+            } as DistributionInput,
+          }
+        : null;
+    });
+  };
+
+  return rows.map((row) => ({
+    visible: true,
+    domainObjectPath: domainEntitiesColumns.map(({ key }) =>
+      String(row[key]?.value || ''),
+    ),
+    risksValues: riskColumns.map(({ key }) => {
+      return !isEmptyUtil(row[key]?.value) ? toNumber(row[key]?.value) : null;
+    }),
+    geoObjectCategory: getGeoObjectCategoryParamsFromOption(
+      row[SpecialColumns.GEO_CATEGORY]?.value as OptionEntity,
+    ),
+    attributeValues: collectAttributeValues(row),
+  }));
+}
+
+function assembleRisks(columns: GridColumn[]): Array<RiskInput> {
+  return columns.map(({ key, name }) => ({
+    code: key,
+    name,
+  }));
+}
+
+function assembleDomainEntities(
+  columns: GridColumn[],
+): Array<RbDomainEntityInput> {
+  return columns.map(({ name, key }) => ({
+    name,
+    icon: RbDomainEntityIcons.FormationIcon,
+    code: key,
+    visible: {
+      tree: true,
+      table: true,
+      calc: true,
+    },
+  }));
+}
+
+function assembleAttributes(
+  columns: GridColumn[],
+  tableTemplate: ProjectStructureInput,
+): Array<AttributeInput> {
+  return columns.map(({ key, name }) => {
+    const attribute = tableTemplate.attributes.find(({ code }) => code === key);
+    const nameWithoutCommas = removeCommas(name);
+
+    return omitTypename(
+      defaultTo(
+        {
+          code: key,
+          name: nameWithoutCommas,
+          shortName: nameWithoutCommas,
+          units: '',
+        },
+        attribute,
+      ),
+    ) as AttributeInput;
+  });
+}
+
 export function packTableData(
   data: GridCollection,
-  template: ProjectStructureInput,
+  tableTemplate: ProjectStructureInput,
 ): ProjectStructureInput {
   const domainEntitiesColumns = getColumnsByType(
     data.columns,
@@ -40,67 +154,15 @@ export function packTableData(
 
   const riskColumns = getColumnsByType(data.columns, TableEntities.RISK);
 
-  const risks: Risk[] = riskColumns.map(({ key, name }) => ({
-    code: key,
-    name,
-  }));
-
-  const rows = data.rows.filter(
-    (row) =>
-      domainEntitiesColumns.some(({ key }) => row[key]) ||
-      riskColumns.some(({ key }) => row[key]) ||
-      calculationParametersColumns.some(({ key }) => row[key]),
-  );
-
-  const domainObjects = rows.map((row) => ({
-    visible: true,
-    domainObjectPath: domainEntitiesColumns.map(({ key }) =>
-      String(row[key]?.value || ''),
-    ),
-    risksValues: riskColumns.map(({ key }) => {
-      return !isEmpty(row[key]?.value) ? toNumber(row[key]?.value) : null;
-    }),
-    geoObjectCategory: getGeoObjectCategoryParamsFromOption(
-      row[SpecialColumns.GEO_CATEGORY]?.value as OptionEntity,
-    ),
-    attributeValues: calculationParametersColumns.map(
-      ({ key }) => row[key]?.args as Maybe<Distribution>,
-    ),
-  }));
-
-  const domainEntities = domainEntitiesColumns.map(({ name, key }) => ({
-    name,
-    icon: RbDomainEntityIcons.FormationIcon,
-    code: key,
-    visible: {
-      tree: true,
-      table: true,
-      calc: true,
-    },
-  }));
-
-  const removeCommas = (str: string) =>
-    str.split(',').filter(Boolean).join(',');
-
-  const calculationParameters = calculationParametersColumns.map(
-    ({ key, name }) => {
-      const el = template.attributes.find(({ code }) => code === key);
-      const nameWithoutCommas = removeCommas(name);
-      return defaultTo(el, {
-        code: key,
-        name: nameWithoutCommas,
-        shortName: nameWithoutCommas,
-        units: '',
-      }) as CalculationParam;
-    },
-  );
-
   return {
-    domainEntities,
-    attributes: calculationParameters.map(
-      ({ __typename, ...params }) => params,
-    ),
-    risks,
-    domainObjects,
+    attributes: assembleAttributes(calculationParametersColumns, tableTemplate),
+    domainEntities: assembleDomainEntities(domainEntitiesColumns),
+    domainObjects: assembleDomainObjects({
+      rows: data.rows,
+      risks: riskColumns,
+      calculationParams: calculationParametersColumns,
+      domainEntities: domainEntitiesColumns,
+    }),
+    risks: assembleRisks(riskColumns),
   };
 }

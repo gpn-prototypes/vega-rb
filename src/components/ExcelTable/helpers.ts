@@ -1,5 +1,5 @@
 import { ReactText } from 'react';
-import { set } from 'lodash';
+import { set } from 'lodash/fp';
 
 import { GridColumn, TableEntities } from './types';
 
@@ -13,7 +13,7 @@ export function setColumnAttributes(
   propertyValue: ReactText | boolean,
 ): void {
   const attributePath = [idx, propertyName];
-  const nextColumns = set([...columns], attributePath, propertyValue);
+  const nextColumns = set(attributePath, propertyValue, [...columns]);
   setColumns(nextColumns);
 }
 

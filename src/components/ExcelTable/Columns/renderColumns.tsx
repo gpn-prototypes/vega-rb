@@ -1,7 +1,7 @@
 import React from 'react';
 import { HeaderRendererProps } from 'react-data-grid';
 import { getHeaderComponent } from 'components/ExcelTable/Header';
-import { curry } from 'lodash';
+import { curry } from 'lodash/fp';
 
 import { columnsReorder, onBlurCell, setColumnAttributes } from '../helpers';
 import { GridColumn, GridRow } from '../types';

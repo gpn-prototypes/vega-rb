@@ -55,7 +55,7 @@ union CapexOrError = Capex | Error
 
 union DiffOrError = Error | UpdateProjectDiff
 
-union DistributionChartResult = CommonErrors | DistributionChart | DistributionDefinitionErrors
+union DistributionChartResult = CommonErrors | DiscreteDistributionChart | DistributionChart | DistributionDefinitionErrors
 
 union LicensingRound_Union = LicensingRound_A_Type
 
@@ -187,6 +187,12 @@ type Attribute {
   shortName: String!
   "Единицы измерения подсчётного параметра"
   units: String!
+}
+
+type AttributeValue {
+  distribution: Distribution!
+  "Отображаемый в ячейке 50-й процентиль (P50)"
+  visibleValue: Float!
 }
 
 type AverageAnnualPriceType {
@@ -550,6 +556,12 @@ type DetailError implements RBErrorInterface {
   message: String!
 }
 
+"Результаты вычисления заданного дискретного распределения."
+type DiscreteDistributionChart {
+  "График функции вероятности распределения"
+  pmf: [Point!]!
+}
+
 "Параметры распределения."
 type Distribution {
   "Способ задания распределения"
@@ -560,7 +572,7 @@ type Distribution {
   type: DistributionTypes!
 }
 
-"Результаты вычисления заданного распределения."
+"Результаты вычисления заданного непрерывного распределения."
 type DistributionChart {
   "График функции плотности распределения"
   pdf: [Point!]!
@@ -638,8 +650,10 @@ type DomainMutations {
 }
 
 type DomainObject {
+  "Значение GCoS геологического объекта"
+  GCoS: Float
   "Список значений атрибутов геологического объекта"
-  attributeValues: [Distribution]!
+  attributeValues: [AttributeValue]!
   "Иерархия геологического объекта в структуре проекта"
   domainObjectPath: [String!]!
   "Категория геологического объекта"
@@ -1008,7 +1022,7 @@ type OpexYearValue {
   year: Int
 }
 
-"Точка на графике."
+"Процентиль распределения."
 type Percentile {
   point: Point!
   "Процентильный ранг (1-99)"
@@ -1553,6 +1567,8 @@ enum DistributionDefinitionTypes {
   MODE_MIN_MAX
   "Через наиболее вероятное и два процентиля"
   MODE_TWO_PERCENTILES
+  "Вероятность успеха"
+  PROBABILITY
   "Через три процентиля"
   THREE_PERCENTILES
   "Через два процентиля"
@@ -1589,6 +1605,8 @@ enum DistributionParameterTypes {
   MIN
   "Наиболее вероятное"
   MODE
+  "Вероятность"
+  PROBABILITY
   "Первый квантильный ранг"
   Q1_RANK
   "Значение первого квантиля"
@@ -1611,6 +1629,8 @@ enum DistributionParameterTypes {
 
 "Типы распределений."
 enum DistributionTypes {
+  "Распределение Бернулли"
+  BERNOULLI
   "Бета распределение"
   BETA
   "Константа"
@@ -1743,6 +1763,10 @@ enum RBErrorCodes {
   IDENTICAL_ROW_IN_TABLE_DATA
   "Версия импортируемого файла не соответствует версии шаблона структуры"
   INCORRECT_FILE_VERSION
+  "Некорректный порядок рангов процентилей"
+  INCORRECT_ORDER_OF_PERCENTILE_RANKS
+  "Некорректный порядок значений процентилей"
+  INCORRECT_ORDER_OF_PERCENTILE_VALUES
   "Некорректное значение параметра для этого способа задания"
   INCORRECT_PARAMETER_VALUE_FOR_DEFINITION
   "Ошибка в загружаемой структуре"
@@ -1751,12 +1775,8 @@ enum RBErrorCodes {
   INVALID_CONCEPTIONS_PROBABILITIES_SUM
   "Вероятность может иметь значение в пределах 0.0 < p <= 1.0"
   INVALID_PROBABILITY_VALUE
-  "Квантили должны убывать"
-  QUANTILES_MUST_BE_DESCENDING
   "Квантиль должен быть больше расположения"
   QUANTILE_MUST_BE_MORE_THAN_LOCATION
-  "Квантильные ранги должны возрастать"
-  QUANTILE_RANKS_MUST_BE_ASCENDING
   "Параметр version не найден."
   VERSION_PARAM_NOT_FOUND
 }
@@ -1783,6 +1803,10 @@ input AttributeInput {
   shortName: String!
   "Единицы измерения подсчётного параметра"
   units: String!
+}
+
+input AttributeValueInput {
+  distribution: DistributionInput!
 }
 
 "Значение цены относительно года."
@@ -1835,7 +1859,7 @@ input DistributionParameterInput {
 
 input DomainObjectInput {
   "Список значений атрибутов геологического объекта"
-  attributeValues: [DistributionInput]!
+  attributeValues: [AttributeValueInput]!
   "Иерархия геологического объекта в структуре проекта"
   domainObjectPath: [String!]!
   "Категория геологического объекта"

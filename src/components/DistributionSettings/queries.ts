@@ -21,6 +21,13 @@ export const GET_DISTRIBUTION_VALUE = gql`
                 y
               }
             }
+            visiblePercentile {
+              rank
+              point {
+                x
+                y
+              }
+            }
           }
           ... on DistributionDefinitionErrors {
             errors {

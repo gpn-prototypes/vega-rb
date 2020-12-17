@@ -1,7 +1,10 @@
 const localePrettierConfig = require('./.prettierrc.js');
 
 module.exports = {
-  extends: [require.resolve('@gpn-prototypes/frontend-configs/.eslintrc')],
+  extends: [
+    require.resolve('@gpn-prototypes/frontend-configs/.eslintrc'),
+    'plugin:lodash-fp/recommended',
+  ],
   rules: {
     'comma-dangle': 'off',
     'simple-import-sort/sort': 'warn',
@@ -20,6 +23,7 @@ module.exports = {
         'react/require-default-props': 'off',
         'no-unused-vars': 'off',
         'no-underscore-dangle': 'off',
+        'lodash-fp/no-extraneous-function-wrapping': 'off',
       },
       settings: {
         'import/resolver': {

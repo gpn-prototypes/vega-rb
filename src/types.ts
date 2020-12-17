@@ -39,7 +39,7 @@ export interface ProjectStructure {
   domainEntities: GeoCategory[];
   calculationParameters: CalculationParam[];
   risks: Risk[];
-  domainObjects?: DomainObject[];
+  domainObjects: DomainObject[];
 }
 
 export type TableStructures = GeoCategory | CalculationParam | Risk;

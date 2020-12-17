@@ -1,15 +1,21 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import { FetchPolicy } from '@apollo/client/core/watchQueryOptions';
 import { GET_DISTRIBUTION_VALUE } from 'components/DistributionSettings/queries';
 import { GridCollection } from 'components/ExcelTable/types';
 import {
-  Distribution,
+  CalculatedOrError,
   DistributionDefinitionError,
+  DistributionInput,
   DistributionParameter,
+  Mutation,
   Percentile,
   ProjectStructure,
   ProjectStructureInput,
   Query,
+  RbProject,
 } from 'generated/graphql';
+import { getOr } from 'lodash/fp';
+import { Just, None } from 'monet';
 import {
   GET_PROJECT_NAME,
   GET_TABLE_TEMPLATE,
@@ -38,31 +44,32 @@ type ProjectServiceProps = {
 class ProjectService {
   private _client: ApolloClient<NormalizedCacheObject> | undefined;
 
-  get client() {
-    return this._client as ApolloClient<NormalizedCacheObject>;
-  }
+  private _fetchPolicy: FetchPolicy = 'no-cache';
+
+  private _identity: Identity | undefined;
 
   private _projectId = '';
 
-  get projectId() {
-    return this._projectId;
+  get client() {
+    return this._client as ApolloClient<NormalizedCacheObject>;
   }
-
-  private _identity: Identity | undefined;
 
   get identity() {
     return this._identity as Identity;
   }
 
+  get projectId() {
+    return this._projectId;
+  }
+
   static getDistributionValue({
     distributionChart,
   }: DistributionResponse): number | null {
-    if (distributionChart) {
-      return distributionChart.percentiles?.find(
+    return Just(
+      distributionChart?.percentiles?.find(
         (percentile: Percentile) => percentile.rank === 50,
-      )?.point.x as number;
-    }
-    return null;
+      )?.point.x as number,
+    ).orNull();
   }
 
   init({ client, projectId, identity }: ProjectServiceProps) {
@@ -103,12 +110,21 @@ class ProjectService {
         context: {
           uri: getGraphqlUri(this.projectId),
         },
-        fetchPolicy: 'no-cache',
+        fetchPolicy: this._fetchPolicy,
       })
-      .then(
-        ({ data }) =>
-          data.resourceBase?.project?.template?.conceptions[0].structure ||
-          ({} as ProjectStructure),
+      .then<ProjectStructure>(({ data }) =>
+        getOr(
+          None<ProjectStructure>(),
+          [
+            'resourceBase',
+            'project',
+            'template',
+            'conceptions',
+            0,
+            'structure',
+          ],
+          data,
+        ),
       );
   }
 
@@ -127,7 +143,7 @@ class ProjectService {
     conceptionStructure: ProjectStructureInput,
   ) {
     return this.client
-      .mutate({
+      .mutate<Mutation>({
         mutation: CALCULATION_PROJECT,
         context: {
           uri: getGraphqlUri(this.projectId),
@@ -142,7 +158,13 @@ class ProjectService {
           }),
         },
       })
-      .then(({ data }) => data.resourceBase.calculateProject);
+      .then(({ data }) =>
+        getOr(
+          None<CalculatedOrError>(),
+          ['resourceBase', 'calculateProject'],
+          data,
+        ),
+      );
   }
 
   getProjectName() {
@@ -164,7 +186,7 @@ class ProjectService {
         variables: {
           vid: this.projectId,
         },
-        fetchPolicy: 'no-cache',
+        fetchPolicy: this._fetchPolicy,
       })
       .then(({ data }) => data.project.version);
   }
@@ -183,28 +205,34 @@ class ProjectService {
 
   getResourceBaseData() {
     return this.client
-      .query({
+      .query<Query>({
         query: LOAD_PROJECT,
         context: {
           uri: getGraphqlUri(this.projectId),
         },
-        fetchPolicy: 'no-cache',
+        fetchPolicy: this._fetchPolicy,
       })
-      .then(({ data }) => data.resourceBase.project.loadFromDatabase);
+      .then(({ data }) => {
+        return getOr(
+          None<RbProject>(),
+          ['resourceBase', 'project', 'loadFromDatabase'],
+          data,
+        );
+      });
   }
 
   getDistribution({
     type,
     definition,
     parameters,
-  }: Distribution): Promise<DistributionResponse> {
+  }: DistributionInput): Promise<DistributionResponse> {
     return this.client
       .query({
         query: GET_DISTRIBUTION_VALUE,
         context: {
           uri: getGraphqlUri(this.projectId),
         },
-        fetchPolicy: 'no-cache',
+        fetchPolicy: this._fetchPolicy,
         variables: {
           distribution: {
             parameters: (parameters as DistributionParameter[]).map(
@@ -230,25 +258,6 @@ class ProjectService {
           errors: [error.message] as DistributionDefinitionError[],
         };
       });
-  }
-
-  getDistributionValues(structure: ProjectStructure) {
-    return Promise.all(
-      structure.domainObjects.map(({ attributeValues }) =>
-        Promise.all(
-          structure.attributes
-            .map((_, colIdx) => attributeValues[colIdx])
-            .map((distributionAttributes) => {
-              if (distributionAttributes) {
-                return this.getDistribution(distributionAttributes).then(
-                  ProjectService.getDistributionValue,
-                );
-              }
-              return distributionAttributes;
-            }),
-        ),
-      ),
-    );
   }
 }
 

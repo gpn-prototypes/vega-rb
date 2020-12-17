@@ -1,5 +1,6 @@
 import React from 'react';
-import { defaultTo, eq, isFinite, round, toNumber } from 'lodash';
+import { defaultTo, eq, isFinite, toNumber } from 'lodash/fp';
+import { roundTo } from 'utils';
 
 import { FormatterProps, GridRow } from '../types';
 
@@ -7,10 +8,10 @@ export default React.memo<FormatterProps<GridRow>>(function NumberFormatter({
   row,
   column,
 }) {
-  const value = defaultTo(row[column.key]?.value, '');
+  const value = defaultTo('', row[column.key]?.value);
   const result =
     !eq(value, '') && isFinite(toNumber(value))
-      ? round(toNumber(value), 3)
+      ? roundTo(3, toNumber(value))
       : value;
   return <>{result}</>;
 });

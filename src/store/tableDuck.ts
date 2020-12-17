@@ -7,8 +7,9 @@ import {
 import { unset } from 'lodash/fp';
 import { ofAction } from 'operators/ofAction';
 import { Epic } from 'redux-observable';
-import { forkJoin, from, of } from 'rxjs';
+import { forkJoin, from, of, throwError } from 'rxjs';
 import {
+  catchError,
   distinctUntilChanged,
   ignoreElements,
   mergeMap,
@@ -123,15 +124,23 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
     ),
     distinctUntilChanged(),
     mergeMap((_) => of(projectService)),
-    switchMap((service) =>
-      forkJoin([
-        of(service),
-        from(service.getTableTemplate()),
-        from(service.getProjectVersion()),
-      ]),
-    ),
-    switchMap(([service, structure, version]) =>
-      from(service.saveProject(state$.value.table, structure, version)),
+    mergeMap((service) =>
+      forkJoin({
+        structure: from(service.getTableTemplate()),
+        version: from(service.getProjectVersion()),
+      }).pipe(
+        switchMap(({ structure, version }) =>
+          from(
+            service.saveProject(state$.value.table, structure, version),
+          ).pipe(catchError((err) => throwError(err))),
+        ),
+        catchError((err) => {
+          // TODO: добавить обработчик для информирования пользователя сообщением
+          // eslint-disable-next-line no-console
+          console.trace('Critical exception at send request to server', err);
+          return of({});
+        }),
+      ),
     ),
     ignoreElements(),
   );

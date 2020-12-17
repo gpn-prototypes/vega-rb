@@ -31,7 +31,7 @@ export const GET_VERSION = gql`
 `;
 
 export const LOAD_PROJECT = gql`
-  query loadFromDataBase {
+  {
     resourceBase {
       project {
         loadFromDatabase {
@@ -46,12 +46,15 @@ export const LOAD_PROJECT = gql`
                 geoObjectCategory
                 risksValues
                 attributeValues {
-                  type
-                  definition
-                  parameters {
+                  distribution {
                     type
-                    value
+                    definition
+                    parameters {
+                      type
+                      value
+                    }
                   }
+                  visibleValue
                 }
               }
               domainEntities {

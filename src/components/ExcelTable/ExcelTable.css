@@ -1,6 +1,8 @@
 @import url('./react-data-grid.css');
 
 .ExcelTable {
+  height: 100%;
+
   &__Header {
     padding: 0;
 
