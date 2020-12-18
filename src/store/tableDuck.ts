@@ -6,7 +6,7 @@ import {
 } from 'components/ExcelTable/types';
 import { ofAction } from 'operators/ofAction';
 import { Epic } from 'redux-observable';
-import { forkJoin, from, of, throwError } from 'rxjs';
+import { from, of, throwError } from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
@@ -113,16 +113,12 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
       actions.updateColumnsByType,
     ),
     distinctUntilChanged(),
-    mergeMap((_) => of(projectService)),
-    mergeMap((service) =>
-      forkJoin({
-        structure: from(service.getTableTemplate()),
-        version: from(service.getProjectVersion()),
-      }).pipe(
-        switchMap(({ structure, version }) =>
-          from(
-            service.saveProject(state$.value.table, structure, version),
-          ).pipe(catchError((err) => throwError(err))),
+    mergeMap(() =>
+      from(projectService.getTableTemplate()).pipe(
+        switchMap((structure) =>
+          from(projectService.saveProject(state$.value.table, structure)).pipe(
+            catchError((err) => throwError(err)),
+          ),
         ),
         catchError((err) => {
           // TODO: добавить обработчик для информирования пользователя сообщением

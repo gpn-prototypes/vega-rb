@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const GET_PROJECT_NAME = gql`
-  query($vid: UUID) {
+  query ProjectName($vid: UUID) {
     project(vid: $vid) {
       __typename
       ... on Project {
@@ -16,7 +16,7 @@ export const GET_PROJECT_NAME = gql`
 `;
 
 export const GET_VERSION = gql`
-  query($vid: UUID) {
+  query ProjectVersion($vid: UUID) {
     project(vid: $vid) {
       __typename
       ... on Project {
@@ -30,43 +30,41 @@ export const GET_VERSION = gql`
   }
 `;
 
-export const LOAD_PROJECT = gql`
-  {
-    resourceBase {
-      project {
-        loadFromDatabase {
-          version
-          conceptions {
-            name
-            probability
-            description
-            structure {
-              domainObjects {
-                domainObjectPath {
-                  code
-                  value
-                }
-                geoObjectCategory
-                risksValues {
-                  code
-                  value
-                }
-                attributeValues {
-                  distribution {
+export const ResourceBaseFragment = gql`
+  fragment ResourceBaseFragment on ResourceBaseQueries {
+    project {
+      loadFromDatabase {
+        version
+        conceptions {
+          name
+          probability
+          description
+          structure {
+            domainObjects {
+              domainObjectPath {
+                code
+                value
+              }
+              geoObjectCategory
+              risksValues {
+                code
+                value
+              }
+              attributeValues {
+                distribution {
+                  type
+                  definition
+                  parameters {
                     type
-                    definition
-                    parameters {
-                      type
-                      value
-                    }
-                    minBound
-                    maxBound
+                    value
                   }
-                  code
-                  visibleValue {
-                    ... on VisibleValue {
-                      value
-                    }
+                  minBound
+                  maxBound
+                }
+                code
+                visibleValue {
+                  ... on VisibleValue {
+                    value
                   }
                 }
               }
@@ -98,30 +96,63 @@ export const LOAD_PROJECT = gql`
   }
 `;
 
+export const LOAD_PROJECT = gql`
+  ${ResourceBaseFragment}
+  query ProjectResourceBase {
+    project {
+      resourceBase {
+        ...ResourceBaseFragment
+      }
+    }
+  }
+`;
+
 export const SAVE_PROJECT = gql`
+  ${ResourceBaseFragment}
+
   mutation SaveProject($projectInput: RBProjectInput!, $version: Int!) {
-    resourceBase {
-      saveProject(projectInput: $projectInput, version: $version) {
-        ... on TableErrors {
-          errors {
-            code
-            message
-            tableName
-            columnKey
-            row
+    project(version: $version) {
+      ... on UpdateProjectInnerDiff {
+        localProject {
+          vid
+          version
+          resourceBase {
+            ...ResourceBaseFragment
           }
         }
-        ... on DistributionDefinitionErrors {
-          errors {
-            code
-            message
-            fields
+        remoteProject {
+          vid
+          version
+          resourceBase {
+            ...ResourceBaseFragment
           }
         }
-        ... on Error {
-          code
-          details
-          payload
+      }
+      ... on ProjectMutation {
+        resourceBase {
+          saveProject(projectInput: $projectInput, version: $version) {
+            ... on TableErrors {
+              errors {
+                code
+                message
+                tableName
+                columnKey
+                row
+              }
+            }
+            ... on DistributionDefinitionErrors {
+              errors {
+                code
+                message
+                fields
+              }
+            }
+            ... on Error {
+              code
+              details
+              payload
+            }
+          }
         }
       }
     }
@@ -130,36 +161,40 @@ export const SAVE_PROJECT = gql`
 
 export const GET_TABLE_TEMPLATE = gql`
   query GetTemplate {
-    resourceBase {
-      project {
-        template {
-          version
-          conceptions {
-            name
-            description
-            probability
-            structure {
-              domainEntities {
-                name
-                code
-                visible {
-                  calc
-                  tree
-                  table
+    project {
+      vid
+      version
+      resourceBase {
+        project {
+          template {
+            version
+            conceptions {
+              name
+              description
+              probability
+              structure {
+                domainEntities {
+                  name
+                  code
+                  visible {
+                    calc
+                    tree
+                    table
+                  }
+                  __typename
                 }
-                __typename
-              }
-              attributes {
-                __typename
-                code
-                name
-                shortName
-                units
-              }
-              risks {
-                __typename
-                code
-                name
+                attributes {
+                  __typename
+                  code
+                  name
+                  shortName
+                  units
+                }
+                risks {
+                  __typename
+                  code
+                  name
+                }
               }
             }
           }

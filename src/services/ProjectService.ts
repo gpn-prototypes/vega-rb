@@ -1,4 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import {
+  ApolloClient,
+  FetchResult,
+  NormalizedCacheObject,
+} from '@apollo/client';
 import { FetchPolicy } from '@apollo/client/core/watchQueryOptions';
 import { GET_RECENTLY_EDITED } from 'components/CompetitiveAccess/queries';
 import { GET_DISTRIBUTION_VALUE } from 'components/DistributionSettings/queries';
@@ -11,7 +15,7 @@ import {
   Mutation,
   ProjectStructure,
   ProjectStructureInput,
-  Query,
+  Query as LegacyQuery,
   RbProject,
 } from 'generated/graphql';
 import { getOr } from 'lodash/fp';
@@ -39,6 +43,18 @@ type ProjectServiceProps = {
   identity?: Identity;
 };
 
+// TODO: заменить на тип из схемы
+type ProjectInner = LegacyQuery & {
+  vid: string;
+  version: number;
+};
+
+// TODO: удалить после обновлении схемы на фронте
+type Query = {
+  project: ProjectInner;
+};
+
+type Data = FetchResult['data'];
 class ProjectService {
   private _client: ApolloClient<NormalizedCacheObject> | undefined;
 
@@ -47,6 +63,8 @@ class ProjectService {
   private _identity: Identity | undefined;
 
   private _projectId = '';
+
+  private _version = 1;
 
   get client() {
     return this._client as ApolloClient<NormalizedCacheObject>;
@@ -74,11 +92,37 @@ class ProjectService {
     this._identity = identity;
   }
 
-  saveProject(
-    table: GridCollection,
-    structure: ProjectStructureInput,
-    version: string,
-  ) {
+  setVersion(version: number): void {
+    this._version = version;
+  }
+
+  private static warnAboutMissingFields(project: Partial<ProjectInner>): void {
+    if (typeof project.version !== 'number') {
+      // eslint-disable-next-line no-console
+      console.warn('Missing project version');
+    }
+
+    if (typeof project.vid !== 'string') {
+      // eslint-disable-next-line no-console
+      console.warn('Missing project vid');
+    }
+  }
+
+  static isProject(data: Data): data is Partial<ProjectInner> {
+    return data?.__typename === 'ProjectInner';
+  }
+
+  private tryUpdateProjectVersion(data: Query) {
+    if (ProjectService.isProject(data.project)) {
+      ProjectService.warnAboutMissingFields(data.project);
+
+      if (typeof data.project.version === 'number') {
+        this.setVersion(data.project.version);
+      }
+    }
+  }
+
+  saveProject(table: GridCollection, structure: ProjectStructureInput) {
     return this.client.mutate({
       mutation: SAVE_PROJECT,
       context: {
@@ -91,7 +135,7 @@ class ProjectService {
           probability: 1,
           structure: packTableData(table, structure),
         }),
-        version,
+        version: this._version,
       },
     });
   }
@@ -112,6 +156,7 @@ class ProjectService {
         getOr(
           None<ProjectStructure>(),
           [
+            'project',
             'resourceBase',
             'project',
             'template',
@@ -166,7 +211,7 @@ class ProjectService {
       .then(({ data }) =>
         getOr(
           None<CalculatedOrError>(),
-          ['resourceBase', 'calculateProject'],
+          ['project', 'resourceBase', 'calculateProject'],
           data,
         ),
       );
@@ -218,9 +263,11 @@ class ProjectService {
         fetchPolicy: this._fetchPolicy,
       })
       .then(({ data }) => {
+        this.tryUpdateProjectVersion(data);
+
         return getOr(
           None<RbProject>(),
-          ['resourceBase', 'project', 'loadFromDatabase'],
+          ['project', 'resourceBase', 'project', 'loadFromDatabase'],
           data,
         );
       });

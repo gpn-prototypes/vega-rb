@@ -2,37 +2,32 @@ import { gql } from '@apollo/client';
 
 export const GET_DISTRIBUTION_VALUE = gql`
   query distributionValue($distribution: DistributionInput!) {
-    resourceBase {
-      distribution {
-        distributionChart(distribution: $distribution) {
-          ... on DistributionChart {
-            visiblePercentile {
-              rank
-              point {
+    project {
+      resourceBase {
+        distribution {
+          distributionChart(distribution: $distribution) {
+            ... on DistributionChart {
+              pdf {
                 x
                 y
               }
-            }
-            pdf {
-              x
-              y
-            }
-            sf {
-              x
-              y
-            }
-            percentiles {
-              rank
-              point {
+              sf {
                 x
                 y
               }
-            }
-            visiblePercentile {
-              rank
-              point {
-                x
-                y
+              percentiles {
+                rank
+                point {
+                  x
+                  y
+                }
+              }
+              visiblePercentile {
+                rank
+                point {
+                  x
+                  y
+                }
               }
             }
           }
