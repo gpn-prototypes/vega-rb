@@ -561,6 +561,8 @@ export type DiscreteDistributionChart = {
   __typename?: 'DiscreteDistributionChart';
   /** График функции вероятности распределения */
   pmf: Array<Point>;
+  /** Отображаемый в ячейке процентиль */
+  visiblePercentile: Percentile;
 };
 
 /** Список ошибок. */

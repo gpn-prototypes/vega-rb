@@ -1,11 +1,8 @@
-import {
-  CommonError,
-  DistributionChart,
-  DistributionDefinitionError,
-} from 'generated/graphql';
+import { DistributionChartData } from 'components/DistributionSettings/types';
+import { CommonError, DistributionDefinitionError } from 'generated/graphql';
 
 export interface DistributionResponse {
-  distributionChart?: DistributionChart;
+  distributionChart?: DistributionChartData;
   errors?: DistributionDefinitionError[];
 }
 
