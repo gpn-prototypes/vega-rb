@@ -42,5 +42,6 @@
   overflow-y: auto;
 
   max-width: 400px;
-  height: 100vh;
+  height: 100%;
+  max-height: calc(100vh - 100px);
 }
