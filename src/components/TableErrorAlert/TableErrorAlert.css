@@ -1,0 +1,11 @@
+.TableErrorAlert {
+  position: absolute;
+  z-index: 2;
+  bottom: var(--space-s);
+  left: 0;
+  right: 0;
+  margin: auto;
+
+  width: 400px;
+  height: 100px;
+}

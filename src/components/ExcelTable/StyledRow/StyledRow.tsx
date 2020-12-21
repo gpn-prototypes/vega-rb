@@ -34,6 +34,7 @@ export default React.memo<RowRendererProps<GridRow>>(function StyledRow(props) {
     [props.rowIdx],
   );
   const error = getError(errors);
+
   return withContextMenu(
     <Row
       {...props}

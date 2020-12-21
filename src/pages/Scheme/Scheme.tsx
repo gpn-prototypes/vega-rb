@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ApolloClient,
@@ -19,6 +19,7 @@ import {
 } from 'components/ExcelTable/types';
 import { HierarchyLevelList } from 'components/HierarchyLevelList';
 import { ProjectContext } from 'components/Providers';
+import { TableErrorAlert } from 'components/TableErrorAlert/TableErrorAlert';
 import TreeEditor from 'pages/Scheme/components/TreeEditor';
 import projectService from 'services/ProjectService';
 import projectDuck from 'store/projectDuck';
@@ -50,6 +51,10 @@ const SchemePage: React.FC = () => {
   };
 
   const data = useSelector(({ table }: RootState) => table);
+  const hasTableRowErrors = useMemo(
+    () => Object.keys(data.errors).some((key) => key.match('row')),
+    [data.errors],
+  );
   const isRecentlyEdited = useSelector(
     ({ competitiveAccess }: RootState) => competitiveAccess.isRecentlyEdited,
   );
@@ -149,6 +154,7 @@ const SchemePage: React.FC = () => {
       />
 
       {isRecentlyEdited && <RecentlyEditedAlert />}
+      {hasTableRowErrors && <TableErrorAlert isShow={hasTableRowErrors} />}
     </div>
   );
 };

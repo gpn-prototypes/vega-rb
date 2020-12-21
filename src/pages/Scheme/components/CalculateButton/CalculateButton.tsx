@@ -26,6 +26,7 @@ export const CalculateButton: React.FC = () => {
               a.click();
               window.URL.revokeObjectURL(url);
             });
+            dispatch(tableDuck.actions.updateErrors({}));
           } else if (errors?.length) {
             dispatch(tableDuck.actions.updateErrors(assembleErrors(errors)));
           }

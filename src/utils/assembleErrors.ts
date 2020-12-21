@@ -8,8 +8,8 @@ export function assembleErrors(errors: TableError[]): ColumnErrors {
   return errors.reduce((previousValue, currentValue) => {
     const { columnKey, row: rowId } = currentValue;
 
-    if (!columnKey && !isEmpty(rowId)) {
-      return set(`row-${rowId}`, currentValue, previousValue);
+    if (isEmpty(columnKey) && !isEmpty(rowId)) {
+      return set(`row-${rowId!}`, currentValue, previousValue);
     }
 
     if (columnKey && !isEmpty(rowId)) {
