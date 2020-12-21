@@ -89,7 +89,7 @@ class ProjectService {
         projectInput: getMockConceptions({
           name: 'conception_1',
           description: '',
-          probability: 0.6,
+          probability: 1,
           structure: packTableData(table, structure),
         }),
         version,

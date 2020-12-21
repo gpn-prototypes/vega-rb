@@ -16,6 +16,7 @@ import {
   RbDomainEntityIcons,
   RbDomainEntityInput,
   RiskInput,
+  VisibleInput,
 } from 'generated/graphql';
 import { defaultTo, isEmpty, omitAll, toNumber } from 'lodash/fp';
 import { SpecialColumns } from 'model/Table';
@@ -25,7 +26,7 @@ import { getColumnsByType } from './getColumnsByType';
 
 const removeCommas = (str: string) => str.split(',').filter(Boolean).join(',');
 
-const omitTypename = omitAll('__typename');
+export const omitTypename = omitAll('__typename');
 
 function getGeoObjectCategoryParamsFromOption(option?: OptionEntity) {
   if (option) {
@@ -104,15 +105,11 @@ function assembleRisks(columns: GridColumn[]): Array<RiskInput> {
 function assembleDomainEntities(
   columns: GridColumn[],
 ): Array<RbDomainEntityInput> {
-  return columns.map(({ name, key }) => ({
+  return columns.map(({ name, key, visible }) => ({
     name,
     icon: RbDomainEntityIcons.FormationIcon,
     code: key,
-    visible: {
-      tree: true,
-      table: true,
-      calc: true,
-    },
+    visible: visible as VisibleInput,
   }));
 }
 
