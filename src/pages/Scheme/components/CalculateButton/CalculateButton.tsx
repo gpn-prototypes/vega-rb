@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@gpn-prototypes/vega-ui';
 import projectService from 'services/ProjectService';
@@ -7,14 +7,19 @@ import { RootState } from 'store/types';
 import { assembleErrors } from 'utils';
 
 export const CalculateButton: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const tableData = useSelector((state: RootState) => state.table);
 
   const handleClick = () => {
-    projectService.getTableTemplate().then((templateStructure) =>
-      projectService
+    projectService.getTableTemplate().then((templateStructure) => {
+      setIsLoading(true);
+
+      return projectService
         .getCalculationResultFileId(tableData, templateStructure)
         .then(({ resultId, errors }) => {
+          setIsLoading(false);
+
           if (resultId) {
             projectService.getCalculationArchive(resultId).then((blob) => {
               const url = window.URL.createObjectURL(blob);
@@ -31,12 +36,20 @@ export const CalculateButton: React.FC = () => {
             dispatch(tableDuck.actions.updateErrors(assembleErrors(errors)));
           }
         })
-        .catch((e) =>
+        .catch((error) => {
+          setIsLoading(false);
           // eslint-disable-next-line no-console
-          console.error('Something went wrong by calculating...', e),
-        ),
-    );
+          console.error('Something went wrong by calculating...', error);
+        });
+    });
   };
 
-  return <Button label="Рассчитать" view="ghost" onClick={handleClick} />;
+  return (
+    <Button
+      label="Рассчитать"
+      view="ghost"
+      onClick={handleClick}
+      loading={isLoading}
+    />
+  );
 };

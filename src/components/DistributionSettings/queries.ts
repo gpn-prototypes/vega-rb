@@ -6,6 +6,13 @@ export const GET_DISTRIBUTION_VALUE = gql`
       distribution {
         distributionChart(distribution: $distribution) {
           ... on DistributionChart {
+            visiblePercentile {
+              rank
+              point {
+                x
+                y
+              }
+            }
             pdf {
               x
               y
@@ -27,6 +34,19 @@ export const GET_DISTRIBUTION_VALUE = gql`
                 x
                 y
               }
+            }
+          }
+          ... on DiscreteDistributionChart {
+            visiblePercentile {
+              rank
+              point {
+                x
+                y
+              }
+            }
+            pmf {
+              x
+              y
             }
           }
           ... on DistributionDefinitionErrors {

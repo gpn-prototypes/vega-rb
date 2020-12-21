@@ -241,6 +241,23 @@ const distributionParametersMap: DistributionParametersMap = {
       ],
     },
   },
+  [DistributionTypes.Constant]: {
+    types: [
+      {
+        type: DistributionDefinitionTypes.Constant,
+        title: 'Константа',
+      },
+    ],
+    fieldsByType: {
+      [DistributionDefinitionTypes.Constant]: [
+        {
+          key: DistributionParameterTypes.Constant,
+          title: 'Константа',
+          defaultValue: '',
+        },
+      ],
+    },
+  },
 };
 
 export default distributionParametersMap;

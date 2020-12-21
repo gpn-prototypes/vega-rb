@@ -8,7 +8,6 @@ import {
   DistributionInput,
   DistributionParameter,
   Mutation,
-  Percentile,
   ProjectStructure,
   ProjectStructureInput,
   Query,
@@ -66,9 +65,7 @@ class ProjectService {
     distributionChart,
   }: DistributionResponse): number | null {
     return Just(
-      distributionChart?.percentiles?.find(
-        (percentile: Percentile) => percentile.rank === 50,
-      )?.point.x as number,
+      distributionChart?.visiblePercentile.point.x as number,
     ).orNull();
   }
 
@@ -92,7 +89,7 @@ class ProjectService {
         projectInput: getMockConceptions({
           name: 'conception_1',
           description: '',
-          probability: 0.6,
+          probability: 1,
           structure: packTableData(table, structure),
         }),
         version,

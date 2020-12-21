@@ -1,4 +1,5 @@
 import {
+  DistributionChart,
   DistributionDefinitionTypes,
   DistributionParameterInput,
   DistributionParameterTypes,
@@ -11,12 +12,37 @@ import { percentileFieldRankTypes, percentileFieldTypes } from './constants';
 import distributionParametersMap from './data';
 import {
   DefaultField,
+  DistributionChartData,
   DistributionPairsCallback,
   DistributionParameterPercentileRank,
   DistributionSettingsParameters,
   Error,
   PercentileField,
 } from './types';
+
+export const defaultChartValues: DistributionChart = {
+  sf: [],
+  pdf: [],
+  percentiles: [],
+  visiblePercentile: {
+    point: {
+      x: 0,
+      y: 0,
+    },
+    rank: 90,
+  },
+};
+
+export const getDefaultChartDataByType = (
+  distributionChart?: DistributionChartData,
+): DistributionChart => {
+  switch (distributionChart?.__typename) {
+    case 'DistributionChart':
+      return distributionChart;
+    default:
+      return defaultChartValues;
+  }
+};
 
 export const isNumeric = (num?: string | number): boolean =>
   (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) &&

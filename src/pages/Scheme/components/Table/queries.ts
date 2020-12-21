@@ -61,6 +61,11 @@ export const LOAD_PROJECT = gql`
                 name
                 code
                 icon
+                visible {
+                  calc
+                  table
+                  tree
+                }
               }
               risks {
                 code
@@ -124,6 +129,11 @@ export const GET_TABLE_TEMPLATE = gql`
               domainEntities {
                 name
                 code
+                visible {
+                  calc
+                  tree
+                  table
+                }
                 __typename
               }
               attributes {

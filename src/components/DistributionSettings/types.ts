@@ -1,9 +1,14 @@
 import {
+  DiscreteDistributionChart,
+  DistributionChart,
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
 } from 'generated/graphql';
 
+export type DistributionChartData =
+  | DistributionChart
+  | DiscreteDistributionChart;
 export type DistributionParametersMap = {
   [key in DistributionTypes]: DistributionParameters;
 };

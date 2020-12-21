@@ -16,10 +16,13 @@ import {
   ProjectStructureInput,
   RbDomainEntityInput,
   RiskInput,
+  VisibleInput,
 } from 'generated/graphql';
 import { omitAll } from 'lodash/fp';
 import { SpecialColumns } from 'model/Table';
 import { CalculationParam, GeoCategory, Risk, TableStructures } from 'types';
+
+import { omitTypename } from './packTableData';
 
 const getCalculationColumn = (
   prev: GridColumn[],
@@ -35,10 +38,15 @@ const getCalculationColumn = (
 
 const getCategoryColumn = (
   prev: GridColumn[],
-  { code, name }: GeoCategory,
+  { code, name, visible }: GeoCategory,
 ): GridColumn[] => [
   ...prev,
-  new GridColumnEntity(code, name, TableEntities.GEO_CATEGORY),
+  new GridColumnEntity(
+    code,
+    name,
+    TableEntities.GEO_CATEGORY,
+    omitTypename(visible) as VisibleInput,
+  ),
 ];
 
 const getRiskColumn = (

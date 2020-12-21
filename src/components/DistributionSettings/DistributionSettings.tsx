@@ -15,33 +15,22 @@ import { percentileFieldRankTypes } from './constants';
 import DistributionChart from './DistributionChart';
 import DistributionSettingsForm from './DistributionSettingsForm';
 import {
+  defaultChartValues,
+  getDefaultChartDataByType,
   getDistributionFormDataParams,
   mapEntries,
   prepareDistributionParams,
   validateDistributionParams,
 } from './helpers';
 import {
+  DistributionChartData,
   DistributionSettingsFormData,
   DistributionSettingsParameters,
 } from './types';
 
-const defaultChartValues: IDistributionChart = {
-  sf: [],
-  pdf: [],
-  percentiles: [],
-  visiblePercentile: {
-    point: {
-      x: 0,
-      y: 0,
-    },
-    rank: 90,
-  },
-};
-
 type DistributionSettingsData = DistributionSettingsFormData & {
   isValid?: boolean;
 };
-
 interface IProps {
   selectedCell: SelectedCell;
 }
@@ -175,7 +164,7 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
     (
       distributionProps,
       onError?: () => void,
-      onSuccess?: (chartData: IDistributionChart) => void,
+      onSuccess?: (chartData: DistributionChartData) => void,
     ) => {
       if (validateDistributionParams(distributionProps.parameters)) {
         getChart(distributionProps).then(
@@ -184,7 +173,7 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
               setFormState(defaultChartValues, errorsList);
               if (onError) onError();
             } else if (distributionChart) {
-              setFormState(distributionChart, []);
+              setFormState(getDefaultChartDataByType(distributionChart), []);
               if (onSuccess) onSuccess(distributionChart);
             }
           },
@@ -199,7 +188,6 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
 
   const handleChange = (distributionProps: DistributionSettingsFormData) => {
     setFormData(distributionProps);
-
     getChartHandler(
       distributionProps,
       () => updateTable('', distributionProps, selectedCell),
