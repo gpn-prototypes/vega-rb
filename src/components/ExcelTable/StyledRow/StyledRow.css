@@ -11,6 +11,49 @@
   &__Odd {
     background-color: rgb(60, 64, 67);
   }
+
+  &.is-error {
+    position: relative;
+
+    &::before {
+      content: '';
+
+      position: absolute;
+      z-index: 1;
+      top: -1px;
+
+      display: block;
+
+      width: 100%;
+      height: 1px;
+
+      background-color: var(--color-bg-alert);
+    }
+
+    &::after {
+      content: '';
+
+      position: absolute;
+      z-index: 1;
+      bottom: 0;
+
+      display: block;
+
+      width: 100%;
+      height: 1px;
+
+      background-color: var(--color-bg-alert);
+    }
+
+    & > :nth-child(1) {
+      background-color: var(--color-bg-alert);
+      border-right: solid 3px #4e5255;
+    }
+
+    & > :nth-child(2) {
+      border-left: 1px solid var(--color-bg-alert);
+    }
+  }
 }
 
 .StyledRow:hover {
