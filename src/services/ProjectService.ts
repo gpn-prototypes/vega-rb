@@ -195,7 +195,7 @@ class ProjectService {
         variables: {
           vid: this.projectId,
         },
-        fetchPolicy: 'no-cache',
+        fetchPolicy: this._fetchPolicy,
       })
       .then(({ data }) => data.project.recentlyEdited);
   }
