@@ -20,7 +20,7 @@ export function createColumn(props?: Partial<GridColumn>): GridColumn {
     hasIcon: hasIcon(type),
     isRenaming: true,
     visible: {
-      calculation: true,
+      calc: true,
       table: true,
       tree: true,
     },

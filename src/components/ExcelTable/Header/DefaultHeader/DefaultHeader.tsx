@@ -1,24 +1,22 @@
 import React from 'react';
 import classNames from 'classnames';
+import { InputEditor } from 'components/ExcelTable/Editors';
+import { ResourceIcon } from 'components/ExcelTable/Icons';
+import {
+  HeaderRendererProps,
+  TableEntities,
+} from 'components/ExcelTable/types';
 
-import DraggableHeader from '../DraggableHeader';
-import { InputEditor } from '../Editors';
-import { ResourceIcon } from '../Icons';
-import { HeaderRendererProps, TableEntities } from '../types';
+import { DraggableHeader } from '../DraggableHeader';
 
-import styles from '../DraggableHeader/DraggableHeader.module.css';
+import styles from '../Header.module.css';
 
-export default React.memo<HeaderRendererProps>(function Header(props) {
-  const { column, setColumnProps, handleColumnsReorder, onBlurHandler } = props;
+export default React.memo<HeaderRendererProps>(function DefaultHeader(props) {
+  const { column, setColumnProps, handleColumnsReorder } = props;
   const { name, idx: columnIdx, type, headerId } = column;
 
   const editor = (
-    <InputEditor
-      idx={columnIdx}
-      name={name}
-      setColumnProps={setColumnProps}
-      onBlurHandler={onBlurHandler}
-    />
+    <InputEditor idx={columnIdx} name={name} setColumnProps={setColumnProps} />
   );
 
   const beforeContentByType = (
@@ -42,7 +40,7 @@ export default React.memo<HeaderRendererProps>(function Header(props) {
       )}
       onColumnsReorder={handleColumnsReorder}
       onDoubleClick={(): void => {
-        setColumnProps(columnIdx, 'isRenaming', true);
+        setColumnProps(columnIdx, { isRenaming: true });
       }}
       editor={editor}
       beforeContent={beforeContentByType}

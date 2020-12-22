@@ -5,7 +5,7 @@ import {
   HeaderRendererProps,
 } from 'components/ExcelTable/types';
 
-import Header from './Header';
+import { DefaultHeader as Header } from './DefaultHeader';
 
 export const HeaderWithContextMenu = (
   props: HeaderRendererProps,

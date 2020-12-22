@@ -14,7 +14,7 @@ describe('createColumn function', () => {
       hasIcon: false,
       isRenaming: true,
       visible: {
-        calculation: true,
+        calc: true,
         table: true,
         tree: true,
       },
@@ -34,7 +34,7 @@ describe('createColumn function', () => {
       hasIcon: true,
       isRenaming: true,
       visible: {
-        calculation: true,
+        calc: true,
         table: true,
         tree: true,
       },

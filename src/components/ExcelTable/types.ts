@@ -109,12 +109,7 @@ export type UniColumn = CalculatedColumn<GridRow> & GridColumn;
 
 export interface HeaderRendererProps extends BaseHeaderRendererProps<GridRow> {
   column: UniColumn;
-  onBlurHandler: (idx: number) => void;
-  setColumnProps: (
-    columnIdx: number,
-    property: keyof GridColumn,
-    value: ReactText | boolean,
-  ) => void;
+  setColumnProps: SetColumnProperties;
   handleColumnsReorder: (sourceKey: string, targetKey: string) => void;
 }
 
@@ -128,8 +123,11 @@ export type EditorResult =
   | { editor: ComponentType<EditorProps<GridCellProperties | undefined>> }
   | { editor: undefined };
 
-export type SetColumnProperty<T> = (
+export type SetColumnProperties = (
   idx: number,
-  property: keyof T,
-  value: ReactText | boolean,
+  properties: ColumnProperties,
 ) => void;
+
+export type ColumnProperties = Partial<
+  Record<keyof GridColumn, string | number | boolean>
+>;

@@ -1,5 +1,11 @@
+import { DefaultHeader } from './DefaultHeader';
+import { DraggableHeader } from './DraggableHeader';
 import { getHeaderComponent } from './getHeaderComponent';
-import Header from './Header';
 import { HeaderWithContextMenu } from './HeaderWithContextMenu';
 
-export { Header, HeaderWithContextMenu, getHeaderComponent };
+export {
+  DefaultHeader,
+  DraggableHeader,
+  HeaderWithContextMenu,
+  getHeaderComponent,
+};

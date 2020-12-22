@@ -51,10 +51,7 @@ const SchemePage: React.FC = () => {
   };
 
   const data = useSelector(({ table }: RootState) => table);
-  const hasTableRowErrors = useMemo(
-    () => Object.keys(data.errors).some((key) => key.match('row')),
-    [data.errors],
-  );
+
   const isRecentlyEdited = useSelector(
     ({ competitiveAccess }: RootState) => competitiveAccess.isRecentlyEdited,
   );
@@ -154,7 +151,7 @@ const SchemePage: React.FC = () => {
       />
 
       {isRecentlyEdited && <RecentlyEditedAlert />}
-      {hasTableRowErrors && <TableErrorAlert isShow={hasTableRowErrors} />}
+      <TableErrorAlert />
     </div>
   );
 };

@@ -1,3 +1,3 @@
 import { DraggableHeader } from './DraggableHeader';
 
-export default DraggableHeader;
+export { DraggableHeader };
