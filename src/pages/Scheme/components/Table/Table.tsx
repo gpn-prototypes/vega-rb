@@ -65,6 +65,13 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
     });
 
     loadTableData(dispatch).then();
+    // projectService
+    //   .getResourceBaseData()
+    //   .then(() => projectService.getStructure())
+    //   .then((structure) => {
+    //     const data = unpackTableData(structure, projectService.version);
+    //     dispatch(tableDuck.actions.initState(data));
+    //   });
   });
 
   useMount(() => {
