@@ -62,24 +62,13 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
       projectId,
     });
 
-    projectService.getProjectVersion().then((version) =>
-      projectService.getResourceBaseData().then((loadFromDatabase) => {
-        if (loadFromDatabase) {
-          const { structure } = loadFromDatabase.conceptions[0];
-          dispatch(
-            tableDuck.actions.initState(unpackTableData(structure, version)),
-          );
-        } else if (loadFromDatabase === null) {
-          projectService.getTableTemplate().then((structureTemplate) => {
-            dispatch(
-              tableDuck.actions.initState(
-                unpackTableData(structureTemplate, version),
-              ),
-            );
-          });
-        }
-      }),
-    );
+    projectService
+      .getResourceBaseData()
+      .then(() => projectService.getStructure())
+      .then((structure) => {
+        const data = unpackTableData(structure, projectService.version);
+        dispatch(tableDuck.actions.initState(data));
+      });
   });
 
   useUnmount(() => {

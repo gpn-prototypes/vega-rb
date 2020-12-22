@@ -6,6 +6,7 @@ export const GET_PROJECT_NAME = gql`
       __typename
       ... on Project {
         vid
+        version
         name
       }
       ... on Error {
@@ -30,94 +31,105 @@ export const GET_VERSION = gql`
   }
 `;
 
-export const ResourceBaseFragment = gql`
-  fragment ResourceBaseFragment on ResourceBaseQueries {
-    project {
-      loadFromDatabase {
-        version
-        conceptions {
-          name
-          probability
-          description
-          structure {
-            domainObjects {
-              domainObjectPath
-              geoObjectCategory
-              risksValues
-              attributeValues {
-                distribution {
-                  type
-                  definition
-                  parameters {
-                    type
-                    value
-                  }
-                }
-                visibleValue
-              }
-              domainEntities {
-                name
-                code
-                icon
-                visible {
-                  calc
-                  table
-                  tree
-                }
-              }
-              risks {
-                code
-                name
-              }
-              attributes {
-                code
-                name
-                shortName
-                units
+export const ResourceBaseTableFragment = gql`
+  fragment ResourceBaseTableFragment on RBProject {
+    version
+    conceptions {
+      name
+      probability
+      description
+      structure {
+        domainObjects {
+          domainObjectPath
+          geoObjectCategory
+          risksValues
+          attributeValues {
+            distribution {
+              type
+              definition
+              parameters {
+                type
+                value
               }
             }
+            visibleValue
           }
         }
+        domainEntities {
+          __typename
+          name
+          code
+          icon
+          visible {
+            calc
+            table
+            tree
+          }
+        }
+        risks {
+          __typename
+          code
+          name
+        }
+        attributes {
+          __typename
+          code
+          name
+          shortName
+          units
+        }
+      }
+    }
+  }
+`;
+
+export const ResourceBaseProjectFragment = gql`
+  ${ResourceBaseTableFragment}
+
+  fragment ResourceBaseProjectFragment on ProjectInner {
+    vid
+    version
+    resourceBase {
+      project {
+        loadFromDatabase {
+          ...ResourceBaseTableFragment
+        }
+      }
+    }
+  }
+`;
+
+export const ResourceBaseDiffFragment = gql`
+  ${ResourceBaseProjectFragment}
+
+  fragment ResourceBaseDiffFragment on UpdateProjectInnerDiff {
+    remoteProject {
+      ... on ProjectInner {
+        ...ResourceBaseProjectFragment
       }
     }
   }
 `;
 
 export const LOAD_PROJECT = gql`
-  ${ResourceBaseFragment}
   query ProjectResourceBase {
     project {
-      resourceBase {
-        ...ResourceBaseFragment
-      }
+      ...ResourceBaseProjectFragment
     }
   }
+
+  ${ResourceBaseProjectFragment}
 `;
 
 export const SAVE_PROJECT = gql`
-  ${ResourceBaseFragment}
-
   mutation SaveProject($projectInput: RBProjectInput!, $version: Int!) {
     project(version: $version) {
       ... on UpdateProjectInnerDiff {
-        localProject {
-          vid
-          version
-          resourceBase {
-            ...ResourceBaseFragment
-          }
-        }
-        remoteProject {
-          vid
-          version
-          resourceBase {
-            ...ResourceBaseFragment
-          }
-        }
+        ...ResourceBaseDiffFragment
       }
       ... on ProjectMutation {
         resourceBase {
-          saveProject(projectInput: $projectInput, version: $version) {
+          saveProject(projectInput: $projectInput) {
             ... on TableErrors {
               errors {
                 code
@@ -144,6 +156,8 @@ export const SAVE_PROJECT = gql`
       }
     }
   }
+
+  ${ResourceBaseDiffFragment}
 `;
 
 export const GET_TABLE_TEMPLATE = gql`
@@ -154,39 +168,12 @@ export const GET_TABLE_TEMPLATE = gql`
       resourceBase {
         project {
           template {
-            version
-            conceptions {
-              name
-              description
-              probability
-              structure {
-                domainEntities {
-                  name
-                  code
-                  visible {
-                    calc
-                    tree
-                    table
-                  }
-                  __typename
-                }
-                attributes {
-                  __typename
-                  code
-                  name
-                  shortName
-                  units
-                }
-                risks {
-                  __typename
-                  code
-                  name
-                }
-              }
-            }
+            ...ResourceBaseTableFragment
           }
         }
       }
     }
   }
+
+  ${ResourceBaseTableFragment}
 `;

@@ -7,18 +7,14 @@ import {
 import { unset } from 'lodash/fp';
 import { ofAction } from 'operators/ofAction';
 import { Epic } from 'redux-observable';
-import { from, of, throwError } from 'rxjs';
-import {
-  catchError,
-  distinctUntilChanged,
-  ignoreElements,
-  mergeMap,
-  switchMap,
-} from 'rxjs/operators';
+import { EMPTY, from, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import projectService from 'services/ProjectService';
 import { ColumnErrors } from 'types';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
+
+import { unpackTableData } from '../utils';
 
 import { RootState, TypedColumnsList } from './types';
 
@@ -122,23 +118,38 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
       actions.updateCell,
       actions.updateColumnsByType,
     ),
-    distinctUntilChanged(),
-    mergeMap(() =>
-      from(projectService.getTableTemplate()).pipe(
-        switchMap((structure) =>
-          from(projectService.saveProject(state$.value.table, structure)).pipe(
-            catchError((err) => throwError(err)),
-          ),
-        ),
+    switchMap(() =>
+      from(projectService.saveProject(state$.value.table)).pipe(
         catchError((err) => {
           // TODO: добавить обработчик для информирования пользователя сообщением
           // eslint-disable-next-line no-console
-          console.trace('Critical exception at send request to server', err);
+          console.error('Critical exception at save project to server', err);
           return of({});
         }),
+        switchMap(() =>
+          from(projectService.getResourceBaseData()).pipe(
+            catchError((err) => {
+              // TODO: добавить обработчик для информирования пользователя сообщением
+              // eslint-disable-next-line no-console
+              console.error(
+                'Critical exception at fetch project from server',
+                err,
+              );
+
+              return EMPTY;
+            }),
+            map((loadFromDatabase) =>
+              actions.initState(
+                unpackTableData(
+                  loadFromDatabase.conceptions[0].structure,
+                  projectService.version,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     ),
-    ignoreElements(),
   );
 
 export default {
