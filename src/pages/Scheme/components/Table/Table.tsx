@@ -31,7 +31,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   const treeFilterData = useSelector(({ tree }: RootState) => tree.filter);
 
   const filteredData = useMemo(() => {
-    const rowIsFullfiled = (row: GridRow): boolean => {
+    const rowIsFulfilled = (row: GridRow): boolean => {
       const structureColumnsKeys = reduxTableData.columns
         .filter(({ type }) => type === TableEntities.GEO_CATEGORY)
         .map(({ key, name }) => ({
@@ -49,7 +49,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
         ),
         rows: reduxTableData.rows.filter(
           (row, idx) =>
-            treeFilterData.rows.includes(idx) || !rowIsFullfiled(row),
+            treeFilterData.rows.includes(idx) || !rowIsFulfilled(row),
         ),
       };
     }

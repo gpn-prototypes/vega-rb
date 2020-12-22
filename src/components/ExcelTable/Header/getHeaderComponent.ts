@@ -5,7 +5,7 @@ import {
 } from 'components/ExcelTable/types';
 import { hasContextMenu } from 'components/ExcelTable/utils';
 
-import Header from './Header';
+import { DefaultHeader as Header } from './DefaultHeader';
 import { HeaderWithContextMenu } from './HeaderWithContextMenu';
 
 export const getHeaderComponent = (

@@ -1,40 +1,35 @@
 import React, { KeyboardEvent, useState } from 'react';
-import { GridColumn, SetColumnProperty } from 'components/ExcelTable/types';
+import { GridColumn, SetColumnProperties } from 'components/ExcelTable/types';
 
 import Input from '../Input';
+
+const DEFAULT_TITLE = 'Новый столбец';
 
 interface IProps<T> {
   idx: number;
   name: string;
-  setColumnProps: SetColumnProperty<T>;
-  onBlurHandler: (idx: number) => void;
+  setColumnProps: SetColumnProperties;
 }
 
 export const InputEditor: React.FC<IProps<GridColumn>> = ({
   name,
   idx,
   setColumnProps,
-  onBlurHandler,
 }) => {
   const [state, setState] = useState(name);
+  const onSave = () =>
+    setColumnProps(idx, {
+      name: !state.trim().length ? DEFAULT_TITLE : state.trim(),
+      isRenaming: false,
+    });
 
   return (
     <Input
       value={state}
       onKeyPress={(event: KeyboardEvent): void => {
-        if (event.key === 'Enter') {
-          setColumnProps(
-            idx,
-            'name',
-            !state.trim().length ? 'Новая колонка' : state,
-          );
-          setColumnProps(idx, 'isRenaming', false);
-        }
+        if (event.key === 'Enter') onSave();
       }}
-      onBlur={(): void => {
-        setColumnProps(idx, 'name', state);
-        onBlurHandler(idx);
-      }}
+      onBlur={onSave}
       onChange={({ target }: React.ChangeEvent<HTMLInputElement>): void => {
         setState(target.value);
       }}

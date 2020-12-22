@@ -1,7 +1,6 @@
-import { ReactText } from 'react';
 import { set } from 'lodash/fp';
 
-import { GridColumn, TableEntities } from './types';
+import { ColumnProperties, GridColumn, TableEntities } from './types';
 
 import './ExcelTable.css';
 
@@ -9,12 +8,11 @@ export function setColumnAttributes(
   columns: GridColumn[],
   setColumns: (columnsList: GridColumn[]) => void,
   idx: number,
-  propertyName: keyof GridColumn,
-  propertyValue: ReactText | boolean,
+  properties: ColumnProperties,
 ): void {
-  const attributePath = [idx, propertyName];
-  const nextColumns = set(attributePath, propertyValue, [...columns]);
-  setColumns(nextColumns);
+  const updatedColumn = { ...columns[idx], ...properties };
+
+  setColumns(set([idx], updatedColumn, [...columns]));
 }
 
 export function columnsReorder(
@@ -26,25 +24,14 @@ export function columnsReorder(
   const sourceColumnIndex = columns.findIndex((c) => c.key === sourceKey);
   const targetColumnIndex = columns.findIndex((c) => c.key === targetKey);
   const reorderedColumns = [...columns];
+
   reorderedColumns.splice(
     targetColumnIndex,
     0,
     reorderedColumns.splice(sourceColumnIndex, 1)[0],
   );
+
   setColumns(reorderedColumns);
-}
-
-export function onBlurCell(
-  columns: GridColumn[],
-  setColumns: (columnsList: GridColumn[]) => void,
-  idx: number,
-): void {
-  const nextColumns = [...columns];
-  const column = nextColumns[idx];
-  if (!column.name.trim().length) column.name = 'Новый столбец';
-
-  column.isRenaming = false;
-  setColumns(nextColumns);
 }
 
 export function isNoneColumnType(type: TableEntities): boolean {

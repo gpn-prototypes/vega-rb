@@ -1,11 +1,14 @@
 import React, { ComponentType, ReactElement, ReactText } from 'react';
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
 import classNames from 'classnames';
+import {
+  GridColumn,
+  HeaderRendererProps,
+  TableEntities,
+} from 'components/ExcelTable/types';
 import { Nullable } from 'types';
 
-import { GridColumn, HeaderRendererProps, TableEntities } from '../types';
-
-import styles from './DraggableHeader.module.css';
+import styles from '../Header.module.css';
 
 interface ColumnDragObject extends DragObjectWithType {
   key: string;
