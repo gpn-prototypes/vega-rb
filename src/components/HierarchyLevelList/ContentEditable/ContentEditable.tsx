@@ -1,5 +1,8 @@
-import React, { useRef } from 'react';
-import ContentEditable from 'react-contenteditable';
+import React from 'react';
+
+import { cnContentEditable } from './cn-content-editable';
+
+import './ContentEditable.css';
 
 interface IProps {
   onChange: (value: string) => void;
@@ -16,18 +19,17 @@ const ContentEditableField: React.FC<IProps> = ({
   className,
   onChange,
 }) => {
-  const editableRef = useRef(null);
   return (
-    <ContentEditable
-      innerRef={editableRef}
-      tagName={tag}
-      className={className}
-      disabled={disabled}
-      html={value}
-      onChange={({ target }) => {
-        onChange(target.value);
-      }}
-    />
+    <span className={cnContentEditable()}>
+      <input
+        className={cnContentEditable('Input').mix(className).toString()}
+        disabled={disabled}
+        value={value}
+        onChange={({ target }) => {
+          onChange(target.value);
+        }}
+      />
+    </span>
   );
 };
 

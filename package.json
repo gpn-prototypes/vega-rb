@@ -131,7 +131,6 @@
     "postcss-simple-vars": "^5.0.2",
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.6",
-    "react-contenteditable": "^3.3.5",
     "react-contextmenu": "^2.14.0",
     "react-data-grid": "7.0.0-canary.16",
     "react-data-grid-addons": "^7.0.0-alpha.24",

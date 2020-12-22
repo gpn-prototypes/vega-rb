@@ -1,0 +1,10 @@
+.ContentEditable {
+  &__Input {
+    display: flex;
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--size-text-s);
+  }
+}
