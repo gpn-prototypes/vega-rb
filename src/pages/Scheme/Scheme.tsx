@@ -40,7 +40,7 @@ import Table from './components/Table';
 
 import style from './Scheme.module.css';
 
-const UPDATE_PROJECT_RECENTLY_EDITED_INTERVAL: number =
+const POLLING_INTERVAL: number =
   Number(process.env.UPDATE_PROJECT_RECENTLY_EDITED_INTERVAL) || 30000;
 
 const SchemePage: React.FC = () => {
@@ -116,7 +116,7 @@ const SchemePage: React.FC = () => {
     updateProjectRecentlyEdited();
   }, [client, dispatch, projectId, updateProjectRecentlyEdited]);
 
-  useInterval(UPDATE_PROJECT_RECENTLY_EDITED_INTERVAL, () => {
+  useInterval(POLLING_INTERVAL, () => {
     updateProjectRecentlyEdited();
   });
 
