@@ -19,12 +19,7 @@ interface ProvidersProps {
 }
 
 export const Providers: React.FC<ProvidersProps> = (props) => {
-<<<<<<< HEAD
-  const { graphqlClient, identity, children } = props;
-
-=======
   const { graphqlClient, identity, children, history } = props;
->>>>>>> fix(router): добавление роутера
   return (
     <Provider store={store}>
       <ApolloProvider
