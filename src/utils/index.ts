@@ -3,6 +3,7 @@ import { mockTableRows } from './fakerGenerators';
 import { isCalculationParam, isTemplateCategory } from './guards';
 import { isEmpty } from './isEmpty';
 import { noop } from './noop';
+import { omitTypename } from './omitByTypename';
 import { packTableData } from './packTableData';
 import { roundTo } from './roundTo';
 import { unpackTableData } from './unpackTableData';
@@ -17,4 +18,5 @@ export {
   isEmpty,
   assembleErrors,
   roundTo,
+  omitTypename,
 };
