@@ -6,7 +6,7 @@ import {
   GridRow,
   TableEntities,
 } from 'components/ExcelTable/types';
-import { options } from 'components/ExcelTable/utils/getEditor';
+import { entitiesOptions } from 'components/ExcelTable/utils/getEditor';
 import {
   Attribute,
   AttributeValue,
@@ -185,10 +185,10 @@ function generateEmptyRows(count: number): Array<GridRow> {
 function getGeoObjectCategoryValue(category?: GeoObjectCategories) {
   if (category) {
     return category === GeoObjectCategories.Reserves
-      ? options.reef
-      : options.resource;
+      ? entitiesOptions.REEF
+      : entitiesOptions.RESOURCE;
   }
-  return options.reef;
+  return entitiesOptions.REEF;
 }
 
 function constructRows({

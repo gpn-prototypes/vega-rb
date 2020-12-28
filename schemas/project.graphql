@@ -1549,6 +1549,7 @@ type User {
   organizationUnits: [OrganizationUnit]
   patronym: String
   role: String
+  tokenJti: String
   vid: ID
 }
 

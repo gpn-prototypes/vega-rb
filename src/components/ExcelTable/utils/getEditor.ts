@@ -1,17 +1,22 @@
 import React, { forwardRef } from 'react';
 import { OptionEntity } from 'components/ExcelTable/Models/OptionEntity';
+import { GeoObjectCategories } from 'generated/graphql';
 
 import { DropDownEditor, SimpleTextEditor } from '../Editors';
 import { EditorResult, TableEntities } from '../types';
 
-export const options = {
-  resource: new OptionEntity('resource', 'Р'),
-  reef: new OptionEntity('reef', 'З'),
+export const entitiesOptions = {
+  RESOURCE: new OptionEntity(GeoObjectCategories.Resources, 'Р'),
+  REEF: new OptionEntity(GeoObjectCategories.Reserves, 'З'),
 };
 
 const geoCategoryTypeEditor = (): EditorResult => ({
   editor: forwardRef((props, ref) =>
-    React.createElement(DropDownEditor, { ...props, ref, options }),
+    React.createElement(DropDownEditor, {
+      ...props,
+      ref,
+      options: entitiesOptions,
+    }),
   ),
 });
 
