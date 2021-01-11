@@ -9,9 +9,8 @@ import { columnsFactory } from 'components/ExcelTable/utils';
 import { RbErrorCodes } from 'generated/graphql';
 import { useUpdateErrors } from 'hooks';
 import { get } from 'lodash/fp';
-import { ColumnErrors } from 'types';
 
-import { ColumnProperties, GridColumn, GridRow } from '../types';
+import { ColumnErrors, ColumnProperties, GridColumn, GridRow } from '../types';
 
 function validate(column: GridColumn, properties: ColumnProperties): boolean {
   return !properties.isRenaming && column.name !== String(properties.name);

@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Item } from '@consta/uikit/SnackBar';
 import { IconAlert, SnackBar } from '@gpn-prototypes/vega-ui';
+import { ErrorWrapper } from 'components/ExcelTable/types';
 import { RbErrorCodes } from 'generated/graphql';
 import { defaultTo, get } from 'lodash/fp';
 import { RootState } from 'store/types';
-import { ErrorWrapper } from 'types';
 
 import { cnTableErrorAlert } from './cn-table-error-alert';
 

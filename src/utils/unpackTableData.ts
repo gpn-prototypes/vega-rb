@@ -18,11 +18,10 @@ import {
   RiskInput,
   VisibleInput,
 } from 'generated/graphql';
-import { omitAll } from 'lodash/fp';
 import { SpecialColumns } from 'model/Table';
 import { CalculationParam, GeoCategory, Risk, TableStructures } from 'types';
 
-import { omitTypename } from './packTableData';
+import { omitTypename } from './omitTypename';
 
 const getCalculationColumn = (
   prev: GridColumn[],
@@ -84,10 +83,7 @@ function collectAttributeValues(
     attributeValue: Maybe<AttributeValue>,
   ): GridCellArguments => {
     if (attributeValue) {
-      return omitAll(
-        '__typename',
-        attributeValue.distribution,
-      ) as GridCellArguments;
+      return omitTypename(attributeValue.distribution) as GridCellArguments;
     }
 
     return {} as GridCellArguments;
@@ -182,13 +178,10 @@ function generateEmptyRows(count: number): Array<GridRow> {
   }));
 }
 
-function getGeoObjectCategoryValue(category?: GeoObjectCategories) {
-  if (category) {
-    return category === GeoObjectCategories.Reserves
-      ? entitiesOptions.REEF
-      : entitiesOptions.RESOURCE;
-  }
-  return entitiesOptions.REEF;
+function getGeoObjectCategoryValue(category: GeoObjectCategories) {
+  return category === GeoObjectCategories.Resources
+    ? entitiesOptions.RESOURCE
+    : entitiesOptions.RESERVES;
 }
 
 function constructRows({
