@@ -1,6 +1,6 @@
+import { tableErrorsList } from '__mocks__/tableErrorsList';
 import { RbErrorCodes } from 'generated/graphql';
 
-import { tableErrorsList } from './__mocks__/tableErrorsList';
 import { assembleErrors, COLUMN_ERROR_KEY } from './assembleErrors';
 
 describe('assembleErrors', () => {

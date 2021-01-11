@@ -1,4 +1,5 @@
-import { columnsListMock } from './__mocks__/columnsList';
+import { columnsListMock } from '__mocks__/columnsList';
+
 import { getSameColumnKeys } from './getSameColumnKeys';
 
 describe('getSameColumnKeys', () => {

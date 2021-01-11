@@ -1,7 +1,7 @@
 import { GridColumn } from 'components/ExcelTable/types';
 import { AttributeInput, ProjectStructureInput } from 'generated/graphql';
 import { defaultTo } from 'lodash/fp';
-import { omitTypename } from 'utils/omitByTypename';
+import { omitTypename } from 'utils/omitTypename';
 
 const removeCommas = (str: string) => str.split(',').filter(Boolean).join(',');
 

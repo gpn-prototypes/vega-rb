@@ -164,7 +164,7 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
     (
       distributionProps,
       onError?: () => void,
-      onSuccess?: (chartData: DistributionChartData) => void,
+      onSuccess?: (data: DistributionChartData) => void,
     ) => {
       if (validateDistributionParams(distributionProps.parameters)) {
         getChart(distributionProps).then(

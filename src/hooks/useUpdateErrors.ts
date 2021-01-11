@@ -1,11 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { GridColumn } from 'components/ExcelTable/types';
+import { ColumnErrors, GridColumn } from 'components/ExcelTable/types';
 import { getSameColumnKeys } from 'components/ExcelTable/utils/columns/getSameColumnKeys';
 import { RbErrorCodes } from 'generated/graphql';
 import { unset } from 'lodash/fp';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
-import { ColumnErrors } from 'types';
 import { Action } from 'typescript-fsa';
 
 type UseUpdateErrors = (

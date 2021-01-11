@@ -1,6 +1,6 @@
+import { ColumnErrors } from 'components/ExcelTable/types';
 import { RbErrorCodes, TableError } from 'generated/graphql';
 import { flow, set } from 'lodash/fp';
-import { ColumnErrors } from 'types';
 
 import { isEmpty } from './isEmpty';
 

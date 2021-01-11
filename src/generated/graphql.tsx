@@ -1,7 +1,5 @@
+/* Generated file via graphql codegen. Do not edit manually */
 /* eslint-disable */
-// @ts-nocheck
-// generated file
-
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
@@ -890,7 +888,7 @@ export enum ErrorCodesEnum {
   ReferenceItemNotFound = 'REFERENCE_ITEM_NOT_FOUND',
   /** Ошибка */
   Error = 'ERROR',
-  /** Не корректная версия проекта */
+  /** Некорректная версия проекта */
   IncorrectProjectVersion = 'INCORRECT_PROJECT_VERSION',
   /** Расхождение версий проекта */
   ProjectVersionDiffError = 'PROJECT_VERSION_DIFF_ERROR',
@@ -924,6 +922,8 @@ export enum ErrorCodesEnum {
   ProjectAttendeeAlreadyHasRole = 'PROJECT_ATTENDEE_ALREADY_HAS_ROLE',
   /** Рольу участника проекта не найдена */
   ProjectAttendeeUserRoleNotFound = 'PROJECT_ATTENDEE_USER_ROLE_NOT_FOUND',
+  /** Невозможно добавить участника с дублирующимися ролями. */
+  ProjectAttendeeUserWithDuplicateRoles = 'PROJECT_ATTENDEE_USER_WITH_DUPLICATE_ROLES',
   /** Невозможно сохранить проект - не найден менеджер проекта */
   ProjectManagerNotFound = 'PROJECT_MANAGER_NOT_FOUND',
   /** Проект нельзя возвращать в статус заготовки. */
@@ -3407,3 +3407,5 @@ export type DeleteDomainGroupResult = {
   __typename?: 'DeleteDomainGroupResult';
   ok?: Maybe<Scalars['Boolean']>;
 };
+
+// The file generated on: 08.02.2021

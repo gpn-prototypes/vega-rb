@@ -7,7 +7,7 @@ import { EditorResult, TableEntities } from '../types';
 
 export const entitiesOptions = {
   RESOURCE: new OptionEntity(GeoObjectCategories.Resources, 'Р'),
-  REEF: new OptionEntity(GeoObjectCategories.Reserves, 'З'),
+  RESERVES: new OptionEntity(GeoObjectCategories.Reserves, 'З'),
 };
 
 const geoCategoryTypeEditor = (): EditorResult => ({
