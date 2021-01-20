@@ -1,8 +1,11 @@
 /* You haven't to change colors to rgba, because it create bug with alpha channel at ID column */
 .StyledRow {
+  z-index: 1;
+
   text-overflow: ellipsis;
 
   color: var(--color-typo-primary);
+  contain: none;
 
   &__Even {
     background-color: var(--color-bg-default);
@@ -10,6 +13,15 @@
 
   &__Odd {
     background-color: rgb(60, 64, 67);
+  }
+
+  &.is-selected {
+    z-index: 10;
+    contain: none;
+  }
+
+  &.is-selected-cell {
+    z-index: 2;
   }
 
   &.is-error {

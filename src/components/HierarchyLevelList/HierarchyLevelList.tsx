@@ -137,6 +137,7 @@ const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
                   {...item}
                   index={index}
                   icons={icons}
+                  name={item.name as string}
                   key={item.key}
                   moveItemDown={moveItemDown}
                   moveItemUp={moveItemUp}

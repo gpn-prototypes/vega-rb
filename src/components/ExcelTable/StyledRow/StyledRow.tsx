@@ -38,7 +38,11 @@ export default React.memo<RowRendererProps<GridRow>>(function StyledRow(props) {
       cellRenderer={CellRenderer}
       className={classnames(
         cnRow(),
-        cnRow.state({ error: !!error }),
+        cnRow.state({
+          'error': !!error,
+          'selected': props.isRowSelected,
+          'selected-cell': !!props.selectedCellProps,
+        }),
         cnRow(props.rowIdx % 2 ? 'Even' : 'Odd'),
       )}
     />,

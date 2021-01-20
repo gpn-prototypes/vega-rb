@@ -27,12 +27,18 @@ export default React.memo<HeaderRendererProps>(function DefaultHeader(props) {
   const { name, idx: columnIdx, type, headerId } = column;
 
   const editor = (
-    <InputEditor idx={columnIdx} name={name} setColumnProps={setColumnProps} />
+    <InputEditor
+      idx={columnIdx}
+      name={name as string}
+      setColumnProps={setColumnProps}
+    />
   );
 
   return (
     <DraggableHeader
-      {...props}
+      onAllRowsSelectionChange={() => {}}
+      allRowsSelected={false}
+      column={props.column}
       className={classNames(
         type === TableEntities.CALC_PARAM && styles.CalcParamHeader,
       )}

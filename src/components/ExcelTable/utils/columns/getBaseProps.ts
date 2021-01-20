@@ -1,10 +1,6 @@
 import { ComponentType } from 'react';
-import { HeaderRendererProps } from 'react-data-grid';
-import {
-  BaseProps,
-  FormatterProps,
-  GridRow,
-} from 'components/ExcelTable/types';
+import { FormatterProps, HeaderRendererProps } from 'react-data-grid';
+import { BaseProps, GridRow } from 'components/ExcelTable/types';
 
 const getBaseProps = (
   formatter: ComponentType<FormatterProps<GridRow>>,

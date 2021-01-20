@@ -1,10 +1,12 @@
 import React, { ComponentType, ReactText } from 'react';
-import { CalculatedColumn, Column, EditorProps } from 'react-data-grid';
 import {
+  CalculatedColumn,
   CellRendererProps,
-  FormatterProps as BaseFormatterProps,
+  Column,
+  EditorProps,
+  FormatterProps,
   HeaderRendererProps as BaseHeaderRendererProps,
-} from 'react-data-grid/lib/common/types';
+} from 'react-data-grid';
 import {
   CategoryIcon,
   TableEntities,
@@ -103,8 +105,6 @@ export type ContextHandler<T extends ContextBody> = (
   { idx }: T,
 ) => void;
 
-export type FormatterProps<T> = BaseFormatterProps<T> & { value?: string };
-
 export type BaseProps = {
   formatter: ComponentType<FormatterProps<GridRow>>;
   headerRenderer: ComponentType<BaseHeaderRendererProps<GridRow>>;
@@ -112,8 +112,21 @@ export type BaseProps = {
 
 export type UniColumn = CalculatedColumn<GridRow> & GridColumn;
 
+export interface DropdownOption {
+  id: string;
+  value: string;
+  text: string;
+}
+export interface DropDownEditorProps extends EditorProps<GridRow | undefined> {
+  options: { [index: string]: DropdownOption };
+}
+
 export type EditorResult =
-  | { editor: ComponentType<EditorProps<GridCellProperties | undefined>> }
+  | {
+      editor: ComponentType<
+        EditorProps<GridRow | undefined> | DropDownEditorProps
+      >;
+    }
   | { editor: undefined };
 
 export type ColumnProperties = Partial<

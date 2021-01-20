@@ -74,12 +74,32 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   return (
     <ExcelTable
       data={filteredData}
+      errors={errors}
       setColumns={(data): void => {
         dispatch(tableDuck.actions.updateColumns(data));
       }}
-      errors={errors}
-      setRows={(data): void => {
-        dispatch(tableDuck.actions.updateRows(data));
+      setRows={(data, indexes): void => {
+        const updatedRows = data.reduce((prev, curr, idx) => {
+          if (indexes.includes(idx)) {
+            return [...prev, curr];
+          }
+
+          return prev;
+        }, [] as GridRow[]);
+
+        const newRows = reduxTableData.rows.map((row) => {
+          const rowIdx = updatedRows?.findIndex(
+            (updatedRow: GridRow) => updatedRow.id === row.id,
+          );
+
+          if (rowIdx !== -1) {
+            return updatedRows[rowIdx];
+          }
+
+          return row;
+        });
+
+        dispatch(tableDuck.actions.updateRows(newRows));
       }}
       onRowClick={(rowIdx, row, column): void => {
         if (column.type === TableEntities.CALC_PARAM) {

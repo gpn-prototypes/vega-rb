@@ -5,12 +5,13 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { HeaderRendererProps } from 'react-data-grid';
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
 import { Tooltip } from '@gpn-prototypes/vega-ui';
 import classNames from 'classnames';
 import { cnCellTooltip } from 'components/ExcelTable/cn-excel-table';
 import { TableEntities } from 'components/ExcelTable/enums';
-import { GridColumn, HeaderRendererProps } from 'components/ExcelTable/types';
+import { GridColumn, GridRow } from 'components/ExcelTable/types';
 import { useCombinedRefs } from 'hooks';
 
 import styles from '../Header.module.css';
@@ -29,7 +30,7 @@ interface IProps {
   precedingContent?: ComponentType | ReactElement;
 }
 
-type DraggableHeaderProps = IProps & HeaderRendererProps;
+type DraggableHeaderProps = IProps & HeaderRendererProps<GridRow>;
 
 export function DraggableHeader({
   onColumnsReorder,

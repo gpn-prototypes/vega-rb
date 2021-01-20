@@ -84,6 +84,9 @@ export function columnsFactory(
       return getColumn({
         ...editor,
         ...defaultStyles,
+        editorOptions: {
+          editOnClick: true,
+        },
       });
 
     default:

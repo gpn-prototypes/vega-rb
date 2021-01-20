@@ -55,4 +55,14 @@ function isNoneColumnType(type: TableEntities): boolean {
   );
 }
 
-export { setColumnProps, handleColumnsReorder, isNoneColumnType };
+function autoFocusAndSelect(input: HTMLInputElement | null): void {
+  input?.focus();
+  input?.select();
+}
+
+export {
+  setColumnProps,
+  handleColumnsReorder,
+  isNoneColumnType,
+  autoFocusAndSelect,
+};

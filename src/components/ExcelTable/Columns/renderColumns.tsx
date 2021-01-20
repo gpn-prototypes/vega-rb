@@ -30,7 +30,7 @@ export const renderColumns = (
     return (
       <HeaderComponent
         {...props}
-        setColumnProps={(idx, properties) => {
+        setColumnProps={(idx: number, properties: ColumnProperties) => {
           setProps(idx, properties);
           if (validate(column, properties))
             updateErrors({ ...column, name: String(properties.name) }, columns);
@@ -39,7 +39,6 @@ export const renderColumns = (
       />
     );
   };
-
   return columns
     .filter((column) => column?.visible?.table)
     .map((column) =>
