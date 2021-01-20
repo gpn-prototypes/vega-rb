@@ -29,6 +29,11 @@ import { DragItem, DragItemTypes } from './types';
 
 import './HierarchyLevelItem.css';
 
+const visibleKeyList = [
+  VisibleKeys.CALCULATION,
+  VisibleKeys.TABLE,
+  VisibleKeys.TREE,
+];
 interface IProps {
   name: string;
   index: number;
@@ -227,7 +232,7 @@ const HierarchyLevelItem: React.FC<IProps> = ({
         </div>
         <div className={cnHierarchy('Item', 'Options')}>
           {visible &&
-            (Object.keys(visible) as VisibleKeys[]).map((key) => (
+            visibleKeyList.map((key) => (
               <Tag
                 key={key}
                 className={cnItem('Tag').toString()}
