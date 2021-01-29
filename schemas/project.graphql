@@ -14,7 +14,7 @@ interface DomainObjectInterface {
 "Интерфейс ошибок, отображаемых пользователю."
 interface ErrorInterface {
   "Код ошибки, соответствующий человекочитаемому сообщению об ошибке"
-  code: ErrorCodes!
+  code: ErrorCodesEnum!
   details: String
   "Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте"
   message: String!
@@ -28,6 +28,8 @@ interface RBErrorInterface {
   "Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте"
   message: String!
 }
+
+union AlternativeDefinitionResult = AlternativeDefinitions | CommonErrors | DistributionDefinitionErrors
 
 union CalculatedOrError = CalculationResult | DetailError | DistributionDefinitionErrors | TableErrors
 
@@ -120,12 +122,13 @@ type Activity {
   createdAt: DateTime
   description: String
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   title: String
   vid: ID
 }
 
-"Эффект мероприятия"
+"Эффект мероприятия."
 type ActivityEffect {
   code: String
   formula: String
@@ -142,9 +145,16 @@ type ActivityEffectMutations {
 
 type ActivityLibraryCategory {
   code: String
+  isDeleted: Boolean
   name: String
   parent: ActivityLibraryCategory
   vid: ID
+}
+
+"Результаты определения альтернативных способов задания распределения."
+type AlternativeDefinitions {
+  "Альтернативные способы задания с расчитанными параметрами"
+  distributions: [Distribution!]!
 }
 
 type Attachment {
@@ -157,6 +167,7 @@ type Attachment {
   editedAt: DateTime
   editedBy: User
   extension: String
+  isDeleted: Boolean
   name: String
   projectId: ID
   size: Int
@@ -169,6 +180,7 @@ type AttachmentType {
   code: String
   createdAt: DateTime
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   vid: ID
 }
@@ -380,19 +392,12 @@ type Conception {
   structure: ProjectStructure!
 }
 
-type CoordinateSystem {
-  code: String
-  coordsNumber: Int
-  createdAt: DateTime
-  editedAt: DateTime
-  name: String
-  vid: ID
-}
-
 type Country {
   code: String
+  coordinateSystems: [String]
   createdAt: DateTime
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   vid: ID
 }
@@ -473,6 +478,11 @@ type CreateScenarioStep {
   result: ScenarioStep
 }
 
+"Создание элемента шага сценария."
+type CreateScenarioStepItem {
+  result: ScenarioStepItem
+}
+
 type DeleteActivityEffect {
   ok: Boolean
 }
@@ -546,6 +556,11 @@ type DeleteScenarioStep {
   ok: Boolean
 }
 
+"Удаление элемента шага сценария."
+type DeleteScenarioStepItem {
+  ok: Boolean
+}
+
 "Ошибка с дополнительной информацией."
 type DetailError implements RBErrorInterface {
   "Код ошибки, соответствующий человекочитаемому сообщению об ошибке"
@@ -560,12 +575,18 @@ type DetailError implements RBErrorInterface {
 type DiscreteDistributionChart {
   "График функции вероятности распределения"
   pmf: [Point!]!
+  "Отображаемый в ячейке процентиль"
+  visiblePercentile: Percentile!
 }
 
 "Параметры распределения."
 type Distribution {
   "Способ задания распределения"
   definition: DistributionDefinitionTypes!
+  "Верхняя граница усечения"
+  maxBound: Float
+  "Нижняя граница усечения"
+  minBound: Float
   "Параметры распределения"
   parameters: [DistributionParameter]!
   "Тип распределения"
@@ -608,6 +629,8 @@ type DistributionParameter {
 
 "Пространство имен для работы с распределениями."
 type DistributionQueries {
+  "Результат поиска альтернативных способов задания распределения"
+  alternativeDefinitions(distribution: DistributionInput!): AlternativeDefinitionResult
   "Результат вычисления значения распределения"
   distributionChart(distribution: DistributionInput!, visibleRank: Int): DistributionChartResult
 }
@@ -627,6 +650,7 @@ type DomainEntity {
   code: String
   createdAt: DateTime
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   vid: ID
 }
@@ -704,7 +728,7 @@ type DomainSchema {
 "Common error-object class."
 type Error implements ErrorInterface {
   "Код ошибки, соответствующий человекочитаемому сообщению об ошибке"
-  code: ErrorCodes!
+  code: ErrorCodesEnum!
   details: String
   "Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте"
   message: String!
@@ -1022,6 +1046,27 @@ type OpexYearValue {
   year: Int
 }
 
+type Organization {
+  code: String
+  createdAt: DateTime
+  editedAt: DateTime
+  isDeleted: Boolean
+  name: String
+  vid: ID
+}
+
+type OrganizationUnit {
+  adId: String
+  code: String
+  createdAt: DateTime
+  editedAt: DateTime
+  isDeleted: Boolean
+  name: String
+  organization: Organization
+  parentOu: OrganizationUnit
+  vid: ID
+}
+
 "Процентиль распределения."
 type Percentile {
   point: Point!
@@ -1065,11 +1110,12 @@ type ProductType {
 }
 
 type Project {
+  adId: String
   attendees(orderBy: [AttendeeOrderBy] = [NAME], sortBy: SortType = ASC): [Attendee]
   attendeesTotal: Int
-  authorUnit: String
+  authorOu: OrganizationUnit
   code: String
-  coordinateSystem: CoordinateSystem
+  coordinateSystem: String
   coordinates: String
   createdAt: DateTime
   createdBy: User
@@ -1079,20 +1125,21 @@ type Project {
   editedBy: User
   files: [Attachment]
   filesTotal: Int
+  isDeleted: Boolean
   isFavorite: Boolean
   myRoles: [ProjectRole]
   name: String
+  recentlyEdited: Boolean!
   region: Region
   resourceId: String
   rootEntity: String
   status: ProjectStatusEnum
   type: ProjectTypeEnum
   version: Int
-  versions: [Int]
+  versions: [Int]!
   vid: ID
   yearEnd: Int
   yearStart: Int
-  years: Int
 }
 
 """
@@ -1122,6 +1169,7 @@ type ProjectRole {
   createdAt: DateTime
   defaultAttachmentType: AttachmentType
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   vid: ID
 }
@@ -1154,6 +1202,7 @@ type PropertyMeta {
   description: String
   entity: DomainEntity
   name: String
+  required: Boolean
   title: String
   unit: String
   validationRules: ValidationRules
@@ -1208,6 +1257,7 @@ type Region {
   createdAt: DateTime
   editedAt: DateTime
   fullName: String
+  isDeleted: Boolean
   name: String
   vid: ID
 }
@@ -1331,12 +1381,23 @@ type ScenarioStepItem {
 }
 
 "Мутации для шагов сценария."
+type ScenarioStepItemMutations {
+  "Создание элемента шага сценария."
+  create(activityVid: UUID!, objectGroupVid: UUID, objectVid: UUID, risk: String, stepVid: UUID!, version: Int!): CreateScenarioStepItem
+  "Удаление элемента шага сценария."
+  delete(stepVid: UUID!, version: Int!, vid: UUID!): DeleteScenarioStepItem
+  effects: ActivityEffectMutations
+  "Изменение элемента шага сценария."
+  update(activityVid: UUID, objectGroupVid: UUID, objectVid: UUID, risk: String, stepVid: UUID!, version: Int!, vid: UUID!): UpdateScenarioStepItem
+}
+
+"Мутации для шагов сценария."
 type ScenarioStepMutations {
   "Создание шага сценария."
   create(activity: UUID, name: String, objectGroup: UUID, objects: [UUID], version: Int!): CreateScenarioStep
   "Удаление шага сценария."
   delete(version: Int!, vid: UUID!): DeleteScenarioStep
-  itemEffects: ActivityEffectMutations
+  items: ScenarioStepItemMutations
   "Обновление шага сценария."
   update(activity: UUID, name: String, objectGroup: UUID, objects: [UUID], version: Int!, vid: UUID!): UpdateScenarioStep
 }
@@ -1468,6 +1529,11 @@ type UpdateScenarioStep {
   result: ScenarioStep
 }
 
+"Изменение элемента шага сценария."
+type UpdateScenarioStepItem {
+  result: ScenarioStepItem
+}
+
 type User {
   adId: String
   code: String
@@ -1476,9 +1542,11 @@ type User {
   favoriteProjects: [ID]
   firstName: String
   groups: [UserGroup]
+  isDeleted: Boolean
   lastName: String
   login: String
   name: String
+  organizationUnits: [OrganizationUnit]
   patronym: String
   role: String
   vid: ID
@@ -1488,7 +1556,9 @@ type UserGroup {
   code: String
   createdAt: DateTime
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
+  project: ID
   vid: ID
 }
 
@@ -1648,7 +1718,7 @@ enum DistributionTypes {
 }
 
 "Error codes list."
-enum ErrorCodes {
+enum ErrorCodesEnum {
   "Проект нельзя возвращать в статус заготовки."
   CANNOT_BRING_BLANK_BACK
   "Отсутствует роль"
@@ -1661,6 +1731,8 @@ enum ErrorCodes {
   INCORRECT_PROJECT_VERSION
   "Некорректный формат UUID"
   INCORRECT_UUID
+  "Неверный номер страницы"
+  INVALID_PAGE_NUMBER
   "Удаляемый участник не найден в проекте "
   NO_ATTENDEE_TO_REMOVE
   "Пользователь не обладает провами для совершения операции"
@@ -1755,8 +1827,6 @@ enum RBErrorCodes {
   DUPLICATING_COLUMNS
   "Найдены концепции с не уникальными наименованиями"
   DUPLICATING_CONCEPTIONS_NAMES
-  "В строке данных таблицы структуры не может быть пустых ячеек"
-  EMPTY_CELL_IN_TABLE_DATA
   "В проекте отсутствуют доменные сущности"
   EMPTY_DOMAIN_ENTITIES
   "В таблице структуры не может быть одинаковых строк"
@@ -1775,8 +1845,12 @@ enum RBErrorCodes {
   INVALID_CONCEPTIONS_PROBABILITIES_SUM
   "Вероятность может иметь значение в пределах 0.0 < p <= 1.0"
   INVALID_PROBABILITY_VALUE
+  "В строке таблицы структуры должна быть заполнена хотя бы одна ячейка"
+  MUST_BE_AT_LEAST_ONE_CELL
   "Квантиль должен быть больше расположения"
   QUANTILE_MUST_BE_MORE_THAN_LOCATION
+  "Значение случайной величины отрицательное."
+  RANDOM_VARIABLE_VALUE_IS_NEGATIVE
   "Параметр version не найден."
   VERSION_PARAM_NOT_FOUND
 }

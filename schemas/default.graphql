@@ -8,7 +8,7 @@ schema {
 "Интерфейс ошибок, отображаемых пользователю."
 interface ErrorInterface {
   "Код ошибки, соответствующий человекочитаемому сообщению об ошибке"
-  code: ErrorCodes!
+  code: ErrorCodesEnum!
   details: String
   "Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте"
   message: String!
@@ -33,6 +33,7 @@ type Activity {
   createdAt: DateTime
   description: String
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   title: String
   vid: ID
@@ -40,6 +41,7 @@ type Activity {
 
 type ActivityLibraryCategory {
   code: String
+  isDeleted: Boolean
   name: String
   parent: ActivityLibraryCategory
   vid: ID
@@ -55,6 +57,7 @@ type Assembly {
   createdAt: DateTime
   description: String
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   title: String
   vid: ID
@@ -62,6 +65,7 @@ type Assembly {
 
 type AssemblyLibraryCategory {
   code: String
+  isDeleted: Boolean
   name: String
   parent: AssemblyLibraryCategory
   vid: ID
@@ -77,6 +81,7 @@ type Attachment {
   editedAt: DateTime
   editedBy: User
   extension: String
+  isDeleted: Boolean
   name: String
   projectId: ID
   size: Int
@@ -89,6 +94,7 @@ type AttachmentType {
   code: String
   createdAt: DateTime
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   vid: ID
 }
@@ -108,6 +114,7 @@ type Component {
   createdAt: DateTime
   description: String
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   title: String
   vid: ID
@@ -115,24 +122,18 @@ type Component {
 
 type ComponentLibraryCategory {
   code: String
+  isDeleted: Boolean
   name: String
   parent: ComponentLibraryCategory
   vid: ID
 }
 
-type CoordinateSystem {
-  code: String
-  coordsNumber: Int
-  createdAt: DateTime
-  editedAt: DateTime
-  name: String
-  vid: ID
-}
-
 type Country {
   code: String
+  coordinateSystems: [String]
   createdAt: DateTime
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   vid: ID
 }
@@ -169,20 +170,8 @@ type CreateComponentCategories {
   result: ComponentLibraryCategory
 }
 
-type CreateCoordinateSystem {
-  result: CoordinateSystem
-}
-
 type CreateCountry {
   result: Country
-}
-
-type CreateDomain {
-  result: Domain
-}
-
-type CreateDomainCategories {
-  result: DomainLibraryCategory
 }
 
 type CreateDomainEntity {
@@ -194,19 +183,23 @@ type CreateDomainTemplate {
 }
 
 type CreateDomainTemplateCategories {
-  result: DomainLibraryCategory
+  result: DomainTemplateLibraryCategory
+}
+
+type CreateJtiBlackListEntry {
+  result: JtiBlackListEntry
 }
 
 type CreateOrganization {
   result: Organization
 }
 
-type CreateProject {
-  result: ProjectOrError
+type CreateOrganizationUnit {
+  result: OrganizationUnit
 }
 
-type CreateProjectFile {
-  result: ProjectFile
+type CreateProject {
+  result: ProjectOrError
 }
 
 type CreateProjectLibrary {
@@ -265,19 +258,7 @@ type DeleteComponentCategories {
   result: Boolean
 }
 
-type DeleteCoordinateSystem {
-  result: Boolean
-}
-
 type DeleteCountry {
-  result: Boolean
-}
-
-type DeleteDomain {
-  result: Boolean
-}
-
-type DeleteDomainCategories {
   result: Boolean
 }
 
@@ -293,16 +274,20 @@ type DeleteDomainTemplateCategories {
   result: Boolean
 }
 
+type DeleteJtiBlackListEntry {
+  result: Boolean
+}
+
 type DeleteOrganization {
+  result: Boolean
+}
+
+type DeleteOrganizationUnit {
   result: Boolean
 }
 
 type DeleteProject {
   result: UuidOrError
-}
-
-type DeleteProjectFile {
-  result: Boolean
 }
 
 type DeleteProjectLibrary {
@@ -329,21 +314,11 @@ type DeleteUserGroup {
   result: Boolean
 }
 
-type Domain {
-  category: DomainLibraryCategory
-  code: String
-  createdAt: DateTime
-  description: String
-  editedAt: DateTime
-  name: String
-  title: String
-  vid: ID
-}
-
 type DomainEntity {
   code: String
   createdAt: DateTime
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   vid: ID
 }
@@ -358,13 +333,6 @@ type DomainEntityImage {
   vid: ID
 }
 
-type DomainLibraryCategory {
-  code: String
-  name: String
-  parent: DomainLibraryCategory
-  vid: ID
-}
-
 type DomainSchema {
   entityImages: [DomainEntityImage]
   version: String
@@ -372,25 +340,45 @@ type DomainSchema {
 
 type DomainTemplate {
   attributes: [PropertyMeta]
-  category: DomainLibraryCategory
+  category: DomainTemplateLibraryCategory
   code: String
   createdAt: DateTime
   description: String
   editedAt: DateTime
   entity: DomainEntity
+  isDeleted: Boolean
   name: String
   title: String
+  vid: ID
+}
+
+type DomainTemplateLibraryCategory {
+  code: String
+  isDeleted: Boolean
+  name: String
+  parent: DomainTemplateLibraryCategory
   vid: ID
 }
 
 "Common error-object class."
 type Error implements ErrorInterface {
   "Код ошибки, соответствующий человекочитаемому сообщению об ошибке"
-  code: ErrorCodes!
+  code: ErrorCodesEnum!
   details: String
   "Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте"
   message: String!
   payload: DictType
+}
+
+type JtiBlackListEntry {
+  code: String
+  createdAt: DateTime
+  editedAt: DateTime
+  exp: Int
+  isDeleted: Boolean
+  jti: String
+  name: String
+  vid: ID
 }
 
 type Mutation {
@@ -401,54 +389,50 @@ type Mutation {
     "Version of the original project."
     version: Int!
   ): AddAttendees
-  createActivity(category: UUID, code: String, createdAt: DateTime, description: String, editedAt: DateTime, isDeleted: Boolean, name: String, title: String, vid: UUID): CreateActivity
-  createActivityCategories(code: String, isDeleted: Boolean, name: String, parent: UUID, vid: UUID): CreateActivityCategories
-  createAssembly(category: UUID, code: String, createdAt: DateTime, description: String, editedAt: DateTime, isDeleted: Boolean, name: String, title: String, vid: UUID): CreateAssembly
-  createAssemblyCategories(code: String, isDeleted: Boolean, name: String, parent: UUID, vid: UUID): CreateAssemblyCategories
-  createAttachment(category: UUID, code: String, comment: String, contentType: String, createdAt: DateTime, createdBy: UUID, editedAt: DateTime, editedBy: UUID, isDeleted: Boolean, name: String, projectId: UUID, size: Int, status: Int, vid: UUID): CreateAttachment
-  createAttachmentType(code: String, createdAt: DateTime, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): CreateAttachmentType
-  createComponent(category: UUID, code: String, createdAt: DateTime, description: String, editedAt: DateTime, isDeleted: Boolean, name: String, title: String, vid: UUID): CreateComponent
-  createComponentCategories(code: String, isDeleted: Boolean, name: String, parent: UUID, vid: UUID): CreateComponentCategories
-  createCoordinateSystem(code: String, coordsNumber: Int, createdAt: DateTime, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): CreateCoordinateSystem
-  createCountry(code: String, createdAt: DateTime, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): CreateCountry
-  createDomain(category: UUID, code: String, createdAt: DateTime, description: String, editedAt: DateTime, isDeleted: Boolean, name: String, title: String, vid: UUID): CreateDomain
-  createDomainCategories(code: String, isDeleted: Boolean, name: String, parent: UUID, vid: UUID): CreateDomainCategories
-  createDomainEntity(code: String, createdAt: DateTime, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): CreateDomainEntity
-  createDomainTemplate(attributes: [PropertyMetaInputType], category: UUID, code: String, createdAt: DateTime, description: String, editedAt: DateTime, entity: UUID, isDeleted: Boolean, name: String, title: String, vid: UUID): CreateDomainTemplate
-  createDomainTemplateCategories(code: String, isDeleted: Boolean, name: String, parent: UUID, vid: UUID): CreateDomainTemplateCategories
-  createOrganization(code: String, createdAt: DateTime, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): CreateOrganization
+  createActivity(category: UUID, code: String, description: String, name: String, title: String): CreateActivity
+  createActivityCategories(code: String, name: String, parent: UUID): CreateActivityCategories
+  createAssembly(category: UUID, code: String, description: String, name: String, title: String): CreateAssembly
+  createAssemblyCategories(code: String, name: String, parent: UUID): CreateAssemblyCategories
+  createAttachment(category: UUID, code: String, comment: String, contentType: String, name: String, projectId: ID, status: Int): CreateAttachment
+  createAttachmentType(code: String, name: String): CreateAttachmentType
+  createComponent(category: UUID, code: String, description: String, name: String, title: String): CreateComponent
+  createComponentCategories(code: String, name: String, parent: UUID): CreateComponentCategories
+  createCountry(code: String, coordinateSystems: [String], name: String): CreateCountry
+  createDomainEntity(code: String, name: String): CreateDomainEntity
+  createDomainTemplate(attributes: [PropertyMetaInputType], category: UUID, code: String, description: String, entity: UUID, name: String, title: String): CreateDomainTemplate
+  createDomainTemplateCategories(code: String, name: String, parent: UUID): CreateDomainTemplateCategories
+  createJtiBlackListEntry(code: String, exp: Int, jti: String, name: String): CreateJtiBlackListEntry
+  createOrganization(code: String, name: String): CreateOrganization
+  createOrganizationUnit(adId: String, code: String, name: String, organization: UUID, parentOu: UUID): CreateOrganizationUnit
   createProject(data: ProjectInputType): CreateProject
-  createProjectFile(category: String, code: String, comment: String, createdAt: DateTime, editedAt: DateTime, extension: String, isDeleted: Boolean, name: String, size: Int, uri: String, vid: UUID): CreateProjectFile
-  createProjectLibrary(category: UUID, code: String, createdAt: DateTime, description: String, editedAt: DateTime, isDeleted: Boolean, name: String, title: String, vid: UUID): CreateProjectLibrary
-  createProjectLibraryCategories(code: String, isDeleted: Boolean, name: String, parent: UUID, vid: UUID): CreateProjectLibraryCategories
-  createProjectRole(code: String, createdAt: DateTime, defaultAttachmentType: UUID, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): CreateProjectRole
-  createRegion(code: String, country: UUID, createdAt: DateTime, editedAt: DateTime, fullName: String, isDeleted: Boolean, name: String, vid: UUID): CreateRegion
-  createUser(adId: String, code: String, createdAt: DateTime, editedAt: DateTime, favoriteProjects: [UUID], firstName: String, groups: [UUID], isDeleted: Boolean, lastName: String, login: String, name: String, patronym: String, role: String, vid: UUID): CreateUser
-  createUserGroup(code: String, createdAt: DateTime, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): CreateUserGroup
-  deleteActivity(vid: UUID): DeleteActivity
-  deleteActivityCategories(vid: UUID): DeleteActivityCategories
-  deleteAssembly(vid: UUID): DeleteAssembly
-  deleteAssemblyCategories(vid: UUID): DeleteAssemblyCategories
-  deleteAttachment(vid: UUID): DeleteAttachment
-  deleteAttachmentType(vid: UUID): DeleteAttachmentType
-  deleteComponent(vid: UUID): DeleteComponent
-  deleteComponentCategories(vid: UUID): DeleteComponentCategories
-  deleteCoordinateSystem(vid: UUID): DeleteCoordinateSystem
-  deleteCountry(vid: UUID): DeleteCountry
-  deleteDomain(vid: UUID): DeleteDomain
-  deleteDomainCategories(vid: UUID): DeleteDomainCategories
-  deleteDomainEntity(vid: UUID): DeleteDomainEntity
-  deleteDomainTemplate(vid: UUID): DeleteDomainTemplate
-  deleteDomainTemplateCategories(vid: UUID): DeleteDomainTemplateCategories
-  deleteOrganization(vid: UUID): DeleteOrganization
+  createProjectLibrary(category: UUID, code: String, description: String, name: String, title: String): CreateProjectLibrary
+  createProjectLibraryCategories(code: String, name: String, parent: UUID): CreateProjectLibraryCategories
+  createProjectRole(code: String, defaultAttachmentType: UUID, name: String): CreateProjectRole
+  createRegion(code: String, country: UUID, fullName: String, name: String): CreateRegion
+  createUser(adId: String, code: String, favoriteProjects: [ID], firstName: String, groups: [UUID], lastName: String, login: String, name: String, organizationUnits: [UUID], patronym: String, role: String): CreateUser
+  createUserGroup(code: String, name: String, project: ID): CreateUserGroup
+  deleteActivity(vid: UUID!): DeleteActivity
+  deleteActivityCategories(vid: UUID!): DeleteActivityCategories
+  deleteAssembly(vid: UUID!): DeleteAssembly
+  deleteAssemblyCategories(vid: UUID!): DeleteAssemblyCategories
+  deleteAttachment(vid: UUID!): DeleteAttachment
+  deleteAttachmentType(vid: UUID!): DeleteAttachmentType
+  deleteComponent(vid: UUID!): DeleteComponent
+  deleteComponentCategories(vid: UUID!): DeleteComponentCategories
+  deleteCountry(vid: UUID!): DeleteCountry
+  deleteDomainEntity(vid: UUID!): DeleteDomainEntity
+  deleteDomainTemplate(vid: UUID!): DeleteDomainTemplate
+  deleteDomainTemplateCategories(vid: UUID!): DeleteDomainTemplateCategories
+  deleteJtiBlackListEntry(vid: UUID!): DeleteJtiBlackListEntry
+  deleteOrganization(vid: UUID!): DeleteOrganization
+  deleteOrganizationUnit(vid: UUID!): DeleteOrganizationUnit
   deleteProject(vid: UUID): DeleteProject
-  deleteProjectFile(vid: UUID): DeleteProjectFile
-  deleteProjectLibrary(vid: UUID): DeleteProjectLibrary
-  deleteProjectLibraryCategories(vid: UUID): DeleteProjectLibraryCategories
-  deleteProjectRole(vid: UUID): DeleteProjectRole
-  deleteRegion(vid: UUID): DeleteRegion
-  deleteUser(vid: UUID): DeleteUser
-  deleteUserGroup(vid: UUID): DeleteUserGroup
+  deleteProjectLibrary(vid: UUID!): DeleteProjectLibrary
+  deleteProjectLibraryCategories(vid: UUID!): DeleteProjectLibraryCategories
+  deleteProjectRole(vid: UUID!): DeleteProjectRole
+  deleteRegion(vid: UUID!): DeleteRegion
+  deleteUser(vid: UUID!): DeleteUser
+  deleteUserGroup(vid: UUID!): DeleteUserGroup
   removeAttendeeRole(projectId: UUID!, role: UUID!, user: UUID!, version: Int!): AttendeeTypeOrError
   removeAttendees(
     attendees: [UUID]!,
@@ -456,46 +440,58 @@ type Mutation {
     "Version of the original project."
     version: Int!
   ): RemoveAttendees
-  updateActivity(category: UUID, code: String, createdAt: DateTime, description: String, editedAt: DateTime, isDeleted: Boolean, name: String, title: String, vid: UUID): UpdateActivity
-  updateActivityCategories(code: String, isDeleted: Boolean, name: String, parent: UUID, vid: UUID): UpdateActivityCategories
-  updateAssembly(category: UUID, code: String, createdAt: DateTime, description: String, editedAt: DateTime, isDeleted: Boolean, name: String, title: String, vid: UUID): UpdateAssembly
-  updateAssemblyCategories(code: String, isDeleted: Boolean, name: String, parent: UUID, vid: UUID): UpdateAssemblyCategories
-  updateAttachment(category: UUID, code: String, comment: String, contentType: String, createdAt: DateTime, createdBy: UUID, editedAt: DateTime, editedBy: UUID, isDeleted: Boolean, name: String, projectId: UUID, size: Int, status: Int, vid: UUID): UpdateAttachment
-  updateAttachmentType(code: String, createdAt: DateTime, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): UpdateAttachmentType
-  updateComponent(category: UUID, code: String, createdAt: DateTime, description: String, editedAt: DateTime, isDeleted: Boolean, name: String, title: String, vid: UUID): UpdateComponent
-  updateComponentCategories(code: String, isDeleted: Boolean, name: String, parent: UUID, vid: UUID): UpdateComponentCategories
-  updateCoordinateSystem(code: String, coordsNumber: Int, createdAt: DateTime, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): UpdateCoordinateSystem
-  updateCountry(code: String, createdAt: DateTime, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): UpdateCountry
-  updateDomain(category: UUID, code: String, createdAt: DateTime, description: String, editedAt: DateTime, isDeleted: Boolean, name: String, title: String, vid: UUID): UpdateDomain
-  updateDomainCategories(code: String, isDeleted: Boolean, name: String, parent: UUID, vid: UUID): UpdateDomainCategories
-  updateDomainEntity(code: String, createdAt: DateTime, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): UpdateDomainEntity
-  updateDomainTemplate(attributes: [PropertyMetaInputType], category: UUID, code: String, createdAt: DateTime, description: String, editedAt: DateTime, entity: UUID, isDeleted: Boolean, name: String, title: String, vid: UUID): UpdateDomainTemplate
-  updateDomainTemplateCategories(code: String, isDeleted: Boolean, name: String, parent: UUID, vid: UUID): UpdateDomainTemplateCategories
-  updateOrganization(code: String, createdAt: DateTime, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): UpdateOrganization
+  updateActivity(category: UUID, code: String, description: String, name: String, title: String, vid: UUID!): UpdateActivity
+  updateActivityCategories(code: String, name: String, parent: UUID, vid: UUID!): UpdateActivityCategories
+  updateAssembly(category: UUID, code: String, description: String, name: String, title: String, vid: UUID!): UpdateAssembly
+  updateAssemblyCategories(code: String, name: String, parent: UUID, vid: UUID!): UpdateAssemblyCategories
+  updateAttachment(category: UUID, code: String, comment: String, contentType: String, name: String, projectId: ID, status: Int, vid: UUID!): UpdateAttachment
+  updateAttachmentType(code: String, name: String, vid: UUID!): UpdateAttachmentType
+  updateComponent(category: UUID, code: String, description: String, name: String, title: String, vid: UUID!): UpdateComponent
+  updateComponentCategories(code: String, name: String, parent: UUID, vid: UUID!): UpdateComponentCategories
+  updateCountry(code: String, coordinateSystems: [String], name: String, vid: UUID!): UpdateCountry
+  updateDomainEntity(code: String, name: String, vid: UUID!): UpdateDomainEntity
+  updateDomainTemplate(attributes: [PropertyMetaInputType], category: UUID, code: String, description: String, entity: UUID, name: String, title: String, vid: UUID!): UpdateDomainTemplate
+  updateDomainTemplateCategories(code: String, name: String, parent: UUID, vid: UUID!): UpdateDomainTemplateCategories
+  updateJtiBlackListEntry(code: String, exp: Int, jti: String, name: String, vid: UUID!): UpdateJtiBlackListEntry
+  updateOrganization(code: String, name: String, vid: UUID!): UpdateOrganization
+  updateOrganizationUnit(adId: String, code: String, name: String, organization: UUID, parentOu: UUID, vid: UUID!): UpdateOrganizationUnit
   updateProject(data: ProjectUpdateType, vid: UUID): UpdateProject
-  updateProjectFile(category: String, code: String, comment: String, createdAt: DateTime, editedAt: DateTime, extension: String, isDeleted: Boolean, name: String, size: Int, uri: String, vid: UUID): UpdateProjectFile
-  updateProjectLibrary(category: UUID, code: String, createdAt: DateTime, description: String, editedAt: DateTime, isDeleted: Boolean, name: String, title: String, vid: UUID): UpdateProjectLibrary
-  updateProjectLibraryCategories(code: String, isDeleted: Boolean, name: String, parent: UUID, vid: UUID): UpdateProjectLibraryCategories
-  updateProjectRole(code: String, createdAt: DateTime, defaultAttachmentType: UUID, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): UpdateProjectRole
-  updateRegion(code: String, country: UUID, createdAt: DateTime, editedAt: DateTime, fullName: String, isDeleted: Boolean, name: String, vid: UUID): UpdateRegion
-  updateUser(adId: String, code: String, createdAt: DateTime, editedAt: DateTime, favoriteProjects: [UUID], firstName: String, groups: [UUID], isDeleted: Boolean, lastName: String, login: String, name: String, patronym: String, role: String, vid: UUID): UpdateUser
-  updateUserGroup(code: String, createdAt: DateTime, editedAt: DateTime, isDeleted: Boolean, name: String, vid: UUID): UpdateUserGroup
+  updateProjectLibrary(category: UUID, code: String, description: String, name: String, title: String, vid: UUID!): UpdateProjectLibrary
+  updateProjectLibraryCategories(code: String, name: String, parent: UUID, vid: UUID!): UpdateProjectLibraryCategories
+  updateProjectRole(code: String, defaultAttachmentType: UUID, name: String, vid: UUID!): UpdateProjectRole
+  updateRegion(code: String, country: UUID, fullName: String, name: String, vid: UUID!): UpdateRegion
+  updateUser(adId: String, code: String, favoriteProjects: [ID], firstName: String, groups: [UUID], lastName: String, login: String, name: String, organizationUnits: [UUID], patronym: String, role: String, vid: UUID!): UpdateUser
+  updateUserGroup(code: String, name: String, project: ID, vid: UUID!): UpdateUserGroup
 }
 
 type Organization {
   code: String
   createdAt: DateTime
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   vid: ID
 }
 
+type OrganizationUnit {
+  adId: String
+  code: String
+  createdAt: DateTime
+  editedAt: DateTime
+  isDeleted: Boolean
+  name: String
+  organization: Organization
+  parentOu: OrganizationUnit
+  vid: ID
+}
+
 type Project {
+  adId: String
   attendees(orderBy: [AttendeeOrderBy] = [NAME], sortBy: SortType = ASC): [Attendee]
   attendeesTotal: Int
-  authorUnit: String
+  authorOu: OrganizationUnit
   code: String
-  coordinateSystem: CoordinateSystem
+  coordinateSystem: String
   coordinates: String
   createdAt: DateTime
   createdBy: User
@@ -505,34 +501,21 @@ type Project {
   editedBy: User
   files: [Attachment]
   filesTotal: Int
+  isDeleted: Boolean
   isFavorite: Boolean
   myRoles: [ProjectRole]
   name: String
+  recentlyEdited: Boolean!
   region: Region
   resourceId: String
   rootEntity: String
   status: ProjectStatusEnum
   type: ProjectTypeEnum
   version: Int
-  versions: [Int]
+  versions: [Int]!
   vid: ID
   yearEnd: Int
   yearStart: Int
-  years: Int
-}
-
-"???"
-type ProjectFile {
-  category: String
-  code: String
-  comment: String
-  createdAt: DateTime
-  editedAt: DateTime
-  extension: String
-  name: String
-  size: Int
-  uri: String
-  vid: ID
 }
 
 type ProjectLibrary {
@@ -541,6 +524,7 @@ type ProjectLibrary {
   createdAt: DateTime
   description: String
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   title: String
   vid: ID
@@ -548,12 +532,14 @@ type ProjectLibrary {
 
 type ProjectLibraryCategory {
   code: String
+  isDeleted: Boolean
   name: String
   parent: ProjectLibraryCategory
   vid: ID
 }
 
 type ProjectList {
+  itemsTotal: Int
   projectList: [Project]
 }
 
@@ -562,6 +548,7 @@ type ProjectRole {
   createdAt: DateTime
   defaultAttachmentType: AttachmentType
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
   vid: ID
 }
@@ -583,6 +570,7 @@ type PropertyMeta {
   description: String
   entity: DomainEntity
   name: String
+  required: Boolean
   title: String
   unit: String
   validationRules: ValidationRules
@@ -605,31 +593,27 @@ type Query {
   componentCategories(vid: UUID): ComponentLibraryCategory
   componentCategoriesList: [ComponentLibraryCategory]
   componentList: [Component]
-  coordinateSystem(vid: UUID): CoordinateSystem
-  coordinateSystemList: [CoordinateSystem]
   country(vid: UUID): Country
   countryList: [Country]
-  domain(vid: UUID): Domain
-  domainCategories(vid: UUID): DomainLibraryCategory
-  domainCategoriesList: [DomainLibraryCategory]
   domainEntity(vid: UUID): DomainEntity
   domainEntityList: [DomainEntity]
-  domainList: [Domain]
   domainTemplate(vid: UUID): DomainTemplate
-  domainTemplateCategories(vid: UUID): DomainLibraryCategory
-  domainTemplateCategoriesList: [DomainLibraryCategory]
+  domainTemplateCategories(vid: UUID): DomainTemplateLibraryCategory
+  domainTemplateCategoriesList: [DomainTemplateLibraryCategory]
   domainTemplatelist: [DomainTemplate]
+  jtiBlackListEntry(vid: UUID): JtiBlackListEntry
+  jtiBlackListEntryList: [JtiBlackListEntry]
   me: User
   organization(vid: UUID): Organization
   organizationList: [Organization]
+  organizationUnit(vid: UUID): OrganizationUnit
+  organizationUnitList: [OrganizationUnit]
   project(version: Int, vid: UUID): ProjectOrError
-  projectFile(vid: UUID): ProjectFile
-  projectFileList: [ProjectFile]
   projectLibrary(vid: UUID): ProjectLibrary
   projectLibraryCategories(vid: UUID): ProjectLibraryCategory
   projectLibraryCategoriesList: [ProjectLibraryCategory]
   projectLibrarylist: [ProjectLibrary]
-  projectList(includeBlank: Boolean = false): ProjectListOrError
+  projectList(includeBlank: Boolean = false, pageNumber: Int = 1, pageSize: Int = 20): ProjectListOrError
   projectRole(vid: UUID): ProjectRole
   projectRoleList: [ProjectRole]
   region(vid: UUID): Region
@@ -646,6 +630,7 @@ type Region {
   createdAt: DateTime
   editedAt: DateTime
   fullName: String
+  isDeleted: Boolean
   name: String
   vid: ID
 }
@@ -690,20 +675,8 @@ type UpdateComponentCategories {
   result: Component
 }
 
-type UpdateCoordinateSystem {
-  result: CoordinateSystem
-}
-
 type UpdateCountry {
   result: Country
-}
-
-type UpdateDomain {
-  result: Domain
-}
-
-type UpdateDomainCategories {
-  result: Domain
 }
 
 type UpdateDomainEntity {
@@ -718,8 +691,16 @@ type UpdateDomainTemplateCategories {
   result: DomainTemplate
 }
 
+type UpdateJtiBlackListEntry {
+  result: JtiBlackListEntry
+}
+
 type UpdateOrganization {
   result: Organization
+}
+
+type UpdateOrganizationUnit {
+  result: OrganizationUnit
 }
 
 type UpdateProject {
@@ -731,10 +712,6 @@ type UpdateProjectDiff {
   localProject: Project
   message: String
   remoteProject: Project
-}
-
-type UpdateProjectFile {
-  result: ProjectFile
 }
 
 type UpdateProjectLibrary {
@@ -769,9 +746,11 @@ type User {
   favoriteProjects: [ID]
   firstName: String
   groups: [UserGroup]
+  isDeleted: Boolean
   lastName: String
   login: String
   name: String
+  organizationUnits: [OrganizationUnit]
   patronym: String
   role: String
   vid: ID
@@ -781,7 +760,9 @@ type UserGroup {
   code: String
   createdAt: DateTime
   editedAt: DateTime
+  isDeleted: Boolean
   name: String
+  project: ID
   vid: ID
 }
 
@@ -806,7 +787,7 @@ enum AttendeeOrderBy {
 }
 
 "Error codes list."
-enum ErrorCodes {
+enum ErrorCodesEnum {
   "Проект нельзя возвращать в статус заготовки."
   CANNOT_BRING_BLANK_BACK
   "Отсутствует роль"
@@ -819,6 +800,8 @@ enum ErrorCodes {
   INCORRECT_PROJECT_VERSION
   "Некорректный формат UUID"
   INCORRECT_UUID
+  "Неверный номер страницы"
+  INVALID_PAGE_NUMBER
   "Удаляемый участник не найден в проекте "
   NO_ATTENDEE_TO_REMOVE
   "Пользователь не обладает провами для совершения операции"
@@ -879,19 +862,19 @@ input AttendeeInputType {
 }
 
 input ProjectInputType {
-  coordinateSystem: ID
+  coordinateSystem: String
   coordinates: String
   description: String
   name: String
   region: ID
   resourceId: String
   type: ProjectTypeEnum = GEO
-  yearStart: Int = 2021
-  years: Int = 25
+  yearEnd: Int
+  yearStart: Int = 2022
 }
 
 input ProjectUpdateType {
-  coordinateSystem: UUID
+  coordinateSystem: String
   coordinates: String
   description: String
   isFavorite: Boolean
@@ -901,8 +884,8 @@ input ProjectUpdateType {
   status: ProjectStatusEnum
   "Version of the original project."
   version: Int!
+  yearEnd: Int
   yearStart: Int
-  years: Int
 }
 
 input PropertyMetaInputType {

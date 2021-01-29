@@ -9,7 +9,7 @@
             "url": "${env:VEGA_SCHEMA_PATH}",
             "headers": {
               "user-agent": "JS GraphQL",
-              "Authorization": "${env:AUTH_TOKEN}"
+              "Authorization": "Bearer ${env:AUTH_TOKEN}"
             },
             "introspect": false
           }
@@ -24,7 +24,7 @@
             "url": "${env:VEGA_PROJECT_SCHEMA_PATH}",
             "headers": {
               "user-agent": "JS GraphQL",
-              "Authorization": "${env:AUTH_TOKEN}"
+              "Authorization": "Bearer ${env:AUTH_TOKEN}"
             },
             "introspect": false
           }
