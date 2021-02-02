@@ -13,11 +13,11 @@ import {
   TableEntities,
 } from 'components/ExcelTable/types';
 import { ProjectContext } from 'components/Providers';
+import { loadTableData } from 'services/loadTableData';
 import projectService from 'services/ProjectService';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { Nullable } from 'types';
-import { unpackTableData } from 'utils';
 
 interface IProps {
   onSelect?: (data: Nullable<SelectedCell>) => void;
@@ -62,24 +62,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
       projectId,
     });
 
-    projectService.getProjectVersion().then((version) =>
-      projectService.getResourceBaseData().then((loadFromDatabase) => {
-        if (loadFromDatabase) {
-          const { structure } = loadFromDatabase.conceptions[0];
-          dispatch(
-            tableDuck.actions.initState(unpackTableData(structure, version)),
-          );
-        } else if (loadFromDatabase === null) {
-          projectService.getTableTemplate().then((structureTemplate) => {
-            dispatch(
-              tableDuck.actions.initState(
-                unpackTableData(structureTemplate, version),
-              ),
-            );
-          });
-        }
-      }),
-    );
+    loadTableData(dispatch).then();
   });
 
   useUnmount(() => {
