@@ -51,10 +51,10 @@ export const ExcelTable: React.FC<IProps> = ({
 
   const handleRowClick = useCallback(
     (rowIdx: number, row: GridRow, column: CommonTableColumn) => {
+      onRowClick(rowIdx, row, column);
+
       if (column.type === TableEntities.GEO_CATEGORY_TYPE) {
         gridRef.current?.selectCell({ rowIdx, idx: column.idx }, true);
-      } else {
-        onRowClick(rowIdx, row, column);
       }
     },
     [onRowClick],
