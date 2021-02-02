@@ -1,5 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { FetchPolicy } from '@apollo/client/core/watchQueryOptions';
+import { GET_RECENTLY_EDITED } from 'components/CompetitiveAccess/queries';
 import { GET_DISTRIBUTION_VALUE } from 'components/DistributionSettings/queries';
 import { GridCollection } from 'components/ExcelTable/types';
 import {
@@ -31,8 +32,6 @@ import {
 } from 'services/utils';
 import { Identity } from 'types';
 import { packTableData } from 'utils';
-
-import { GET_RECENTLY_EDITED } from '../components/CompetitiveAccess/queries';
 
 type ProjectServiceProps = {
   client: ApolloClient<NormalizedCacheObject>;
