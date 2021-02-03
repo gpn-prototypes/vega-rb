@@ -2,7 +2,7 @@
 _{Short Issue Description}_
 
 ### Checks
-- [ ] Jira link attached: VEGA-XYZ
+- [ ] Jira link attached: [VEGA-XYZ]()
 - [ ] Possible Associated Jira links:
 - [ ] Personal Vega Instance link attached: http://xx-yy-vega-builder.code013.org
 - [ ] Jira tasks for technical debt were created (if needed)
