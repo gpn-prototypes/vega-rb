@@ -7,6 +7,7 @@ import ReactDataGrid, {
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { AutoSizer } from 'react-virtualized';
+import { useUpdateErrors } from 'hooks';
 
 import { renderColumns } from './Columns/renderColumns';
 import { cnExcelTable } from './cn-excel-table';
@@ -39,13 +40,14 @@ interface IProps {
 }
 
 export const ExcelTable: React.FC<IProps> = ({
-  data = { columns: [], rows: [] },
+  data = { columns: [], rows: [], errors: {} },
   setColumns = (): void => {},
   setRows = (): void => {},
   onRowClick = (): void => {},
 }) => {
-  const { columns, rows } = data;
+  const { columns, rows, errors } = data;
   const gridRef = useRef<DataGridHandle>(null);
+  const updateErrors = useUpdateErrors();
 
   const handleRowClick = useCallback(
     (rowIdx: number, row: GridRow, column: CommonTableColumn) => {
@@ -79,7 +81,10 @@ export const ExcelTable: React.FC<IProps> = ({
     e: React.MouseEvent<HTMLDivElement>,
     { idx }: { idx: number },
   ): void => {
+    const deletedColumn = columns[idx];
+
     setColumns([...columns.slice(0, idx), ...columns.slice(idx + 1)]);
+    updateErrors(deletedColumn, columns);
   };
 
   const pushColumn = (insertIdx: number): void => {
@@ -102,10 +107,9 @@ export const ExcelTable: React.FC<IProps> = ({
     { idx }: { idx: number },
   ): void => pushColumn(idx + 1);
 
-  const columnsList = useMemo(() => renderColumns(columns, setColumns), [
-    columns,
-    setColumns,
-  ]);
+  const columnsList = useMemo(() => {
+    return renderColumns(columns, errors, setColumns);
+  }, [columns, setColumns, errors]);
 
   return (
     <>

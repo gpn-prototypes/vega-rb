@@ -366,8 +366,8 @@ export type RbErrorInterface = {
 export enum RbErrorCodes {
   /** Ошибка в загружаемой структуре */
   IncorrectProjectStructure = 'INCORRECT_PROJECT_STRUCTURE',
-  /** В строке данных таблицы структуры не может быть пустых ячеек */
-  EmptyCellInTableData = 'EMPTY_CELL_IN_TABLE_DATA',
+  /** В строке таблицы структуры должна быть заполнена хотя бы одна ячейка */
+  MustBeAtLeastOneCell = 'MUST_BE_AT_LEAST_ONE_CELL',
   /** В таблице структуры не может быть одинаковых строк */
   IdenticalRowInTableData = 'IDENTICAL_ROW_IN_TABLE_DATA',
   /** Версия импортируемого файла не соответствует версии шаблона структуры */
@@ -400,6 +400,8 @@ export enum RbErrorCodes {
   VersionParamNotFound = 'VERSION_PARAM_NOT_FOUND',
   /** Значения доверительного интервала отрицательны */
   ConfidenceIntervalIsNegative = 'CONFIDENCE_INTERVAL_IS_NEGATIVE',
+  /** Значение случайной величины отрицательное. */
+  RandomVariableValueIsNegative = 'RANDOM_VARIABLE_VALUE_IS_NEGATIVE',
   /** В проекте отсутствуют доменные сущности */
   EmptyDomainEntities = 'EMPTY_DOMAIN_ENTITIES',
   /** Дублируются имена колонок */
@@ -514,12 +516,19 @@ export type DistributionQueries = {
   __typename?: 'DistributionQueries';
   /** Результат вычисления значения распределения */
   distributionChart?: Maybe<DistributionChartResult>;
+  /** Результат поиска альтернативных способов задания распределения */
+  alternativeDefinitions?: Maybe<AlternativeDefinitionResult>;
 };
 
 /** Пространство имен для работы с распределениями. */
 export type DistributionQueriesDistributionChartArgs = {
   distribution: DistributionInput;
   visibleRank?: Maybe<Scalars['Int']>;
+};
+
+/** Пространство имен для работы с распределениями. */
+export type DistributionQueriesAlternativeDefinitionsArgs = {
+  distribution: DistributionInput;
 };
 
 export type DistributionChartResult =
@@ -597,6 +606,18 @@ export type DistributionDefinitionError = RbErrorInterface & {
   fields: Array<Scalars['String']>;
 };
 
+export type AlternativeDefinitionResult =
+  | AlternativeDefinitions
+  | DistributionDefinitionErrors
+  | CommonErrors;
+
+/** Результаты определения альтернативных способов задания распределения. */
+export type AlternativeDefinitions = {
+  __typename?: 'AlternativeDefinitions';
+  /** Альтернативные способы задания с расчитанными параметрами */
+  distributions: Array<Distribution>;
+};
+
 /** Модель логики проекта - хранение внутри сущности проекта. */
 export type Logic = {
   __typename?: 'Logic';
@@ -670,6 +691,7 @@ export type Activity = {
   category?: Maybe<ActivityLibraryCategory>;
   vid?: Maybe<Scalars['ID']>;
   code?: Maybe<Scalars['String']>;
+  isDeleted?: Maybe<Scalars['Boolean']>;
   createdAt?: Maybe<Scalars['DateTime']>;
   editedAt?: Maybe<Scalars['DateTime']>;
   name?: Maybe<Scalars['String']>;
@@ -681,11 +703,12 @@ export type ActivityLibraryCategory = {
   __typename?: 'ActivityLibraryCategory';
   vid?: Maybe<Scalars['ID']>;
   code?: Maybe<Scalars['String']>;
+  isDeleted?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
   parent?: Maybe<ActivityLibraryCategory>;
 };
 
-/** Эффект мероприятия */
+/** Эффект мероприятия. */
 export type ActivityEffect = {
   __typename?: 'ActivityEffect';
   vid?: Maybe<Scalars['ID']>;
@@ -840,7 +863,7 @@ export type YearValue = {
 export type Error = ErrorInterface & {
   __typename?: 'Error';
   /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
-  code: ErrorCodes;
+  code: ErrorCodesEnum;
   /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
   message: Scalars['String'];
   details?: Maybe<Scalars['String']>;
@@ -850,7 +873,7 @@ export type Error = ErrorInterface & {
 /** Интерфейс ошибок, отображаемых пользователю. */
 export type ErrorInterface = {
   /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
-  code: ErrorCodes;
+  code: ErrorCodesEnum;
   /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
   message: Scalars['String'];
   details?: Maybe<Scalars['String']>;
@@ -858,7 +881,7 @@ export type ErrorInterface = {
 };
 
 /** Error codes list. */
-export enum ErrorCodes {
+export enum ErrorCodesEnum {
   /** Проект не найден */
   ProjectNotFound = 'PROJECT_NOT_FOUND',
   /** Ошибка при обновлении проекта */
@@ -907,6 +930,8 @@ export enum ErrorCodes {
   CannotBringBlankBack = 'CANNOT_BRING_BLANK_BACK',
   /** Отсутствует год начала планирования проекта */
   ProjectYearstartCannotBeNull = 'PROJECT_YEARSTART_CANNOT_BE_NULL',
+  /** Неверный номер страницы */
+  InvalidPageNumber = 'INVALID_PAGE_NUMBER',
 }
 
 export type TaxDnsProfileType = {
@@ -1903,7 +1928,7 @@ export type ScenarioStepMutations = {
   update?: Maybe<UpdateScenarioStep>;
   /** Удаление шага сценария. */
   delete?: Maybe<DeleteScenarioStep>;
-  itemEffects?: Maybe<ActivityEffectMutations>;
+  items?: Maybe<ScenarioStepItemMutations>;
 };
 
 /** Мутации для шагов сценария. */
@@ -1946,6 +1971,64 @@ export type UpdateScenarioStep = {
 /** Удаление шага сценария. */
 export type DeleteScenarioStep = {
   __typename?: 'DeleteScenarioStep';
+  ok?: Maybe<Scalars['Boolean']>;
+};
+
+/** Мутации для шагов сценария. */
+export type ScenarioStepItemMutations = {
+  __typename?: 'ScenarioStepItemMutations';
+  /** Создание элемента шага сценария. */
+  create?: Maybe<CreateScenarioStepItem>;
+  /** Изменение элемента шага сценария. */
+  update?: Maybe<UpdateScenarioStepItem>;
+  /** Удаление элемента шага сценария. */
+  delete?: Maybe<DeleteScenarioStepItem>;
+  effects?: Maybe<ActivityEffectMutations>;
+};
+
+/** Мутации для шагов сценария. */
+export type ScenarioStepItemMutationsCreateArgs = {
+  activityVid: Scalars['UUID'];
+  objectGroupVid?: Maybe<Scalars['UUID']>;
+  objectVid?: Maybe<Scalars['UUID']>;
+  risk?: Maybe<Scalars['String']>;
+  stepVid: Scalars['UUID'];
+  version: Scalars['Int'];
+};
+
+/** Мутации для шагов сценария. */
+export type ScenarioStepItemMutationsUpdateArgs = {
+  activityVid?: Maybe<Scalars['UUID']>;
+  objectGroupVid?: Maybe<Scalars['UUID']>;
+  objectVid?: Maybe<Scalars['UUID']>;
+  risk?: Maybe<Scalars['String']>;
+  stepVid: Scalars['UUID'];
+  version: Scalars['Int'];
+  vid: Scalars['UUID'];
+};
+
+/** Мутации для шагов сценария. */
+export type ScenarioStepItemMutationsDeleteArgs = {
+  stepVid: Scalars['UUID'];
+  version: Scalars['Int'];
+  vid: Scalars['UUID'];
+};
+
+/** Создание элемента шага сценария. */
+export type CreateScenarioStepItem = {
+  __typename?: 'CreateScenarioStepItem';
+  result?: Maybe<ScenarioStepItem>;
+};
+
+/** Изменение элемента шага сценария. */
+export type UpdateScenarioStepItem = {
+  __typename?: 'UpdateScenarioStepItem';
+  result?: Maybe<ScenarioStepItem>;
+};
+
+/** Удаление элемента шага сценария. */
+export type DeleteScenarioStepItem = {
+  __typename?: 'DeleteScenarioStepItem';
   ok?: Maybe<Scalars['Boolean']>;
 };
 
@@ -2077,26 +2160,28 @@ export type Project = {
   attendees?: Maybe<Array<Maybe<Attendee>>>;
   yearEnd?: Maybe<Scalars['Int']>;
   domainSchema?: Maybe<DomainSchema>;
-  versions?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  versions: Array<Maybe<Scalars['Int']>>;
   myRoles?: Maybe<Array<Maybe<ProjectRole>>>;
+  recentlyEdited: Scalars['Boolean'];
   vid?: Maybe<Scalars['ID']>;
   code?: Maybe<Scalars['String']>;
+  isDeleted?: Maybe<Scalars['Boolean']>;
   name?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['DateTime']>;
   editedAt?: Maybe<Scalars['DateTime']>;
   type?: Maybe<ProjectTypeEnum>;
   createdBy?: Maybe<User>;
   editedBy?: Maybe<User>;
-  authorUnit?: Maybe<Scalars['String']>;
+  adId?: Maybe<Scalars['String']>;
+  authorOu?: Maybe<OrganizationUnit>;
   region?: Maybe<Region>;
   coordinates?: Maybe<Scalars['String']>;
-  coordinateSystem?: Maybe<CoordinateSystem>;
+  coordinateSystem?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   rootEntity?: Maybe<Scalars['String']>;
   status?: Maybe<ProjectStatusEnum>;
   resourceId?: Maybe<Scalars['String']>;
   yearStart?: Maybe<Scalars['Int']>;
-  years?: Maybe<Scalars['Int']>;
   version?: Maybe<Scalars['Int']>;
 };
 
@@ -2111,6 +2196,7 @@ export type Attachment = {
   uri?: Maybe<Scalars['String']>;
   vid?: Maybe<Scalars['ID']>;
   code?: Maybe<Scalars['String']>;
+  isDeleted?: Maybe<Scalars['Boolean']>;
   createdAt?: Maybe<Scalars['DateTime']>;
   editedAt?: Maybe<Scalars['DateTime']>;
   name?: Maybe<Scalars['String']>;
@@ -2129,6 +2215,7 @@ export type User = {
   name?: Maybe<Scalars['String']>;
   vid?: Maybe<Scalars['ID']>;
   code?: Maybe<Scalars['String']>;
+  isDeleted?: Maybe<Scalars['Boolean']>;
   createdAt?: Maybe<Scalars['DateTime']>;
   editedAt?: Maybe<Scalars['DateTime']>;
   login?: Maybe<Scalars['String']>;
@@ -2138,22 +2225,49 @@ export type User = {
   adId?: Maybe<Scalars['String']>;
   role?: Maybe<Scalars['String']>;
   favoriteProjects?: Maybe<Array<Maybe<Scalars['ID']>>>;
+  organizationUnits?: Maybe<Array<Maybe<OrganizationUnit>>>;
   groups?: Maybe<Array<Maybe<UserGroup>>>;
+};
+
+export type OrganizationUnit = {
+  __typename?: 'OrganizationUnit';
+  vid?: Maybe<Scalars['ID']>;
+  code?: Maybe<Scalars['String']>;
+  isDeleted?: Maybe<Scalars['Boolean']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  editedAt?: Maybe<Scalars['DateTime']>;
+  name?: Maybe<Scalars['String']>;
+  organization?: Maybe<Organization>;
+  parentOu?: Maybe<OrganizationUnit>;
+  adId?: Maybe<Scalars['String']>;
+};
+
+export type Organization = {
+  __typename?: 'Organization';
+  vid?: Maybe<Scalars['ID']>;
+  code?: Maybe<Scalars['String']>;
+  isDeleted?: Maybe<Scalars['Boolean']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  editedAt?: Maybe<Scalars['DateTime']>;
+  name?: Maybe<Scalars['String']>;
 };
 
 export type UserGroup = {
   __typename?: 'UserGroup';
   vid?: Maybe<Scalars['ID']>;
   code?: Maybe<Scalars['String']>;
+  isDeleted?: Maybe<Scalars['Boolean']>;
   createdAt?: Maybe<Scalars['DateTime']>;
   editedAt?: Maybe<Scalars['DateTime']>;
   name?: Maybe<Scalars['String']>;
+  project?: Maybe<Scalars['ID']>;
 };
 
 export type AttachmentType = {
   __typename?: 'AttachmentType';
   vid?: Maybe<Scalars['ID']>;
   code?: Maybe<Scalars['String']>;
+  isDeleted?: Maybe<Scalars['Boolean']>;
   createdAt?: Maybe<Scalars['DateTime']>;
   editedAt?: Maybe<Scalars['DateTime']>;
   name?: Maybe<Scalars['String']>;
@@ -2169,6 +2283,7 @@ export type ProjectRole = {
   __typename?: 'ProjectRole';
   vid?: Maybe<Scalars['ID']>;
   code?: Maybe<Scalars['String']>;
+  isDeleted?: Maybe<Scalars['Boolean']>;
   createdAt?: Maybe<Scalars['DateTime']>;
   editedAt?: Maybe<Scalars['DateTime']>;
   name?: Maybe<Scalars['String']>;
@@ -2209,6 +2324,7 @@ export type DomainEntity = {
   __typename?: 'DomainEntity';
   vid?: Maybe<Scalars['ID']>;
   code?: Maybe<Scalars['String']>;
+  isDeleted?: Maybe<Scalars['Boolean']>;
   createdAt?: Maybe<Scalars['DateTime']>;
   editedAt?: Maybe<Scalars['DateTime']>;
   name?: Maybe<Scalars['String']>;
@@ -2234,6 +2350,7 @@ export type PropertyMeta = {
   unit?: Maybe<Scalars['String']>;
   validationRules?: Maybe<ValidationRules>;
   description?: Maybe<Scalars['String']>;
+  required?: Maybe<Scalars['Boolean']>;
 };
 
 /**
@@ -2257,6 +2374,7 @@ export type Region = {
   __typename?: 'Region';
   vid?: Maybe<Scalars['ID']>;
   code?: Maybe<Scalars['String']>;
+  isDeleted?: Maybe<Scalars['Boolean']>;
   createdAt?: Maybe<Scalars['DateTime']>;
   editedAt?: Maybe<Scalars['DateTime']>;
   name?: Maybe<Scalars['String']>;
@@ -2268,19 +2386,11 @@ export type Country = {
   __typename?: 'Country';
   vid?: Maybe<Scalars['ID']>;
   code?: Maybe<Scalars['String']>;
+  isDeleted?: Maybe<Scalars['Boolean']>;
   createdAt?: Maybe<Scalars['DateTime']>;
   editedAt?: Maybe<Scalars['DateTime']>;
   name?: Maybe<Scalars['String']>;
-};
-
-export type CoordinateSystem = {
-  __typename?: 'CoordinateSystem';
-  vid?: Maybe<Scalars['ID']>;
-  code?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['DateTime']>;
-  editedAt?: Maybe<Scalars['DateTime']>;
-  name?: Maybe<Scalars['String']>;
-  coordsNumber?: Maybe<Scalars['Int']>;
+  coordinateSystems?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** An enumeration. */

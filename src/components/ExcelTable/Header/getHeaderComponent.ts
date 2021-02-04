@@ -1,4 +1,4 @@
-import React from 'react';
+import { NamedExoticComponent, ReactElement } from 'react';
 import {
   HeaderRendererProps,
   TableEntities,
@@ -11,7 +11,7 @@ import { HeaderWithContextMenu } from './HeaderWithContextMenu';
 export const getHeaderComponent = (
   type: TableEntities = TableEntities.NONE,
 ):
-  | ((props: HeaderRendererProps) => React.ReactElement)
-  | React.NamedExoticComponent<HeaderRendererProps> => {
+  | ((props: HeaderRendererProps) => ReactElement)
+  | NamedExoticComponent<HeaderRendererProps> => {
   return hasContextMenu(type) ? HeaderWithContextMenu : Header;
 };

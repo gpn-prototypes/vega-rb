@@ -46,6 +46,6 @@ export type TableStructures = GeoCategory | CalculationParam | Risk;
 
 export type Nullable<T> = T | null;
 
-export type RowError = { [index: number]: TableError[] };
+export type ErrorWrapper = { [index: string]: TableError };
 
-export type ColumnErrors = { [index: string]: RowError | TableError };
+export type ColumnErrors = { [index: string]: ErrorWrapper };
