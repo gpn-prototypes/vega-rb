@@ -1,7 +1,4 @@
 /* eslint-disable */
-// @ts-nocheck
-// generated file
-
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
@@ -890,23 +887,13 @@ export enum ErrorCodesEnum {
   ReferenceItemNotFound = 'REFERENCE_ITEM_NOT_FOUND',
   /** Ошибка */
   Error = 'ERROR',
-  /** Не корректная версия проекта */
+  /** Некорректная версия проекта */
   IncorrectProjectVersion = 'INCORRECT_PROJECT_VERSION',
   /** Расхождение версий проекта */
   ProjectVersionDiffError = 'PROJECT_VERSION_DIFF_ERROR',
   /** Проект с таким именем уже существует */
   ProjectNameAlreadyExists = 'PROJECT_NAME_ALREADY_EXISTS',
-  /** Пустое имя проекта */
-  EmptyProjectName = 'EMPTY_PROJECT_NAME',
-  /** Имя проекта превышает лимит в 256 символов */
-  TooLongProjectName = 'TOO_LONG_PROJECT_NAME',
-  /** Имя проекта должно содержать минимум 2 символа */
-  TooShortProjectName = 'TOO_SHORT_PROJECT_NAME',
-  /** Год начала планирования не может быть меньше текущего календарного года */
-  YearStartError = 'YEAR_START_ERROR',
-  /** Отрицательное число лет планирования недопустимо */
-  YearsCountError = 'YEARS_COUNT_ERROR',
-  /** Пользователь не обладает провами для совершения операции */
+  /** Пользователь не обладает правами для совершения операции */
   NoRights = 'NO_RIGHTS',
   /** Объект не найден */
   ObjectNotFound = 'OBJECT_NOT_FOUND',
@@ -916,22 +903,22 @@ export enum ErrorCodesEnum {
   NoAttendeeToRemove = 'NO_ATTENDEE_TO_REMOVE',
   /** Некорректный формат UUID */
   IncorrectUuid = 'INCORRECT_UUID',
-  /** Статус проекта нельзя очистить */
-  ProjectStatusCannotBeNull = 'PROJECT_STATUS_CANNOT_BE_NULL',
   /** Участник проекта не найден */
   ProjectAttendeeNotFound = 'PROJECT_ATTENDEE_NOT_FOUND',
   /** Участник проекта уже обладет данной ролью */
   ProjectAttendeeAlreadyHasRole = 'PROJECT_ATTENDEE_ALREADY_HAS_ROLE',
   /** Рольу участника проекта не найдена */
   ProjectAttendeeUserRoleNotFound = 'PROJECT_ATTENDEE_USER_ROLE_NOT_FOUND',
+  /** Невозможно добавить участника с дублирующимися ролями. */
+  ProjectAttendeeUserWithDuplicateRoles = 'PROJECT_ATTENDEE_USER_WITH_DUPLICATE_ROLES',
   /** Невозможно сохранить проект - не найден менеджер проекта */
   ProjectManagerNotFound = 'PROJECT_MANAGER_NOT_FOUND',
   /** Проект нельзя возвращать в статус заготовки. */
   CannotBringBlankBack = 'CANNOT_BRING_BLANK_BACK',
-  /** Отсутствует год начала планирования проекта */
-  ProjectYearstartCannotBeNull = 'PROJECT_YEARSTART_CANNOT_BE_NULL',
   /** Неверный номер страницы */
   InvalidPageNumber = 'INVALID_PAGE_NUMBER',
+  /** Ошибка валидации */
+  Validation = 'VALIDATION',
 }
 
 export type TaxDnsProfileType = {
@@ -2158,7 +2145,6 @@ export type Project = {
   filesTotal?: Maybe<Scalars['Int']>;
   files?: Maybe<Array<Maybe<Attachment>>>;
   attendees?: Maybe<Array<Maybe<Attendee>>>;
-  yearEnd?: Maybe<Scalars['Int']>;
   domainSchema?: Maybe<DomainSchema>;
   versions: Array<Maybe<Scalars['Int']>>;
   myRoles?: Maybe<Array<Maybe<ProjectRole>>>;
@@ -2182,6 +2168,7 @@ export type Project = {
   status?: Maybe<ProjectStatusEnum>;
   resourceId?: Maybe<Scalars['String']>;
   yearStart?: Maybe<Scalars['Int']>;
+  yearEnd?: Maybe<Scalars['Int']>;
   version?: Maybe<Scalars['Int']>;
 };
 
