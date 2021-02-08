@@ -1,12 +1,20 @@
-import React, { ComponentType, ReactElement, ReactText } from 'react';
+import React, {
+  ComponentType,
+  ReactElement,
+  ReactText,
+  useRef,
+  useState,
+} from 'react';
 import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
+import { Tooltip } from '@gpn-prototypes/vega-ui';
 import classNames from 'classnames';
+import { cnCellTooltip } from 'components/ExcelTable/cn-excel-table';
 import {
   GridColumn,
   HeaderRendererProps,
   TableEntities,
 } from 'components/ExcelTable/types';
-import { Nullable } from 'types';
+import { useCombinedRefs } from 'hooks';
 
 import styles from '../Header.module.css';
 
@@ -15,36 +23,25 @@ interface ColumnDragObject extends DragObjectWithType {
   name: ReactText;
 }
 
-function wrapRefs<T>(...refs: React.Ref<T>[]) {
-  return (handle: Nullable<T>): void => {
-    refs.forEach((ref) => {
-      if (typeof ref === 'function') {
-        ref(handle);
-      } else if (ref !== null) {
-        // eslint-disable-next-line no-param-reassign
-        (ref as React.MutableRefObject<Nullable<T>>).current = handle;
-      }
-    });
-  };
-}
-
 interface IProps {
   column: GridColumn;
   onColumnsReorder: (sourceKey: string, targetKey: string) => void;
   onDoubleClick: () => void;
   editor: ComponentType | ReactElement;
   className?: string;
-  beforeContent?: ComponentType | ReactElement;
+  precedingContent?: ComponentType | ReactElement;
 }
+
+type DraggableHeaderProps = IProps & HeaderRendererProps;
 
 export function DraggableHeader({
   onColumnsReorder,
   onDoubleClick,
   editor,
   className = '',
-  beforeContent,
+  precedingContent,
   ...props
-}: IProps & HeaderRendererProps): JSX.Element {
+}: DraggableHeaderProps): JSX.Element {
   const { isRenaming, name } = props.column;
   const columnType = props.column?.type || TableEntities.NONE;
 
@@ -67,21 +64,45 @@ export function DraggableHeader({
     }),
   });
 
+  const innerRef = useRef<HTMLDivElement>(null);
+  const combinedRef = useCombinedRefs<HTMLDivElement>(innerRef, drag, drop);
+
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+
+  const hasError = !!props.column.error;
+  const errorMessage = props.column.error?.message;
+
   return (
-    <div
-      ref={wrapRefs(drag, drop)}
-      className={classNames(
-        className,
-        styles.Root,
-        isDragging && styles.IsDragging,
-        isOver && styles.IsOver,
+    <>
+      {isTooltipVisible && (
+        <Tooltip
+          anchorRef={combinedRef}
+          size="s"
+          className={cnCellTooltip.toString()}
+        >
+          {errorMessage}
+        </Tooltip>
       )}
-      onDoubleClick={onDoubleClick}
-    >
-      {beforeContent}
-      <div className={styles.WrapperText}>
-        {isRenaming ? editor : <span>{name}</span>}
+      <div
+        ref={combinedRef}
+        className={classNames(
+          className,
+          styles.Root,
+          isDragging && styles.IsDragging,
+          isOver && styles.IsOver,
+          hasError && styles.Error,
+        )}
+        onMouseEnter={() => {
+          if (hasError) setIsTooltipVisible(true);
+        }}
+        onMouseLeave={() => setIsTooltipVisible(false)}
+        onDoubleClick={onDoubleClick}
+      >
+        {precedingContent}
+        <div className={styles.WrapperText}>
+          {isRenaming ? editor : <span>{name}</span>}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

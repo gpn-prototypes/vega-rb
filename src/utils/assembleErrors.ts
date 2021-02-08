@@ -1,5 +1,5 @@
-import { TableError } from 'generated/graphql';
-import { set } from 'lodash/fp';
+import { RbErrorCodes, TableError } from 'generated/graphql';
+import { flow, set } from 'lodash/fp';
 import { ColumnErrors } from 'types';
 
 import { isEmpty } from './isEmpty';
@@ -10,17 +10,22 @@ export function assembleErrors(errors: TableError[]): ColumnErrors {
   return errors.reduce((previousValue, currentValue) => {
     const { columnKey, row: rowId, code } = currentValue;
 
-    if (code === 'DUPLICATING_COLUMNS') {
-      return set(COLUMN_ERROR_KEY, currentValue, previousValue);
+    if (code === RbErrorCodes.DuplicatingColumns && columnKey) {
+      return flow(
+        (prev: ColumnErrors) => set([COLUMN_ERROR_KEY], currentValue, prev),
+        (prev: ColumnErrors) =>
+          set([RbErrorCodes.DuplicatingColumns, columnKey], currentValue, prev),
+      )(previousValue);
     }
 
-    if (isEmpty(columnKey) && !isEmpty(rowId)) {
+    if (!isEmpty(rowId)) {
+      if (columnKey) {
+        return set([columnKey, rowId!], currentValue, previousValue);
+      }
+
       return set(`row-${rowId!}`, currentValue, previousValue);
     }
 
-    if (columnKey && !isEmpty(rowId)) {
-      return set([columnKey, rowId!], currentValue, previousValue);
-    }
     return previousValue;
   }, {} as ColumnErrors);
 }

@@ -9,6 +9,7 @@ import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
+  RbErrorInterface,
 } from 'generated/graphql';
 import { ColumnErrors } from 'types';
 
@@ -84,6 +85,7 @@ export interface GridColumn extends Column<GridRow> {
   notRemovable?: boolean;
   visible?: VisibilityProperties;
   cellRenderer?: React.ComponentType<CellRendererProps<GridRow>>;
+  error?: RbErrorInterface;
 }
 
 export interface GridCollection {

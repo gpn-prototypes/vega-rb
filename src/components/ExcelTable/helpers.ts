@@ -4,7 +4,7 @@ import { ColumnProperties, GridColumn, TableEntities } from './types';
 
 import './ExcelTable.css';
 
-export function setColumnAttributes(
+function setColumnAttributes(
   columns: GridColumn[],
   setColumns: (columnsList: GridColumn[]) => void,
   idx: number,
@@ -15,7 +15,7 @@ export function setColumnAttributes(
   setColumns(set([idx], updatedColumn, [...columns]));
 }
 
-export function columnsReorder(
+function columnsReorder(
   columns: GridColumn[],
   setColumns: (columnsList: GridColumn[]) => void,
   sourceKey: string,
@@ -34,10 +34,24 @@ export function columnsReorder(
   setColumns(reorderedColumns);
 }
 
-export function isNoneColumnType(type: TableEntities): boolean {
+const setColumnProps = (
+  columns: GridColumn[],
+  setColumns: (data: GridColumn[]) => void,
+) => (idx: number, properties: ColumnProperties): void =>
+  setColumnAttributes(columns, setColumns, idx, properties);
+
+const handleColumnsReorder = (
+  columns: GridColumn[],
+  setColumns: (data: GridColumn[]) => void,
+) => (sourceKey: string, targetKey: string): void =>
+  columnsReorder(columns, setColumns, sourceKey, targetKey);
+
+function isNoneColumnType(type: TableEntities): boolean {
   return (
     type === TableEntities.ID ||
     type === TableEntities.SPLITTER ||
     type === TableEntities.NONE
   );
 }
+
+export { setColumnProps, handleColumnsReorder, isNoneColumnType };

@@ -1,5 +1,7 @@
 .Root {
-  padding: var(--space-xs) 0;
+  padding-right: var(--space-xs);
+
+  height: 30px;
 
   font-size: var(--size-text-xs);
 

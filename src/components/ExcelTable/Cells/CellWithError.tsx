@@ -10,7 +10,7 @@ import { preventDefault, wrapEvent } from 'react-data-grid/lib/utils';
 import { useSelector } from 'react-redux';
 import { Tooltip } from '@gpn-prototypes/vega-ui';
 import cn from 'classnames';
-import useCombinedRefs from 'hooks/useCombinedRefs';
+import { useCombinedRefs } from 'hooks';
 import { get } from 'lodash/fp';
 import { RootState } from 'store/types';
 import { isEmpty } from 'utils';

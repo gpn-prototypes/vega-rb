@@ -17,7 +17,6 @@ const CellRenderer: React.FC<CellRendererProps<GridRow>> = (
   props,
 ): JSX.Element => {
   const column = props.column as GridColumn;
-  // const columns = useSelector((state: RootState) => state.table.columns);
   const ref = useRef<HTMLDivElement>(null);
 
   if (column.type === TableEntities.GEO_CATEGORY_TYPE)
