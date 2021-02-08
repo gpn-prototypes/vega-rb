@@ -15,14 +15,18 @@ module.exports = {
     {
       files: ['./src/**/*.{ts,tsx}'],
       rules: {
+        'no-use-before-define': 'off',
+        'react/require-default-props': 'off',
+        'no-unused-vars': 'off',
+        'no-underscore-dangle': 'off',
+        'no-shadow': 'off',
+        '@typescript-eslint/no-shadow': 'error',
+        '@typescript-eslint/no-use-before-define': ['error'],
         '@typescript-eslint/no-empty-function': 'off',
         '@typescript-eslint/no-explicit-any': 'error',
         '@typescript-eslint/no-non-null-assertion': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
         '@typescript-eslint/interface-name-prefix': 'off',
-        'react/require-default-props': 'off',
-        'no-unused-vars': 'off',
-        'no-underscore-dangle': 'off',
         'lodash-fp/no-extraneous-function-wrapping': 'off',
       },
       settings: {
