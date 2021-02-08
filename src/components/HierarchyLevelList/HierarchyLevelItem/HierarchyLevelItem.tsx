@@ -24,16 +24,25 @@ import HierarchyContextMenu from '../HierarchyContextMenu';
 import { Icons } from '../types';
 
 import { cnItem } from './cn-item';
-import { HIERARCHY_TAGS } from './data';
 import { DragItem, DragItemTypes } from './types';
 
 import './HierarchyLevelItem.css';
 
-const visibleKeyList = [
-  VisibleKeys.CALCULATION,
-  VisibleKeys.TABLE,
-  VisibleKeys.TREE,
+const visibleItemList = [
+  {
+    key: VisibleKeys.CALCULATION,
+    title: 'Расчет',
+  },
+  {
+    key: VisibleKeys.TABLE,
+    title: 'Дерево',
+  },
+  {
+    key: VisibleKeys.TREE,
+    title: 'Таблица',
+  },
 ];
+
 interface IProps {
   name: string;
   index: number;
@@ -232,11 +241,11 @@ const HierarchyLevelItem: React.FC<IProps> = ({
         </div>
         <div className={cnHierarchy('Item', 'Options')}>
           {visible &&
-            visibleKeyList.map((key) => (
+            visibleItemList.map(({ key, title }) => (
               <Tag
                 key={key}
                 className={cnItem('Tag').toString()}
-                label={HIERARCHY_TAGS[key].title}
+                label={title}
                 mode="check"
                 size="m"
                 checked={visible[key]}
