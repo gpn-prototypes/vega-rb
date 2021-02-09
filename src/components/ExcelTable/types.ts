@@ -6,6 +6,11 @@ import {
   HeaderRendererProps as BaseHeaderRendererProps,
 } from 'react-data-grid/lib/common/types';
 import {
+  CategoryIcon,
+  TableEntities,
+  VisibleKeys,
+} from 'components/ExcelTable/enums';
+import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
@@ -13,16 +18,6 @@ import {
   RbErrorInterface,
   TableError,
 } from 'generated/graphql';
-
-export const HEADER_CONTEXT_ID = 'header-context-menu';
-
-export enum CategoryIcon {
-  LICENSING_ROUND_ICON = 'LICENSING_ROUND_ICON',
-  FIELD_ICON = 'FIELD_ICON',
-  FORMATION_ICON = 'FORMATION_ICON',
-  OIL_POOL_ICON = 'OIL_POOL_ICON',
-  WELL_ICON = 'WELL_ICON',
-}
 
 export type ErrorWrapper = { [index: string]: TableError };
 
@@ -34,25 +29,9 @@ export type SelectedCell = {
   column: GridColumn;
 };
 
-export enum VisibleKeys {
-  CALCULATION = 'calc',
-  TABLE = 'table',
-  TREE = 'tree',
-}
-
 export type VisibilityProperties = {
   [key in VisibleKeys]: boolean;
 };
-
-export enum TableEntities {
-  GEO_CATEGORY = 'RBDomainEntity',
-  CALC_PARAM = 'Attribute',
-  GEO_CATEGORY_TYPE = 'GeoObjectType',
-  RISK = 'Risk',
-  ID = 'ID',
-  SPLITTER = 'Splitter',
-  NONE = 'None',
-}
 
 export interface GridCellParameters {
   value: ReactText;

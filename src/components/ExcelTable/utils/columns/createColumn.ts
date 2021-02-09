@@ -1,5 +1,6 @@
 import { cnCell, cnHeader } from 'components/ExcelTable/cn-excel-table';
-import { GridColumn, TableEntities } from 'components/ExcelTable/types';
+import { TableEntities } from 'components/ExcelTable/enums';
+import { GridColumn } from 'components/ExcelTable/types';
 import { v4 as uuid } from 'uuid';
 
 const hasIcon = (type: TableEntities) => type === TableEntities.GEO_CATEGORY;

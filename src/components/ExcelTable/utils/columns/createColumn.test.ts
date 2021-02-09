@@ -1,4 +1,4 @@
-import { TableEntities } from 'components/ExcelTable/types';
+import { TableEntities } from 'components/ExcelTable/enums';
 
 import { createColumn } from './createColumn';
 

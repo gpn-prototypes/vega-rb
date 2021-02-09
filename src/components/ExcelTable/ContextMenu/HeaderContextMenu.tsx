@@ -30,10 +30,9 @@ interface IProps {
 }
 
 export default React.forwardRef<Component<ContextMenuProps>, IProps>(
-  function HeaderContextMenu(
-    { id, onDelete, onInsertLeft, onInsertRight },
-    contextRef,
-  ) {
+  function HeaderContextMenu(props, contextRef) {
+    const { id, onDelete, onInsertLeft, onInsertRight } = props;
+
     const data = useMemo(
       () => [
         {
@@ -76,7 +75,7 @@ export default React.forwardRef<Component<ContextMenuProps>, IProps>(
     const { renderPortalWithTheme } = usePortalRender();
 
     return renderPortalWithTheme(
-      <ContextMenu id={id} ref={contextRef}>
+      <ContextMenu id={id} ref={contextRef} hideOnLeave>
         {data.map(({ title: itemTitle, onClick, Icon, disabled }) => (
           <MenuItem
             key={itemTitle}

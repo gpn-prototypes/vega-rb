@@ -6,12 +6,12 @@ import {
   useApolloClient,
 } from '@apollo/client';
 import { useMount, useUnmount } from '@gpn-prototypes/vega-ui';
-import ExcelTable from 'components/ExcelTable';
 import {
+  ExcelTable,
   GridRow,
   SelectedCell,
   TableEntities,
-} from 'components/ExcelTable/types';
+} from 'components/ExcelTable';
 import { ProjectContext } from 'components/Providers';
 import { loadTableData } from 'services/loadTableData';
 import projectService from 'services/ProjectService';

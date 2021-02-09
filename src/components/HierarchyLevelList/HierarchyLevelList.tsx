@@ -3,14 +3,13 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Button, IconAdd, Sidebar } from '@gpn-prototypes/vega-ui';
 import arrayMove from 'array-move';
-import { ResourceIcon } from 'components/ExcelTable/Icons';
 import {
   CategoryIcon,
-  GridColumn,
   TableEntities,
-  VisibilityProperties,
   VisibleKeys,
-} from 'components/ExcelTable/types';
+} from 'components/ExcelTable/enums';
+import { ResourceIcon } from 'components/ExcelTable/Icons';
+import { GridColumn, VisibilityProperties } from 'components/ExcelTable/types';
 import { createColumn } from 'components/ExcelTable/utils';
 import { v4 as uuid } from 'uuid';
 

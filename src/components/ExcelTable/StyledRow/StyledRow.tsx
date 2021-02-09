@@ -2,12 +2,13 @@ import React, { useCallback, useRef } from 'react';
 import { CellRendererProps, Row, RowRendererProps } from 'react-data-grid';
 import { useSelector } from 'react-redux';
 import { classnames } from '@bem-react/classnames';
+import { ContextMenuId, TableEntities } from 'components/ExcelTable/enums';
 import { get } from 'lodash/fp';
 import { RootState } from 'store/types';
 
 import { CellWithError, DropDownCell } from '../Cells';
 import { withContextMenu } from '../ContextMenu';
-import { GridColumn, GridRow, TableEntities } from '../types';
+import { GridColumn, GridRow } from '../types';
 
 import { cnRow } from './cn-row';
 
@@ -44,6 +45,6 @@ export default React.memo<RowRendererProps<GridRow>>(function StyledRow(props) {
         cnRow(props.rowIdx % 2 ? 'Even' : 'Odd'),
       )}
     />,
-    { id: 'row-context-menu', collect },
+    { id: ContextMenuId.ROW, collect },
   );
 });

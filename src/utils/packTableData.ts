@@ -1,4 +1,5 @@
-import { GridCollection, TableEntities } from 'components/ExcelTable/types';
+import { TableEntities } from 'components/ExcelTable/enums';
+import { GridCollection } from 'components/ExcelTable/types';
 import { ProjectStructureInput } from 'generated/graphql';
 import {
   assembleAttributes,

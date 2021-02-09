@@ -1,4 +1,6 @@
-import { GridColumn, TableEntities, VisibilityProperties } from '../types';
+import { TableEntities } from 'components/ExcelTable/enums';
+
+import { GridColumn, VisibilityProperties } from '../types';
 
 export default class GridColumnEntity implements GridColumn {
   readonly key: string;

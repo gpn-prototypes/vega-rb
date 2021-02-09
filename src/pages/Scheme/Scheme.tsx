@@ -13,11 +13,7 @@ import {
 } from '@gpn-prototypes/vega-ui';
 import { RecentlyEditedAlert } from 'components/CompetitiveAccess/RecentlyEditedAlert';
 import { DistributionSettings } from 'components/DistributionSettings';
-import {
-  GridColumn,
-  SelectedCell,
-  TableEntities,
-} from 'components/ExcelTable/types';
+import { GridColumn, SelectedCell, TableEntities } from 'components/ExcelTable';
 import { HierarchyLevelList } from 'components/HierarchyLevelList';
 import { ProjectContext } from 'components/Providers';
 import { TableErrorAlert } from 'components/TableErrorAlert';

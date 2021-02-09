@@ -1,9 +1,10 @@
 import React, { forwardRef } from 'react';
-import { OptionEntity } from 'components/ExcelTable/Models/OptionEntity';
+import { TableEntities } from 'components/ExcelTable/enums';
+import { OptionEntity } from 'components/ExcelTable/Models';
 import { GeoObjectCategories } from 'generated/graphql';
 
 import { DropDownEditor, SimpleTextEditor } from '../Editors';
-import { EditorResult, TableEntities } from '../types';
+import { EditorResult } from '../types';
 
 export const entitiesOptions = {
   RESOURCE: new OptionEntity(GeoObjectCategories.Resources, 'Р'),

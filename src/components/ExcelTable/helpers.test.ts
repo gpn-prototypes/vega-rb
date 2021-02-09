@@ -1,5 +1,6 @@
+import { TableEntities } from 'components/ExcelTable';
+
 import { isNoneColumnType } from './helpers';
-import { TableEntities } from './types';
 
 describe('isNoneColumnType', () => {
   test('ID', () => {

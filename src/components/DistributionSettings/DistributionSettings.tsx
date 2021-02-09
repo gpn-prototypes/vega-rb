@@ -1,6 +1,6 @@
 import React, { ReactText, useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { SelectedCell } from 'components/ExcelTable/types';
+import { SelectedCell } from 'components/ExcelTable';
 import {
   DistributionChart as IDistributionChart,
   DistributionDefinitionTypes,

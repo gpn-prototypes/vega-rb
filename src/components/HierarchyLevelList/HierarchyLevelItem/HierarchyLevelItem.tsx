@@ -12,11 +12,8 @@ import {
   Popover,
   Tag,
 } from '@gpn-prototypes/vega-ui';
-import {
-  CategoryIcon,
-  VisibilityProperties,
-  VisibleKeys,
-} from 'components/ExcelTable/types';
+import { CategoryIcon, VisibleKeys } from 'components/ExcelTable/enums';
+import { VisibilityProperties } from 'components/ExcelTable/types';
 
 import { cnHierarchy } from '../cn-hierarchy';
 import ContentEditableField from '../ContentEditable';

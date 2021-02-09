@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { ColumnErrors, GridColumn } from 'components/ExcelTable/types';
-import { getSameColumnKeys } from 'components/ExcelTable/utils/columns/getSameColumnKeys';
+import { getSameColumnKeys } from 'components/ExcelTable/utils';
 import { RbErrorCodes } from 'generated/graphql';
 import { unset } from 'lodash/fp';
 import tableDuck from 'store/tableDuck';
