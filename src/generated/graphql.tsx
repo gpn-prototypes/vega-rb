@@ -1,3 +1,4 @@
+/* Generated file via graphql codegen. Do not edit manually */
 /* eslint-disable */
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -3394,3 +3395,5 @@ export type DeleteDomainGroupResult = {
   __typename?: 'DeleteDomainGroupResult';
   ok?: Maybe<Scalars['Boolean']>;
 };
+
+// The file generated on: 08.02.2021
