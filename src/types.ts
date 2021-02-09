@@ -49,3 +49,5 @@ export type DomainObjectsProps = {
   calculationParams: GridColumn[];
   domainEntities: GridColumn[];
 };
+
+export type NoopFunction<T, R = void> = (data: T) => R;

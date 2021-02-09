@@ -10,5 +10,5 @@ export const HeaderWithContextMenu = (
 ): ReactElement =>
   withContextMenu(<Header {...props} />, {
     id: ContextMenuId.HEADER,
-    collect: () => ({ idx: props.column.idx }),
+    collect: () => ({ idx: props.column.idx, type: props.column.type }),
   });
