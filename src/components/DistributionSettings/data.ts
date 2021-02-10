@@ -4,6 +4,7 @@ import {
   DistributionParameterTypes,
   DistributionTypes,
 } from 'generated/graphql';
+
 // TODO: добавить оставшиеся распределения
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -34,7 +35,7 @@ const distributionParametersMap: DistributionParametersMap = {
     types: [
       {
         type: DistributionDefinitionTypes.MeanSd,
-        title: 'Среднее, станд. отклонение',
+        title: 'Среднее значение, станд. отклонение',
       },
       {
         type: DistributionDefinitionTypes.TwoPercentiles,
@@ -63,12 +64,12 @@ const distributionParametersMap: DistributionParametersMap = {
       [DistributionDefinitionTypes.MeanSd]: [
         {
           key: DistributionParameterTypes.Mean,
-          title: 'Среднее',
+          title: 'Среднее значение',
           defaultValue: '',
         },
         {
           key: DistributionParameterTypes.Sd,
-          title: 'Стандартное',
+          title: 'Стандартное отклонение',
           defaultValue: '',
         },
       ],
@@ -90,15 +91,15 @@ const distributionParametersMap: DistributionParametersMap = {
     types: [
       {
         type: DistributionDefinitionTypes.LocationArmeanArsd,
-        title: 'Расположение, среднее, станд. отклонение',
+        title: 'Расположение, среднее значение, станд. отклонение',
       },
       {
         type: DistributionDefinitionTypes.LocationLogmeanLogsd,
-        title: 'Расположение, лог. среднее, лог. станд. отклонение',
+        title: 'Расположение, лог. среднее значение, лог. станд. отклонение',
       },
       {
         type: DistributionDefinitionTypes.LocationGeommeanGeomsd,
-        title: 'Расположение, геом. среднее, геом. станд.отклонение',
+        title: 'Расположение, геом. среднее значение, геом. станд. отклонение',
       },
     ],
     fieldsByType: {
@@ -110,12 +111,12 @@ const distributionParametersMap: DistributionParametersMap = {
         },
         {
           key: DistributionParameterTypes.Armean,
-          title: 'Среднее',
+          title: 'Среднее значение',
           defaultValue: '',
         },
         {
           key: DistributionParameterTypes.Arsd,
-          title: 'Стандартное',
+          title: 'Стандартное отклонение',
           defaultValue: '',
         },
       ],
@@ -127,12 +128,12 @@ const distributionParametersMap: DistributionParametersMap = {
         },
         {
           key: DistributionParameterTypes.Geommean,
-          title: 'Геом. среднее',
+          title: 'Геом. среднее значение',
           defaultValue: '',
         },
         {
           key: DistributionParameterTypes.Geomsd,
-          title: 'Геом. стандартное',
+          title: 'Геом. стандартное отклонение',
           defaultValue: '',
         },
       ],
@@ -144,12 +145,12 @@ const distributionParametersMap: DistributionParametersMap = {
         },
         {
           key: DistributionParameterTypes.Logmean,
-          title: 'Лог. среднее',
+          title: 'Лог. среднее значение',
           defaultValue: '',
         },
         {
           key: DistributionParameterTypes.Logsd,
-          title: 'Лог. стандартное',
+          title: 'Лог. стандартное отклонение',
           defaultValue: '',
         },
       ],
@@ -159,7 +160,7 @@ const distributionParametersMap: DistributionParametersMap = {
     types: [
       {
         type: DistributionDefinitionTypes.ModeMinMax,
-        title: 'Минимум, наиболее вероятное, максимум',
+        title: 'Минимум, наиболее вероятное значение, максимум',
       },
     ],
     fieldsByType: {
@@ -171,7 +172,7 @@ const distributionParametersMap: DistributionParametersMap = {
         },
         {
           key: DistributionParameterTypes.Mode,
-          title: 'Наиболее вероятное',
+          title: 'Наиболее вероятное значение',
           defaultValue: '',
         },
         {
@@ -186,7 +187,7 @@ const distributionParametersMap: DistributionParametersMap = {
     types: [
       {
         type: DistributionDefinitionTypes.AlphaBetaMinMax,
-        title: 'Минимум, Максимум, Альфа, Бета',
+        title: 'Минимум, максимум, альфа, бета',
       },
     ],
     fieldsByType: {
@@ -218,7 +219,7 @@ const distributionParametersMap: DistributionParametersMap = {
     types: [
       {
         type: DistributionDefinitionTypes.ModeMinMax,
-        title: 'Минимум, наиболее вероятное, максимум',
+        title: 'Минимум, наиболее вероятное значение, максимум',
       },
     ],
     fieldsByType: {
@@ -230,7 +231,7 @@ const distributionParametersMap: DistributionParametersMap = {
         },
         {
           key: DistributionParameterTypes.Mode,
-          title: 'Наиболее вероятное',
+          title: 'Наиболее вероятное значение',
           defaultValue: '',
         },
         {
