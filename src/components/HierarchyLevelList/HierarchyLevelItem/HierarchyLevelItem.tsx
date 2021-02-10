@@ -222,7 +222,6 @@ const HierarchyLevelItem: React.FC<IProps> = ({
             value={value}
             disabled={!isEditing}
             onChange={(newName) => setValue(newName)}
-            className={cnHierarchy('Item', 'Title', 'Input').toString()}
           />
         </div>
         <div className={cnHierarchy('Item', 'Options')}>
