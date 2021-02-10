@@ -1,10 +1,10 @@
+import { TableEntities } from 'components/ExcelTable/enums';
 import GridColumnEntity from 'components/ExcelTable/Models/GridColumnEntity';
 import {
   GridCellArguments,
   GridCollection,
   GridColumn,
   GridRow,
-  TableEntities,
 } from 'components/ExcelTable/types';
 import { entitiesOptions } from 'components/ExcelTable/utils/getEditor';
 import {

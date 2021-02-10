@@ -1,6 +1,7 @@
+import { TableEntities } from 'components/ExcelTable/enums';
 import { set } from 'lodash/fp';
 
-import { ColumnProperties, GridColumn, TableEntities } from './types';
+import { ColumnProperties, GridColumn } from './types';
 
 import './ExcelTable.css';
 

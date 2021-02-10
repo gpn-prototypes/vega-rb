@@ -6,12 +6,9 @@ import {
   cnCellSplitter,
   cnHeader,
 } from 'components/ExcelTable/cn-excel-table';
+import { TableEntities } from 'components/ExcelTable/enums';
 import { Formatter, NumberFormatter } from 'components/ExcelTable/Formatters';
-import {
-  GridColumn,
-  GridRow,
-  TableEntities,
-} from 'components/ExcelTable/types';
+import { GridColumn, GridRow } from 'components/ExcelTable/types';
 
 import { getEditor } from '../getEditor';
 

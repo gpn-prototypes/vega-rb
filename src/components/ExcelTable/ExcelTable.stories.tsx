@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { TableEntities } from 'components/ExcelTable/enums';
 import faker from 'faker';
 import { SpecialColumns } from 'model/Table';
 
 import { cnCell, cnCellId, cnCellSplitter, cnHeader } from './cn-excel-table';
-import ExcelTable from './index';
-import { GridCollection, TableEntities } from './types';
+import { ExcelTable } from './ExcelTable';
+import { GridCollection } from './types';
 
 import './ExcelTable.css';
 

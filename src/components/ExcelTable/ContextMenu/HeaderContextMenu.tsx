@@ -1,4 +1,4 @@
-import React, { Component, useMemo } from 'react';
+import React, { Component, useMemo, useState } from 'react';
 import { ContextMenu, ContextMenuProps, MenuItem } from 'react-contextmenu';
 import {
   IconArrowLeft,
@@ -8,11 +8,15 @@ import {
   IconTrash,
   usePortalRender,
 } from '@gpn-prototypes/vega-ui';
+import { TableEntities } from 'components/ExcelTable/enums';
+import { useValidateByColumns } from 'hooks';
+import { NoopFunction } from 'types';
 import { noop } from 'utils';
 
-import { ContextHandler } from '../types';
+import { ContextHandler, GridColumn } from '../types';
 
 import { cnContextMenu } from './cn-context-menu';
+import { headerValidatorByTypes } from './validators';
 
 import './react-context.css';
 import './ContextMenu.css';
@@ -29,11 +33,19 @@ interface IProps {
   title?: string;
 }
 
+const columnValidator = (columns: GridColumn[]) => (type: TableEntities) =>
+  headerValidatorByTypes(columns, type);
+
 export default React.forwardRef<Component<ContextMenuProps>, IProps>(
-  function HeaderContextMenu(
-    { id, onDelete, onInsertLeft, onInsertRight },
-    contextRef,
-  ) {
+  function HeaderContextMenu(props, contextRef) {
+    const { id, onDelete, onInsertLeft, onInsertRight } = props;
+
+    const [isDeletable, setIsDeletable] = useState(true);
+    const validator = useValidateByColumns<
+      NoopFunction<TableEntities, boolean>
+    >(columnValidator);
+    const { renderPortalWithTheme } = usePortalRender();
+
     const data = useMemo(
       () => [
         {
@@ -73,10 +85,15 @@ export default React.forwardRef<Component<ContextMenuProps>, IProps>(
       [onInsertLeft, onInsertRight],
     );
 
-    const { renderPortalWithTheme } = usePortalRender();
+    const onShow = (event: CustomEvent) => {
+      const { type } = event.detail.data;
+      const validatorResult = validator(type);
+
+      setIsDeletable(validatorResult);
+    };
 
     return renderPortalWithTheme(
-      <ContextMenu id={id} ref={contextRef}>
+      <ContextMenu id={id} ref={contextRef} hideOnLeave onShow={onShow}>
         {data.map(({ title: itemTitle, onClick, Icon, disabled }) => (
           <MenuItem
             key={itemTitle}
@@ -89,7 +106,11 @@ export default React.forwardRef<Component<ContextMenuProps>, IProps>(
           </MenuItem>
         ))}
         <div className={cnContextMenu('Splitter')} />
-        <MenuItem onClick={onDelete} className={cnMenuItem.toString()}>
+        <MenuItem
+          onClick={onDelete}
+          className={cnMenuItem.toString()}
+          disabled={!isDeletable}
+        >
           <IconTrash className={cnMenuIcon} size="s" />
           <span className={cnMenuTitle}>Удалить</span>
         </MenuItem>

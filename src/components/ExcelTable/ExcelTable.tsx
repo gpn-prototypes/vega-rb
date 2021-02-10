@@ -7,19 +7,14 @@ import ReactDataGrid, {
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { AutoSizer } from 'react-virtualized';
+import { ContextMenuId, TableEntities } from 'components/ExcelTable/enums';
 import { useUpdateErrors } from 'hooks';
 
 import { renderColumns } from './Columns/renderColumns';
 import { cnExcelTable } from './cn-excel-table';
 import { HeaderContextMenu } from './ContextMenu';
 import StyledRow from './StyledRow';
-import {
-  GridCollection,
-  GridColumn,
-  GridRow,
-  HEADER_CONTEXT_ID,
-  TableEntities,
-} from './types';
+import { GridCollection, GridColumn, GridRow } from './types';
 import { createColumn, getInsertableType } from './utils';
 
 import './ExcelTable.css';
@@ -136,7 +131,7 @@ export const ExcelTable: React.FC<IProps> = ({
         </div>
       </DndProvider>
       <HeaderContextMenu
-        id={HEADER_CONTEXT_ID}
+        id={ContextMenuId.HEADER}
         onDelete={onColumnDelete}
         onInsertLeft={onColumnInsertLeft}
         onInsertRight={onColumnInsertRight}

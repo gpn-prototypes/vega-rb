@@ -15,6 +15,7 @@ module.exports = {
     {
       files: ['./src/**/*.{ts,tsx}'],
       rules: {
+        'import/named': 'error',
         'no-use-before-define': 'off',
         'react/require-default-props': 'off',
         'no-unused-vars': 'off',

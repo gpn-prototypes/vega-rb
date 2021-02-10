@@ -9,11 +9,8 @@ import { DragObjectWithType, useDrag, useDrop } from 'react-dnd';
 import { Tooltip } from '@gpn-prototypes/vega-ui';
 import classNames from 'classnames';
 import { cnCellTooltip } from 'components/ExcelTable/cn-excel-table';
-import {
-  GridColumn,
-  HeaderRendererProps,
-  TableEntities,
-} from 'components/ExcelTable/types';
+import { TableEntities } from 'components/ExcelTable/enums';
+import { GridColumn, HeaderRendererProps } from 'components/ExcelTable/types';
 import { useCombinedRefs } from 'hooks';
 
 import styles from '../Header.module.css';

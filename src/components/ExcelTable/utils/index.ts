@@ -1,5 +1,4 @@
-import { columnsFactory } from './columns/columnsFactory';
-import { createColumn } from './columns/createColumn';
+import { columnsFactory, createColumn, getSameColumnKeys } from './columns';
 import { getEditor } from './getEditor';
 import { getInsertableType } from './getInsertableType';
 import { hasContextMenu } from './hasContextMenu';
@@ -10,4 +9,5 @@ export {
   getEditor,
   getInsertableType,
   hasContextMenu,
+  getSameColumnKeys,
 };

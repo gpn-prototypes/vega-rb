@@ -1,8 +1,6 @@
 import { NamedExoticComponent, ReactElement } from 'react';
-import {
-  HeaderRendererProps,
-  TableEntities,
-} from 'components/ExcelTable/types';
+import { TableEntities } from 'components/ExcelTable/enums';
+import { HeaderRendererProps } from 'components/ExcelTable/types';
 import { hasContextMenu } from 'components/ExcelTable/utils';
 
 import { DefaultHeader as Header } from './DefaultHeader';

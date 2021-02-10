@@ -1,12 +1,8 @@
 import React, { PropsWithChildren, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Text, Tree } from '@gpn-prototypes/vega-ui';
+import { GridColumn, GridRow, TableEntities } from 'components/ExcelTable';
 import { ResourceIcon } from 'components/ExcelTable/Icons';
-import {
-  GridColumn,
-  GridRow,
-  TableEntities,
-} from 'components/ExcelTable/types';
 import { cnTreeEditor } from 'pages/Scheme/components/TreeEditor/cn-tree-editor';
 import {
   getNodeListFromTableData,

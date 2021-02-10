@@ -1,10 +1,6 @@
 import { TreeItem } from '@gpn-prototypes/vega-ui';
 import arrayToTree from 'array-to-tree';
-import {
-  GridColumn,
-  GridRow,
-  TableEntities,
-} from 'components/ExcelTable/types';
+import { GridColumn, GridRow, TableEntities } from 'components/ExcelTable';
 import { get, groupBy, mergeWith } from 'lodash/fp';
 import { v4 as uuid } from 'uuid';
 

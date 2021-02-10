@@ -6,11 +6,8 @@ import {
   cnCellSplitter,
   cnHeader,
 } from 'components/ExcelTable/cn-excel-table';
-import {
-  GridColumn,
-  GridRow,
-  TableEntities,
-} from 'components/ExcelTable/types';
+import { TableEntities } from 'components/ExcelTable/enums';
+import { GridColumn, GridRow } from 'components/ExcelTable/types';
 
 import { columnsFactory } from './columnsFactory';
 import { createColumn } from './createColumn';

@@ -1,12 +1,7 @@
 import React from 'react';
+import { TableEntities } from 'components/ExcelTable/enums';
 
-import {
-  DropDownOption,
-  FormatterProps,
-  GridColumn,
-  GridRow,
-  TableEntities,
-} from '../types';
+import { DropDownOption, FormatterProps, GridColumn, GridRow } from '../types';
 
 export default React.memo<FormatterProps<GridRow>>(function Formatter({
   row,

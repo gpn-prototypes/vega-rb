@@ -1,7 +1,7 @@
 import { DropDownOption } from 'components/ExcelTable/types';
 import { GeoObjectCategories } from 'generated/graphql';
 
-export class OptionEntity implements DropDownOption {
+export default class OptionEntity implements DropDownOption {
   private readonly _id: GeoObjectCategories;
 
   private readonly _value: GeoObjectCategories;

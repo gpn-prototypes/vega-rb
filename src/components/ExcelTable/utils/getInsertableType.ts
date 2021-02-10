@@ -1,5 +1,6 @@
+import { TableEntities } from 'components/ExcelTable/enums';
 import { isNoneColumnType } from 'components/ExcelTable/helpers';
-import { GridColumn, TableEntities } from 'components/ExcelTable/types';
+import { GridColumn } from 'components/ExcelTable/types';
 
 export function getInsertableType(
   columnsList: GridColumn[],

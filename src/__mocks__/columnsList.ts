@@ -1,5 +1,8 @@
-import GridColumnEntity from 'components/ExcelTable/Models/GridColumnEntity';
-import { GridColumn, TableEntities } from 'components/ExcelTable/types';
+import {
+  GridColumn,
+  GridColumnEntity,
+  TableEntities,
+} from 'components/ExcelTable';
 import { v4 as uuid } from 'uuid';
 
 export const columnsListMock: GridColumn[] = [

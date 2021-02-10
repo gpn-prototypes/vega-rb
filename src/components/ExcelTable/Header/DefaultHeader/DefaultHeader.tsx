@@ -1,11 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 import { InputEditor } from 'components/ExcelTable/Editors';
+import { TableEntities } from 'components/ExcelTable/enums';
 import { ResourceIcon } from 'components/ExcelTable/Icons';
-import {
-  HeaderRendererProps,
-  TableEntities,
-} from 'components/ExcelTable/types';
+import { HeaderRendererProps } from 'components/ExcelTable/types';
 
 import { DraggableHeader } from '../DraggableHeader';
 

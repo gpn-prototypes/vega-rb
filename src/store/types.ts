@@ -1,8 +1,5 @@
-import {
-  GridCollection,
-  GridColumn,
-  TableEntities,
-} from 'components/ExcelTable/types';
+import { TableEntities } from 'components/ExcelTable/enums';
+import { GridCollection, GridColumn } from 'components/ExcelTable/types';
 import { Param } from 'model/Param';
 
 export interface CompetitiveAccess {
