@@ -1,4 +1,5 @@
 import React from 'react';
+import { set } from 'lodash/fp';
 
 type Ref<T> = null | React.RefObject<T> | React.RefCallback<T>;
 
@@ -14,8 +15,8 @@ export default function useCombinedRefs<T>(
       if (typeof ref === 'function') {
         ref(targetRef.current);
       } else {
-        // @ts-expect-error: readonly
-        ref.current = targetRef.current; // eslint-disable-line no-param-reassign
+        // eslint-disable-next-line lodash-fp/no-unused-result
+        set(['current'], targetRef.current, ref);
       }
     });
   }, [refs]);

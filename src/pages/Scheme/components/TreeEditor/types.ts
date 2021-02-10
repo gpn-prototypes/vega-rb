@@ -1,5 +1,7 @@
+import { RefObject } from 'react';
+
 export type TargetData = {
-  ref: React.RefObject<HTMLElement> | null;
+  ref: RefObject<HTMLElement> | null;
   id: string;
   isDraggable: boolean;
 };

@@ -9,8 +9,10 @@ import {
   DistributionDefinitionTypes,
   DistributionParameterTypes,
   DistributionTypes,
+  GeoObjectCategories,
+  RbErrorInterface,
+  TableError,
 } from 'generated/graphql';
-import { ColumnErrors } from 'types';
 
 export const HEADER_CONTEXT_ID = 'header-context-menu';
 
@@ -21,6 +23,10 @@ export enum CategoryIcon {
   OIL_POOL_ICON = 'OIL_POOL_ICON',
   WELL_ICON = 'WELL_ICON',
 }
+
+export type ErrorWrapper = { [index: string]: TableError };
+
+export type ColumnErrors = { [index: string]: ErrorWrapper };
 
 export type SelectedCell = {
   rowIdx: number;
@@ -59,8 +65,14 @@ export interface GridCellArguments {
   parameters: GridCellParameters[];
 }
 
+export interface DropDownOption {
+  id: string;
+  value: GeoObjectCategories;
+  text: string;
+}
+
 export interface GridCellProperties {
-  value: ReactText | DropdownOption;
+  value: ReactText | DropDownOption;
   args?: GridCellArguments;
 }
 
@@ -84,6 +96,7 @@ export interface GridColumn extends Column<GridRow> {
   notRemovable?: boolean;
   visible?: VisibilityProperties;
   cellRenderer?: React.ComponentType<CellRendererProps<GridRow>>;
+  error?: RbErrorInterface;
 }
 
 export interface GridCollection {
@@ -107,27 +120,21 @@ export type BaseProps = {
 
 export type UniColumn = CalculatedColumn<GridRow> & GridColumn;
 
-export interface HeaderRendererProps extends BaseHeaderRendererProps<GridRow> {
-  column: UniColumn;
-  setColumnProps: SetColumnProperties;
-  handleColumnsReorder: (sourceKey: string, targetKey: string) => void;
-}
-
-export interface DropdownOption {
-  id: string;
-  value: string;
-  text: string;
-}
-
 export type EditorResult =
   | { editor: ComponentType<EditorProps<GridCellProperties | undefined>> }
   | { editor: undefined };
+
+export type ColumnProperties = Partial<
+  Record<keyof GridColumn, string | number | boolean>
+>;
 
 export type SetColumnProperties = (
   idx: number,
   properties: ColumnProperties,
 ) => void;
 
-export type ColumnProperties = Partial<
-  Record<keyof GridColumn, string | number | boolean>
->;
+export interface HeaderRendererProps extends BaseHeaderRendererProps<GridRow> {
+  column: UniColumn;
+  setColumnProps: SetColumnProperties;
+  handleColumnsReorder: (sourceKey: string, targetKey: string) => void;
+}

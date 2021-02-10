@@ -2,9 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Item } from '@consta/uikit/SnackBar';
 import { IconAlert, SnackBar } from '@gpn-prototypes/vega-ui';
-import { RbErrorCodes, TableError } from 'generated/graphql';
+import { ErrorWrapper } from 'components/ExcelTable/types';
+import { RbErrorCodes } from 'generated/graphql';
+import { defaultTo, get } from 'lodash/fp';
 import { RootState } from 'store/types';
-import { COLUMN_ERROR_KEY } from 'utils/assembleErrors';
 
 import { cnTableErrorAlert } from './cn-table-error-alert';
 
@@ -29,44 +30,32 @@ export const TableErrorAlert: React.FC = () => {
     [errors],
   );
 
-  const tableColumnError: TableError | undefined = useMemo(
-    () => errors[COLUMN_ERROR_KEY] as TableError,
+  const tableColumnError = useMemo<ErrorWrapper>(
+    () => errors[RbErrorCodes.DuplicatingColumns],
     [errors],
   );
 
   useEffect(() => {
+    const generateItem = (errorCode: RbErrorCodes): Item => ({
+      key: errorCode,
+      message: defaultTo('', get([errorCode], errorMessages)),
+      icon: IconAlert,
+      status: 'alert',
+      onClose: () => {
+        setItems((prevArr) => prevArr.filter(({ key }) => key !== errorCode));
+      },
+    });
+
     if (tableColumnError) {
-      setItems((arr) => [
-        ...arr,
-        {
-          key: RbErrorCodes.DuplicatingColumns,
-          message: errorMessages[RbErrorCodes.DuplicatingColumns],
-          icon: IconAlert,
-          status: 'alert',
-          onClose: () =>
-            setItems((prevArr) =>
-              prevArr.filter(
-                ({ key }) => key !== RbErrorCodes.DuplicatingColumns,
-              ),
-            ),
-        },
+      setItems((prevState) => [
+        ...prevState,
+        generateItem(RbErrorCodes.DuplicatingColumns),
       ]);
     }
     if (tableRowErrors.length) {
-      setItems((arr) => [
-        ...arr,
-        {
-          key: RbErrorCodes.IdenticalRowInTableData,
-          message: errorMessages[RbErrorCodes.IdenticalRowInTableData],
-          icon: IconAlert,
-          status: 'alert',
-          onClose: () =>
-            setItems((prevArr) =>
-              prevArr.filter(
-                ({ key }) => key !== RbErrorCodes.IdenticalRowInTableData,
-              ),
-            ),
-        },
+      setItems((prevState) => [
+        ...prevState,
+        generateItem(RbErrorCodes.IdenticalRowInTableData),
       ]);
     }
   }, [tableColumnError, tableRowErrors]);

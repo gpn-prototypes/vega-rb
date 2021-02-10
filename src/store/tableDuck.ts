@@ -1,4 +1,5 @@
 import {
+  ColumnErrors,
   GridCell,
   GridCollection,
   GridColumn,
@@ -16,7 +17,6 @@ import {
   switchMap,
 } from 'rxjs/operators';
 import projectService from 'services/ProjectService';
-import { ColumnErrors } from 'types';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 

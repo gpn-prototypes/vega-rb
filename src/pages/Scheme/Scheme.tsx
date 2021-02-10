@@ -11,6 +11,7 @@ import {
   useInterval,
   useSidebar,
 } from '@gpn-prototypes/vega-ui';
+import { RecentlyEditedAlert } from 'components/CompetitiveAccess/RecentlyEditedAlert';
 import { DistributionSettings } from 'components/DistributionSettings';
 import {
   GridColumn,
@@ -19,19 +20,17 @@ import {
 } from 'components/ExcelTable/types';
 import { HierarchyLevelList } from 'components/HierarchyLevelList';
 import { ProjectContext } from 'components/Providers';
-import { TableErrorAlert } from 'components/TableErrorAlert/TableErrorAlert';
-import TreeEditor from 'pages/Scheme/components/TreeEditor';
+import { TableErrorAlert } from 'components/TableErrorAlert';
 import projectService from 'services/ProjectService';
+import competitiveAccessDuck from 'store/competitiveAccessDuck';
 import projectDuck from 'store/projectDuck';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { Nullable } from 'types';
 
-import { RecentlyEditedAlert } from '../../components/CompetitiveAccess/RecentlyEditedAlert';
-import competitiveAccessDuck from '../../store/competitiveAccessDuck';
-
 import CalculateButton from './components/CalculateButton';
 import Table from './components/Table';
+import TreeEditor from './components/TreeEditor';
 
 import style from './Scheme.module.css';
 

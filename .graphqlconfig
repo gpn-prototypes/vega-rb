@@ -6,10 +6,10 @@
       "extensions": {
         "endpoints": {
           "Default GraphQL Endpoint": {
-            "url": "${env:SCHEMA_PATH}",
+            "url": "${env:VEGA_SCHEMA_PATH}",
             "headers": {
               "user-agent": "JS GraphQL",
-              "Authorization": "${env:AUTH_TOKEN}"
+              "Authorization": "Bearer ${env:AUTH_TOKEN}"
             },
             "introspect": false
           }
@@ -21,10 +21,10 @@
       "extensions": {
         "endpoints": {
           "Project GraphQL Endpoint": {
-            "url": "${env:PROJECT_SCHEMA_PATH}",
+            "url": "${env:VEGA_PROJECT_SCHEMA_PATH}",
             "headers": {
               "user-agent": "JS GraphQL",
-              "Authorization": "${env:AUTH_TOKEN}"
+              "Authorization": "Bearer ${env:AUTH_TOKEN}"
             },
             "introspect": false
           }

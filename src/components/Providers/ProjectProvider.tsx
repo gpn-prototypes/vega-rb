@@ -18,6 +18,10 @@ interface ProjectProviderProps {
   identity: Identity;
 }
 
+const ProjectContext = React.createContext<ProjectContextProps>({
+  projectId: '',
+});
+
 const ProjectProvider: React.FC<ProjectProviderProps> = ({
   children,
   graphqlClient,
@@ -49,9 +53,5 @@ const ProjectProvider: React.FC<ProjectProviderProps> = ({
     </ProjectContext.Provider>
   );
 };
-
-const ProjectContext = React.createContext<ProjectContextProps>({
-  projectId: '',
-});
 
 export { ProjectProvider, ProjectContext };

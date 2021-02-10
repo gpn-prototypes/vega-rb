@@ -1,15 +1,12 @@
 .Root {
-  padding: 0 var(--space-xs);
+  padding-left: var(--space-xs);
 
   display: flex;
+  justify-content: flex-start;
   align-items: center;
 
   background-color: inherit;
   opacity: 1;
-  /*
-  stylelint-disable-next-line
-  cursor: move;
-  */
 }
 
 .Icon {
@@ -46,4 +43,8 @@
 
 .IsOver {
   background-color: var(--color-control-bg-focus);
+}
+
+.Error {
+  background-color: var(--color-bg-alert);
 }

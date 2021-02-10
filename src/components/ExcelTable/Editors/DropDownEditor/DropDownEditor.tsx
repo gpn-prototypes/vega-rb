@@ -2,21 +2,19 @@ import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { Editor, EditorProps } from 'react-data-grid';
 import { presetGpnDark, Theme } from '@gpn-prototypes/vega-ui';
 import {
-  cnDropDownEditor,
-  cnOption,
-} from 'components/ExcelTable/Editors/cn-editor';
-import {
-  DropdownOption,
+  DropDownOption,
   GridCellProperties,
   GridRow,
 } from 'components/ExcelTable/types';
-import { size } from 'lodash/fp';
+import { size, toPairsIn } from 'lodash/fp';
+
+import { cnDropDownEditor, cnOption } from '../cn-editor';
 
 import './DropDownEditor.css';
 
 interface DropDownEditorProps<TRow>
   extends EditorProps<GridCellProperties | undefined, TRow> {
-  options: { [index: string]: DropdownOption };
+  options: { [index: string]: DropDownOption };
 }
 
 type DropDownEditorHandle = Editor<GridRow>;
@@ -44,14 +42,14 @@ function DropDownEditor<TRow>(
       <select
         ref={selectRef}
         className={cnDropDownEditor.toString()}
-        defaultValue={value?.value as string}
+        defaultValue={String(value?.value)}
         onBlur={onCommit}
         size={size(options)}
       >
-        {Object.values(options).map((option) => (
+        {toPairsIn(options).map(([key, option]) => (
           <option
-            key={option.id}
-            value={option.value}
+            key={key}
+            value={key}
             onClick={onCommit}
             className={cnOption.toString()}
           >

@@ -11,25 +11,25 @@ import { DraggableHeader } from '../DraggableHeader';
 
 import styles from '../Header.module.css';
 
+const PrecedingContent = (type: TableEntities, headerId: string) => (
+  <>
+    {type === TableEntities.GEO_CATEGORY && (
+      <div className={styles.WrapperIcon}>
+        <ResourceIcon color="#00eeaa" className={styles.Icon} />
+      </div>
+    )}
+    {type === TableEntities.CALC_PARAM && (
+      <div className={styles.HeaderId}>{headerId}</div>
+    )}
+  </>
+);
+
 export default React.memo<HeaderRendererProps>(function DefaultHeader(props) {
   const { column, setColumnProps, handleColumnsReorder } = props;
   const { name, idx: columnIdx, type, headerId } = column;
 
   const editor = (
     <InputEditor idx={columnIdx} name={name} setColumnProps={setColumnProps} />
-  );
-
-  const beforeContentByType = (
-    <>
-      {type === TableEntities.GEO_CATEGORY && (
-        <div className={styles.WrapperIcon}>
-          <ResourceIcon color="#00eeaa" className={styles.Icon} />
-        </div>
-      )}
-      {type === TableEntities.CALC_PARAM && (
-        <div className={styles.HeaderId}>{headerId}</div>
-      )}
-    </>
   );
 
   return (
@@ -43,7 +43,7 @@ export default React.memo<HeaderRendererProps>(function DefaultHeader(props) {
         setColumnProps(columnIdx, { isRenaming: true });
       }}
       editor={editor}
-      beforeContent={beforeContentByType}
+      precedingContent={PrecedingContent(type!, headerId!)}
     />
   );
 });

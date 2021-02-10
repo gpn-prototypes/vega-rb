@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  DropdownOption,
+  DropDownOption,
   FormatterProps,
   GridColumn,
   GridRow,
@@ -17,7 +17,7 @@ export default React.memo<FormatterProps<GridRow>>(function Formatter({
 
   if (gridRow === undefined) return null;
   if (col.type === TableEntities.GEO_CATEGORY_TYPE) {
-    const option = gridRow as DropdownOption;
+    const option = gridRow as DropDownOption;
     return <>{option.text}</>;
   }
 

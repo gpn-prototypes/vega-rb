@@ -1,8 +1,5 @@
-import {
-  DomainObject,
-  RbDomainEntityIcons,
-  TableError,
-} from 'generated/graphql';
+import { GridColumn, GridRow } from 'components/ExcelTable/types';
+import { DomainObject, RbDomainEntityIcons } from 'generated/graphql';
 
 export interface Identity {
   getToken(): Promise<string>;
@@ -46,6 +43,9 @@ export type TableStructures = GeoCategory | CalculationParam | Risk;
 
 export type Nullable<T> = T | null;
 
-export type RowError = { [index: number]: TableError[] };
-
-export type ColumnErrors = { [index: string]: RowError | TableError };
+export type DomainObjectsProps = {
+  rows: GridRow[];
+  risks: GridColumn[];
+  calculationParams: GridColumn[];
+  domainEntities: GridColumn[];
+};
