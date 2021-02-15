@@ -9,6 +9,7 @@ import {
 export type DistributionChartData =
   | DistributionChart
   | DiscreteDistributionChart;
+
 export type DistributionParametersMap = {
   [key in DistributionTypes]: DistributionParameters;
 };
@@ -23,12 +24,19 @@ export type DistributionParameters = {
   types: DistributionType[];
 };
 
+export enum TruncationBoundaryTypes {
+  minBound = 'minBound',
+  maxBound = 'maxBound',
+}
+
 export type Field = DefaultField | PercentileField;
+
 export type DistributionParameterPercentileValue =
   | DistributionParameterTypes.Q1Value
   | DistributionParameterTypes.Q2Value
   | DistributionParameterTypes.Q3Value
   | DistributionParameterTypes.Q4Value;
+
 export type DistributionParameterPercentileRank =
   | DistributionParameterTypes.Q1Rank
   | DistributionParameterTypes.Q2Rank
@@ -62,6 +70,8 @@ export type DistributionSettingsFormData = {
   distributionType: DistributionTypes;
   distributionDefinitionType: DistributionDefinitionTypes;
   parameters: Partial<DistributionSettingsParameters>;
+  minBound?: number;
+  maxBound?: number;
 };
 
 export type DistributionPairsCallback = (

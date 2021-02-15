@@ -116,7 +116,7 @@ function CellWithError(props: Props, ref: React.Ref<HTMLDivElement>) {
       {isShowError && error && (
         <Tooltip
           size="s"
-          anchorRef={innerRef}
+          anchorRef={combinedRef}
           direction="rightCenter"
           className={cnCellTooltip.toString()}
         >

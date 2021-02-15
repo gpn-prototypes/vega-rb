@@ -42,6 +42,8 @@ export interface GridCellArguments {
   type: DistributionTypes;
   definition: DistributionDefinitionTypes;
   parameters: GridCellParameters[];
+  minBound?: number;
+  maxBound?: number;
 }
 
 export interface DropDownOption {

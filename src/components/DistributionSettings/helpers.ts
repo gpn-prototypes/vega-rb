@@ -5,7 +5,7 @@ import {
   DistributionParameterTypes,
   DistributionTypes,
 } from 'generated/graphql';
-import { toPairs } from 'lodash/fp';
+import { every, toPairs } from 'lodash/fp';
 import { DistributionError } from 'services/types';
 
 import { percentileFieldRankTypes, percentileFieldTypes } from './constants';
@@ -15,6 +15,7 @@ import {
   DistributionChartData,
   DistributionPairsCallback,
   DistributionParameterPercentileRank,
+  DistributionSettingsFormData,
   DistributionSettingsParameters,
   Error,
   PercentileField,
@@ -48,12 +49,15 @@ export const isNumeric = (num?: string | number): boolean =>
   (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) &&
   !Number.isNaN(parseFloat(num as string));
 
-export const validateDistributionParams = (
-  parameters: Partial<DistributionSettingsParameters>,
-): boolean => {
-  return (Object.keys(
-    parameters,
-  ) as DistributionParameterTypes[]).every((key) => isNumeric(parameters[key]));
+export const validateDistributionParams = ({
+  parameters,
+  minBound,
+  maxBound,
+}: DistributionSettingsFormData): boolean => {
+  const boundState =
+    (!minBound || isNumeric(minBound)) && (!maxBound || isNumeric(maxBound));
+
+  return every(isNumeric, parameters) && boundState;
 };
 
 const getPercentileParam = (field: PercentileField) => {

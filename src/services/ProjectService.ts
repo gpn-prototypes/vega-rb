@@ -221,6 +221,8 @@ class ProjectService {
     type,
     definition,
     parameters,
+    minBound,
+    maxBound,
   }: DistributionInput): Promise<DistributionResponse> {
     return this.client
       .query({
@@ -236,6 +238,8 @@ class ProjectService {
             ),
             type,
             definition,
+            minBound,
+            maxBound,
           },
         },
       })

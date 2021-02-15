@@ -81,8 +81,10 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
             ...parameters,
             ...defaultParameters,
           },
+          minBound: cellArgs.minBound,
+          maxBound: cellArgs.maxBound,
         };
-        const isValid = validateDistributionParams(result.parameters);
+        const isValid = validateDistributionParams(result);
 
         return {
           ...result,
@@ -125,9 +127,11 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
         parameters,
         distributionType,
         distributionDefinitionType,
+        maxBound,
+        minBound,
       } = distributionProps;
 
-      if (validateDistributionParams(parameters)) {
+      if (validateDistributionParams(distributionProps)) {
         dispatch(
           tableDuck.actions.updateCell({
             selectedCell: cellForUpdate,
@@ -136,6 +140,8 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
                 parameters: mapEntries(parameters, prepareDistributionParams),
                 type: distributionType,
                 definition: distributionDefinitionType,
+                maxBound,
+                minBound,
               },
               value: cellValue,
             },
@@ -151,11 +157,15 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
       parameters,
       distributionType,
       distributionDefinitionType,
+      minBound,
+      maxBound,
     }: DistributionSettingsFormData) =>
       projectService.getDistribution({
         parameters: mapEntries(parameters, prepareDistributionParams),
         type: distributionType,
         definition: distributionDefinitionType,
+        ...(minBound && { minBound }),
+        ...(maxBound && { maxBound }),
       }),
     [],
   );
@@ -166,7 +176,7 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
       onError?: () => void,
       onSuccess?: (data: DistributionChartData) => void,
     ) => {
-      if (validateDistributionParams(distributionProps.parameters)) {
+      if (validateDistributionParams(distributionProps)) {
         getChart(distributionProps).then(
           ({ distributionChart, errors: errorsList }) => {
             if (errorsList) {
@@ -216,9 +226,9 @@ const DistributionSettings: React.FC<IProps> = ({ selectedCell }) => {
           onChange={handleChange}
           formData={formData}
           errors={errors}
+          chart={<DistributionChart data={chartData} />}
         />
       )}
-      <DistributionChart data={chartData} />
     </>
   );
 };

@@ -12,6 +12,7 @@ import {
   DistributionSettingsFormData,
   Field,
   PercentileField,
+  TruncationBoundaryTypes,
 } from 'components/DistributionSettings/types';
 import EditableText from 'components/EditableText';
 import {
@@ -19,9 +20,11 @@ import {
   DistributionParameterTypes,
   DistributionTypes,
 } from 'generated/graphql';
+import { defaultTo } from 'lodash/fp';
 import { Just } from 'monet';
 import { Dropdown, Option } from 'pages/Scheme/components/Dropdown';
 import { DistributionError } from 'services/types';
+import { IValuableStructure, NoopFunction } from 'types';
 
 import { cnForm } from './cn-form';
 import { options } from './data';
@@ -33,12 +36,14 @@ interface IProps {
   onChange: (distributionData: DistributionSettingsFormData) => void;
   formData: DistributionSettingsFormData;
   errors: DistributionError[];
+  chart: React.ReactNode;
 }
 
 export const DistributionSettingsForm: React.FC<IProps> = ({
   onChange,
   formData,
   errors,
+  chart,
 }) => {
   const { fieldsByType, types } = distributionParametersMap[
     formData.distributionType
@@ -53,6 +58,7 @@ export const DistributionSettingsForm: React.FC<IProps> = ({
     const typeByValue = distributionParametersMap[o.value].types[0].type;
 
     onChange({
+      ...formData,
       distributionType: o.value,
       distributionDefinitionType: typeByValue,
       parameters: getDistributionFormDataParams(o.value, typeByValue),
@@ -72,15 +78,23 @@ export const DistributionSettingsForm: React.FC<IProps> = ({
     });
   };
 
-  // TODO: args has type TextFieldOnChangeArguments, but we cannot import it from ui-kit
-  // eslint-disable-next-line
-  const handleChange = (key: DistributionParameterTypes) => (args: any) => {
+  const handleChange = (
+    key: DistributionParameterTypes,
+  ): NoopFunction<IValuableStructure> => (args) => {
     onChange({
       ...formData,
       parameters: { ...formData.parameters, [key]: args.value },
     });
   };
 
+  const handleChangeBound = (
+    key: TruncationBoundaryTypes,
+  ): NoopFunction<IValuableStructure> => (args) => {
+    onChange({
+      ...formData,
+      [key]: args.value,
+    });
+  };
   const renderFormField = (field: Field, position: number, fields: Field[]) => {
     const {
       key,
@@ -147,6 +161,27 @@ export const DistributionSettingsForm: React.FC<IProps> = ({
           ]?.map((field, index, fields) =>
             renderFormField(field, index, fields),
           )}
+        </div>
+      </Form.Row>
+      <Form.Row>{chart}</Form.Row>
+      <Form.Row>
+        <div className={cnForm('Grid')}>
+          <DistributionSettingsFormField
+            key={TruncationBoundaryTypes.minBound}
+            label={<Form.Label>Мин. значение</Form.Label>}
+            fieldType="defaultClear"
+            onChange={handleChangeBound(TruncationBoundaryTypes.minBound)}
+            value={defaultTo('', formData.maxBound)}
+            errorMessage={getErrorMessage(errors, 'minBound').message}
+          />
+          <DistributionSettingsFormField
+            key={TruncationBoundaryTypes.maxBound}
+            label={<Form.Label>Макс. значение</Form.Label>}
+            fieldType="brickDefault"
+            onChange={handleChangeBound(TruncationBoundaryTypes.maxBound)}
+            value={defaultTo('', formData.maxBound)}
+            errorMessage={getErrorMessage(errors, 'maxBound').message}
+          />
         </div>
       </Form.Row>
     </Form>
