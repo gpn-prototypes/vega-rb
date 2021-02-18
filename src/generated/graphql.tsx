@@ -1865,8 +1865,6 @@ export type TableError = RbErrorInterface & {
   message: Scalars['String'];
   /** Имя таблицы, содержащей строки или ячейки, повлекшие ошибку */
   tableName: TableNames;
-  /** Индекс ячейки в строке таблицы, повлекшей ошибку */
-  column?: Maybe<Scalars['Int']>;
   /** Индекс строки таблицы, повлекшей ошибку */
   row?: Maybe<Scalars['Int']>;
   /** Идентификатор сущности в колонке. */
@@ -2215,6 +2213,7 @@ export type User = {
   favoriteProjects?: Maybe<Array<Maybe<Scalars['ID']>>>;
   organizationUnits?: Maybe<Array<Maybe<OrganizationUnit>>>;
   groups?: Maybe<Array<Maybe<UserGroup>>>;
+  customSettings?: Maybe<UserCustomSettings>;
 };
 
 export type OrganizationUnit = {
@@ -2251,6 +2250,35 @@ export type UserGroup = {
   project?: Maybe<Scalars['ID']>;
 };
 
+export type UserCustomSettings = {
+  __typename?: 'UserCustomSettings';
+  projectList?: Maybe<ProjectListSortingSetting>;
+};
+
+export type ProjectListSortingSetting = {
+  __typename?: 'ProjectListSortingSetting';
+  orderBy?: Maybe<ProjectOrderByEnum>;
+  sortBy?: Maybe<SortTypeEnum>;
+};
+
+/** An enumeration. */
+export enum ProjectOrderByEnum {
+  IsFavorite = 'IS_FAVORITE',
+  Name = 'NAME',
+  Description = 'DESCRIPTION',
+  Region = 'REGION',
+  CreatedBy = 'CREATED_BY',
+  CreatedAt = 'CREATED_AT',
+  EditedBy = 'EDITED_BY',
+  EditedAt = 'EDITED_AT',
+}
+
+/** An enumeration. */
+export enum SortTypeEnum {
+  Asc = 'ASC',
+  Desc = 'DESC',
+}
+
 export type AttachmentType = {
   __typename?: 'AttachmentType';
   vid?: Maybe<Scalars['ID']>;
@@ -2265,6 +2293,7 @@ export type Attendee = {
   __typename?: 'Attendee';
   user?: Maybe<User>;
   roles?: Maybe<Array<Maybe<ProjectRole>>>;
+  status?: Maybe<AttendeeStatus>;
 };
 
 export type ProjectRole = {
@@ -2277,6 +2306,11 @@ export type ProjectRole = {
   name?: Maybe<Scalars['String']>;
   defaultAttachmentType?: Maybe<AttachmentType>;
 };
+
+export enum AttendeeStatus {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE',
+}
 
 export enum AttendeeOrderBy {
   FirstName = 'FIRST_NAME',
@@ -3396,4 +3430,4 @@ export type DeleteDomainGroupResult = {
   ok?: Maybe<Scalars['Boolean']>;
 };
 
-// The file generated on: 08.02.2021
+// The file generated on: 18.02.2021

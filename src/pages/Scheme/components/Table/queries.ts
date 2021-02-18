@@ -94,7 +94,7 @@ export const SAVE_PROJECT = gql`
             code
             message
             tableName
-            column
+            columnKey
             row
           }
         }
