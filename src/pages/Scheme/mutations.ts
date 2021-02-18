@@ -8,7 +8,6 @@ export const CALCULATION_PROJECT = gql`
           errors {
             code
             message
-            column
             row
             tableName
             columnKey

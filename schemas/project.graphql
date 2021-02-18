@@ -59,8 +59,6 @@ union DiffOrError = Error | UpdateProjectDiff
 
 union DistributionChartResult = CommonErrors | DiscreteDistributionChart | DistributionChart | DistributionDefinitionErrors
 
-union LicensingRound_Union = LicensingRound_A_Type
-
 union MacroparameterGroupListOrError = Error | MacroparameterGroupList
 
 union MacroparameterGroupOrDiffOrError = Error | MacroparameterGroup | UpdateProjectDiff
@@ -100,10 +98,6 @@ union OpexSdfOrDiffOrError = Error | OpexSdf | UpdateProjectDiff
 union ProductOrDiffOrError = Error | Product | UpdateProjectDiff
 
 union ProductTypeOrDiffOrError = Error | ProductType | UpdateProjectDiff
-
-union Project_Union = GeoEconomicAppraisalProject_Type
-
-union Prospect_Union = Prospect_A_Type
 
 "Результат сохранения проекта."
 union SavedOrError = DistributionDefinitionErrors | Error | TableErrors
@@ -187,6 +181,7 @@ type AttachmentType {
 
 type Attendee {
   roles: [ProjectRole]
+  status: AttendeeStatus
   user: User
 }
 
@@ -666,11 +661,8 @@ type DomainEntityImage {
 }
 
 type DomainMutations {
-  geoEconomicAppraisalProject: GeoEconomicAppraisalProjectMutations
-  licensingRoundA: LicensingRound_AMutations
   object: DomainObjectMutations
   objectGroup: DomainObjectGroupMutations
-  prospectA: Prospect_AMutations
 }
 
 type DomainObject {
@@ -700,17 +692,8 @@ type DomainObjectMutations {
 
 type DomainObjectQuery {
   domainObject(name: String, vid: UUID): DomainObjectInterface
-  geoEconomicAppraisalProject(name: String, vid: UUID): GeoEconomicAppraisalProject_Type
-  geoEconomicAppraisalProjectList: [GeoEconomicAppraisalProject_Type]
-  licensingRound(name: String, vid: UUID): LicensingRound_Union
-  licensingRoundA(name: String, vid: UUID): LicensingRound_A_Type
-  licensingRoundAList: [LicensingRound_A_Type]
   objectGroup(name: String, vid: UUID): DomainObjectsGroup
   objectGroupList: [DomainObjectsGroup]
-  project(name: String, vid: UUID): Project_Union
-  prospect(name: String, vid: UUID): Prospect_Union
-  prospectA(name: String, vid: UUID): Prospect_A_Type
-  prospectAList: [Prospect_A_Type]
 }
 
 type DomainObjectsGroup {
@@ -739,33 +722,6 @@ type GCoSCalculationResult {
   "Список значений GCoS геологических объектов"
   GCoSValues: [Float]
   errors: [TableError!]
-}
-
-type GeoEconomicAppraisalProjectMutations {
-  create(correlationType: [Int], licensingRounds: [UUID], name: String, projectStartYear: Int, shelfProductionParameter: Float, version: Int!): GeoEconomicAppraisalProject_Type
-  update(correlationType: [Int], licensingRounds: [UUID], name: String, projectStartYear: Int, shelfProductionParameter: Float, version: Int!, vid: UUID!): GeoEconomicAppraisalProject_Type
-}
-
-type GeoEconomicAppraisalProject_Type implements DomainObjectInterface {
-  correlationType: [Int]
-  licensingRounds: [LicensingRound_Union]
-  name: String
-  projectStartYear: Int
-  shelfProductionParameter: Float
-  vid: UUID
-}
-
-type LicensingRound_AMutations {
-  create(geoEconomicAppraisalProject: UUID, initialInventory: [Int], name: String, prospects: [UUID], version: Int!): LicensingRound_A_Type
-  update(geoEconomicAppraisalProject: UUID, initialInventory: [Int], name: String, prospects: [UUID], version: Int!, vid: UUID!): LicensingRound_A_Type
-}
-
-type LicensingRound_A_Type implements DomainObjectInterface {
-  geoEconomicAppraisalProject: Project_Union
-  initialInventory: [Int]
-  name: String
-  prospects: [Prospect_Union]
-  vid: UUID
 }
 
 "Модель логики проекта - хранение внутри сущности проекта."
@@ -1154,6 +1110,11 @@ type ProjectActivity {
   risk: String
 }
 
+type ProjectListSortingSetting {
+  orderBy: ProjectOrderByEnum
+  sortBy: SortTypeEnum
+}
+
 "Пространство имен для работы с проектом."
 type ProjectQueries {
   "Данные проекта"
@@ -1206,18 +1167,6 @@ type PropertyMeta {
   title: String
   unit: String
   validationRules: ValidationRules
-}
-
-type Prospect_AMutations {
-  create(geoEconomicAppraisalProject: UUID, initialInv: Float, name: String, version: Int!): Prospect_A_Type
-  update(geoEconomicAppraisalProject: UUID, initialInv: Float, name: String, version: Int!, vid: UUID!): Prospect_A_Type
-}
-
-type Prospect_A_Type implements DomainObjectInterface {
-  geoEconomicAppraisalProject: Project_Union
-  initialInv: Float
-  name: String
-  vid: UUID
 }
 
 type Query {
@@ -1454,8 +1403,6 @@ type SetOpexSdf {
 type TableError implements RBErrorInterface {
   "Код ошибки, соответствующий человекочитаемому сообщению об ошибке"
   code: RBErrorCodes!
-  "Индекс ячейки в строке таблицы, повлекшей ошибку"
-  column: Int
   "Идентификатор сущности в колонке."
   columnKey: String
   "Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте"
@@ -1538,6 +1485,7 @@ type User {
   adId: String
   code: String
   createdAt: DateTime
+  customSettings: UserCustomSettings
   editedAt: DateTime
   favoriteProjects: [ID]
   firstName: String
@@ -1549,8 +1497,11 @@ type User {
   organizationUnits: [OrganizationUnit]
   patronym: String
   role: String
-  tokenJti: String
   vid: ID
+}
+
+type UserCustomSettings {
+  projectList: ProjectListSortingSetting
 }
 
 type UserGroup {
@@ -1594,6 +1545,11 @@ enum AttendeeOrderBy {
   NAME
   PATRONYM
   ROLE
+}
+
+enum AttendeeStatus {
+  ACTIVE
+  INACTIVE
 }
 
 "An enumeration."
@@ -1724,11 +1680,9 @@ enum ErrorCodesEnum {
   CANNOT_BRING_BLANK_BACK
   "Отсутствует роль"
   EMPTY_ATTENDEE_ROLE
-  "Пустое имя проекта"
-  EMPTY_PROJECT_NAME
   "Ошибка"
   ERROR
-  "Не корректная версия проекта"
+  "Некорректная версия проекта"
   INCORRECT_PROJECT_VERSION
   "Некорректный формат UUID"
   INCORRECT_UUID
@@ -1736,7 +1690,7 @@ enum ErrorCodesEnum {
   INVALID_PAGE_NUMBER
   "Удаляемый участник не найден в проекте "
   NO_ATTENDEE_TO_REMOVE
-  "Пользователь не обладает провами для совершения операции"
+  "Пользователь не обладает правами для совершения операции"
   NO_RIGHTS
   "Объект не найден"
   OBJECT_NOT_FOUND
@@ -1746,30 +1700,22 @@ enum ErrorCodesEnum {
   PROJECT_ATTENDEE_NOT_FOUND
   "Рольу участника проекта не найдена"
   PROJECT_ATTENDEE_USER_ROLE_NOT_FOUND
+  "Невозможно добавить участника с дублирующимися ролями."
+  PROJECT_ATTENDEE_USER_WITH_DUPLICATE_ROLES
   "Невозможно сохранить проект - не найден менеджер проекта"
   PROJECT_MANAGER_NOT_FOUND
   "Проект с таким именем уже существует"
   PROJECT_NAME_ALREADY_EXISTS
   "Проект не найден"
   PROJECT_NOT_FOUND
-  "Статус проекта нельзя очистить"
-  PROJECT_STATUS_CANNOT_BE_NULL
   "Ошибка при обновлении проекта"
   PROJECT_UPDATE_ERROR
   "Расхождение версий проекта"
   PROJECT_VERSION_DIFF_ERROR
-  "Отсутствует год начала планирования проекта"
-  PROJECT_YEARSTART_CANNOT_BE_NULL
   "Объект справочника не найден"
   REFERENCE_ITEM_NOT_FOUND
-  "Имя проекта превышает лимит в 256 символов"
-  TOO_LONG_PROJECT_NAME
-  "Имя проекта должно содержать минимум 2 символа"
-  TOO_SHORT_PROJECT_NAME
-  "Отрицательное число лет планирования недопустимо"
-  YEARS_COUNT_ERROR
-  "Год начала планирования не может быть меньше текущего календарного года"
-  YEAR_START_ERROR
+  "Ошибка валидации"
+  VALIDATION
 }
 
 "Список категорий геологического объекта."
@@ -1788,6 +1734,18 @@ enum IncomeTaxBase {
 enum MacroparameterSetCategory {
   SET_CATEGORY_NOMINAL
   SET_CATEGORY_REAL
+}
+
+"An enumeration."
+enum ProjectOrderByEnum {
+  CREATED_AT
+  CREATED_BY
+  DESCRIPTION
+  EDITED_AT
+  EDITED_BY
+  IS_FAVORITE
+  NAME
+  REGION
 }
 
 "An enumeration."
@@ -1857,6 +1815,12 @@ enum RBErrorCodes {
 }
 
 enum SortType {
+  ASC
+  DESC
+}
+
+"An enumeration."
+enum SortTypeEnum {
   ASC
   DESC
 }

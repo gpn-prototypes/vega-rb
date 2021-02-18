@@ -15,15 +15,15 @@ interface ErrorInterface {
   payload: DictType
 }
 
-union AttendeeListOrError = AttendeeList | Error | UpdateProjectDiff
+union AttendeeListOrError = AttendeeList | DuplicateRoleError | Error | UpdateProjectDiff
 
 union AttendeeTypeOrError = Attendee | Error | UpdateProjectDiff
 
-union ProjectDiffOrError = Error | Project | UpdateProjectDiff
+union ProjectDiffOrError = Error | Project | UpdateProjectDiff | ValidationError
 
 union ProjectListOrError = Error | ProjectList
 
-union ProjectOrError = Error | Project
+union ProjectOrError = Error | Project | ValidationError
 
 union UuidOrError = Error | Result
 
@@ -101,6 +101,7 @@ type AttachmentType {
 
 type Attendee {
   roles: [ProjectRole]
+  status: AttendeeStatus
   user: User
 }
 
@@ -360,6 +361,16 @@ type DomainTemplateLibraryCategory {
   vid: ID
 }
 
+type DuplicateRoleError implements ErrorInterface {
+  "Код ошибки, соответствующий человекочитаемому сообщению об ошибке"
+  code: ErrorCodesEnum!
+  details: String
+  "Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте"
+  message: String!
+  payload: DictType
+  roles: [UUID]
+}
+
 "Common error-object class."
 type Error implements ErrorInterface {
   "Код ошибки, соответствующий человекочитаемому сообщению об ошибке"
@@ -409,7 +420,7 @@ type Mutation {
   createProjectLibraryCategories(code: String, name: String, parent: UUID): CreateProjectLibraryCategories
   createProjectRole(code: String, defaultAttachmentType: UUID, name: String): CreateProjectRole
   createRegion(code: String, country: UUID, fullName: String, name: String): CreateRegion
-  createUser(adId: String, code: String, favoriteProjects: [ID], firstName: String, groups: [UUID], lastName: String, login: String, name: String, organizationUnits: [UUID], patronym: String, role: String): CreateUser
+  createUser(adId: String, code: String, customSettings: UserCustomSettingsInputType, favoriteProjects: [ID], firstName: String, groups: [UUID], lastName: String, login: String, name: String, organizationUnits: [UUID], patronym: String, role: String): CreateUser
   createUserGroup(code: String, name: String, project: ID): CreateUserGroup
   deleteActivity(vid: UUID!): DeleteActivity
   deleteActivityCategories(vid: UUID!): DeleteActivityCategories
@@ -460,7 +471,7 @@ type Mutation {
   updateProjectLibraryCategories(code: String, name: String, parent: UUID, vid: UUID!): UpdateProjectLibraryCategories
   updateProjectRole(code: String, defaultAttachmentType: UUID, name: String, vid: UUID!): UpdateProjectRole
   updateRegion(code: String, country: UUID, fullName: String, name: String, vid: UUID!): UpdateRegion
-  updateUser(adId: String, code: String, favoriteProjects: [ID], firstName: String, groups: [UUID], lastName: String, login: String, name: String, organizationUnits: [UUID], patronym: String, role: String, vid: UUID!): UpdateUser
+  updateUser(adId: String, code: String, customSettings: UserCustomSettingsInputType, favoriteProjects: [ID], firstName: String, groups: [UUID], lastName: String, login: String, name: String, organizationUnits: [UUID], patronym: String, role: String, vid: UUID!): UpdateUser
   updateUserGroup(code: String, name: String, project: ID, vid: UUID!): UpdateUserGroup
 }
 
@@ -543,6 +554,11 @@ type ProjectList {
   projectList: [Project]
 }
 
+type ProjectListSortingSetting {
+  orderBy: ProjectOrderByEnum
+  sortBy: SortTypeEnum
+}
+
 type ProjectRole {
   code: String
   createdAt: DateTime
@@ -613,7 +629,7 @@ type Query {
   projectLibraryCategories(vid: UUID): ProjectLibraryCategory
   projectLibraryCategoriesList: [ProjectLibraryCategory]
   projectLibrarylist: [ProjectLibrary]
-  projectList(includeBlank: Boolean = false, pageNumber: Int = 1, pageSize: Int = 20): ProjectListOrError
+  projectList(includeBlank: Boolean = false, orderBy: ProjectOrderByEnum, pageNumber: Int = 1, pageSize: Int = 20, sortBy: SortType): ProjectListOrError
   projectRole(vid: UUID): ProjectRole
   projectRoleList: [ProjectRole]
   region(vid: UUID): Region
@@ -742,6 +758,7 @@ type User {
   adId: String
   code: String
   createdAt: DateTime
+  customSettings: UserCustomSettings
   editedAt: DateTime
   favoriteProjects: [ID]
   firstName: String
@@ -756,6 +773,10 @@ type User {
   vid: ID
 }
 
+type UserCustomSettings {
+  projectList: ProjectListSortingSetting
+}
+
 type UserGroup {
   code: String
   createdAt: DateTime
@@ -764,6 +785,25 @@ type UserGroup {
   name: String
   project: ID
   vid: ID
+}
+
+type ValidationError implements ErrorInterface {
+  "Код ошибки, соответствующий человекочитаемому сообщению об ошибке"
+  code: ErrorCodesEnum!
+  details: String
+  "Массив ошибок валидации для отправленных полей мутации"
+  items: [ValidationErrorItemType]
+  "Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте"
+  message: String!
+  payload: DictType
+}
+
+type ValidationErrorItemType {
+  "Код ошибки, соответствующий человекочитаемому сообщению об ошибке"
+  code: ValidationErrorCode!
+  "Сообщение об ошибке валидации. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте"
+  message: String!
+  path: [String]
 }
 
 """
@@ -786,17 +826,20 @@ enum AttendeeOrderBy {
   ROLE
 }
 
+enum AttendeeStatus {
+  ACTIVE
+  INACTIVE
+}
+
 "Error codes list."
 enum ErrorCodesEnum {
   "Проект нельзя возвращать в статус заготовки."
   CANNOT_BRING_BLANK_BACK
   "Отсутствует роль"
   EMPTY_ATTENDEE_ROLE
-  "Пустое имя проекта"
-  EMPTY_PROJECT_NAME
   "Ошибка"
   ERROR
-  "Не корректная версия проекта"
+  "Некорректная версия проекта"
   INCORRECT_PROJECT_VERSION
   "Некорректный формат UUID"
   INCORRECT_UUID
@@ -804,7 +847,7 @@ enum ErrorCodesEnum {
   INVALID_PAGE_NUMBER
   "Удаляемый участник не найден в проекте "
   NO_ATTENDEE_TO_REMOVE
-  "Пользователь не обладает провами для совершения операции"
+  "Пользователь не обладает правами для совершения операции"
   NO_RIGHTS
   "Объект не найден"
   OBJECT_NOT_FOUND
@@ -814,30 +857,34 @@ enum ErrorCodesEnum {
   PROJECT_ATTENDEE_NOT_FOUND
   "Рольу участника проекта не найдена"
   PROJECT_ATTENDEE_USER_ROLE_NOT_FOUND
+  "Невозможно добавить участника с дублирующимися ролями."
+  PROJECT_ATTENDEE_USER_WITH_DUPLICATE_ROLES
   "Невозможно сохранить проект - не найден менеджер проекта"
   PROJECT_MANAGER_NOT_FOUND
   "Проект с таким именем уже существует"
   PROJECT_NAME_ALREADY_EXISTS
   "Проект не найден"
   PROJECT_NOT_FOUND
-  "Статус проекта нельзя очистить"
-  PROJECT_STATUS_CANNOT_BE_NULL
   "Ошибка при обновлении проекта"
   PROJECT_UPDATE_ERROR
   "Расхождение версий проекта"
   PROJECT_VERSION_DIFF_ERROR
-  "Отсутствует год начала планирования проекта"
-  PROJECT_YEARSTART_CANNOT_BE_NULL
   "Объект справочника не найден"
   REFERENCE_ITEM_NOT_FOUND
-  "Имя проекта превышает лимит в 256 символов"
-  TOO_LONG_PROJECT_NAME
-  "Имя проекта должно содержать минимум 2 символа"
-  TOO_SHORT_PROJECT_NAME
-  "Отрицательное число лет планирования недопустимо"
-  YEARS_COUNT_ERROR
-  "Год начала планирования не может быть меньше текущего календарного года"
-  YEAR_START_ERROR
+  "Ошибка валидации"
+  VALIDATION
+}
+
+"An enumeration."
+enum ProjectOrderByEnum {
+  CREATED_AT
+  CREATED_BY
+  DESCRIPTION
+  EDITED_AT
+  EDITED_BY
+  IS_FAVORITE
+  NAME
+  REGION
 }
 
 "An enumeration."
@@ -856,6 +903,42 @@ enum SortType {
   DESC
 }
 
+"An enumeration."
+enum SortTypeEnum {
+  ASC
+  DESC
+}
+
+"Validation error codes list."
+enum ValidationErrorCode {
+  "ARRAY_IS_EMPTY"
+  ARRAY_IS_EMPTY
+  "ARRAY_TOO_LONG"
+  ARRAY_TOO_LONG
+  "ARRAY_TOO_SHORT"
+  ARRAY_TOO_SHORT
+  "NOT_UNIQUE"
+  NOT_UNIQUE
+  "NUMBER_IS_NEGATIVE"
+  NUMBER_IS_NEGATIVE
+  "NUMBER_TOO_LARGE"
+  NUMBER_TOO_LARGE
+  "NUMBER_TOO_LOW"
+  NUMBER_TOO_LOW
+  "OBJECT_KEY_NOT_FOUND"
+  OBJECT_KEY_NOT_FOUND
+  "STRING_DOES_NOT_MATCH_PATTERN"
+  STRING_DOES_NOT_MATCH_PATTERN
+  "STRING_TOO_LONG"
+  STRING_TOO_LONG
+  "STRING_TOO_SHORT"
+  STRING_TOO_SHORT
+  "VALUE_HAS_WRONG_TYPE"
+  VALUE_HAS_WRONG_TYPE
+  "VALUE_IS_EMPTY"
+  VALUE_IS_EMPTY
+}
+
 input AttendeeInputType {
   roles: [UUID]!
   user: UUID!
@@ -866,11 +949,16 @@ input ProjectInputType {
   coordinates: String
   description: String
   name: String
-  region: ID
+  region: UUID
   resourceId: String
   type: ProjectTypeEnum = GEO
   yearEnd: Int
   yearStart: Int = 2022
+}
+
+input ProjectListSortingSettingInputType {
+  orderBy: ProjectOrderByEnum
+  sortBy: SortTypeEnum
 }
 
 input ProjectUpdateType {
@@ -897,6 +985,10 @@ input PropertyMetaInputType {
   title: String
   unit: String
   validationRules: ValidationRulesInputType
+}
+
+input UserCustomSettingsInputType {
+  projectList: ProjectListSortingSettingInputType
 }
 
 input ValidationRulesInputType {
