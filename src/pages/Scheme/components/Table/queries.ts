@@ -53,6 +53,8 @@ export const LOAD_PROJECT = gql`
                       type
                       value
                     }
+                    minBound
+                    maxBound
                   }
                   visibleValue
                 }

@@ -1,5 +1,5 @@
 .DistributionChart {
-  margin-bottom: 60px;
+  margin-bottom: var(--space-xs);
 
   background-color: var(--color-bg-secondary);
 

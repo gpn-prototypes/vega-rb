@@ -1,15 +1,16 @@
-import React, { ComponentProps } from 'react';
+import React, { ReactText } from 'react';
 import { Form, TextField } from '@gpn-prototypes/vega-ui';
-import { cnField } from 'components/DistributionSettings/DistributionSettingsFormField/cn-field';
+import { IValuableStructure, NoopFunction } from 'types';
 
-import 'components/DistributionSettings/DistributionSettingsFormField/DistributionSettingsFormField.css';
+import { cnField } from './cn-field';
+import { TextFieldOnChange, TextFieldProps } from './types';
 
-type TextFieldProps = ComponentProps<typeof TextField>;
+import './DistributionSettingsFormField.css';
 
 interface IProps {
   label: React.ReactNode;
-  value: string;
-  onChange: TextFieldProps['onChange'];
+  value: ReactText;
+  onChange?: NoopFunction<IValuableStructure>;
   fieldType: TextFieldProps['form'];
   errorMessage?: string;
 }
@@ -28,8 +29,8 @@ const DistributionSettingsFormField: React.FC<IProps> = ({
         width="full"
         size="s"
         form={fieldType}
-        value={value.toString()}
-        onChange={onChange}
+        value={String(value)}
+        onChange={onChange as TextFieldOnChange}
         className={cnField.state({
           error: !!errorMessage,
         })}

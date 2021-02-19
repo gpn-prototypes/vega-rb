@@ -51,3 +51,7 @@ export type DomainObjectsProps = {
 };
 
 export type NoopFunction<T, R = void> = (data: T) => R;
+
+export interface IValuableStructure {
+  value: string;
+}
