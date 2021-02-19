@@ -171,7 +171,7 @@ export const DistributionSettingsForm: React.FC<IProps> = ({
             label={<Form.Label>Мин. значение</Form.Label>}
             fieldType="defaultClear"
             onChange={handleChangeBound(TruncationBoundaryTypes.minBound)}
-            value={defaultTo('', formData.maxBound)}
+            value={defaultTo('', formData.minBound)}
             errorMessage={getErrorMessage(errors, 'minBound').message}
           />
           <DistributionSettingsFormField
