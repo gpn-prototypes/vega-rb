@@ -1,0 +1,3 @@
+@gpn-prototypes:registry=https://$NPM_URI
+//$NPM_URI/:_authToken=$NPM_AUTH_TOKEN
+
