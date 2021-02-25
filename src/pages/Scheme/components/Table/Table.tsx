@@ -1,11 +1,11 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ApolloClient,
   NormalizedCacheObject,
   useApolloClient,
 } from '@apollo/client';
-import { useMount } from '@gpn-prototypes/vega-ui';
+import { Loader, useMount, useUnmount } from '@gpn-prototypes/vega-ui';
 import {
   ExcelTable,
   GridRow,
@@ -29,8 +29,9 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
   const { projectId } = useContext(ProjectContext);
   const reduxTableData = useSelector(({ table }: RootState) => table);
-  const [, errors] = useGetError();
   const treeFilterData = useSelector(({ tree }: RootState) => tree.filter);
+  const [isLoading, setIsLoading] = useState(false);
+  const [, errors] = useGetError();
 
   const filteredData = useMemo(() => {
     const rowIsFulfilled = (row: GridRow): boolean => {
@@ -63,15 +64,17 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
       client,
       projectId,
     });
-
-    loadTableData(dispatch).then();
+    setIsLoading(true);
+    loadTableData(dispatch).then(() => setIsLoading(false));
   });
 
-  useMount(() => {
+  useUnmount(() => {
     dispatch(tableDuck.actions.resetState());
   });
 
-  return (
+  return isLoading ? (
+    <Loader />
+  ) : (
     <ExcelTable
       data={filteredData}
       setColumns={(data): void => {
