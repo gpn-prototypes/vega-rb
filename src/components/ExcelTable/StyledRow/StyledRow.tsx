@@ -6,7 +6,7 @@ import { useGetError } from 'hooks';
 
 import { CellWithError, DropDownCell } from '../Cells';
 import { withContextMenu } from '../ContextMenu';
-import { GridColumn, GridRow } from '../types';
+import { GridColumn, GridRow, RowContextBody } from '../types';
 
 import { cnRow } from './cn-row';
 
@@ -25,7 +25,10 @@ const CellRenderer: React.FC<CellRendererProps<GridRow>> = (
 };
 
 export default React.memo<RowRendererProps<GridRow>>(function StyledRow(props) {
-  const collect = (): { rowIdx: number } => ({ rowIdx: props.rowIdx });
+  const collect = (): RowContextBody => ({
+    idx: props.rowIdx,
+    element: props.row,
+  });
   const [error] = useGetError(`row-${props.rowIdx}`);
 
   return withContextMenu(

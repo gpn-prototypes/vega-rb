@@ -13,7 +13,7 @@ import { useValidateByColumns } from 'hooks';
 import { NoopFunction } from 'types';
 import { noop } from 'utils';
 
-import { ContextHandler, GridColumn } from '../types';
+import { ColumnContextBody, ContextHandler, GridColumn } from '../types';
 
 import { cnContextMenu } from './cn-context-menu';
 import { headerValidatorByTypes } from './validators';
@@ -27,9 +27,9 @@ const cnMenuTitle = cnContextMenu('Title');
 
 interface IProps {
   id: string;
-  onDelete: ContextHandler;
-  onInsertLeft: ContextHandler;
-  onInsertRight: ContextHandler;
+  onDelete: ContextHandler<ColumnContextBody>;
+  onInsertLeft: ContextHandler<ColumnContextBody>;
+  onInsertRight: ContextHandler<ColumnContextBody>;
   title?: string;
 }
 
@@ -41,10 +41,11 @@ export default React.forwardRef<Component<ContextMenuProps>, IProps>(
     const { id, onDelete, onInsertLeft, onInsertRight } = props;
 
     const [isDeletable, setIsDeletable] = useState(true);
+    const { renderPortalWithTheme } = usePortalRender();
+
     const validator = useValidateByColumns<
       NoopFunction<TableEntities, boolean>
     >(columnValidator);
-    const { renderPortalWithTheme } = usePortalRender();
 
     const data = useMemo(
       () => [
@@ -59,7 +60,6 @@ export default React.forwardRef<Component<ContextMenuProps>, IProps>(
           onClick: onInsertLeft,
           Icon: IconArrowLeft,
         },
-
         {
           title: 'Добавить столбец справа',
           onClick: onInsertRight,

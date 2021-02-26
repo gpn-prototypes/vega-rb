@@ -12,9 +12,16 @@ import { useUpdateErrors } from 'hooks';
 
 import { renderColumns } from './Columns/renderColumns';
 import { cnExcelTable } from './cn-excel-table';
-import { HeaderContextMenu } from './ContextMenu';
+import { HeaderContextMenu, RowContextMenu } from './ContextMenu';
 import StyledRow from './StyledRow';
-import { ColumnErrors, GridCollection, GridColumn, GridRow } from './types';
+import {
+  ColumnErrors,
+  ContextBody,
+  GridCollection,
+  GridColumn,
+  GridRow,
+  RowContextBody,
+} from './types';
 import { createColumn, getInsertableType } from './utils';
 
 import './ExcelTable.css';
@@ -96,13 +103,24 @@ export const ExcelTable: React.FC<IProps> = ({
 
   const onColumnInsertLeft = (
     e: React.MouseEvent<HTMLDivElement>,
-    { idx }: { idx: number },
+    { idx }: ContextBody,
   ): void => pushColumn(idx);
 
   const onColumnInsertRight = (
     e: React.MouseEvent<HTMLDivElement>,
-    { idx }: { idx: number },
+    { idx }: ContextBody,
   ): void => pushColumn(idx + 1);
+
+  const onRowDelete = (
+    e: React.MouseEvent<HTMLDivElement>,
+    { idx, element }: RowContextBody,
+  ) => {
+    setRows([
+      ...rows.slice(0, idx),
+      { id: element.id },
+      ...rows.slice(idx + 1),
+    ]);
+  };
 
   const columnsList = useMemo(() => {
     return renderColumns(columns, errors, setColumns);
@@ -137,6 +155,12 @@ export const ExcelTable: React.FC<IProps> = ({
         onDelete={onColumnDelete}
         onInsertLeft={onColumnInsertLeft}
         onInsertRight={onColumnInsertRight}
+      />
+      <RowContextMenu
+        id={ContextMenuId.ROW}
+        onDelete={onRowDelete}
+        onInsertAbove={() => {}}
+        onInsertBelow={() => {}}
       />
     </>
   );
