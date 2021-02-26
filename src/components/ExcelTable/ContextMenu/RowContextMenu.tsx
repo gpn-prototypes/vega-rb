@@ -1,32 +1,29 @@
 import React from 'react';
 import { ContextMenu, MenuItem } from 'react-contextmenu';
-import { usePortalRender } from '@gpn-prototypes/vega-ui';
+import { IconTrash, usePortalRender } from '@gpn-prototypes/vega-ui';
 
-import { ContextHandler } from '../types';
+import { ContextHandler, RowContextBody } from '../types';
+
+import { cnContextMenu } from './cn-context-menu';
 
 import './react-context.css';
 
 interface IProps {
   id: string;
-  title: string;
-  onDelete: ContextHandler;
-  onInsertAbove: ContextHandler;
-  onInsertBelow: ContextHandler;
+  onDelete: ContextHandler<RowContextBody>;
+  onInsertAbove: ContextHandler<RowContextBody>;
+  onInsertBelow: ContextHandler<RowContextBody>;
 }
 
-export default React.memo<IProps>(function RowContextMenu({
-  id,
-  onDelete,
-  onInsertAbove,
-  onInsertBelow,
-}) {
+export default React.memo<IProps>(function RowContextMenu({ id, onDelete }) {
   const { renderPortalWithTheme } = usePortalRender();
 
   return renderPortalWithTheme(
     <ContextMenu id={id} hideOnLeave>
-      <MenuItem onClick={onDelete}>Удалить</MenuItem>
-      <MenuItem onClick={onInsertAbove}>Добавить выше</MenuItem>
-      <MenuItem onClick={onInsertBelow}>Добавить ниже</MenuItem>
+      <MenuItem onClick={onDelete} className={cnContextMenu('Item').toString()}>
+        <IconTrash className={cnContextMenu('Icon').toString()} size="s" />
+        <span className={cnContextMenu('Title')}>Удалить</span>
+      </MenuItem>
     </ContextMenu>,
     document.body,
   );
