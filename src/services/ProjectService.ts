@@ -124,14 +124,23 @@ class ProjectService {
       );
   }
 
-  getCalculationArchive(fileId: string) {
-    return this.identity.getToken().then((token) =>
-      fetch(getDownloadResultUri(fileId), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }).then((resp) => resp.blob()),
-    );
+  async getCalculationArchive(
+    fileId: string,
+  ): Promise<{ filename: string; data: Blob }> {
+    const token = await this.identity.getToken();
+    const serverResponse = await fetch(getDownloadResultUri(fileId), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const filename = serverResponse.headers
+      .get('Content-Disposition')
+      ?.match('filename="(?<filename>.*)"')?.groups?.filename;
+
+    return {
+      filename: filename || 'result.zip',
+      data: await serverResponse.blob(),
+    };
   }
 
   getCalculationResultFileId(
