@@ -35,7 +35,7 @@ jobs:
       - uses: docker://quay.csssr.cloud/csssr/github-info:v1
         id: gh
 
-      - run: yarn build:shell
+      - run: yarn build
         working-directory: vega
         env:
           BASE_URL: http://${{ steps.gh.outputs.releaseID }}.vega-rb.csssr.cloud
