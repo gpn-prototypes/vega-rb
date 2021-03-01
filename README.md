@@ -16,9 +16,6 @@
 Запуск dev server для работы из под обвязки `http://localhost:9004`
 
 ##### `yarn build`
-Production build в папку `./dist`
-
-##### `yarn build:shell`
 Production build для обвязки в папку `./dist`
 
 ## Настройка proxy

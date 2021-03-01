@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "node scripts/build.js",
-    "build:shell": "cross-env APP_MODE=shell yarn build",
+    "build": "cross-env APP_MODE=shell node scripts/build.js",
     "build-storybook": "build-storybook -s public --quiet",
     "format": "prettier --write '{src,types,scripts}/**/*.{json,{j,t}s{,x},css,}'",
     "gen:codegen:dev": "dotenv -c local -- graphql-codegen --config codegen.project.dev.yml",
