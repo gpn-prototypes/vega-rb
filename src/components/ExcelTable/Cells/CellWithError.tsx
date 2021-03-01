@@ -1,18 +1,9 @@
-import React, {
-  forwardRef,
-  PropsWithChildren,
-  useCallback,
-  useRef,
-  useState,
-} from 'react';
+import React, { forwardRef, PropsWithChildren, useRef, useState } from 'react';
 import { CellRendererProps } from 'react-data-grid/lib/common/types';
 import { preventDefault, wrapEvent } from 'react-data-grid/lib/utils';
-import { useSelector } from 'react-redux';
 import { Tooltip } from '@gpn-prototypes/vega-ui';
 import cn from 'classnames';
-import { useCombinedRefs } from 'hooks';
-import { get } from 'lodash/fp';
-import { RootState } from 'store/types';
+import { useCombinedRefs, useGetError } from 'hooks';
 import { isEmpty } from 'utils';
 
 import { cnCellTooltip, cnCellValueError } from '../cn-excel-table';
@@ -34,16 +25,10 @@ function CellWithError(props: Props, ref: React.Ref<HTMLDivElement>) {
     isRowSelected,
   } = props;
   const column = props.column as UniColumn;
-
   const innerRef = useRef<HTMLDivElement>(null);
   const combinedRef = useCombinedRefs(ref, innerRef);
   const [isShowError, setIsShowError] = useState(false);
-  const errors = useSelector(({ table }: RootState) => table.errors);
-
-  const getError = useCallback(
-    (errorsList) => get([column.key, currentRowIdx], errorsList),
-    [column.key, currentRowIdx],
-  );
+  const [error] = useGetError([column.key, currentRowIdx]);
 
   function selectCell(shouldOpenEditor?: boolean) {
     eventBus.dispatch(
@@ -75,8 +60,6 @@ function CellWithError(props: Props, ref: React.Ref<HTMLDivElement>) {
       isShiftClick,
     });
   }
-
-  const error = getError(errors);
 
   const rowObject = {
     ...row,

@@ -1,5 +1,9 @@
 import { TableEntities } from 'components/ExcelTable/enums';
-import { GridCollection, GridColumn } from 'components/ExcelTable/types';
+import {
+  ColumnErrors,
+  GridCollection,
+  GridColumn,
+} from 'components/ExcelTable/types';
 import { Param } from 'model/Param';
 
 export interface CompetitiveAccess {
@@ -11,7 +15,6 @@ export interface AlertState {
   loaderText: string;
   errorText: string;
 }
-
 export interface TreeFilter {
   rows: number[];
   columns: string[];
@@ -25,6 +28,14 @@ export interface ProjectState {
   params: Param[];
   name: string;
 }
+export interface NormalizedState<T> {
+  ids: string[];
+  byId: {
+    [id: string]: T;
+  };
+}
+
+export type ErrorsState = NormalizedState<ColumnErrors>;
 
 export interface RootState {
   alert: AlertState;
@@ -32,9 +43,20 @@ export interface RootState {
   table: GridCollection;
   tree: TreeState;
   competitiveAccess: CompetitiveAccess;
+  errors: ErrorsState;
 }
 
 export type TypedColumnsList = {
   columns: GridColumn[];
   type: TableEntities;
+};
+
+export type NormalizedErrors = {
+  errors: ColumnErrors;
+  id: string;
+};
+
+export type RemovableError = {
+  id: string;
+  path: (string | number)[];
 };

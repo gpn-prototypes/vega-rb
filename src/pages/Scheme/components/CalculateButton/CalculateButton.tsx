@@ -1,17 +1,43 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@gpn-prototypes/vega-ui';
+import { ColumnErrors } from 'components/ExcelTable';
+import { ProjectContext } from 'components/Providers';
 import projectService from 'services/ProjectService';
-import tableDuck from 'store/tableDuck';
+import errorsDuck from 'store/errorsDuck';
 import { RootState } from 'store/types';
 import { assembleErrors } from 'utils';
 
+const loadArchive = async (fileId: string) => {
+  const blob = await projectService.getCalculationArchive(fileId);
+
+  const url = window.URL.createObjectURL(blob);
+  const link = Object.assign(document.createElement('a'), {
+    style: { display: 'none' },
+    download: 'result.zip',
+    href: url,
+  });
+
+  document.body.appendChild(link).click();
+  window.URL.revokeObjectURL(url);
+};
+
 export const CalculateButton: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
-  const tableData = useSelector((state: RootState) => state.table);
+  const { projectId } = useContext(ProjectContext);
 
-  const handleClick = () => {
+  const tableData = useSelector((state: RootState) => state.table);
+  const dispatch = useDispatch();
+
+  const dispatchErrors = (id: string, errors: ColumnErrors) =>
+    dispatch(
+      errorsDuck.actions.updateErrors({
+        id,
+        errors,
+      }),
+    );
+
+  const handleClick = async () => {
     projectService.getTableTemplate().then((templateStructure) => {
       setIsLoading(true);
 
@@ -21,19 +47,10 @@ export const CalculateButton: React.FC = () => {
           setIsLoading(false);
 
           if (resultId) {
-            projectService.getCalculationArchive(resultId).then((blob) => {
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.style.display = 'none';
-              a.href = url;
-              a.download = 'result.zip';
-              document.body.appendChild(a);
-              a.click();
-              window.URL.revokeObjectURL(url);
-            });
-            dispatch(tableDuck.actions.updateErrors({}));
+            loadArchive(resultId);
+            dispatchErrors(projectId, {});
           } else if (errors?.length) {
-            dispatch(tableDuck.actions.updateErrors(assembleErrors(errors)));
+            dispatchErrors(projectId, assembleErrors(errors));
           }
         })
         .catch((error) => {

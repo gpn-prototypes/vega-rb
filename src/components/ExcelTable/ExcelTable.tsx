@@ -14,7 +14,7 @@ import { renderColumns } from './Columns/renderColumns';
 import { cnExcelTable } from './cn-excel-table';
 import { HeaderContextMenu } from './ContextMenu';
 import StyledRow from './StyledRow';
-import { GridCollection, GridColumn, GridRow } from './types';
+import { ColumnErrors, GridCollection, GridColumn, GridRow } from './types';
 import { createColumn, getInsertableType } from './utils';
 
 import './ExcelTable.css';
@@ -25,6 +25,7 @@ type CommonTableColumn = GridColumn & CalculatedColumn<GridRow>;
 
 interface IProps {
   data: GridCollection;
+  errors: ColumnErrors;
   setColumns?: (data: GridColumn[]) => void;
   setRows?: (data: GridRow[]) => void;
   onRowClick?: (
@@ -35,12 +36,13 @@ interface IProps {
 }
 
 export const ExcelTable: React.FC<IProps> = ({
-  data = { columns: [], rows: [], errors: {} },
+  data = { columns: [], rows: [] },
+  errors = {},
   setColumns = (): void => {},
   setRows = (): void => {},
   onRowClick = (): void => {},
 }) => {
-  const { columns, rows, errors } = data;
+  const { columns, rows } = data;
   const gridRef = useRef<DataGridHandle>(null);
   const updateErrors = useUpdateErrors();
 

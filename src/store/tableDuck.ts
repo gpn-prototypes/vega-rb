@@ -1,11 +1,9 @@
 import {
-  ColumnErrors,
   GridCell,
   GridCollection,
   GridColumn,
   GridRow,
 } from 'components/ExcelTable/types';
-import { unset } from 'lodash/fp';
 import { ofAction } from 'operators/ofAction';
 import { Epic } from 'redux-observable';
 import { forkJoin, from, of, throwError } from 'rxjs';
@@ -13,13 +11,14 @@ import {
   catchError,
   distinctUntilChanged,
   ignoreElements,
+  map,
   mergeMap,
   switchMap,
 } from 'rxjs/operators';
-import projectService from 'services/ProjectService';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 
+import errorsDuck from './errorsDuck';
 import { RootState, TypedColumnsList } from './types';
 
 const factory = actionCreatorFactory('table');
@@ -30,14 +29,12 @@ const actions = {
   updateColumnsByType: factory<TypedColumnsList>('UPDATE_COLUMNS_BY_TYPE'),
   updateRows: factory<GridRow[]>('UPDATE_ROWS'),
   updateCell: factory<GridCell>('UPDATE_CELL'),
-  updateErrors: factory<ColumnErrors>('UPDATE_ERRORS'),
   resetState: factory('RESET_STATE'),
 };
 
 const initialState: GridCollection = {
   columns: [],
   rows: [],
-  errors: {},
   version: 0,
 };
 
@@ -81,14 +78,8 @@ const reducer = reducerWithInitialState<GridCollection>(initialState)
     ...state,
     rows: payload,
   }))
-  .case(actions.updateErrors, (state, payload) => ({
-    ...state,
-    errors: payload,
-  }))
   .case(actions.updateCell, (state, { selectedCell, cellData }) => {
     const rows = [...state.rows];
-    let errors = { ...state.errors };
-
     const selectedColumnKey = selectedCell.column.key;
     const selectedRowIdx = selectedCell.rowIdx;
 
@@ -100,20 +91,18 @@ const reducer = reducerWithInitialState<GridCollection>(initialState)
           ...cellData,
         },
       } as GridRow);
-
-      errors = unset([selectedColumnKey, selectedRowIdx], errors);
     }
 
     return {
       ...state,
       rows,
-      errors,
     };
   });
 
 const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
   action$,
   state$,
+  { projectService },
 ) =>
   action$.pipe(
     ofAction(
@@ -145,8 +134,25 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
     ignoreElements(),
   );
 
+export const updateCell: Epic<AnyAction, AnyAction, RootState> = (
+  action$,
+  state$,
+  { projectService },
+) =>
+  action$.pipe(
+    ofAction(actions.updateCell),
+    map(({ payload }) => {
+      const { column, rowIdx } = payload.selectedCell;
+
+      return errorsDuck.actions.removeErrors({
+        id: projectService.projectId,
+        path: [column.key, rowIdx],
+      });
+    }),
+  );
+
 export default {
   reducer,
   actions,
-  epics: [saveToStorageEpic],
+  epics: [saveToStorageEpic, updateCell],
 };

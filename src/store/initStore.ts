@@ -1,16 +1,16 @@
 import { applyMiddleware, CombinedState, createStore, Store } from 'redux';
 import * as logger from 'redux-logger';
 import { createEpicMiddleware } from 'redux-observable';
+import projectService from 'services/ProjectService';
 import { AnyAction } from 'typescript-fsa';
 
 import rootReducer from './reducers';
 import rootEpic from './rootEpic';
 import { RootState } from './types';
-// import {ajaxWithJWTAuth} from 'utils/ajaxWithJWTAuth'
 
 const configureStore = (): Store<CombinedState<RootState>, AnyAction> => {
   const epicMiddleware = createEpicMiddleware<AnyAction, AnyAction, RootState>({
-    // dependencies: { ajaxWithJWTAuth }
+    dependencies: { projectService },
   });
 
   const middleware =

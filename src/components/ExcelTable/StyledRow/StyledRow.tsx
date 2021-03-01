@@ -1,10 +1,8 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useRef } from 'react';
 import { CellRendererProps, Row, RowRendererProps } from 'react-data-grid';
-import { useSelector } from 'react-redux';
 import { classnames } from '@bem-react/classnames';
 import { ContextMenuId, TableEntities } from 'components/ExcelTable/enums';
-import { get } from 'lodash/fp';
-import { RootState } from 'store/types';
+import { useGetError } from 'hooks';
 
 import { CellWithError, DropDownCell } from '../Cells';
 import { withContextMenu } from '../ContextMenu';
@@ -28,12 +26,7 @@ const CellRenderer: React.FC<CellRendererProps<GridRow>> = (
 
 export default React.memo<RowRendererProps<GridRow>>(function StyledRow(props) {
   const collect = (): { rowIdx: number } => ({ rowIdx: props.rowIdx });
-  const errors = useSelector(({ table }: RootState) => table.errors);
-  const getError = useCallback(
-    (errorsList) => get(`row-${props.rowIdx}`, errorsList),
-    [props.rowIdx],
-  );
-  const error = getError(errors);
+  const [error] = useGetError(`row-${props.rowIdx}`);
 
   return withContextMenu(
     <Row
@@ -41,7 +34,7 @@ export default React.memo<RowRendererProps<GridRow>>(function StyledRow(props) {
       cellRenderer={CellRenderer}
       className={classnames(
         cnRow(),
-        cnRow.state({ error }),
+        cnRow.state({ error: !!error }),
         cnRow(props.rowIdx % 2 ? 'Even' : 'Odd'),
       )}
     />,

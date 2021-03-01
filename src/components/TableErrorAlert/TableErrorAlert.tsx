@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Item } from '@consta/uikit/SnackBar';
 import { IconAlert, SnackBar } from '@gpn-prototypes/vega-ui';
 import { ErrorWrapper } from 'components/ExcelTable/types';
 import { RbErrorCodes } from 'generated/graphql';
+import useGetError from 'hooks/useGetError';
 import { defaultTo, get } from 'lodash/fp';
-import { RootState } from 'store/types';
 
 import { cnTableErrorAlert } from './cn-table-error-alert';
 
@@ -20,8 +19,7 @@ const errorMessages = {
 
 export const TableErrorAlert: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
-  const errors = useSelector(({ table }: RootState) => table.errors);
-
+  const [, errors] = useGetError();
   const tableRowErrors = useMemo(
     () =>
       Object.keys(errors)

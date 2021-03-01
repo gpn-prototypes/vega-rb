@@ -5,7 +5,7 @@ import {
   NormalizedCacheObject,
   useApolloClient,
 } from '@apollo/client';
-import { useMount, useUnmount } from '@gpn-prototypes/vega-ui';
+import { useMount } from '@gpn-prototypes/vega-ui';
 import {
   ExcelTable,
   GridRow,
@@ -13,6 +13,7 @@ import {
   TableEntities,
 } from 'components/ExcelTable';
 import { ProjectContext } from 'components/Providers';
+import { useGetError } from 'hooks';
 import { loadTableData } from 'services/loadTableData';
 import projectService from 'services/ProjectService';
 import tableDuck from 'store/tableDuck';
@@ -28,6 +29,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
   const { projectId } = useContext(ProjectContext);
   const reduxTableData = useSelector(({ table }: RootState) => table);
+  const [, errors] = useGetError();
   const treeFilterData = useSelector(({ tree }: RootState) => tree.filter);
 
   const filteredData = useMemo(() => {
@@ -65,8 +67,8 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
     loadTableData(dispatch).then();
   });
 
-  useUnmount(() => {
-    // dispatch(tableDuck.actions.resetState());
+  useMount(() => {
+    dispatch(tableDuck.actions.resetState());
   });
 
   return (
@@ -75,6 +77,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
       setColumns={(data): void => {
         dispatch(tableDuck.actions.updateColumns(data));
       }}
+      errors={errors}
       setRows={(data): void => {
         dispatch(tableDuck.actions.updateRows(data));
       }}

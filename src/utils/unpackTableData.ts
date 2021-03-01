@@ -234,7 +234,6 @@ export function unpackTableData(
   return {
     columns,
     rows,
-    errors: {},
     version,
   };
 }

@@ -83,7 +83,6 @@ export interface GridColumn extends Column<GridRow> {
 export interface GridCollection {
   columns: GridColumn[];
   rows: GridRow[];
-  errors: ColumnErrors;
   version: number;
 }
 
