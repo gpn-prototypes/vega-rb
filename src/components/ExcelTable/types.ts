@@ -112,6 +112,8 @@ export type BaseProps = {
 
 export type UniColumn = CalculatedColumn<GridRow> & GridColumn;
 
+export type CommonTableColumn = GridColumn & CalculatedColumn<GridRow>;
+
 export interface DropdownOption {
   id: string;
   value: string;

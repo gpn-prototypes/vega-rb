@@ -4,7 +4,11 @@ import {
   cnDropDownEditor,
   cnOption,
 } from 'components/ExcelTable/Editors/cn-editor';
-import { DropDownEditorProps, GridRow } from 'components/ExcelTable/types';
+import {
+  DropDownEditorProps,
+  DropdownOption,
+  GridRow,
+} from 'components/ExcelTable/types';
 import { size } from 'lodash/fp';
 
 import './DropDownEditor.css';
@@ -16,6 +20,16 @@ const DropDownEditor: React.FC<DropDownEditorProps> = ({
   options,
 }) => {
   const selectRef = useRef<HTMLSelectElement>(null);
+  const handleClick = (option: DropdownOption) => () => {
+    onRowChange(
+      {
+        ...row,
+        [column.key]: option,
+      } as GridRow,
+      true,
+    );
+  };
+
   return (
     <Theme preset={presetGpnDark}>
       <select
@@ -27,15 +41,7 @@ const DropDownEditor: React.FC<DropDownEditorProps> = ({
           <option
             key={option.id}
             value={option.value}
-            onClick={() =>
-              onRowChange(
-                {
-                  ...row,
-                  [column.key]: option,
-                } as GridRow,
-                true,
-              )
-            }
+            onClick={handleClick(option)}
             className={cnOption.toString()}
           >
             {option.text || option.value}

@@ -5,37 +5,36 @@ import { getOr } from 'lodash/fp';
 
 import { autoFocusAndSelect } from '../helpers';
 
-export const SimpleTextEditor: React.FC<EditorProps<GridRow | undefined>> = ({
+type IProps = EditorProps<GridRow | undefined>;
+type EditorChangeEvent<T> = React.ChangeEvent<T> | React.FocusEvent<T>;
+
+export const SimpleTextEditor: React.FC<IProps> = ({
   row,
   column,
   onRowChange,
   onClose,
 }) => {
-  const handleChange = (
-    event:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLInputElement>,
-  ) => {
+  const handleChange = ({ target }: EditorChangeEvent<HTMLInputElement>) => {
+    const { value, type } = target;
+    const columnKey = column.key;
     onRowChange({
       ...row,
-      [column.key]: {
-        ...row?.[column.key],
-        value: event.target.value,
+      [columnKey]: {
+        ...row?.[columnKey],
+        value,
       },
     });
-    if (event.type === 'blur') {
+    if (type === 'blur') {
       onClose(true);
     }
   };
   return (
-    <>
-      <input
-        className="rdg-text-editor"
-        ref={autoFocusAndSelect}
-        value={getOr('', [column.key, 'value'], row)}
-        onChange={handleChange}
-        onBlur={handleChange}
-      />
-    </>
+    <input
+      className="rdg-text-editor"
+      ref={autoFocusAndSelect}
+      value={getOr('', [column.key, 'value'], row)}
+      onChange={handleChange}
+      onBlur={handleChange}
+    />
   );
 };

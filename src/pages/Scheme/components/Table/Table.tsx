@@ -7,13 +7,16 @@ import {
 } from '@apollo/client';
 import { useMount } from '@gpn-prototypes/vega-ui';
 import {
+  CommonTableColumn,
   ExcelTable,
+  GridColumn,
   GridRow,
   SelectedCell,
   TableEntities,
 } from 'components/ExcelTable';
 import { ProjectContext } from 'components/Providers';
 import { useGetError } from 'hooks';
+import { filter, flow, map, some } from 'lodash/fp';
 import { loadTableData } from 'services/loadTableData';
 import projectService from 'services/ProjectService';
 import tableDuck from 'store/tableDuck';
@@ -33,15 +36,15 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   const treeFilterData = useSelector(({ tree }: RootState) => tree.filter);
 
   const filteredData = useMemo(() => {
-    const rowIsFulfilled = (row: GridRow): boolean => {
-      const structureColumnsKeys = reduxTableData.columns
-        .filter(({ type }) => type === TableEntities.GEO_CATEGORY)
-        .map(({ key, name }) => ({
+    const rowIsFulfilled = (row: GridRow): boolean =>
+      flow(
+        filter(({ type }) => type === TableEntities.GEO_CATEGORY),
+        map(({ key, name }: GridColumn) => ({
           key,
           name,
-        }));
-      return structureColumnsKeys.some(({ key }) => key !== 'id' && row[key]);
-    };
+        })),
+        some(({ key }: { key: string }) => Boolean(key !== 'id' && row[key])),
+      )(reduxTableData.columns);
 
     if (treeFilterData.rows.length && treeFilterData.columns.length) {
       return {
@@ -57,6 +60,51 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
     }
     return reduxTableData;
   }, [reduxTableData, treeFilterData.columns, treeFilterData.rows]);
+
+  const handleSetRows = (data: GridRow[], indexes?: number[]): void => {
+    const updatedRows = data.filter((value, idx) => indexes?.includes(idx));
+
+    const newRows = reduxTableData.rows.map((row) => {
+      const rowIdx = updatedRows.findIndex(
+        (updatedRow: GridRow) => updatedRow.id === row.id,
+      );
+
+      if (rowIdx !== -1) {
+        return updatedRows[rowIdx];
+      }
+
+      return row;
+    });
+
+    dispatch(tableDuck.actions.updateRows(newRows));
+  };
+
+  const handleSetColumns = (data: GridColumn[]): void => {
+    dispatch(tableDuck.actions.updateColumns(data));
+  };
+
+  const handleRowClick = ({
+    rowIdx,
+    row,
+    column,
+  }: {
+    rowIdx: number;
+    row: GridRow;
+    column: CommonTableColumn;
+  }): void => {
+    if (column.type === TableEntities.CALC_PARAM) {
+      // TODO: to remove pass column objet
+      // onSelect(
+      //   row[column.key] || {
+      //     value: '',
+      //     args: undefined,
+      //   },
+      // );
+      onSelect({ rowIdx, row, column });
+    } else {
+      onSelect(null);
+    }
+  };
 
   useMount(() => {
     projectService.init({
@@ -75,46 +123,9 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
     <ExcelTable
       data={filteredData}
       errors={errors}
-      setColumns={(data): void => {
-        dispatch(tableDuck.actions.updateColumns(data));
-      }}
-      setRows={(data, indexes): void => {
-        const updatedRows = data.reduce((prev, curr, idx) => {
-          if (indexes.includes(idx)) {
-            return [...prev, curr];
-          }
-
-          return prev;
-        }, [] as GridRow[]);
-
-        const newRows = reduxTableData.rows.map((row) => {
-          const rowIdx = updatedRows?.findIndex(
-            (updatedRow: GridRow) => updatedRow.id === row.id,
-          );
-
-          if (rowIdx !== -1) {
-            return updatedRows[rowIdx];
-          }
-
-          return row;
-        });
-
-        dispatch(tableDuck.actions.updateRows(newRows));
-      }}
-      onRowClick={(rowIdx, row, column): void => {
-        if (column.type === TableEntities.CALC_PARAM) {
-          // TODO: to remove pass column objet
-          // onSelect(
-          //   row[column.key] || {
-          //     value: '',
-          //     args: undefined,
-          //   },
-          // );
-          onSelect({ rowIdx, row, column });
-        } else {
-          onSelect(null);
-        }
-      }}
+      setColumns={handleSetColumns}
+      setRows={handleSetRows}
+      onRowClick={handleRowClick}
     />
   );
 };

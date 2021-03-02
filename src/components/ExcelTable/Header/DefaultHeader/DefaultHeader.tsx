@@ -33,19 +33,18 @@ export default React.memo<HeaderRendererProps>(function DefaultHeader(props) {
       setColumnProps={setColumnProps}
     />
   );
+  const handleDoubleClick = (): void => {
+    setColumnProps(columnIdx, { isRenaming: true });
+  };
 
   return (
     <DraggableHeader
-      onAllRowsSelectionChange={() => {}}
-      allRowsSelected={false}
-      column={props.column}
+      {...props}
       className={classNames(
         type === TableEntities.CALC_PARAM && styles.CalcParamHeader,
       )}
       onColumnsReorder={handleColumnsReorder}
-      onDoubleClick={(): void => {
-        setColumnProps(columnIdx, { isRenaming: true });
-      }}
+      onDoubleClick={handleDoubleClick}
       editor={editor}
       precedingContent={PrecedingContent(type!, headerId!)}
     />

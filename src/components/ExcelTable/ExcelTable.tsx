@@ -1,6 +1,5 @@
 import React, { ReactText, useCallback, useMemo, useRef } from 'react';
 import ReactDataGrid, {
-  CalculatedColumn,
   DataGridHandle,
   FillEvent,
   PasteEvent,
@@ -9,6 +8,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ContextMenuId, TableEntities } from 'components/ExcelTable/enums';
 import { useUpdateErrors } from 'hooks';
+import { NoopFunction } from 'types';
 import { getColumnsByType } from 'utils/getColumnsByType';
 
 import { renderColumns } from './Columns/renderColumns';
@@ -17,6 +17,7 @@ import { HeaderContextMenu, RowContextMenu } from './ContextMenu';
 import StyledRow from './StyledRow';
 import {
   ColumnErrors,
+  CommonTableColumn,
   ContextBody,
   GridCollection,
   GridColumn,
@@ -28,19 +29,16 @@ import { createColumn, getInsertableType } from './utils';
 import './ExcelTable.css';
 
 const cnExcelTableClass = cnExcelTable();
-
-type CommonTableColumn = GridColumn & CalculatedColumn<GridRow>;
-
 interface IProps {
   data: GridCollection;
   errors: ColumnErrors;
   setColumns?: (data: GridColumn[]) => void;
-  setRows?: (data: GridRow[], indexes: number[]) => void;
-  onRowClick?: (
-    rowIdx: number,
-    row: GridRow,
-    column: CommonTableColumn,
-  ) => void;
+  setRows?: (data: GridRow[], indexes?: number[]) => void;
+  onRowClick?: NoopFunction<{
+    rowIdx: number;
+    row: GridRow;
+    column: CommonTableColumn;
+  }>;
 }
 
 export const ExcelTable: React.FC<IProps> = ({
@@ -58,13 +56,12 @@ export const ExcelTable: React.FC<IProps> = ({
       data.columns,
       TableEntities.GEO_CATEGORY,
     );
-
     const calculationParametersColumns = getColumnsByType(
       data.columns,
       TableEntities.CALC_PARAM,
     );
-
     const riskColumns = getColumnsByType(data.columns, TableEntities.RISK);
+
     return {
       [TableEntities.GEO_CATEGORY]: domainEntitiesColumns,
       [TableEntities.CALC_PARAM]: calculationParametersColumns,
@@ -74,7 +71,7 @@ export const ExcelTable: React.FC<IProps> = ({
 
   const handleRowClick = useCallback(
     (rowIdx: number, row: GridRow, column: CommonTableColumn) => {
-      onRowClick(rowIdx, row, column);
+      onRowClick({ rowIdx, row, column });
       if (column.type === TableEntities.GEO_CATEGORY_TYPE) {
         gridRef.current?.selectCell({ rowIdx, idx: column.idx }, true);
       }
