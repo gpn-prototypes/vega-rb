@@ -8,30 +8,23 @@ import {
   TableEntities,
   VisibleKeys,
 } from 'components/ExcelTable/enums';
-import { ResourceIcon } from 'components/ExcelTable/Icons';
-import { GridColumn, VisibilityProperties } from 'components/ExcelTable/types';
 import { createColumn } from 'components/ExcelTable/utils';
+import { set } from 'lodash/fp';
 import { v4 as uuid } from 'uuid';
 
 import { cnHierarchy } from './cn-hierarchy';
-import HierarchyLevelItem from './HierarchyLevelItem';
-import { Icons } from './types';
+import { HierarchyLevelItem } from './HierarchyLevelItem';
+import { HierarchyLevelListProps } from './types';
 
 import './HierarchyLevelList.css';
 
-interface HierarchyLevelListProps {
-  items: GridColumn[];
-  isOpen?: boolean;
-  handleClose: () => void;
-  onSubmit: (items: GridColumn[]) => void;
-  icons?: Icons;
-}
+export const testId = {
+  list: 'HierarchyLevelList:list',
+};
 
 const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
   items: innerItems,
-  icons = {
-    [CategoryIcon.FIELD_ICON]: <ResourceIcon className={cnHierarchy('Icon')} />,
-  },
+  icons,
   onSubmit,
   isOpen,
   handleClose,
@@ -66,30 +59,13 @@ const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
     visibleProperty: VisibleKeys,
     isChecked: boolean,
   ) => {
-    setItems((prevItems) => {
-      const columns = [...prevItems];
-      const visibleProps = {
-        ...columns[index].visible,
-        [visibleProperty]: isChecked,
-      } as VisibilityProperties;
-
-      const column = {
-        ...columns[index],
-        visible: visibleProps,
-      };
-      columns.splice(index, 1, column);
-
-      return columns;
-    });
+    setItems((prevItems) =>
+      set([index, 'visible', visibleProperty], isChecked, prevItems),
+    );
   };
 
   const onDelete = (index: number) => {
-    setItems((prevState) => {
-      const arr = [...prevState];
-      arr.splice(index, 1);
-
-      return arr;
-    });
+    setItems((prevState) => prevState.filter((v, idx) => idx === index));
   };
 
   const onAddItem = () => {
@@ -108,15 +84,7 @@ const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
   };
 
   const onChangeName = (index: number, name: string) => {
-    setItems((prevState) => {
-      const arr = [...prevState];
-      arr.splice(index, 1, {
-        ...items[index],
-        name,
-      });
-
-      return arr;
-    });
+    setItems((prevState) => set([index, 'name'], name, prevState));
   };
 
   useEffect(() => {
@@ -130,7 +98,7 @@ const HierarchyLevelList: React.FC<HierarchyLevelListProps> = ({
       </Sidebar.Header>
       <Sidebar.Body>
         <div className={cnHierarchy()}>
-          <div className={cnHierarchy('Content')}>
+          <div className={cnHierarchy('Content')} data-testid={testId.list}>
             <DndProvider backend={HTML5Backend}>
               {items.map((item, index) => (
                 <HierarchyLevelItem

@@ -1,3 +1,3 @@
-import HierarchyLevelItem from './HierarchyLevelItem';
+import HierarchyLevelItem, { testId } from './HierarchyLevelItem';
 
-export default HierarchyLevelItem;
+export { HierarchyLevelItem, testId };

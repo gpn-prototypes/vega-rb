@@ -13,8 +13,15 @@ import {
 } from '@gpn-prototypes/vega-ui';
 import { RecentlyEditedAlert } from 'components/CompetitiveAccess/RecentlyEditedAlert';
 import { DistributionSettings } from 'components/DistributionSettings';
-import { GridColumn, SelectedCell, TableEntities } from 'components/ExcelTable';
+import {
+  CategoryIcon,
+  GridColumn,
+  SelectedCell,
+  TableEntities,
+} from 'components/ExcelTable';
+import { ResourceIcon } from 'components/ExcelTable/Icons';
 import { HierarchyLevelList } from 'components/HierarchyLevelList';
+import { cnHierarchy } from 'components/HierarchyLevelList/cn-hierarchy';
 import { ProjectContext } from 'components/Providers';
 import { TableErrorAlert } from 'components/TableErrorAlert';
 import projectService from 'services/ProjectService';
@@ -143,6 +150,11 @@ const SchemePage: React.FC = () => {
         handleClose={handleClose}
         items={geoCategoryColumns}
         onSubmit={(columns) => updateColumns(columns)}
+        icons={{
+          [CategoryIcon.FIELD_ICON]: (
+            <ResourceIcon className={cnHierarchy('Icon')} />
+          ),
+        }}
       />
 
       {isRecentlyEdited && <RecentlyEditedAlert />}

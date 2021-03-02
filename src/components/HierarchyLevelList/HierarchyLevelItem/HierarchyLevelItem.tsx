@@ -16,7 +16,7 @@ import { CategoryIcon, VisibleKeys } from 'components/ExcelTable/enums';
 import { VisibilityProperties } from 'components/ExcelTable/types';
 
 import { cnHierarchy } from '../cn-hierarchy';
-import ContentEditableField from '../ContentEditable';
+import { ContentEditableField } from '../ContentEditable';
 import HierarchyContextMenu from '../HierarchyContextMenu';
 import { Icons } from '../types';
 
@@ -24,6 +24,11 @@ import { cnItem } from './cn-item';
 import { DragItem, DragItemTypes } from './types';
 
 import './HierarchyLevelItem.css';
+
+export const testId = {
+  tag: 'HierarchyLevelItem:tag',
+  item: 'HierarchyLevelItem:item',
+};
 
 const visibleItemList = [
   {
@@ -216,6 +221,7 @@ const HierarchyLevelItem: React.FC<IProps> = ({
         over: isOver,
         editing: isEditing,
       })}
+      data-testid={testId.item}
       ref={ref}
     >
       <div
@@ -242,6 +248,7 @@ const HierarchyLevelItem: React.FC<IProps> = ({
                 key={key}
                 className={cnItem('Tag').toString()}
                 label={title}
+                data-testid={testId.tag}
                 mode="check"
                 size="m"
                 checked={visible[key]}

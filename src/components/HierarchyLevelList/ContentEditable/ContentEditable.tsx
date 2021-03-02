@@ -7,7 +7,6 @@ import './ContentEditable.css';
 interface IProps {
   onChange: (value: string) => void;
   disabled?: boolean;
-  tag?: string;
   className?: string;
   value?: string;
 }
@@ -15,7 +14,6 @@ interface IProps {
 const ContentEditableField: React.FC<IProps> = ({
   value = '',
   disabled,
-  tag = 'span',
   className,
   onChange,
 }) => {
