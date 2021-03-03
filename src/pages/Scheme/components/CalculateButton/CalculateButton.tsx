@@ -9,12 +9,12 @@ import { RootState } from 'store/types';
 import { assembleErrors } from 'utils';
 
 const loadArchive = async (fileId: string) => {
-  const blob = await projectService.getCalculationArchive(fileId);
+  const { filename, data } = await projectService.getCalculationArchive(fileId);
 
-  const url = window.URL.createObjectURL(blob);
+  const url = window.URL.createObjectURL(data);
   const link = Object.assign(document.createElement('a'), {
     style: { display: 'none' },
-    download: 'result.zip',
+    download: filename,
     href: url,
   });
 

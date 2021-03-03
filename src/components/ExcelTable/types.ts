@@ -86,9 +86,21 @@ export interface GridCollection {
   version: number;
 }
 
-export type ContextHandler = (
+export interface ContextBody {
+  idx: number;
+}
+
+export interface ColumnContextBody extends ContextBody {
+  type: TableEntities;
+}
+
+export interface RowContextBody extends ContextBody {
+  element: GridRow;
+}
+
+export type ContextHandler<T extends ContextBody> = (
   e: React.MouseEvent<HTMLDivElement>,
-  { idx }: { idx: number; type: TableEntities },
+  { idx }: T,
 ) => void;
 
 export type FormatterProps<T> = BaseFormatterProps<T> & { value?: string };
