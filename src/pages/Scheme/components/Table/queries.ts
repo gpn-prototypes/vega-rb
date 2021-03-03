@@ -33,62 +33,60 @@ export const GET_VERSION = gql`
 
 export const ResourceBaseTableFragment = gql`
   fragment ResourceBaseTableFragment on RBProject {
-        version
-        conceptions {
-          name
-          probability
-          description
-          structure {
-            domainObjects {
-              domainObjectPath {
-                code
+    version
+    conceptions {
+      name
+      probability
+      description
+      structure {
+        domainObjects {
+          domainObjectPath {
+            code
+            value
+          }
+          geoObjectCategory
+          risksValues {
+            code
+            value
+          }
+          attributeValues {
+            distribution {
+              type
+              definition
+              parameters {
+                type
                 value
               }
-              geoObjectCategory
-              risksValues {
-                code
+              minBound
+              maxBound
+            }
+            code
+            visibleValue {
+              ... on VisibleValue {
                 value
-              }
-              attributeValues {
-                distribution {
-                  type
-                  definition
-                  parameters {
-                    type
-                    value
-                  }
-                  minBound
-                  maxBound
-                }
-                code
-                visibleValue {
-                  ... on VisibleValue {
-                    value
-                  }
-                }
-              }
-              domainEntities {
-                name
-                code
-                icon
-                visible {
-                  calc
-                  table
-                  tree
-                }
-              }
-              risks {
-                code
-                name
-              }
-              attributes {
-                code
-                name
-                shortName
-                units
               }
             }
           }
+        }
+        domainEntities {
+          name
+          code
+          icon
+          visible {
+            calc
+            table
+            tree
+          }
+        }
+        risks {
+          code
+          name
+        }
+        attributes {
+          code
+          name
+          shortName
+          units
         }
       }
     }
@@ -122,7 +120,6 @@ export const ResourceBaseDiffFragment = gql`
     }
   }
 `;
-
 
 export const LOAD_PROJECT = gql`
   query ProjectResourceBase {

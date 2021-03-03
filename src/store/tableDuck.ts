@@ -4,6 +4,7 @@ import {
   GridColumn,
   GridRow,
 } from 'components/ExcelTable/types';
+import { RbProject } from 'generated/graphql';
 import { ofAction } from 'operators/ofAction';
 import { Epic } from 'redux-observable';
 import { EMPTY, from, of } from 'rxjs';
@@ -115,7 +116,7 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
           return of({});
         }),
         switchMap(() =>
-          from(projectService.getResourceBaseData()).pipe(
+          from<Promise<RbProject>>(projectService.getResourceBaseData()).pipe(
             catchError((err) => {
               // TODO: добавить обработчик для информирования пользователя сообщением
               // eslint-disable-next-line no-console
@@ -126,7 +127,7 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
 
               return EMPTY;
             }),
-            map((loadFromDatabase) =>
+            map((loadFromDatabase: RbProject) =>
               actions.initState(
                 unpackTableData(
                   loadFromDatabase.conceptions[0].structure,

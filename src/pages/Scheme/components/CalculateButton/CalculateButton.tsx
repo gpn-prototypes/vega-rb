@@ -1,11 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Button } from '@gpn-prototypes/vega-ui';
 import { ColumnErrors } from 'components/ExcelTable';
 import { ProjectContext } from 'components/Providers';
 import projectService from 'services/ProjectService';
 import errorsDuck from 'store/errorsDuck';
-import { RootState } from 'store/types';
 import tableDuck from 'store/tableDuck';
 import { assembleErrors, unpackTableData } from 'utils';
 
@@ -27,7 +26,6 @@ export const CalculateButton: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { projectId } = useContext(ProjectContext);
 
-  const tableData = useSelector((state: RootState) => state.table);
   const dispatch = useDispatch();
 
   const dispatchErrors = (id: string, errors: ColumnErrors) =>
@@ -48,10 +46,13 @@ export const CalculateButton: React.FC = () => {
 
       dispatch(tableDuck.actions.initState(data));
 
-      const { resultId, errors } = await projectService.getCalculationResultFileId(data);
+      const {
+        resultId,
+        errors,
+      } = await projectService.getCalculationResultFileId(data);
 
       if (resultId) {
-        loadArchive(resultId);
+        await loadArchive(resultId);
         dispatchErrors(projectId, {});
       } else if (errors?.length) {
         dispatchErrors(projectId, assembleErrors(errors));

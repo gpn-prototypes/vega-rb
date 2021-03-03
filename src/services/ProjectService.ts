@@ -343,7 +343,7 @@ class ProjectService {
       .then(({ data }) => data.project.recentlyEdited);
   }
 
-  getResourceBaseData() {
+  getResourceBaseData(): Promise<RbProject> {
     return this.client
       .query<Query>({
         query: LOAD_PROJECT,
