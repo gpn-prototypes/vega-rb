@@ -44,13 +44,18 @@ export type TableStructures = GeoCategory | CalculationParam | Risk;
 export type Nullable<T> = T | null;
 
 export type DomainObjectsProps = {
+  domainEntitiesColumns: GridColumn[];
+  attributeColumns: GridColumn[];
+  riskColumns: GridColumn[];
   rows: GridRow[];
-  risks: GridColumn[];
-  calculationParams: GridColumn[];
-  domainEntities: GridColumn[];
 };
 
 export type NoopFunction<T, R = void> = (data: T) => R;
+
+export interface IData<T> {
+  code: string;
+  value: Nullable<T>;
+}
 
 export interface IValuableStructure {
   value: string;

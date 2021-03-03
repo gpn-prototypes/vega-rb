@@ -42,9 +42,15 @@ export const LOAD_PROJECT = gql`
             description
             structure {
               domainObjects {
-                domainObjectPath
+                domainObjectPath {
+                  code
+                  value
+                }
                 geoObjectCategory
-                risksValues
+                risksValues {
+                  code
+                  value
+                }
                 attributeValues {
                   distribution {
                     type
@@ -56,7 +62,12 @@ export const LOAD_PROJECT = gql`
                     minBound
                     maxBound
                   }
-                  visibleValue
+                  code
+                  visibleValue {
+                    ... on VisibleValue {
+                      value
+                    }
+                  }
                 }
               }
               domainEntities {

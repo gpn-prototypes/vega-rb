@@ -1,27 +1,20 @@
 import { TableEntities } from 'components/ExcelTable/enums';
 import GridColumnEntity from 'components/ExcelTable/Models/GridColumnEntity';
 import {
-  GridCellArguments,
   GridCollection,
   GridColumn,
   GridRow,
 } from 'components/ExcelTable/types';
-import { entitiesOptions } from 'components/ExcelTable/utils/getEditor';
 import {
-  Attribute,
-  AttributeValue,
-  GeoObjectCategories,
-  Maybe,
   ProjectStructure,
   ProjectStructureInput,
-  RbDomainEntityInput,
-  RiskInput,
   VisibleInput,
 } from 'generated/graphql';
 import { SpecialColumns } from 'model/Table';
 import { CalculationParam, GeoCategory, Risk, TableStructures } from 'types';
 
 import { omitTypename } from './omitTypename';
+import { constructRows } from './unpackingData';
 
 const getCalculationColumn = (
   prev: GridColumn[],
@@ -75,69 +68,6 @@ function structureParamsReducer(list: TableStructures[]): GridColumn[] {
   }, []);
 }
 
-function collectAttributeValues(
-  attributes: Array<Attribute>,
-  attributesValues: Array<Maybe<AttributeValue>>,
-): GridRow {
-  const getArguments = (
-    attributeValue: Maybe<AttributeValue>,
-  ): GridCellArguments => {
-    if (attributeValue) {
-      return omitTypename(attributeValue.distribution) as GridCellArguments;
-    }
-
-    return {} as GridCellArguments;
-  };
-
-  return attributes
-    .map(({ code }) => code)
-    .reduce((prev, key, idx) => {
-      const attributeValue = attributesValues[idx];
-
-      return {
-        ...prev,
-        [key]: {
-          value: attributeValue?.visibleValue,
-          args: getArguments(attributeValue),
-        },
-      };
-    }, {});
-}
-
-function collectRisks(
-  riskValues: Array<Maybe<number>>,
-  risk: RiskInput[],
-): GridRow {
-  return risk
-    .map(({ code }) => code)
-    .reduce(
-      (prev, name, idx) => ({
-        ...prev,
-        [name]: {
-          value: riskValues[idx],
-        },
-      }),
-      {},
-    );
-}
-
-function collectDomainEntities(
-  cells: string[],
-  domainEntities: RbDomainEntityInput[],
-): GridRow {
-  return domainEntities
-    .map(({ code }) => code)
-    .reduce(
-      (prev, name, idx) => ({
-        ...prev,
-        [name]: {
-          value: cells[idx],
-        },
-      }),
-      {},
-    );
-}
-
 function constructColumns({
   domainEntities = [],
   attributes = [],
@@ -163,64 +93,6 @@ function constructColumns({
       TableEntities.SPLITTER,
     ),
     ...structureParamsReducer(risks),
-  ];
-}
-
-function generateEmptyRows(count: number): Array<GridRow> {
-  const getOrderNumber = (index: number) => {
-    return count === 1000 ? index + 1 : Math.abs(count - 1000 - index - 1);
-  };
-
-  return Array.from({ length: count }, (val, index) => ({
-    id: {
-      value: getOrderNumber(index),
-    },
-  }));
-}
-
-function getGeoObjectCategoryValue(category: GeoObjectCategories) {
-  return category === GeoObjectCategories.Resources
-    ? entitiesOptions.RESOURCE
-    : entitiesOptions.RESERVES;
-}
-
-function constructRows({
-  domainEntities = [],
-  domainObjects = [],
-  attributes = [],
-  risks: risksEntities = [],
-}: ProjectStructure): GridRow[] {
-  const rowsCount = 1000 - domainObjects.length;
-
-  return [
-    ...domainObjects.map(
-      (
-        { domainObjectPath, geoObjectCategory, attributeValues, risksValues },
-        idx,
-      ) => {
-        const geoObjectCategoryValue = getGeoObjectCategoryValue(
-          geoObjectCategory,
-        );
-        const domainEntitiesList = collectDomainEntities(
-          domainObjectPath,
-          domainEntities,
-        );
-        const attributeValuesList = collectAttributeValues(
-          attributes,
-          attributeValues,
-        );
-        const risksList = collectRisks(risksValues, risksEntities);
-
-        return {
-          id: { value: idx + 1 },
-          [SpecialColumns.GEO_CATEGORY]: geoObjectCategoryValue,
-          ...domainEntitiesList,
-          ...attributeValuesList,
-          ...risksList,
-        };
-      },
-    ),
-    ...generateEmptyRows(rowsCount),
   ];
 }
 

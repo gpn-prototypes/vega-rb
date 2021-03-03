@@ -108,6 +108,8 @@ union UpdateRiskValueResult = DetailError | GCoSCalculationResult
 
 union UuidOrErrorOrDiff = Error | Result | UpdateProjectDiff
 
+union VisibleValueResult = CommonErrors | DistributionDefinitionErrors | VisibleValue
+
 union YearValueOrError = Error | YearValue
 
 type Activity {
@@ -197,9 +199,11 @@ type Attribute {
 }
 
 type AttributeValue {
-  distribution: Distribution!
-  "Отображаемый в ячейке 50-й процентиль (P50)"
-  visibleValue: Float!
+  "Кодовое обозначение подсчётного параметра"
+  code: String!
+  distribution: Distribution
+  "Отображаемый в ячейке процентиль"
+  visibleValue(visibleRank: Int): VisibleValueResult!
 }
 
 type AverageAnnualPriceType {
@@ -669,13 +673,13 @@ type DomainObject {
   "Значение GCoS геологического объекта"
   GCoS: Float
   "Список значений атрибутов геологического объекта"
-  attributeValues: [AttributeValue]!
+  attributeValues: [AttributeValue!]!
   "Иерархия геологического объекта в структуре проекта"
-  domainObjectPath: [String!]!
+  domainObjectPath: [DomainObjectPathLevel!]!
   "Категория геологического объекта"
   geoObjectCategory: GeoObjectCategories!
-  "Список значений рисков геологического объекта"
-  risksValues: [Float]!
+  "Список рисков геологического объекта"
+  risksValues: [RiskValue!]!
   "Отображения/Скрытие объекта в таблице"
   visible: Boolean!
 }
@@ -686,21 +690,28 @@ type DomainObjectGroupMutations {
   update(formula: String, name: String, version: Int!, vid: UUID!, vids: [UUID]): UpdateDomainGroupResult
 }
 
-type DomainObjectMutations {
-  delete(version: Int!, vid: UUID): DeleteDomainObjectMutation
-}
-
-type DomainObjectQuery {
-  domainObject(name: String, vid: UUID): DomainObjectInterface
-  objectGroup(name: String, vid: UUID): DomainObjectsGroup
-  objectGroupList: [DomainObjectsGroup]
-}
-
-type DomainObjectsGroup {
+type DomainObjectGroupType {
   formula: String
   name: String
   objects: [DomainObjectInterface]
   vid: UUID
+}
+
+type DomainObjectMutations {
+  delete(version: Int!, vid: UUID): DeleteDomainObjectMutation
+}
+
+type DomainObjectPathLevel {
+  "Кодовое обозначение уровня иерархии геологического объекта"
+  code: String!
+  "Название уровня иерархии геологического объекта"
+  value: String
+}
+
+type DomainObjectQuery {
+  domainObject(name: String, vid: UUID): DomainObjectInterface
+  objectGroup(name: String, vid: UUID): DomainObjectGroupType
+  objectGroupList: [DomainObjectGroupType]
 }
 
 type DomainSchema {
@@ -902,6 +913,8 @@ type Mutation {
     scenarioId: ID!,
     version: Int!
   ): ScenarioUpdateMutation
+  "Актуальная версия текущего проекта"
+  version: Int
 }
 
 type NddType {
@@ -1136,13 +1149,13 @@ type ProjectRole {
 }
 
 type ProjectStructure {
-  "Список подсчетных параметров"
+  "Список атрибутов структуры проекта"
   attributes: [Attribute!]!
-  "Список доменных сущностей геологических объектов"
+  "Список доменных сущностей структуры проекта"
   domainEntities: [RBDomainEntity!]!
   "Список геологических объектов структуры проекта"
   domainObjects: [DomainObject!]!
-  "Список рисков геологических объектов"
+  "Список рисков структуры проекта"
   risks: [Risk!]!
 }
 
@@ -1181,6 +1194,8 @@ type Query {
   resourceBase: ResourceBaseQueries
   scenario(version: Int): [ScenarioType]
   taxEnvironment: TaxEnvironmentType
+  "Актуальная версия текущего проекта"
+  version: Int
 }
 
 type RBDomainEntity {
@@ -1235,6 +1250,13 @@ type Risk {
   code: String!
   "Наименование риска"
   name: String!
+}
+
+type RiskValue {
+  "Кодовое обозначение риска"
+  code: String!
+  "Значение риска"
+  value: Float
 }
 
 type ScenarioCreateMutation {
@@ -1535,6 +1557,13 @@ type Visible {
   tree: Boolean!
 }
 
+type VisibleValue {
+  "Ранг процентиля"
+  rank: Float!
+  "Процентиль"
+  value: Float
+}
+
 type YearValue {
   yearValue: Float
 }
@@ -1810,6 +1839,8 @@ enum RBErrorCodes {
   QUANTILE_MUST_BE_MORE_THAN_LOCATION
   "Значение случайной величины отрицательное."
   RANDOM_VARIABLE_VALUE_IS_NEGATIVE
+  "Для категории 'Запасы' риски не должны быть указаны"
+  RISKS_NOT_APPLICABLE_TO_RESERVES
   "Параметр version не найден."
   VERSION_PARAM_NOT_FOUND
 }
@@ -1845,7 +1876,9 @@ input AttributeInput {
 }
 
 input AttributeValueInput {
-  distribution: DistributionInput!
+  "Кодовое обозначение подсчётного параметра"
+  code: String!
+  distribution: DistributionInput
 }
 
 "Значение цены относительно года."
@@ -1898,15 +1931,22 @@ input DistributionParameterInput {
 
 input DomainObjectInput {
   "Список значений атрибутов геологического объекта"
-  attributeValues: [AttributeValueInput]!
+  attributeValues: [AttributeValueInput!]!
   "Иерархия геологического объекта в структуре проекта"
-  domainObjectPath: [String!]!
+  domainObjectPath: [DomainObjectPathLevelInput!]!
   "Категория геологического объекта"
   geoObjectCategory: GeoObjectCategories!
-  "Список значений рисков геологического объекта"
-  risksValues: [Float]!
+  "Список рисков геологического объекта"
+  risksValues: [RiskValueInput!]!
   "Отображения/Скрытие объекта в таблице"
   visible: Boolean!
+}
+
+input DomainObjectPathLevelInput {
+  "Кодовое обозначение уровня иерархии геологического объекта"
+  code: String!
+  "Название уровня иерархии геологического объекта"
+  value: String
 }
 
 "Значение цены реализации относительно года."
@@ -1936,13 +1976,13 @@ input ProductTypeInput {
 }
 
 input ProjectStructureInput {
-  "Список подсчетных параметров"
+  "Список атрибутов структуры проекта"
   attributes: [AttributeInput!]!
-  "Список доменных сущностей геологических объектов"
+  "Список доменных сущностей структуры проекта"
   domainEntities: [RBDomainEntityInput!]!
   "Список геологических объектов структуры проекта"
   domainObjects: [DomainObjectInput!]!
-  "Список рисков геологических объектов"
+  "Список рисков структуры проекта"
   risks: [RiskInput!]!
 }
 
@@ -1968,6 +2008,13 @@ input RiskInput {
   code: String!
   "Наименование риска"
   name: String!
+}
+
+input RiskValueInput {
+  "Кодовое обозначение риска"
+  code: String!
+  "Значение риска"
+  value: Float
 }
 
 input VisibleInput {

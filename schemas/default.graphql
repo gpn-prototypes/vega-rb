@@ -664,7 +664,7 @@ type UpdateActivity {
 }
 
 type UpdateActivityCategories {
-  result: Activity
+  result: ActivityLibraryCategory
 }
 
 type UpdateAssembly {
@@ -672,7 +672,7 @@ type UpdateAssembly {
 }
 
 type UpdateAssemblyCategories {
-  result: Assembly
+  result: AssemblyLibraryCategory
 }
 
 type UpdateAttachment {
@@ -688,7 +688,7 @@ type UpdateComponent {
 }
 
 type UpdateComponentCategories {
-  result: Component
+  result: ComponentLibraryCategory
 }
 
 type UpdateCountry {
@@ -704,7 +704,7 @@ type UpdateDomainTemplate {
 }
 
 type UpdateDomainTemplateCategories {
-  result: DomainTemplate
+  result: DomainTemplateLibraryCategory
 }
 
 type UpdateJtiBlackListEntry {
@@ -735,7 +735,7 @@ type UpdateProjectLibrary {
 }
 
 type UpdateProjectLibraryCategories {
-  result: ProjectLibrary
+  result: ProjectLibraryCategory
 }
 
 type UpdateProjectRole {
@@ -937,6 +937,8 @@ enum ValidationErrorCode {
   VALUE_HAS_WRONG_TYPE
   "VALUE_IS_EMPTY"
   VALUE_IS_EMPTY
+  "VALUE_IS_INCORRECT"
+  VALUE_IS_INCORRECT
 }
 
 input AttendeeInputType {

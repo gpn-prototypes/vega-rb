@@ -19,22 +19,22 @@ export function packTableData(
     TableEntities.GEO_CATEGORY,
   );
 
-  const calculationParametersColumns = getColumnsByType(
+  const attributeColumns = getColumnsByType(
     data.columns,
     TableEntities.CALC_PARAM,
   );
 
-  const risksColumns = getColumnsByType(data.columns, TableEntities.RISK);
+  const riskColumns = getColumnsByType(data.columns, TableEntities.RISK);
 
   return {
-    attributes: assembleAttributes(calculationParametersColumns, tableTemplate),
-    domainEntities: assembleDomainEntities(domainEntitiesColumns),
     domainObjects: assembleDomainObjects({
       rows: data.rows,
-      risks: risksColumns,
-      calculationParams: calculationParametersColumns,
-      domainEntities: domainEntitiesColumns,
+      riskColumns,
+      attributeColumns,
+      domainEntitiesColumns,
     }),
-    risks: assembleRisks(risksColumns),
+    attributes: assembleAttributes(attributeColumns, tableTemplate),
+    domainEntities: assembleDomainEntities(domainEntitiesColumns),
+    risks: assembleRisks(riskColumns),
   };
 }

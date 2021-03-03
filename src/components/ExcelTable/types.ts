@@ -52,18 +52,18 @@ export interface DropDownOption {
   text: string;
 }
 
-export interface GridCellProperties {
-  value: ReactText | DropDownOption;
-  args?: GridCellArguments;
-}
-
 export interface GridCell {
   selectedCell: SelectedCell;
   cellData: GridCellProperties;
 }
 
+export interface GridCellProperties {
+  value: ReactText | DropDownOption;
+  args?: GridCellArguments;
+}
+
 export interface GridRow {
-  [key: string]: GridCellProperties | undefined;
+  [columnKey: string]: GridCellProperties | undefined;
 }
 
 export interface GridColumn extends Column<GridRow> {

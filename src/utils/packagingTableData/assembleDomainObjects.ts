@@ -1,25 +1,27 @@
-import {
-  DropDownOption,
-  GridColumn,
-  GridRow,
-} from 'components/ExcelTable/types';
+import { ReactText } from 'react';
+import { isNumeric } from 'components/DistributionSettings/helpers';
+import { GridColumn, GridRow } from 'components/ExcelTable/types';
 import { entitiesOptions } from 'components/ExcelTable/utils/getEditor';
 import {
   AttributeValueInput,
   DistributionInput,
   DomainObjectInput,
-  GeoObjectCategories,
-  Maybe,
+  DomainObjectPathLevelInput,
+  RiskValueInput,
 } from 'generated/graphql';
-import { defaultTo, dropRightWhile, isEmpty, toNumber } from 'lodash/fp';
+import {
+  dropRightWhile,
+  flow,
+  getOr,
+  isNull,
+  map,
+  toNumber,
+  toString,
+} from 'lodash/fp';
 import { SpecialColumns } from 'model/Table';
-import { DomainObjectsProps } from 'types';
-import { isEmpty as isEmptyUtil } from 'utils/isEmpty';
+import { DomainObjectsProps, IData, NoopFunction, Nullable } from 'types';
+import { isEmpty } from 'utils/isEmpty';
 import { omitTypename } from 'utils/omitTypename';
-
-function getGeoObjectCategory(option: DropDownOption): GeoObjectCategories {
-  return option?.value ?? entitiesOptions.RESOURCE.value;
-}
 
 function trimEmptyRows(
   rows: GridRow[],
@@ -28,54 +30,89 @@ function trimEmptyRows(
   return dropRightWhile((row) => !validateValue(row), rows);
 }
 
-function collectAttributeValues(
+function getDistribution(
+  key: string,
   row: GridRow,
-  calculationParametersColumns: GridColumn[],
-): Array<Maybe<AttributeValueInput>> {
-  return calculationParametersColumns.map(({ key }: GridColumn) => {
-    const distributionValues = row[key]?.args;
-    const parameters = defaultTo(
-      [],
-      distributionValues?.parameters?.map((parameter) =>
-        omitTypename(parameter),
-      ),
-    );
+): Nullable<DistributionInput> {
+  const distributionValues = getOr(null, [key, 'args'], row);
+  const getParameters = flow(
+    (object) => getOr([], [key, 'args', 'parameters'], object),
+    map(omitTypename),
+  );
 
-    return !isEmpty(distributionValues)
-      ? {
-          distribution: {
-            ...distributionValues,
-            parameters,
-          } as DistributionInput,
-        }
-      : null;
+  if (distributionValues != null) {
+    return {
+      ...distributionValues,
+      parameters: getParameters(row),
+    };
+  }
+
+  return null;
+}
+
+function collectValuesWithAttributes(
+  row: GridRow,
+  columnsList: GridColumn[],
+): AttributeValueInput[] {
+  return columnsList.map(({ key }) => {
+    return {
+      code: key,
+      distribution: getDistribution(key, row),
+    };
+  });
+}
+
+function collectValues<T>(
+  row: GridRow,
+  columns: GridColumn[],
+  getValue: NoopFunction<Nullable<ReactText>, Nullable<T>>,
+): IData<T>[] {
+  return columns.map(({ key }) => ({
+    code: key,
+    value: getValue(getOr(null, [key, 'value'], row)),
+  }));
+}
+
+export function collectRisks(
+  row: GridRow,
+  columns: GridColumn[],
+): RiskValueInput[] {
+  return collectValues<number>(row, columns, (value) => {
+    return !isNull(value) && isNumeric(value) ? toNumber(value) : null;
+  });
+}
+
+export function collectDomainObjects(
+  row: GridRow,
+  columns: GridColumn[],
+): DomainObjectPathLevelInput[] {
+  return collectValues<string>(row, columns, (value) => {
+    return isEmpty(value) ? null : toString(value);
   });
 }
 
 export default function assembleDomainObjects({
   rows: commonRows,
-  risks: riskColumns,
-  calculationParams: attributesColumns,
-  domainEntities: domainEntitiesColumns,
+  riskColumns,
+  attributeColumns,
+  domainEntitiesColumns,
 }: DomainObjectsProps): Array<DomainObjectInput> {
   const validateValue = (row: GridRow) =>
     domainEntitiesColumns.some(({ key }) => row[key]) ||
     riskColumns.some(({ key }) => row[key]) ||
-    attributesColumns.some(({ key }) => row[key]);
+    attributeColumns.some(({ key }) => row[key]);
 
   const rows = trimEmptyRows(commonRows, validateValue);
 
   return rows.map((row) => ({
     visible: true,
-    domainObjectPath: domainEntitiesColumns.map(({ key }) =>
-      String(row[key]?.value || ''),
+    domainObjectPath: collectDomainObjects(row, domainEntitiesColumns),
+    geoObjectCategory: getOr(
+      entitiesOptions.RESOURCE.value,
+      [SpecialColumns.GEO_CATEGORY, 'value'],
+      row,
     ),
-    risksValues: riskColumns.map(({ key }) => {
-      return !isEmptyUtil(row[key]?.value) ? toNumber(row[key]?.value) : null;
-    }),
-    geoObjectCategory: getGeoObjectCategory(
-      row[SpecialColumns.GEO_CATEGORY] as DropDownOption,
-    ),
-    attributeValues: collectAttributeValues(row, attributesColumns),
+    attributeValues: collectValuesWithAttributes(row, attributeColumns),
+    risksValues: collectRisks(row, riskColumns),
   }));
 }

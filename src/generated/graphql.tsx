@@ -27,6 +27,8 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
+  /** Актуальная версия текущего проекта */
+  version?: Maybe<Scalars['Int']>;
   /** Запросы к данным ресурсной базы. */
   resourceBase?: Maybe<ResourceBaseQueries>;
   /** Данные конструктора логики */
@@ -113,11 +115,11 @@ export type Conception = {
 
 export type ProjectStructure = {
   __typename?: 'ProjectStructure';
-  /** Список доменных сущностей геологических объектов */
+  /** Список доменных сущностей структуры проекта */
   domainEntities: Array<RbDomainEntity>;
-  /** Список подсчетных параметров */
+  /** Список атрибутов структуры проекта */
   attributes: Array<Attribute>;
-  /** Список рисков геологических объектов */
+  /** Список рисков структуры проекта */
   risks: Array<Risk>;
   /** Список геологических объектов структуры проекта */
   domainObjects: Array<DomainObject>;
@@ -175,16 +177,16 @@ export type Risk = {
 
 export type DomainObject = {
   __typename?: 'DomainObject';
-  /** Иерархия геологического объекта в структуре проекта */
-  domainObjectPath: Array<Scalars['String']>;
   /** Категория геологического объекта */
   geoObjectCategory: GeoObjectCategories;
-  /** Список значений рисков геологического объекта */
-  risksValues: Array<Maybe<Scalars['Float']>>;
   /** Отображения/Скрытие объекта в таблице */
   visible: Scalars['Boolean'];
+  /** Иерархия геологического объекта в структуре проекта */
+  domainObjectPath: Array<DomainObjectPathLevel>;
   /** Список значений атрибутов геологического объекта */
-  attributeValues: Array<Maybe<AttributeValue>>;
+  attributeValues: Array<AttributeValue>;
+  /** Список рисков геологического объекта */
+  risksValues: Array<RiskValue>;
   /** Значение GCoS геологического объекта */
   GCoS?: Maybe<Scalars['Float']>;
 };
@@ -195,11 +197,25 @@ export enum GeoObjectCategories {
   Resources = 'RESOURCES',
 }
 
+export type DomainObjectPathLevel = {
+  __typename?: 'DomainObjectPathLevel';
+  /** Кодовое обозначение уровня иерархии геологического объекта */
+  code: Scalars['String'];
+  /** Название уровня иерархии геологического объекта */
+  value?: Maybe<Scalars['String']>;
+};
+
 export type AttributeValue = {
   __typename?: 'AttributeValue';
-  distribution: Distribution;
-  /** Отображаемый в ячейке 50-й процентиль (P50) */
-  visibleValue: Scalars['Float'];
+  /** Кодовое обозначение подсчётного параметра */
+  code: Scalars['String'];
+  distribution?: Maybe<Distribution>;
+  /** Отображаемый в ячейке процентиль */
+  visibleValue: VisibleValueResult;
+};
+
+export type AttributeValueVisibleValueArgs = {
+  visibleRank?: Maybe<Scalars['Int']>;
 };
 
 /** Параметры распределения. */
@@ -341,15 +357,32 @@ export enum DistributionParameterTypes {
   Probability = 'PROBABILITY',
 }
 
-/** Ошибка с дополнительной информацией. */
-export type DetailError = RbErrorInterface & {
-  __typename?: 'DetailError';
+export type VisibleValueResult =
+  | VisibleValue
+  | CommonErrors
+  | DistributionDefinitionErrors;
+
+export type VisibleValue = {
+  __typename?: 'VisibleValue';
+  /** Ранг процентиля */
+  rank: Scalars['Float'];
+  /** Процентиль */
+  value?: Maybe<Scalars['Float']>;
+};
+
+/** Список ошибок. */
+export type CommonErrors = {
+  __typename?: 'CommonErrors';
+  errors: Array<CommonError>;
+};
+
+/** Общая ошибка. */
+export type CommonError = RbErrorInterface & {
+  __typename?: 'CommonError';
   /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
   code: RbErrorCodes;
   /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
   message: Scalars['String'];
-  /** Детальная информация об ошибке */
-  details?: Maybe<Scalars['String']>;
 };
 
 /** Интерфейс ошибок, отображаемых пользователю. */
@@ -404,7 +437,45 @@ export enum RbErrorCodes {
   EmptyDomainEntities = 'EMPTY_DOMAIN_ENTITIES',
   /** Дублируются имена колонок */
   DuplicatingColumns = 'DUPLICATING_COLUMNS',
+  /** Для категории 'Запасы' риски не должны быть указаны */
+  RisksNotApplicableToReserves = 'RISKS_NOT_APPLICABLE_TO_RESERVES',
 }
+
+/** Список ошибок задания распределения. */
+export type DistributionDefinitionErrors = {
+  __typename?: 'DistributionDefinitionErrors';
+  errors: Array<DistributionDefinitionError>;
+};
+
+/** Ошибка задания распределения. */
+export type DistributionDefinitionError = RbErrorInterface & {
+  __typename?: 'DistributionDefinitionError';
+  /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
+  code: RbErrorCodes;
+  /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
+  message: Scalars['String'];
+  /** Список параметров задания распределения, к которым относится ошибка */
+  fields: Array<Scalars['String']>;
+};
+
+export type RiskValue = {
+  __typename?: 'RiskValue';
+  /** Кодовое обозначение риска */
+  code: Scalars['String'];
+  /** Значение риска */
+  value?: Maybe<Scalars['Float']>;
+};
+
+/** Ошибка с дополнительной информацией. */
+export type DetailError = RbErrorInterface & {
+  __typename?: 'DetailError';
+  /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
+  code: RbErrorCodes;
+  /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
+  message: Scalars['String'];
+  /** Детальная информация об ошибке */
+  details?: Maybe<Scalars['String']>;
+};
 
 export type RbProjectInput = {
   /** Версия шаблона структуры проекта */
@@ -424,11 +495,11 @@ export type ConceptionInput = {
 };
 
 export type ProjectStructureInput = {
-  /** Список доменных сущностей геологических объектов */
+  /** Список доменных сущностей структуры проекта */
   domainEntities: Array<RbDomainEntityInput>;
-  /** Список подсчетных параметров */
+  /** Список атрибутов структуры проекта */
   attributes: Array<AttributeInput>;
-  /** Список рисков геологических объектов */
+  /** Список рисков структуры проекта */
   risks: Array<RiskInput>;
   /** Список геологических объектов структуры проекта */
   domainObjects: Array<DomainObjectInput>;
@@ -472,20 +543,29 @@ export type RiskInput = {
 };
 
 export type DomainObjectInput = {
-  /** Иерархия геологического объекта в структуре проекта */
-  domainObjectPath: Array<Scalars['String']>;
   /** Категория геологического объекта */
   geoObjectCategory: GeoObjectCategories;
-  /** Список значений рисков геологического объекта */
-  risksValues: Array<Maybe<Scalars['Float']>>;
   /** Отображения/Скрытие объекта в таблице */
   visible: Scalars['Boolean'];
+  /** Иерархия геологического объекта в структуре проекта */
+  domainObjectPath: Array<DomainObjectPathLevelInput>;
   /** Список значений атрибутов геологического объекта */
-  attributeValues: Array<Maybe<AttributeValueInput>>;
+  attributeValues: Array<AttributeValueInput>;
+  /** Список рисков геологического объекта */
+  risksValues: Array<RiskValueInput>;
+};
+
+export type DomainObjectPathLevelInput = {
+  /** Кодовое обозначение уровня иерархии геологического объекта */
+  code: Scalars['String'];
+  /** Название уровня иерархии геологического объекта */
+  value?: Maybe<Scalars['String']>;
 };
 
 export type AttributeValueInput = {
-  distribution: DistributionInput;
+  /** Кодовое обозначение подсчётного параметра */
+  code: Scalars['String'];
+  distribution?: Maybe<DistributionInput>;
 };
 
 /** Параметры распределения. */
@@ -507,6 +587,13 @@ export type DistributionParameterInput = {
   /** Тип параметра распределения */
   type: DistributionParameterTypes;
   value: Scalars['Float'];
+};
+
+export type RiskValueInput = {
+  /** Кодовое обозначение риска */
+  code: Scalars['String'];
+  /** Значение риска */
+  value?: Maybe<Scalars['Float']>;
 };
 
 /** Пространство имен для работы с распределениями. */
@@ -570,38 +657,6 @@ export type DiscreteDistributionChart = {
   pmf: Array<Point>;
   /** Отображаемый в ячейке процентиль */
   visiblePercentile: Percentile;
-};
-
-/** Список ошибок. */
-export type CommonErrors = {
-  __typename?: 'CommonErrors';
-  errors: Array<CommonError>;
-};
-
-/** Общая ошибка. */
-export type CommonError = RbErrorInterface & {
-  __typename?: 'CommonError';
-  /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
-  code: RbErrorCodes;
-  /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
-  message: Scalars['String'];
-};
-
-/** Список ошибок задания распределения. */
-export type DistributionDefinitionErrors = {
-  __typename?: 'DistributionDefinitionErrors';
-  errors: Array<DistributionDefinitionError>;
-};
-
-/** Ошибка задания распределения. */
-export type DistributionDefinitionError = RbErrorInterface & {
-  __typename?: 'DistributionDefinitionError';
-  /** Код ошибки, соответствующий человекочитаемому сообщению об ошибке */
-  code: RbErrorCodes;
-  /** Сообщение об ошибке. Отображается в случае отсутствия соответствующего коду человекочитаемого сообщения на клиенте */
-  message: Scalars['String'];
-  /** Список параметров задания распределения, к которым относится ошибка */
-  fields: Array<Scalars['String']>;
 };
 
 export type AlternativeDefinitionResult =
@@ -1231,53 +1286,12 @@ export type CapexGlobalValueOrError = CapexGlobalValue | Error;
 
 export type DomainObjectQuery = {
   __typename?: 'DomainObjectQuery';
-  geoEconomicAppraisalProject?: Maybe<GeoEconomicAppraisalProject_Type>;
-  geoEconomicAppraisalProjectList?: Maybe<
-    Array<Maybe<GeoEconomicAppraisalProject_Type>>
-  >;
-  licensingRoundA?: Maybe<LicensingRound_A_Type>;
-  licensingRoundAList?: Maybe<Array<Maybe<LicensingRound_A_Type>>>;
-  prospectA?: Maybe<Prospect_A_Type>;
-  prospectAList?: Maybe<Array<Maybe<Prospect_A_Type>>>;
   domainObject?: Maybe<DomainObjectInterface>;
-  project?: Maybe<Project_Union>;
-  licensingRound?: Maybe<LicensingRound_Union>;
-  prospect?: Maybe<Prospect_Union>;
-  objectGroup?: Maybe<DomainObjectsGroup>;
-  objectGroupList?: Maybe<Array<Maybe<DomainObjectsGroup>>>;
-};
-
-export type DomainObjectQueryGeoEconomicAppraisalProjectArgs = {
-  vid?: Maybe<Scalars['UUID']>;
-  name?: Maybe<Scalars['String']>;
-};
-
-export type DomainObjectQueryLicensingRoundAArgs = {
-  vid?: Maybe<Scalars['UUID']>;
-  name?: Maybe<Scalars['String']>;
-};
-
-export type DomainObjectQueryProspectAArgs = {
-  vid?: Maybe<Scalars['UUID']>;
-  name?: Maybe<Scalars['String']>;
+  objectGroup?: Maybe<DomainObjectGroupType>;
+  objectGroupList?: Maybe<Array<Maybe<DomainObjectGroupType>>>;
 };
 
 export type DomainObjectQueryDomainObjectArgs = {
-  vid?: Maybe<Scalars['UUID']>;
-  name?: Maybe<Scalars['String']>;
-};
-
-export type DomainObjectQueryProjectArgs = {
-  vid?: Maybe<Scalars['UUID']>;
-  name?: Maybe<Scalars['String']>;
-};
-
-export type DomainObjectQueryLicensingRoundArgs = {
-  vid?: Maybe<Scalars['UUID']>;
-  name?: Maybe<Scalars['String']>;
-};
-
-export type DomainObjectQueryProspectArgs = {
   vid?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
 };
@@ -1287,41 +1301,8 @@ export type DomainObjectQueryObjectGroupArgs = {
   name?: Maybe<Scalars['String']>;
 };
 
-export type GeoEconomicAppraisalProject_Type = DomainObjectInterface & {
-  __typename?: 'GeoEconomicAppraisalProject_Type';
-  vid?: Maybe<Scalars['UUID']>;
-  name?: Maybe<Scalars['String']>;
-  projectStartYear?: Maybe<Scalars['Int']>;
-  shelfProductionParameter?: Maybe<Scalars['Float']>;
-  correlationType?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  licensingRounds?: Maybe<Array<Maybe<LicensingRound_Union>>>;
-};
-
-export type LicensingRound_Union = LicensingRound_A_Type;
-
-export type LicensingRound_A_Type = DomainObjectInterface & {
-  __typename?: 'LicensingRound_A_Type';
-  vid?: Maybe<Scalars['UUID']>;
-  name?: Maybe<Scalars['String']>;
-  initialInventory?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  prospects?: Maybe<Array<Maybe<Prospect_Union>>>;
-  geoEconomicAppraisalProject?: Maybe<Project_Union>;
-};
-
-export type Prospect_Union = Prospect_A_Type;
-
-export type Prospect_A_Type = DomainObjectInterface & {
-  __typename?: 'Prospect_A_Type';
-  vid?: Maybe<Scalars['UUID']>;
-  name?: Maybe<Scalars['String']>;
-  initialInv?: Maybe<Scalars['Float']>;
-  geoEconomicAppraisalProject?: Maybe<Project_Union>;
-};
-
-export type Project_Union = GeoEconomicAppraisalProject_Type;
-
-export type DomainObjectsGroup = {
-  __typename?: 'DomainObjectsGroup';
+export type DomainObjectGroupType = {
+  __typename?: 'DomainObjectGroupType';
   vid?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
   objects?: Maybe<Array<Maybe<DomainObjectInterface>>>;
@@ -1330,6 +1311,8 @@ export type DomainObjectsGroup = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Актуальная версия текущего проекта */
+  version?: Maybe<Scalars['Int']>;
   /** Запросы к данным ресурсной базы. */
   resourceBase?: Maybe<ResourceBaseMutations>;
   logic?: Maybe<LogicMutations>;
@@ -3291,80 +3274,8 @@ export type CapexOrDiffOrError = Capex | Error | UpdateProjectDiff;
 
 export type DomainMutations = {
   __typename?: 'DomainMutations';
-  geoEconomicAppraisalProject?: Maybe<GeoEconomicAppraisalProjectMutations>;
-  licensingRoundA?: Maybe<LicensingRound_AMutations>;
-  prospectA?: Maybe<Prospect_AMutations>;
   object?: Maybe<DomainObjectMutations>;
   objectGroup?: Maybe<DomainObjectGroupMutations>;
-};
-
-export type GeoEconomicAppraisalProjectMutations = {
-  __typename?: 'GeoEconomicAppraisalProjectMutations';
-  create?: Maybe<GeoEconomicAppraisalProject_Type>;
-  update?: Maybe<GeoEconomicAppraisalProject_Type>;
-};
-
-export type GeoEconomicAppraisalProjectMutationsCreateArgs = {
-  name?: Maybe<Scalars['String']>;
-  projectStartYear?: Maybe<Scalars['Int']>;
-  shelfProductionParameter?: Maybe<Scalars['Float']>;
-  correlationType?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  licensingRounds?: Maybe<Array<Maybe<Scalars['UUID']>>>;
-  version: Scalars['Int'];
-};
-
-export type GeoEconomicAppraisalProjectMutationsUpdateArgs = {
-  vid: Scalars['UUID'];
-  name?: Maybe<Scalars['String']>;
-  projectStartYear?: Maybe<Scalars['Int']>;
-  shelfProductionParameter?: Maybe<Scalars['Float']>;
-  correlationType?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  licensingRounds?: Maybe<Array<Maybe<Scalars['UUID']>>>;
-  version: Scalars['Int'];
-};
-
-export type LicensingRound_AMutations = {
-  __typename?: 'LicensingRound_AMutations';
-  create?: Maybe<LicensingRound_A_Type>;
-  update?: Maybe<LicensingRound_A_Type>;
-};
-
-export type LicensingRound_AMutationsCreateArgs = {
-  name?: Maybe<Scalars['String']>;
-  initialInventory?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  prospects?: Maybe<Array<Maybe<Scalars['UUID']>>>;
-  geoEconomicAppraisalProject?: Maybe<Scalars['UUID']>;
-  version: Scalars['Int'];
-};
-
-export type LicensingRound_AMutationsUpdateArgs = {
-  vid: Scalars['UUID'];
-  name?: Maybe<Scalars['String']>;
-  initialInventory?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  prospects?: Maybe<Array<Maybe<Scalars['UUID']>>>;
-  geoEconomicAppraisalProject?: Maybe<Scalars['UUID']>;
-  version: Scalars['Int'];
-};
-
-export type Prospect_AMutations = {
-  __typename?: 'Prospect_AMutations';
-  create?: Maybe<Prospect_A_Type>;
-  update?: Maybe<Prospect_A_Type>;
-};
-
-export type Prospect_AMutationsCreateArgs = {
-  name?: Maybe<Scalars['String']>;
-  initialInv?: Maybe<Scalars['Float']>;
-  geoEconomicAppraisalProject?: Maybe<Scalars['UUID']>;
-  version: Scalars['Int'];
-};
-
-export type Prospect_AMutationsUpdateArgs = {
-  vid: Scalars['UUID'];
-  name?: Maybe<Scalars['String']>;
-  initialInv?: Maybe<Scalars['Float']>;
-  geoEconomicAppraisalProject?: Maybe<Scalars['UUID']>;
-  version: Scalars['Int'];
 };
 
 export type DomainObjectMutations = {
@@ -3430,4 +3341,4 @@ export type DeleteDomainGroupResult = {
   ok?: Maybe<Scalars['Boolean']>;
 };
 
-// The file generated on: 18.02.2021
+// The file generated on: 26.02.2021
