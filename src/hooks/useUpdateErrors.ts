@@ -17,11 +17,11 @@ type UseUpdateErrors = (
 ) => Action<NormalizedErrors>;
 
 function getCleanedErrorsList(
-  column: GridColumn,
-  columns: GridColumn[],
+  removedColumn: GridColumn,
+  columnList: GridColumn[],
   errors: ColumnErrors,
 ): ColumnErrors {
-  return getSameColumnKeys(column, columns).reduce<ColumnErrors>(
+  return getSameColumnKeys(removedColumn, columnList).reduce<ColumnErrors>(
     (previousValue, currentValue) =>
       unset([RbErrorCodes.DuplicatingColumns, currentValue], previousValue),
     errors,
