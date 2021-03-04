@@ -5,23 +5,19 @@ import classNames from 'classnames';
 import ErrorBoundary from 'components/ErrorBoundary';
 import { Providers } from 'components/Providers';
 import { SchemePage } from 'pages/Scheme';
-import { Identity } from 'types';
+import { CurrentProject, Identity, ShellToolkit } from 'types';
 
 import './App.css';
 
-interface AppProps {
-  graphqlClient?: ApolloClient<NormalizedCacheObject>;
-  identity?: Identity;
-}
-
-const App: React.FC<AppProps> = (props) => {
-  const { graphqlClient, identity } = props;
+const App: React.FC<Partial<ShellToolkit>> = (props) => {
+  const { graphqlClient, identity, currentProject } = props;
 
   return (
     <React.StrictMode>
       <ErrorBoundary>
         <Root defaultTheme="dark" className={classNames('RB-App-Wrapper')}>
           <Providers
+            currentProject={currentProject as CurrentProject}
             graphqlClient={graphqlClient as ApolloClient<NormalizedCacheObject>}
             identity={identity as Identity}
           >

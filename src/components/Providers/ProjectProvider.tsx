@@ -1,51 +1,36 @@
 import React, { useEffect } from 'react';
-import { useRouteMatch } from 'react-router';
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
-import { defaultTo } from 'lodash/fp';
 import projectService from 'services/ProjectService';
-import { Identity } from 'types';
+import { Identity, ShellToolkit } from 'types';
 
-const ROUTE_MATCH_PROJECT_ID = '/projects/show/:projectId';
-
-type MatchedData = { projectId: string };
-
-interface ProjectContextProps extends MatchedData {
+interface ProjectContextProps {
+  projectId: string;
   identity?: Identity;
-}
-
-interface ProjectProviderProps {
-  graphqlClient: ApolloClient<NormalizedCacheObject>;
-  identity: Identity;
 }
 
 const ProjectContext = React.createContext<ProjectContextProps>({
   projectId: '',
 });
 
-const ProjectProvider: React.FC<ProjectProviderProps> = ({
+const ProjectProvider: React.FC<ShellToolkit> = ({
   children,
   graphqlClient,
+  currentProject,
   identity,
 }) => {
-  const matchedData = defaultTo<MatchedData>(
-    {
-      projectId: '',
-    },
-    useRouteMatch<MatchedData>(ROUTE_MATCH_PROJECT_ID)?.params,
-  );
+  const projectId = currentProject.get()?.vid || '';
 
   useEffect(() => {
     projectService.init({
       client: graphqlClient,
-      projectId: matchedData.projectId,
+      projectId,
       identity,
     });
-  }, [identity, graphqlClient, matchedData]);
+  }, [identity, graphqlClient, projectId]);
 
   return (
     <ProjectContext.Provider
       value={{
-        ...matchedData,
+        projectId,
         identity,
       }}
     >

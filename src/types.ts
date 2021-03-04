@@ -1,8 +1,25 @@
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import { GridColumn, GridRow } from 'components/ExcelTable/types';
 import { DomainObject, RbDomainEntityIcons } from 'generated/graphql';
 
+type ProjectVID = string;
+
+interface Project {
+  vid: ProjectVID;
+}
+
+export interface CurrentProject {
+  get(): Project;
+}
+
 export interface Identity {
   getToken(): Promise<string>;
+}
+
+export interface ShellToolkit {
+  graphqlClient: ApolloClient<NormalizedCacheObject>;
+  identity: Identity;
+  currentProject: CurrentProject;
 }
 
 interface Structure {
