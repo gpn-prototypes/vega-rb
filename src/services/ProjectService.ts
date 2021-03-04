@@ -12,12 +12,11 @@ import {
   DistributionDefinitionError,
   DistributionInput,
   DistributionParameter,
-  // DomainObject,
-  // DomainObjectInput,
   Mutation,
+  ProjectInner,
   ProjectStructure,
   ProjectStructureInput,
-  Query as LegacyQuery,
+  Query,
   RbProject,
 } from 'generated/graphql';
 import { getOr } from 'lodash/fp';
@@ -45,18 +44,12 @@ type ProjectServiceProps = {
   identity?: Identity;
 };
 
-// TODO: заменить на тип из схемы
-type ProjectInner = LegacyQuery & {
+type Data = FetchResult['data'];
+
+type Project = ProjectInner & {
   vid: string;
   version: number;
 };
-
-// TODO: удалить после обновлении схемы на фронте
-type Query = {
-  project: ProjectInner;
-};
-
-type Data = FetchResult['data'];
 
 const getProjectStructure = (
   project: Partial<ProjectInner>,
@@ -66,7 +59,7 @@ const getProjectStructure = (
 };
 
 const repackTableData = (
-  project: ProjectInner,
+  project: Project,
   input?: ProjectStructureInput,
 ): ProjectStructureInput => {
   const structure = getProjectStructure(project);
@@ -80,6 +73,10 @@ const repackTableData = (
   return packTableData(data, input ?? structure);
 };
 
+function throwError(message: string): never {
+  throw new Error(`[RB/ProjectService]: ${message}`);
+}
+
 class ProjectService {
   private _client: ApolloClient<NormalizedCacheObject> | undefined;
 
@@ -89,7 +86,7 @@ class ProjectService {
 
   private _projectId = '';
 
-  private _project: null | ProjectInner = null;
+  private _project: null | Project = null;
 
   private diffErrorTypename = 'UpdateProjectInnerDiff';
 
@@ -111,7 +108,7 @@ class ProjectService {
 
   get project() {
     if (this._project === null) {
-      throw new Error('Working project version is not setup');
+      throwError('Working project version is not setup');
     }
 
     return this._project;
@@ -131,15 +128,15 @@ class ProjectService {
     this._identity = identity;
   }
 
-  private static warnAboutMissingFields(project: Partial<ProjectInner>): void {
+  private static assertRequiredFields(
+    project: Partial<ProjectInner>,
+  ): asserts project is Project {
     if (typeof project.version !== 'number') {
-      // eslint-disable-next-line no-console
-      console.warn('Missing project version');
+      throwError('Missing project version');
     }
 
     if (typeof project.vid !== 'string') {
-      // eslint-disable-next-line no-console
-      console.warn('Missing project vid');
+      throwError('Missing project vid');
     }
   }
 
@@ -149,10 +146,10 @@ class ProjectService {
 
   private trySetupWorkingProject(data: Query) {
     if (ProjectService.isProject(data.project)) {
-      ProjectService.warnAboutMissingFields(data.project);
+      ProjectService.assertRequiredFields(data.project);
       this._project = data.project;
     } else {
-      throw new Error('"project" is not found in query');
+      throwError('"project" is not found in query');
     }
   }
 
