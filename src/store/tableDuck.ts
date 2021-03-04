@@ -5,6 +5,7 @@ import {
   GridRow,
 } from 'components/ExcelTable/types';
 import { ofAction } from 'operators/ofAction';
+import { getRowIdx } from 'pages/Scheme/components/TreeEditor/helpers';
 import { Epic } from 'redux-observable';
 import { forkJoin, from, of, throwError } from 'rxjs';
 import {
@@ -142,11 +143,11 @@ export const updateCell: Epic<AnyAction, AnyAction, RootState> = (
   action$.pipe(
     ofAction(actions.updateCell),
     map(({ payload }) => {
-      const { column, rowIdx } = payload.selectedCell;
+      const { column, row } = payload.selectedCell;
 
       return errorsDuck.actions.removeErrors({
         id: projectService.projectId,
-        path: [column.key, rowIdx],
+        path: [column.key, getRowIdx(row)],
       });
     }),
   );

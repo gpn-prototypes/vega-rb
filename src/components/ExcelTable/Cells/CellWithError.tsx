@@ -3,7 +3,9 @@ import { CellRendererProps } from 'react-data-grid/lib/common/types';
 import { preventDefault, wrapEvent } from 'react-data-grid/lib/utils';
 import { Tooltip } from '@gpn-prototypes/vega-ui';
 import cn from 'classnames';
-import { useCombinedRefs, useGetError } from 'hooks';
+import useCombinedRefs from 'hooks/useCombinedRefs';
+import useGetError from 'hooks/useGetError';
+import { getRowIdx } from 'pages/Scheme/components/TreeEditor/helpers';
 import { isEmpty } from 'utils';
 
 import { cnCellTooltip, cnCellValueError } from '../cn-excel-table';
@@ -28,7 +30,7 @@ function CellWithError(props: Props, ref: React.Ref<HTMLDivElement>) {
   const innerRef = useRef<HTMLDivElement>(null);
   const combinedRef = useCombinedRefs(ref, innerRef);
   const [isShowError, setIsShowError] = useState(false);
-  const [error] = useGetError([column.key, currentRowIdx]);
+  const [error] = useGetError([column.key, getRowIdx(row)]);
 
   function selectCell(shouldOpenEditor?: boolean) {
     eventBus.dispatch(

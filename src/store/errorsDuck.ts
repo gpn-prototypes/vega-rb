@@ -18,17 +18,14 @@ const initialState: ErrorsState = {
 
 const reducer = reducerWithInitialState<ErrorsState>(initialState)
   .case(actions.updateErrors, (state, { id, errors }) => {
-    return flow(
-      (immutableState) => set(['byId', id], errors, immutableState),
-      (immutableState: ErrorsState) => ({
-        ...immutableState,
-        ids: [...immutableState.ids, id],
-      }),
-    )(state);
+    return flow(set(['byId', id], errors), (immutableState: ErrorsState) => ({
+      ...immutableState,
+      ids: [...immutableState.ids, id],
+    }))(state);
   })
   .case(actions.removeErrors, (state, { id, path }) => {
     return flow(
-      (immutableState) => unset(['byId', id, ...path], immutableState),
+      unset(['byId', id, ...path]),
       (immutableState: ErrorsState) => ({
         ...immutableState,
         ids: remove((val) => id === val)(immutableState.ids),
