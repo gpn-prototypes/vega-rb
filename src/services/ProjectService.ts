@@ -158,7 +158,7 @@ class ProjectService {
       maxAttempts: 20,
       errorTypename: this.diffErrorTypename,
       mergeStrategy: {
-        default: 'smart',
+        default: 'replace',
       },
       projectAccessor: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
