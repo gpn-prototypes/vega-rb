@@ -3,6 +3,7 @@ import ReactDataGrid, {
   DataGridHandle,
   FillEvent,
   PasteEvent,
+  RowsChangeData,
 } from 'react-data-grid';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -33,7 +34,7 @@ interface IProps {
   data: GridCollection;
   errors: ColumnErrors;
   setColumns?: (data: GridColumn[]) => void;
-  setRows?: (data: GridRow[], indexes?: number[]) => void;
+  setRows?: (data: GridRow[], rowsChangeData?: RowsChangeData<GridRow>) => void;
   onRowClick?: NoopFunction<{
     rowIdx: number;
     row: GridRow;
@@ -80,7 +81,7 @@ export const ExcelTable: React.FC<IProps> = ({
   );
 
   const onRowsChange = useCallback(
-    (newRows, { indexes }) => setRows(newRows, indexes),
+    (newRows, rowsChangeData) => setRows(newRows, rowsChangeData),
     [setRows],
   );
 

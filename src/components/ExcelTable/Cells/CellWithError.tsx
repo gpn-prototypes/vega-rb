@@ -2,10 +2,11 @@ import React, { forwardRef, PropsWithChildren, useRef, useState } from 'react';
 import { CalculatedColumn, CellRendererProps } from 'react-data-grid';
 import { Tooltip } from '@gpn-prototypes/vega-ui';
 import cn from 'classnames';
+import useCombinedRefs from 'hooks/useCombinedRefs';
 import useGetError from 'hooks/useGetError';
 import { isEmpty } from 'utils';
 import { getRowId } from 'utils/getRowId';
-import useCombinedRefs from 'hooks/useCombinedRefs';
+
 import { cnCellTooltip, cnCellValueError } from '../cn-excel-table';
 import { GridRow, UniColumn } from '../types';
 
