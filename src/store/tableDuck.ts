@@ -5,7 +5,6 @@ import {
   GridRow,
 } from 'components/ExcelTable/types';
 import { ofAction } from 'operators/ofAction';
-import { getRowIdx } from 'pages/Scheme/components/TreeEditor/helpers';
 import { Epic } from 'redux-observable';
 import { forkJoin, from, of, throwError } from 'rxjs';
 import {
@@ -18,6 +17,7 @@ import {
 } from 'rxjs/operators';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
+import { getRowId } from 'utils/getRowId';
 
 import errorsDuck from './errorsDuck';
 import { RootState, TypedColumnsList } from './types';
@@ -147,7 +147,7 @@ export const updateCell: Epic<AnyAction, AnyAction, RootState> = (
 
       return errorsDuck.actions.removeErrors({
         id: projectService.projectId,
-        path: [column.key, getRowIdx(row)],
+        path: [column.key, getRowId(row)],
       });
     }),
   );

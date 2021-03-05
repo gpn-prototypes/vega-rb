@@ -3,6 +3,7 @@ import arrayToTree from 'array-to-tree';
 import { TableEntities } from 'components/ExcelTable/enums';
 import { GridColumn, GridRow } from 'components/ExcelTable/types';
 import { get, groupBy, mergeWith } from 'lodash/fp';
+import { getRowId } from 'utils/getRowId';
 import { v4 as uuid } from 'uuid';
 
 import { CellPosition, TreeItemData } from './types';
@@ -88,9 +89,6 @@ export function searchInTree<T>(
   return null;
 }
 
-export const getRowIdx = (row: GridRow): number =>
-  (row.id?.value as number) - 1;
-
 export function mergeObjectsInUnique<T>(array: T[], properties: string[]): T[] {
   const newArray = new Map();
 
@@ -140,7 +138,7 @@ export function getNodeListFromTableData(
       const map = groupBy(
         (item) => item.name,
         filledRows.map((row) =>
-          getTreeNodeItem(row, getRowIdx(row), columnKey, columnIdx),
+          getTreeNodeItem(row, getRowId(row), columnKey, columnIdx),
         ),
       );
       const items = Object.keys(map)
@@ -155,7 +153,7 @@ export function getNodeListFromTableData(
       nodes.push(...items);
     } else {
       const items = filledRows.map((row) =>
-        getTreeNodeItem(row, getRowIdx(row), columnKey, columnIdx, nodes),
+        getTreeNodeItem(row, getRowId(row), columnKey, columnIdx, nodes),
       );
 
       if (structureColumnsKeys.length - 1 === columnIdx) {
