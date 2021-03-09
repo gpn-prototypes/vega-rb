@@ -21,7 +21,7 @@ import './HierarchyLevelList.css';
 
 interface HierarchyLevelListProps {
   items: GridColumn[];
-  isOpen: boolean;
+  isOpen?: boolean;
   handleClose: () => void;
   onSubmit: (items: GridColumn[]) => void;
   icons?: Icons;
