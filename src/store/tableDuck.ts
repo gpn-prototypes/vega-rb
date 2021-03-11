@@ -17,6 +17,7 @@ import {
 } from 'rxjs/operators';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
+import { getRowId } from 'utils/getRowId';
 
 import errorsDuck from './errorsDuck';
 import { RootState, TypedColumnsList } from './types';
@@ -142,11 +143,11 @@ export const updateCell: Epic<AnyAction, AnyAction, RootState> = (
   action$.pipe(
     ofAction(actions.updateCell),
     map(({ payload }) => {
-      const { column, rowIdx } = payload.selectedCell;
+      const { column, row } = payload.selectedCell;
 
       return errorsDuck.actions.removeErrors({
         id: projectService.projectId,
-        path: [column.key, rowIdx],
+        path: [column.key, getRowId(row)],
       });
     }),
   );

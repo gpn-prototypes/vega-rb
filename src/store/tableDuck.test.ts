@@ -113,7 +113,11 @@ describe('tableDuck', () => {
         selectedCell: {
           column: { key: 'AREA', name: 'test' },
           rowIdx: 1,
-          row: {},
+          row: {
+            id: {
+              value: 124,
+            },
+          },
         },
         cellData: {
           value: 222,

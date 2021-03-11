@@ -10,7 +10,11 @@ export const gridCell: GridCell = {
   selectedCell: {
     column: { key: 'COLUMN_POLL_KEY' } as GridColumn,
     rowIdx: 123,
-    row: {} as GridRow,
+    row: {
+      id: {
+        value: 124,
+      },
+    } as GridRow,
   },
   cellData: {} as GridCellProperties,
 };

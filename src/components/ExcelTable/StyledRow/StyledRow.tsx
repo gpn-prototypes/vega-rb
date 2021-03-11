@@ -2,7 +2,8 @@ import React, { useRef } from 'react';
 import { CellRendererProps, Row, RowRendererProps } from 'react-data-grid';
 import { classnames } from '@bem-react/classnames';
 import { ContextMenuId, TableEntities } from 'components/ExcelTable/enums';
-import { useGetError } from 'hooks';
+import useGetError from 'hooks/useGetError';
+import { getRowId } from 'utils/getRowId';
 
 import { CellWithError, DropDownCell } from '../Cells';
 import { withContextMenu } from '../ContextMenu';
@@ -29,7 +30,7 @@ export default React.memo<RowRendererProps<GridRow>>(function StyledRow(props) {
     idx: props.rowIdx,
     element: props.row,
   });
-  const [error] = useGetError(`row-${props.rowIdx}`);
+  const [error] = useGetError(`row-${getRowId(props.row)}`);
 
   return withContextMenu(
     <Row

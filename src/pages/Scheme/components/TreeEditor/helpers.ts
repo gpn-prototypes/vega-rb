@@ -1,7 +1,9 @@
 import { TreeItem } from '@gpn-prototypes/vega-ui';
 import arrayToTree from 'array-to-tree';
-import { GridColumn, GridRow, TableEntities } from 'components/ExcelTable';
+import { TableEntities } from 'components/ExcelTable/enums';
+import { GridColumn, GridRow } from 'components/ExcelTable/types';
 import { get, groupBy, mergeWith } from 'lodash/fp';
+import { getRowId } from 'utils/getRowId';
 import { v4 as uuid } from 'uuid';
 
 import { CellPosition, TreeItemData } from './types';
@@ -129,15 +131,14 @@ export function getNodeListFromTableData(
   const filledRows = rows.filter((row) =>
     structureColumnsKeys.some(({ key }) => key !== 'id' && row[key]),
   );
-
   const nodes: TreeItem<TreeItemData>[] = [];
 
   structureColumnsKeys.forEach(({ key: columnKey }, columnIdx) => {
     if (columnIdx === 0) {
       const map = groupBy(
         (item) => item.name,
-        filledRows.map((row, rowIdx) =>
-          getTreeNodeItem(row, rowIdx, columnKey, columnIdx),
+        filledRows.map((row) =>
+          getTreeNodeItem(row, getRowId(row), columnKey, columnIdx),
         ),
       );
       const items = Object.keys(map)
@@ -151,8 +152,8 @@ export function getNodeListFromTableData(
 
       nodes.push(...items);
     } else {
-      const items = filledRows.map((row, rowIdx) =>
-        getTreeNodeItem(row, rowIdx, columnKey, columnIdx, nodes),
+      const items = filledRows.map((row) =>
+        getTreeNodeItem(row, getRowId(row), columnKey, columnIdx, nodes),
       );
 
       if (structureColumnsKeys.length - 1 === columnIdx) {
