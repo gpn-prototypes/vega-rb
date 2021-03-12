@@ -47,8 +47,8 @@ function CellWithError(props: Props, ref: React.Ref<HTMLDivElement>) {
     rowIdx: currentRowIdx,
   };
 
-  const selectCellWrapper = (openEditor?: boolean) => {
-    selectCell(position, openEditor);
+  const selectCellWrapper = (shouldOpenEditor?: boolean) => {
+    selectCell(position, shouldOpenEditor);
   };
 
   const handleCellClick = () => {

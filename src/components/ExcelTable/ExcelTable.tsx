@@ -9,7 +9,6 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ContextMenuId, TableEntities } from 'components/ExcelTable/enums';
 import { useUpdateErrors } from 'hooks';
-import { NoopFunction } from 'types';
 import { getColumnsByType } from 'utils/getColumnsByType';
 
 import { renderColumns } from './Columns/renderColumns';
@@ -23,6 +22,7 @@ import {
   GridCollection,
   GridColumn,
   GridRow,
+  onRowClick as onRowClickType,
   RowContextBody,
 } from './types';
 import { createColumn, getInsertableType } from './utils';
@@ -30,16 +30,13 @@ import { createColumn, getInsertableType } from './utils';
 import './ExcelTable.css';
 
 const cnExcelTableClass = cnExcelTable();
+
 interface IProps {
   data: GridCollection;
   errors: ColumnErrors;
   setColumns?: (data: GridColumn[]) => void;
   setRows?: (data: GridRow[], rowsChangeData?: RowsChangeData<GridRow>) => void;
-  onRowClick?: NoopFunction<{
-    rowIdx: number;
-    row: GridRow;
-    column: CommonTableColumn;
-  }>;
+  onRowClick?: onRowClickType;
 }
 
 export const ExcelTable: React.FC<IProps> = ({

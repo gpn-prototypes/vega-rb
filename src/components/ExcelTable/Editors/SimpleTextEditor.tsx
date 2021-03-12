@@ -17,6 +17,7 @@ export const SimpleTextEditor: React.FC<IProps> = ({
   const handleChange = ({ target }: EditorChangeEvent<HTMLInputElement>) => {
     const { value, type } = target;
     const columnKey = column.key;
+
     onRowChange({
       ...row,
       [columnKey]: {
@@ -24,10 +25,12 @@ export const SimpleTextEditor: React.FC<IProps> = ({
         value,
       },
     });
+
     if (type === 'blur') {
       onClose(true);
     }
   };
+
   return (
     <input
       className="rdg-text-editor"

@@ -3,7 +3,7 @@ import {
   CalculatedColumn,
   CellRendererProps,
   Column,
-  EditorProps,
+  EditorProps as CommonEditorProps,
   FormatterProps,
   HeaderRendererProps as BaseHeaderRendererProps,
 } from 'react-data-grid';
@@ -119,17 +119,15 @@ export interface DropdownOption {
   value: string;
   text: string;
 }
-export interface DropDownEditorProps extends EditorProps<GridRow | undefined> {
+export interface DropDownEditorProps
+  extends CommonEditorProps<GridRow | undefined> {
   options: { [index: string]: DropdownOption };
 }
+type EditorProps = CommonEditorProps<GridRow | undefined> | DropDownEditorProps;
 
-export type EditorResult =
-  | {
-      editor: ComponentType<
-        EditorProps<GridRow | undefined> | DropDownEditorProps
-      >;
-    }
-  | { editor: undefined };
+export type EditorResult = {
+  editor?: ComponentType<EditorProps>;
+};
 
 export type ColumnProperties = Partial<
   Record<keyof GridColumn, string | number | boolean>
@@ -145,3 +143,11 @@ export interface HeaderRendererProps extends BaseHeaderRendererProps<GridRow> {
   setColumnProps: SetColumnProperties;
   handleColumnsReorder: (sourceKey: string, targetKey: string) => void;
 }
+
+export interface onRowClickArgs {
+  rowIdx: number;
+  row: GridRow;
+  column: CommonTableColumn;
+}
+
+export type onRowClick = (args: onRowClickArgs) => void;

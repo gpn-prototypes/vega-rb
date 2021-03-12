@@ -39,7 +39,6 @@ function DropDownCell(
   const position = { rowIdx, idx: column.idx };
   const style = {
     width: column.width,
-    // left: column.left,
   };
 
   const cellClassName = classNames(
