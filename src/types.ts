@@ -4,8 +4,9 @@ import { DomainObject, RbDomainEntityIcons } from 'generated/graphql';
 
 type ProjectVID = string;
 
-interface Project {
+export interface Project {
   vid: ProjectVID;
+  version: number;
 }
 
 export interface CurrentProject {

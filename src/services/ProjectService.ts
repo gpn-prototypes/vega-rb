@@ -19,7 +19,6 @@ import { Just, None } from 'monet';
 import {
   GET_PROJECT_NAME,
   GET_TABLE_TEMPLATE,
-  GET_VERSION,
   LOAD_PROJECT,
   SAVE_PROJECT,
 } from 'pages/Scheme/components/Table/queries';
@@ -30,34 +29,40 @@ import {
   getGraphqlUri,
   getMockConceptions,
 } from 'services/utils';
-import { Identity } from 'types';
+import { Identity, Project } from 'types';
 import { packTableData } from 'utils';
 
 type ProjectServiceProps = {
   client: ApolloClient<NormalizedCacheObject>;
-  projectId: string;
+  project: Project;
   identity?: Identity;
 };
 
 class ProjectService {
-  private _client: ApolloClient<NormalizedCacheObject> | undefined;
+  #client: ApolloClient<NormalizedCacheObject> | undefined;
 
-  private _fetchPolicy: FetchPolicy = 'no-cache';
+  #fetchPolicy: FetchPolicy = 'no-cache';
 
-  private _identity: Identity | undefined;
+  #identity: Identity | undefined;
 
-  private _projectId = '';
+  #projectId = '';
+
+  #version = 0;
 
   get client() {
-    return this._client as ApolloClient<NormalizedCacheObject>;
+    return this.#client as ApolloClient<NormalizedCacheObject>;
   }
 
   get identity() {
-    return this._identity as Identity;
+    return this.#identity as Identity;
   }
 
-  get projectId() {
-    return this._projectId;
+  get projectId(): string {
+    return this.#projectId;
+  }
+
+  get version(): number {
+    return this.#version;
   }
 
   static getDistributionValue({
@@ -68,10 +73,13 @@ class ProjectService {
     ).orNull();
   }
 
-  init({ client, projectId, identity }: ProjectServiceProps) {
-    this._client = client;
-    this._projectId = projectId;
-    this._identity = identity;
+  init({ client, project, identity }: ProjectServiceProps): ProjectService {
+    this.#client = client;
+    this.#projectId = project.vid;
+    this.#version = project.version;
+    this.#identity = identity;
+
+    return this;
   }
 
   saveProject(
@@ -96,7 +104,7 @@ class ProjectService {
     });
   }
 
-  getTableTemplate() {
+  getTableTemplate(): Promise<ProjectStructure> {
     return this.client
       .query<Query>({
         query: GET_TABLE_TEMPLATE,
@@ -106,7 +114,7 @@ class ProjectService {
         context: {
           uri: getGraphqlUri(this.projectId),
         },
-        fetchPolicy: this._fetchPolicy,
+        fetchPolicy: this.#fetchPolicy,
       })
       .then<ProjectStructure>(({ data }) =>
         getOr(
@@ -177,23 +185,11 @@ class ProjectService {
       .query({
         query: GET_PROJECT_NAME,
         variables: {
-          vid: this.projectId,
+          vid: this.#projectId,
         },
         fetchPolicy: 'no-cache',
       })
       .then(({ data }) => data.project.name);
-  }
-
-  getProjectVersion() {
-    return this.client
-      .query({
-        query: GET_VERSION,
-        variables: {
-          vid: this.projectId,
-        },
-        fetchPolicy: this._fetchPolicy,
-      })
-      .then(({ data }) => data.project.version);
   }
 
   getProjectRecentlyEdited() {
@@ -208,14 +204,14 @@ class ProjectService {
       .then(({ data }) => data.project.recentlyEdited);
   }
 
-  getResourceBaseData() {
+  getResourceBaseData(): Promise<RbProject> {
     return this.client
       .query<Query>({
         query: LOAD_PROJECT,
         context: {
           uri: getGraphqlUri(this.projectId),
         },
-        fetchPolicy: this._fetchPolicy,
+        fetchPolicy: this.#fetchPolicy,
       })
       .then(({ data }) => {
         return getOr(
@@ -239,7 +235,7 @@ class ProjectService {
         context: {
           uri: getGraphqlUri(this.projectId),
         },
-        fetchPolicy: this._fetchPolicy,
+        fetchPolicy: this.#fetchPolicy,
         variables: {
           distribution: {
             parameters: (parameters as DistributionParameter[]).map(

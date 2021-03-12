@@ -9,6 +9,7 @@ module.exports = {
     'comma-dangle': 'off',
     'simple-import-sort/sort': 'warn',
     'no-unused-vars': 'warn',
+    'no-console': 'off',
     'prettier/prettier': ['error', localePrettierConfig],
   },
   overrides: [

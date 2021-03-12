@@ -32,7 +32,7 @@ import style from './Scheme.module.css';
 
 const SchemePage: React.FC = () => {
   const dispatch = useDispatch();
-  const { projectId } = useContext(ProjectContext);
+  const { project } = useContext(ProjectContext);
   const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
   const [selectedCell, setSelectedCell] = useState<Nullable<SelectedCell>>(
     null,
@@ -74,16 +74,16 @@ const SchemePage: React.FC = () => {
   };
 
   useEffect(() => {
-    projectService.init({
-      client,
-      projectId,
-    });
     projectService
+      .init({
+        client,
+        project,
+      })
       .getProjectName()
       .then((projectName) =>
         dispatch(projectDuck.actions.updateProjectName(projectName)),
       );
-  }, [client, dispatch, projectId]);
+  }, [client, dispatch, project]);
 
   useInterval(30000, () => {
     projectService

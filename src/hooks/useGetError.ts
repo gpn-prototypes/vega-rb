@@ -14,7 +14,7 @@ export default function useGetError(
   const errors = useSelector(
     ({ errors: errorsState }: RootState) => errorsState,
   );
-  const { projectId } = useContext(ProjectContext);
+  const { vid: projectId } = useContext(ProjectContext).project;
   const errorsList = useMemo<ColumnErrors>(
     () => getOr({}, ['byId', projectId], errors),
     [errors, projectId],

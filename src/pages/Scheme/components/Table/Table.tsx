@@ -27,7 +27,7 @@ interface IProps {
 export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   const dispatch = useDispatch();
   const client = useApolloClient() as ApolloClient<NormalizedCacheObject>;
-  const { projectId } = useContext(ProjectContext);
+  const { project } = useContext(ProjectContext);
   const reduxTableData = useSelector(({ table }: RootState) => table);
   const [, errors] = useGetError();
   const treeFilterData = useSelector(({ tree }: RootState) => tree.filter);
@@ -61,7 +61,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   useMount(() => {
     projectService.init({
       client,
-      projectId,
+      project,
     });
 
     loadTableData(dispatch).then();

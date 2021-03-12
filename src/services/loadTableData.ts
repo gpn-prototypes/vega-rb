@@ -10,14 +10,16 @@ const initAction = (template: ProjectStructure, version: number) =>
 export async function loadTableData(
   dispatch: Dispatch<unknown>,
 ): Promise<void> {
-  const projectVersion = await projectService.getProjectVersion();
+  const projectVersion = projectService.version;
   const resourceBaseData = await projectService.getResourceBaseData();
+  const dispatchOnInit = (structure: ProjectStructure) =>
+    dispatch(initAction(structure, projectVersion));
 
   if (resourceBaseData) {
     const { structure } = resourceBaseData.conceptions[0];
-    dispatch(initAction(structure, projectVersion));
+    dispatchOnInit(structure);
   } else if (resourceBaseData === null) {
     const structureTemplate = await projectService.getTableTemplate();
-    dispatch(initAction(structureTemplate, projectVersion));
+    dispatchOnInit(structureTemplate);
   }
 }

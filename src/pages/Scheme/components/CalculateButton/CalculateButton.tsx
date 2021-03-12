@@ -24,7 +24,7 @@ const loadArchive = async (fileId: string) => {
 
 export const CalculateButton: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const { projectId } = useContext(ProjectContext);
+  const { vid: projectId } = useContext(ProjectContext).project;
 
   const tableData = useSelector((state: RootState) => state.table);
   const dispatch = useDispatch();

@@ -117,7 +117,7 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
     mergeMap((service) =>
       forkJoin({
         structure: from(service.getTableTemplate()),
-        version: from(service.getProjectVersion()),
+        version: of(service.version),
       }).pipe(
         switchMap(({ structure, version }) =>
           from(

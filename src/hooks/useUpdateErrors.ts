@@ -29,7 +29,7 @@ function getCleanedErrorsList(
 }
 
 export default function useUpdateErrors(): UseUpdateErrors {
-  const { projectId } = useContext(ProjectContext);
+  const { vid: projectId } = useContext(ProjectContext).project;
 
   const [, errors] = useGetError();
   const dispatch = useDispatch();
