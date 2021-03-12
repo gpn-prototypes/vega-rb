@@ -11,7 +11,7 @@ export default function assembleAttributes(
 ): Array<AttributeInput> {
   return columns.map(({ key, name }) => {
     const attribute = tableTemplate.attributes.find(({ code }) => code === key);
-    const nameWithoutCommas = removeCommas(name);
+    const nameWithoutCommas = removeCommas(String(name));
 
     return omitTypename(
       defaultTo(

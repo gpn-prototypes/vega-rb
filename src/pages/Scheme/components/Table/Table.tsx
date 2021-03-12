@@ -1,4 +1,5 @@
 import React, { useContext, useMemo } from 'react';
+import { RowsChangeData } from 'react-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ApolloClient,
@@ -6,19 +7,23 @@ import {
   useApolloClient,
 } from '@apollo/client';
 import { useMount } from '@gpn-prototypes/vega-ui';
+import { ExcelTable } from 'components/ExcelTable';
+import { TableEntities } from 'components/ExcelTable/enums';
 import {
-  ExcelTable,
+  GridColumn,
   GridRow,
+  onRowClickArgs,
   SelectedCell,
-  TableEntities,
-} from 'components/ExcelTable';
+} from 'components/ExcelTable/types';
 import { ProjectContext } from 'components/Providers';
 import { useGetError } from 'hooks';
+import { flow, set } from 'lodash/fp';
 import { loadTableData } from 'services/loadTableData';
 import projectService from 'services/ProjectService';
 import tableDuck from 'store/tableDuck';
 import { RootState } from 'store/types';
 import { Nullable } from 'types';
+import { rowIsFulfilled } from 'utils/rowIsFullFilled';
 
 interface IProps {
   onSelect?: (data: Nullable<SelectedCell>) => void;
@@ -31,19 +36,10 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   const reduxTableData = useSelector(({ table }: RootState) => table);
   const [, errors] = useGetError();
   const treeFilterData = useSelector(({ tree }: RootState) => tree.filter);
-
+  const isTreeFilterActive =
+    treeFilterData.rows.length && treeFilterData.columns.length;
   const filteredData = useMemo(() => {
-    const rowIsFulfilled = (row: GridRow): boolean => {
-      const structureColumnsKeys = reduxTableData.columns
-        .filter(({ type }) => type === TableEntities.GEO_CATEGORY)
-        .map(({ key, name }) => ({
-          key,
-          name,
-        }));
-      return structureColumnsKeys.some(({ key }) => key !== 'id' && row[key]);
-    };
-
-    if (treeFilterData.rows.length && treeFilterData.columns.length) {
+    if (isTreeFilterActive) {
       return {
         ...reduxTableData,
         columns: reduxTableData.columns.filter(
@@ -51,12 +47,66 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
         ),
         rows: reduxTableData.rows.filter(
           (row, idx) =>
-            treeFilterData.rows.includes(idx) || !rowIsFulfilled(row),
+            treeFilterData.rows.includes(idx) ||
+            !rowIsFulfilled(row, reduxTableData.columns),
         ),
       };
     }
     return reduxTableData;
-  }, [reduxTableData, treeFilterData.columns, treeFilterData.rows]);
+  }, [
+    reduxTableData,
+    treeFilterData.columns,
+    treeFilterData.rows,
+    isTreeFilterActive,
+  ]);
+
+  const handleSetRows = (
+    data: GridRow[],
+    rowsChangeData?: RowsChangeData<GridRow>,
+  ): void => {
+    const updatedRows = data.filter((value, idx) =>
+      rowsChangeData?.indexes?.includes(idx),
+    );
+    const parentRowIdx = treeFilterData.rows[0];
+    const columnKeys = treeFilterData.columns;
+    const isGeoCategoryColumn =
+      TableEntities.GEO_CATEGORY ===
+      (rowsChangeData?.column as GridColumn).type;
+
+    const newRows = reduxTableData.rows.map((row) => {
+      const rowIdx = updatedRows.findIndex(
+        (updatedRow: GridRow) => updatedRow.id === row.id,
+      );
+
+      if (rowIdx !== -1 && isTreeFilterActive && isGeoCategoryColumn) {
+        return flow(
+          ...columnKeys.map((key) =>
+            set([key], reduxTableData.rows[parentRowIdx][key]),
+          ),
+        )(updatedRows[rowIdx]);
+      }
+
+      if (rowIdx !== -1) {
+        return updatedRows[rowIdx];
+      }
+
+      return row;
+    });
+
+    dispatch(tableDuck.actions.updateRows(newRows));
+  };
+
+  const handleSetColumns = (data: GridColumn[]): void => {
+    dispatch(tableDuck.actions.updateColumns(data));
+  };
+
+  const handleRowClick = ({ rowIdx, row, column }: onRowClickArgs): void => {
+    if (column.type === TableEntities.CALC_PARAM) {
+      onSelect({ rowIdx, row, column });
+    } else {
+      onSelect(null);
+    }
+  };
 
   useMount(() => {
     projectService.init({
@@ -74,27 +124,10 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
   return (
     <ExcelTable
       data={filteredData}
-      setColumns={(data): void => {
-        dispatch(tableDuck.actions.updateColumns(data));
-      }}
       errors={errors}
-      setRows={(data): void => {
-        dispatch(tableDuck.actions.updateRows(data));
-      }}
-      onRowClick={(rowIdx, row, column): void => {
-        if (column.type === TableEntities.CALC_PARAM) {
-          // TODO: to remove pass column objet
-          // onSelect(
-          //   row[column.key] || {
-          //     value: '',
-          //     args: undefined,
-          //   },
-          // );
-          onSelect({ rowIdx, row, column });
-        } else {
-          onSelect(null);
-        }
-      }}
+      setColumns={handleSetColumns}
+      setRows={handleSetRows}
+      onRowClick={handleRowClick}
     />
   );
 };

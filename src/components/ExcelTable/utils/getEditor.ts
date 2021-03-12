@@ -1,9 +1,9 @@
-import React, { forwardRef } from 'react';
-import { TableEntities } from 'components/ExcelTable/enums';
-import { OptionEntity } from 'components/ExcelTable/Models';
+import React from 'react';
 import { GeoObjectCategories } from 'generated/graphql';
 
 import { DropDownEditor, SimpleTextEditor } from '../Editors';
+import { TableEntities } from '../enums';
+import { OptionEntity } from '../Models';
 import { EditorResult } from '../types';
 
 export const entitiesOptions = {
@@ -12,13 +12,8 @@ export const entitiesOptions = {
 };
 
 const geoCategoryTypeEditor = (): EditorResult => ({
-  editor: forwardRef((props, ref) =>
-    React.createElement(DropDownEditor, {
-      ...props,
-      ref,
-      options: entitiesOptions,
-    }),
-  ),
+  editor: (props) =>
+    React.createElement(DropDownEditor, { ...props, options: entitiesOptions }),
 });
 
 const geoCategoryEditor = (): EditorResult => ({ editor: SimpleTextEditor });

@@ -1,14 +1,15 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { ReactText, useCallback, useMemo, useRef } from 'react';
 import ReactDataGrid, {
-  CalculatedColumn,
   DataGridHandle,
-  RowsUpdateEvent,
+  FillEvent,
+  PasteEvent,
+  RowsChangeData,
 } from 'react-data-grid';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { AutoSizer } from 'react-virtualized';
 import { ContextMenuId, TableEntities } from 'components/ExcelTable/enums';
 import { useUpdateErrors } from 'hooks';
+import { getColumnsByType } from 'utils/getColumnsByType';
 
 import { renderColumns } from './Columns/renderColumns';
 import { cnExcelTable } from './cn-excel-table';
@@ -16,10 +17,12 @@ import { HeaderContextMenu, RowContextMenu } from './ContextMenu';
 import StyledRow from './StyledRow';
 import {
   ColumnErrors,
+  CommonTableColumn,
   ContextBody,
   GridCollection,
   GridColumn,
   GridRow,
+  onRowClick as onRowClickType,
   RowContextBody,
 } from './types';
 import { createColumn, getInsertableType } from './utils';
@@ -28,18 +31,12 @@ import './ExcelTable.css';
 
 const cnExcelTableClass = cnExcelTable();
 
-type CommonTableColumn = GridColumn & CalculatedColumn<GridRow>;
-
 interface IProps {
   data: GridCollection;
   errors: ColumnErrors;
   setColumns?: (data: GridColumn[]) => void;
-  setRows?: (data: GridRow[]) => void;
-  onRowClick?: (
-    rowIdx: number,
-    row: GridRow,
-    column: CommonTableColumn,
-  ) => void;
+  setRows?: (data: GridRow[], rowsChangeData?: RowsChangeData<GridRow>) => void;
+  onRowClick?: onRowClickType;
 }
 
 export const ExcelTable: React.FC<IProps> = ({
@@ -52,11 +49,27 @@ export const ExcelTable: React.FC<IProps> = ({
   const { columns, rows } = data;
   const gridRef = useRef<DataGridHandle>(null);
   const updateErrors = useUpdateErrors();
+  const columnsByType = useMemo(() => {
+    const domainEntitiesColumns = getColumnsByType(
+      data.columns,
+      TableEntities.GEO_CATEGORY,
+    );
+    const calculationParametersColumns = getColumnsByType(
+      data.columns,
+      TableEntities.CALC_PARAM,
+    );
+    const riskColumns = getColumnsByType(data.columns, TableEntities.RISK);
+
+    return {
+      [TableEntities.GEO_CATEGORY]: domainEntitiesColumns,
+      [TableEntities.CALC_PARAM]: calculationParametersColumns,
+      [TableEntities.RISK]: riskColumns,
+    };
+  }, [data.columns]);
 
   const handleRowClick = useCallback(
     (rowIdx: number, row: GridRow, column: CommonTableColumn) => {
-      onRowClick(rowIdx, row, column);
-
+      onRowClick({ rowIdx, row, column });
       if (column.type === TableEntities.GEO_CATEGORY_TYPE) {
         gridRef.current?.selectCell({ rowIdx, idx: column.idx }, true);
       }
@@ -64,21 +77,9 @@ export const ExcelTable: React.FC<IProps> = ({
     [onRowClick],
   );
 
-  const handleRowsUpdate = useCallback(
-    ({ fromRow, toRow, updated }: RowsUpdateEvent<Partial<GridRow>>) => {
-      const newRows = [...rows];
-      for (let i = fromRow; i <= toRow; i += 1) {
-        newRows[i] = {
-          ...newRows[i],
-          ...Object.entries(updated).reduce(
-            (prev, [key, value]) => ({ ...prev, [key]: value }),
-            {},
-          ),
-        };
-      }
-      setRows(newRows);
-    },
-    [rows, setRows],
+  const onRowsChange = useCallback(
+    (newRows, rowsChangeData) => setRows(newRows, rowsChangeData),
+    [setRows],
   );
 
   const onColumnDelete = (
@@ -100,7 +101,42 @@ export const ExcelTable: React.FC<IProps> = ({
       ...columns.slice(insertIdx),
     ]);
   };
+  const handleFill = ({
+    columnKey,
+    sourceRow,
+    targetRows,
+  }: FillEvent<GridRow>): GridRow[] => {
+    return targetRows.map((row) => ({
+      ...row,
+      [columnKey]: sourceRow[columnKey],
+    }));
+  };
+  const handlePaste = ({
+    sourceColumnKey,
+    sourceRow,
+    targetColumnKey,
+    targetRow,
+  }: PasteEvent<GridRow>): GridRow => {
+    const isSameColumnType = (sourceKey: string, targetKey: string) =>
+      (Object.keys(columnsByType) as (
+        | TableEntities.GEO_CATEGORY
+        | TableEntities.CALC_PARAM
+        | TableEntities.RISK
+      )[]).some(
+        (key) =>
+          columnsByType[key].find((column) => column.key === sourceKey) &&
+          columnsByType[key].find((column) => column.key === targetKey),
+      );
 
+    if (isSameColumnType(sourceColumnKey, targetColumnKey)) {
+      return {
+        ...targetRow,
+        [targetColumnKey]: sourceRow[sourceColumnKey as keyof GridRow],
+      };
+    }
+
+    return targetRow;
+  };
   const onColumnInsertLeft = (
     e: React.MouseEvent<HTMLDivElement>,
     { idx }: ContextBody,
@@ -126,29 +162,26 @@ export const ExcelTable: React.FC<IProps> = ({
     return renderColumns(columns, errors, setColumns);
   }, [columns, setColumns, errors]);
 
+  const rowKeyGetter = (row: GridRow) => {
+    return row.id?.value as ReactText;
+  };
+
   return (
     <>
       <DndProvider backend={HTML5Backend}>
-        <div style={{ height: '100%', flex: 1 }}>
-          <AutoSizer className={cnExcelTableClass}>
-            {({ height, width }): JSX.Element => (
-              <ReactDataGrid
-                ref={gridRef}
-                columns={columnsList}
-                rows={rows}
-                width={width}
-                height={height}
-                rowHeight={32}
-                onRowClick={handleRowClick}
-                onRowsUpdate={handleRowsUpdate}
-                rowRenderer={StyledRow}
-                enableCellCopyPaste
-                enableCellDragAndDrop
-                enableCellAutoFocus
-              />
-            )}
-          </AutoSizer>
-        </div>
+        <ReactDataGrid
+          className={cnExcelTableClass}
+          ref={gridRef}
+          rowKeyGetter={rowKeyGetter}
+          columns={columnsList}
+          rows={rows}
+          rowHeight={32}
+          onFill={handleFill}
+          onPaste={handlePaste}
+          onRowClick={handleRowClick}
+          onRowsChange={onRowsChange}
+          rowRenderer={StyledRow}
+        />
       </DndProvider>
       <HeaderContextMenu
         id={ContextMenuId.HEADER}

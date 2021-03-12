@@ -1,6 +1,5 @@
 import React, { forwardRef, PropsWithChildren } from 'react';
 import { CellRendererProps } from 'react-data-grid';
-import { preventDefault, wrapEvent } from 'react-data-grid/lib/utils';
 import { IconSelect } from '@gpn-prototypes/vega-ui';
 import classNames from 'classnames';
 import { GridRow } from 'components/ExcelTable/types';
@@ -11,13 +10,6 @@ import './DropDownCell.css';
 
 type Props = PropsWithChildren<CellRendererProps<GridRow>>;
 
-function getClassNames(frozen: boolean | undefined, isLastFrozen: boolean) {
-  return {
-    'rdg-cell-frozen': frozen,
-    'rdg-cell-frozen-last': isLastFrozen,
-  };
-}
-
 function DropDownCell(
   props: Props,
   ref: React.Ref<HTMLDivElement>,
@@ -26,61 +18,80 @@ function DropDownCell(
     className,
     column,
     isRowSelected,
-    lastFrozenColumnIndex,
+    isCellSelected,
     row,
     rowIdx,
-    eventBus,
     onRowClick,
     onClick,
+    onRowChange,
     onDoubleClick,
     onContextMenu,
+    selectRow,
+    selectCell,
     onDragOver,
+    isCopied,
+    dragHandleProps,
+    isDraggedOver,
     ...rest
   } = props;
 
-  const { frozen, idx: columnIdx, cellClass } = column;
-
+  const { cellClass } = column;
+  const position = { rowIdx, idx: column.idx };
   const style = {
     width: column.width,
-    left: column.left,
   };
 
   const cellClassName = classNames(
     'rdg-cell',
-    getClassNames(frozen, columnIdx === lastFrozenColumnIndex),
+    {
+      'rdg-cell-frozen': column.frozen,
+      'rdg-cell-selected': isCellSelected,
+      'rdg-cell-dragged-over': isDraggedOver,
+      'rdg-cell-copied': isCopied,
+    },
     typeof cellClass === 'function' ? cellClass(row) : cellClass,
     cnDropDownCell.toString(),
     className,
   );
-
-  const selectCell = () => {
-    const cellPosition = { rowIdx, idx: column.idx };
-    eventBus.dispatch('SELECT_CELL', cellPosition);
+  const selectCellWrapper = (openEditor?: boolean) => {
+    selectCell(position, openEditor);
   };
 
   const handleCellClick = () => {
-    selectCell();
-    if (onRowClick) {
-      onRowClick(rowIdx, row, column);
-    }
+    selectCellWrapper(column.editorOptions?.editOnClick);
+    selectRow({
+      rowIdx,
+      checked: true,
+      isShiftClick: false,
+    });
+    onRowClick?.(rowIdx, row, column);
   };
 
-  const handleCellContextMenu = () => {
-    selectCell();
+  const handleRowChange = (newRow: GridRow) => {
+    onRowChange(rowIdx, newRow);
   };
 
   const onRowSelectionChange = (checked: boolean, isShiftClick: boolean) => {
-    eventBus.dispatch('SELECT_ROW', { rowIdx, checked, isShiftClick });
+    selectRow({
+      rowIdx,
+      checked,
+      isShiftClick,
+    });
   };
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
     <div
+      aria-colindex={column.idx + 1}
+      aria-selected={isCellSelected}
       ref={ref}
       className={classNames(cellClassName)}
-      onClick={wrapEvent(handleCellClick, onClick)}
-      onContextMenu={wrapEvent(handleCellContextMenu, onContextMenu)}
-      onDragOver={wrapEvent(preventDefault, onDragOver)}
+      onClick={(e) => {
+        onClick?.(e);
+        handleCellClick();
+      }}
+      onContextMenu={onContextMenu}
+      onDragOver={onDragOver}
       style={style}
       {...rest}
     >
@@ -90,6 +101,8 @@ function DropDownCell(
         column={column}
         isRowSelected={isRowSelected}
         onRowSelectionChange={onRowSelectionChange}
+        isCellSelected
+        onRowChange={handleRowChange}
       />
       <div className={cnDropDownCell('IconWrapper')}>
         <IconSelect size="xs" />

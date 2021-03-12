@@ -1,39 +1,43 @@
 import React from 'react';
-import { Editor } from 'react-data-grid';
-import { EditorProps } from 'react-data-grid/lib/common/types';
-import { GridCellProperties, GridRow } from 'components/ExcelTable/types';
-import { Nullable } from 'types';
+import { EditorProps } from 'react-data-grid';
+import { GridRow } from 'components/ExcelTable/types';
+import { getOr } from 'lodash/fp';
 
-type IProps = EditorProps<GridCellProperties | undefined>;
+import { autoFocusAndSelect } from '../helpers';
 
-export class SimpleTextEditor
-  extends React.Component<IProps>
-  implements Editor<GridRow> {
-  private readonly input: React.RefObject<Nullable<HTMLInputElement>>;
+type IProps = EditorProps<GridRow | undefined>;
+type EditorChangeEvent<T> = React.ChangeEvent<T> | React.FocusEvent<T>;
 
-  constructor(props: IProps) {
-    super(props);
-    this.input = React.createRef();
-  }
+export const SimpleTextEditor: React.FC<IProps> = ({
+  row,
+  column,
+  onRowChange,
+  onClose,
+}) => {
+  const handleChange = ({ target }: EditorChangeEvent<HTMLInputElement>) => {
+    const { value, type } = target;
+    const columnKey = column.key;
 
-  getInputNode(): HTMLInputElement | null {
-    return this.input.current;
-  }
-
-  getValue(): GridRow {
-    return {
-      [this.props.column.key]: {
-        value: this.input.current?.value || '',
+    onRowChange({
+      ...row,
+      [columnKey]: {
+        ...row?.[columnKey],
+        value,
       },
-    };
-  }
-
-  render(): React.ReactElement {
-    return React.createElement('input', {
-      className: 'rdg-text-editor',
-      ref: this.input,
-      defaultValue: this.props.value?.value,
-      onBlur: this.props.onCommit,
     });
-  }
-}
+
+    if (type === 'blur') {
+      onClose(true);
+    }
+  };
+
+  return (
+    <input
+      className="rdg-text-editor"
+      ref={autoFocusAndSelect}
+      value={getOr('', [column.key, 'value'], row)}
+      onChange={handleChange}
+      onBlur={handleChange}
+    />
+  );
+};

@@ -1,12 +1,13 @@
 import React from 'react';
-import { TableEntities } from 'components/ExcelTable/enums';
+import { FormatterProps } from 'react-data-grid';
 
-import { DropDownOption, FormatterProps, GridColumn, GridRow } from '../types';
+import { TableEntities } from '../enums';
+import { DropDownOption, GridColumn, GridRow } from '../types';
 
 export default React.memo<FormatterProps<GridRow>>(function Formatter({
   row,
   column,
-}) {
+}: FormatterProps<GridRow>) {
   const col = column as GridColumn;
   const gridRow = row[column.key];
 

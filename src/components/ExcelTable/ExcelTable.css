@@ -1,9 +1,23 @@
-@import url('./react-data-grid.css');
+.ExcelTable__Cell__Tooltip {
+  --tooltip-bg-color: var(--color-bg-alert);
+  font-size: var(--size-text-xs);
+
+  color: var(--color-typo-primary);
+}
 
 .ExcelTable {
-  height: 100%;
+  &.rdg {
+    --selection-color: var(--color-control-bg-border-focus);
+    --checkbox-color: var(--color-control-bg-primary);
+    --checkbox-focus-color: var(--color-control-bg-primary);
+    width: 100%;
+    height: 100%;
 
-  &__Header {
+    background: inherit;
+    border: none;
+  }
+
+  .ExcelTable__Header {
     padding: 0;
 
     align-items: center;
@@ -12,7 +26,9 @@
     font-weight: 400;
 
     color: var(--color-typo-primary);
-    background: var(--color-bg-default);
+
+    background-color: var(--color-bg-default);
+
     border-color: var(--color-bg-border);
 
     &.is-renaming {
@@ -32,11 +48,27 @@
     }
   }
 
-  &__Cell {
+  .ExcelTable__Cell {
+    z-index: 1;
+
+    padding: 0 8px;
+
+    overflow: hidden;
+
+    height: inherit;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    background-color: inherit;
     border-top-color: var(--color-bg-border);
+
     border-left: none;
     border-right: none;
+    border-bottom: 1px solid #ddd;
+
     border-bottom-color: var(--color-bg-border);
+    contain: none;
 
     &__Value.is-error {
       color: var(--color-typo-alert);
@@ -52,14 +84,88 @@
       background-color: var(--color-bg-secondary);
       border-right: solid 3px var(--color-bg-border);
     }
+  }
 
-    &__Tooltip {
-      --tooltip-bg-color: var(--color-bg-alert);
-      --color-typo-primary: #fafafa;
-      font-size: var(--size-text-xs);
+  .rdg-text-editor {
+    padding: 0 8px;
 
-      color: var(--color-typo-primary);
-    }
+    width: 100%;
+    height: 100%;
+
+    vertical-align: top;
+
+    background-color: var(--color-bg-default);
+
+    border: 2px solid var(--selection-color);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 0 3px rgba(0, 0, 0, 0.25),
+      0 2px 6px rgba(0, 0, 0, 0.25);
+  }
+
+  .rdg-text-editor:focus {
+    color: var(--color-control-typo-ghost-hover);
+    outline: none;
+    caret-color: var(--color-control-typo-ghost-hover);
+  }
+
+  .rdg-cell-selected {
+    position: relative;
+
+    z-index: 2;
+
+    overflow: visible;
+
+    box-shadow: inset 0 0 0 2px var(--selection-color);
+  }
+
+  .rdg-cell-mask {
+    border-color: var(--selection-color);
+  }
+
+  .rdg-cell-drag-handle {
+    position: absolute;
+
+    right: -4px;
+    bottom: -5px;
+
+    width: 8px;
+    height: 8px;
+
+    cursor: crosshair;
+    cursor: grab;
+    pointer-events: auto;
+
+    background: var(--selection-color);
+    border: 1px solid var(--color-bg-border);
+    border-right: 0;
+    border-bottom: 0;
+  }
+
+  .rdg-selected .rdg-cell-drag-handle {
+    background-color: var(--selection-color);
+  }
+
+  .rdg-cell.rdg-cell-editing {
+    z-index: 2;
+
+    padding: 0;
+  }
+
+  .rdg-row-selected:hover {
+    background-color: var(--color-control-bg-focus);
+  }
+
+  .rdg-cell-frozen {
+    position: sticky;
+    z-index: 2;
+  }
+
+  .rdg-cell-copied {
+    background: var(--color-control-bg-active);
+  }
+
+  .rdg-cell-dragged-over {
+    background: var(--color-control-bg-active);
+    border: 1px dashed var(--color-control-bg-default);
   }
 }
 

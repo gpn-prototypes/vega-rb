@@ -16,7 +16,7 @@ import { CategoryIcon, VisibleKeys } from 'components/ExcelTable/enums';
 import { VisibilityProperties } from 'components/ExcelTable/types';
 
 import { cnHierarchy } from '../cn-hierarchy';
-import ContentEditableField from '../ContentEditable';
+import { ContentEditableField } from '../ContentEditable';
 import HierarchyContextMenu from '../HierarchyContextMenu';
 import { Icons } from '../types';
 

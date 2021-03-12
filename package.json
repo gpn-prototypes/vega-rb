@@ -136,7 +136,7 @@
     "react": "^16.14.0",
     "react-app-polyfill": "^1.0.6",
     "react-contextmenu": "^2.14.0",
-    "react-data-grid": "7.0.0-canary.16",
+    "react-data-grid": "7.0.0-canary.36",
     "react-data-grid-addons": "^7.0.0-alpha.24",
     "react-dev-utils": "^10.2.1",
     "react-dnd": "^11.1.3",

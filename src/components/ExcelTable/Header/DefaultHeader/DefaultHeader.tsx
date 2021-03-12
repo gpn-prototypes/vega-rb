@@ -27,8 +27,15 @@ export default React.memo<HeaderRendererProps>(function DefaultHeader(props) {
   const { name, idx: columnIdx, type, headerId } = column;
 
   const editor = (
-    <InputEditor idx={columnIdx} name={name} setColumnProps={setColumnProps} />
+    <InputEditor
+      idx={columnIdx}
+      name={name as string}
+      setColumnProps={setColumnProps}
+    />
   );
+  const handleDoubleClick = (): void => {
+    setColumnProps(columnIdx, { isRenaming: true });
+  };
 
   return (
     <DraggableHeader
@@ -37,9 +44,7 @@ export default React.memo<HeaderRendererProps>(function DefaultHeader(props) {
         type === TableEntities.CALC_PARAM && styles.CalcParamHeader,
       )}
       onColumnsReorder={handleColumnsReorder}
-      onDoubleClick={(): void => {
-        setColumnProps(columnIdx, { isRenaming: true });
-      }}
+      onDoubleClick={handleDoubleClick}
       editor={editor}
       precedingContent={PrecedingContent(type!, headerId!)}
     />

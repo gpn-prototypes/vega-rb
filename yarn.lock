@@ -17938,12 +17938,12 @@ react-data-grid-addons@^7.0.0-alpha.24:
     reselect "^4.0.0"
     tslib "^1.10.0"
 
-react-data-grid@7.0.0-canary.16:
-  version "7.0.0-canary.16"
-  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-canary.16.tgz#bc7e76c8d0dea41c1e019089a376d5f5dca0be83"
-  integrity sha512-xH0lJBwrusMJaW1HqJ5q0WKy/ePYNPN+fnKwB0TTg+tQ2xbW3loRF5RfPkOxSZnS61rUGAnatAQyrMVrsmpNMg==
+react-data-grid@7.0.0-canary.36:
+  version "7.0.0-canary.36"
+  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-canary.36.tgz#3b44fe2093aecee641fcf565a8fbe773d0be7da7"
+  integrity sha512-r+IxHSzsW+QW7Vp3AM51dxfnMZ33o6uNurR/iedsaxUv9t0lqLoqPNLqwLytFR0dw1NHKBRQzZ2jJTTCGXXnGg==
   dependencies:
-    classnames "^2.2.6"
+    clsx "^1.1.1"
 
 react-data-grid@^7.0.0-alpha.24:
   version "7.0.0-canary.33"
