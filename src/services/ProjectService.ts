@@ -1,4 +1,8 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import {
+  ApolloClient,
+  FetchResult,
+  NormalizedCacheObject,
+} from '@apollo/client';
 import { FetchPolicy } from '@apollo/client/core/watchQueryOptions';
 import { GET_RECENTLY_EDITED } from 'components/CompetitiveAccess/queries';
 import { GET_DISTRIBUTION_VALUE } from 'components/DistributionSettings/queries';
@@ -9,6 +13,7 @@ import {
   DistributionInput,
   DistributionParameter,
   Mutation,
+  ProjectInner,
   ProjectStructure,
   ProjectStructureInput,
   Query,
@@ -31,13 +36,46 @@ import {
   getMockConceptions,
 } from 'services/utils';
 import { Identity } from 'types';
-import { packTableData } from 'utils';
+import { packTableData, unpackTableData } from 'utils';
 
 type ProjectServiceProps = {
   client: ApolloClient<NormalizedCacheObject>;
   projectId: string;
   identity?: Identity;
 };
+
+type Data = FetchResult['data'];
+
+type Project = ProjectInner & {
+  vid: string;
+  version: number;
+};
+
+const getProjectStructure = (
+  project: Partial<ProjectInner>,
+): ProjectStructure | undefined => {
+  return project.resourceBase?.project?.loadFromDatabase?.conceptions?.[0]
+    .structure;
+};
+
+const repackTableData = (
+  project: Project,
+  input?: ProjectStructureInput,
+): ProjectStructureInput => {
+  const structure = getProjectStructure(project);
+
+  if (structure === undefined) {
+    throw new Error('Cannot repack table data without project structure');
+  }
+
+  const data = unpackTableData(structure, project.version);
+
+  return packTableData(data, input ?? structure);
+};
+
+function throwError(message: string): never {
+  throw new Error(`[RB/ProjectService]: ${message}`);
+}
 
 class ProjectService {
   private _client: ApolloClient<NormalizedCacheObject> | undefined;
@@ -47,6 +85,10 @@ class ProjectService {
   private _identity: Identity | undefined;
 
   private _projectId = '';
+
+  private _project: null | Project = null;
+
+  private diffErrorTypename = 'UpdateProjectInnerDiff';
 
   get client() {
     return this._client as ApolloClient<NormalizedCacheObject>;
@@ -58,6 +100,18 @@ class ProjectService {
 
   get projectId() {
     return this._projectId;
+  }
+
+  get version() {
+    return this.project.version;
+  }
+
+  get project() {
+    if (this._project === null) {
+      throwError('Working project version is not setup');
+    }
+
+    return this._project;
   }
 
   static getDistributionValue({
@@ -74,15 +128,92 @@ class ProjectService {
     this._identity = identity;
   }
 
-  saveProject(
-    table: GridCollection,
-    structure: ProjectStructureInput,
-    version: string,
-  ) {
+  private static assertRequiredFields(
+    project: Partial<ProjectInner>,
+  ): asserts project is Project {
+    if (typeof project.version !== 'number') {
+      throwError('Missing project version');
+    }
+
+    if (typeof project.vid !== 'string') {
+      throwError('Missing project vid');
+    }
+  }
+
+  static isProject(data: Data): data is Partial<ProjectInner> {
+    return data?.__typename === 'ProjectInner';
+  }
+
+  private trySetupWorkingProject(data: Query) {
+    if (ProjectService.isProject(data.project)) {
+      ProjectService.assertRequiredFields(data.project);
+      this._project = data.project;
+    } else {
+      throwError('"project" is not found in query');
+    }
+  }
+
+  private getDiffResolvingConfig() {
+    return {
+      maxAttempts: 20,
+      errorTypename: this.diffErrorTypename,
+      mergeStrategy: {
+        default: 'replace',
+      },
+      projectAccessor: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        fromDiffError: (data: Record<string, any>) => ({
+          remote: {
+            version: data.remoteProject.version,
+            projectInput: getMockConceptions({
+              name: 'conception_1',
+              description: '',
+              probability: 1,
+              structure: repackTableData(data.remoteProject),
+            }),
+          },
+          local: {
+            version: this.project.version,
+            projectInput: getMockConceptions({
+              name: 'conception_1',
+              description: '',
+              probability: 1,
+              structure: repackTableData(this.project),
+            }),
+          },
+        }),
+      },
+    };
+  }
+
+  async getStructure(): Promise<ProjectStructure> {
+    let structure = getProjectStructure(this.project);
+
+    if (structure === undefined) {
+      // eslint-disable-next-line no-console
+      console.info(
+        'Local version of project stucture not found. Trying to fetch from template...',
+      );
+      try {
+        structure = await this.getTableTemplate();
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Cannot fetch resource base structure');
+        throw error;
+      }
+    }
+
+    return structure;
+  }
+
+  async saveProject(table: GridCollection) {
+    const structure = await this.getStructure();
+
     return this.client.mutate({
       mutation: SAVE_PROJECT,
       context: {
         uri: getGraphqlUri(this.projectId),
+        projectDiffResolving: this.getDiffResolvingConfig(),
       },
       variables: {
         projectInput: getMockConceptions({
@@ -91,7 +222,7 @@ class ProjectService {
           probability: 1,
           structure: packTableData(table, structure),
         }),
-        version,
+        version: this.project.version,
       },
     });
   }
@@ -108,10 +239,11 @@ class ProjectService {
         },
         fetchPolicy: this._fetchPolicy,
       })
-      .then<ProjectStructure>(({ data }) =>
-        getOr(
+      .then<ProjectStructure>(({ data }) => {
+        return getOr(
           None<ProjectStructure>(),
           [
+            'project',
             'resourceBase',
             'project',
             'template',
@@ -120,8 +252,8 @@ class ProjectService {
             'structure',
           ],
           data,
-        ),
-      );
+        );
+      });
   }
 
   async getCalculationArchive(
@@ -143,30 +275,30 @@ class ProjectService {
     };
   }
 
-  getCalculationResultFileId(
-    tableData: GridCollection,
-    conceptionStructure: ProjectStructureInput,
-  ) {
+  async getCalculationResultFileId(tableData: GridCollection) {
+    const structure = await this.getStructure();
     return this.client
       .mutate<Mutation>({
         mutation: CALCULATION_PROJECT,
         context: {
           uri: getGraphqlUri(this.projectId),
+          projectDiffResolving: this.getDiffResolvingConfig(),
         },
         fetchPolicy: 'no-cache',
         variables: {
+          version: this.project.version,
           projectInput: getMockConceptions({
             name: 'conception_1',
             description: 'описание',
             probability: 1,
-            structure: packTableData(tableData, conceptionStructure),
+            structure: packTableData(tableData, structure),
           }),
         },
       })
       .then(({ data }) =>
         getOr(
           None<CalculatedOrError>(),
-          ['resourceBase', 'calculateProject'],
+          ['project', 'resourceBase', 'calculateProject'],
           data,
         ),
       );
@@ -208,7 +340,7 @@ class ProjectService {
       .then(({ data }) => data.project.recentlyEdited);
   }
 
-  getResourceBaseData() {
+  getResourceBaseData(): Promise<RbProject> {
     return this.client
       .query<Query>({
         query: LOAD_PROJECT,
@@ -218,9 +350,11 @@ class ProjectService {
         fetchPolicy: this._fetchPolicy,
       })
       .then(({ data }) => {
+        this.trySetupWorkingProject(data);
+
         return getOr(
           None<RbProject>(),
-          ['resourceBase', 'project', 'loadFromDatabase'],
+          ['project', 'resourceBase', 'project', 'loadFromDatabase'],
           data,
         );
       });
@@ -254,7 +388,7 @@ class ProjectService {
       })
       .then(({ data }) => {
         const distributionChart =
-          data?.resourceBase.distribution?.distributionChart;
+          data?.project.resourceBase.distribution?.distributionChart;
         const errors = distributionChart?.errors;
 
         return {

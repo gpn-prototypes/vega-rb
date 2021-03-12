@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Button } from '@gpn-prototypes/vega-ui';
 import { ColumnErrors } from 'components/ExcelTable';
 import { ProjectContext } from 'components/Providers';
 import projectService from 'services/ProjectService';
 import errorsDuck from 'store/errorsDuck';
-import { RootState } from 'store/types';
-import { assembleErrors } from 'utils';
+import tableDuck from 'store/tableDuck';
+import { assembleErrors, unpackTableData } from 'utils';
 
 const loadArchive = async (fileId: string) => {
   const { filename, data } = await projectService.getCalculationArchive(fileId);
@@ -26,7 +26,6 @@ export const CalculateButton: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { projectId } = useContext(ProjectContext);
 
-  const tableData = useSelector((state: RootState) => state.table);
   const dispatch = useDispatch();
 
   const dispatchErrors = (id: string, errors: ColumnErrors) =>
@@ -38,27 +37,32 @@ export const CalculateButton: React.FC = () => {
     );
 
   const handleClick = async () => {
-    projectService.getTableTemplate().then((templateStructure) => {
+    try {
       setIsLoading(true);
 
-      return projectService
-        .getCalculationResultFileId(tableData, templateStructure)
-        .then(({ resultId, errors }) => {
-          setIsLoading(false);
+      await projectService.getResourceBaseData();
+      const structure = await projectService.getStructure();
+      const data = unpackTableData(structure, projectService.version);
 
-          if (resultId) {
-            loadArchive(resultId);
-            dispatchErrors(projectId, {});
-          } else if (errors?.length) {
-            dispatchErrors(projectId, assembleErrors(errors));
-          }
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          // eslint-disable-next-line no-console
-          console.error('Something went wrong by calculating...', error);
-        });
-    });
+      dispatch(tableDuck.actions.initState(data));
+
+      const {
+        resultId,
+        errors,
+      } = await projectService.getCalculationResultFileId(data);
+
+      if (resultId) {
+        await loadArchive(resultId);
+        dispatchErrors(projectId, {});
+      } else if (errors?.length) {
+        dispatchErrors(projectId, assembleErrors(errors));
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Something went wrong by calculating...', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

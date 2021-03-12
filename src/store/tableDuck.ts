@@ -4,19 +4,14 @@ import {
   GridColumn,
   GridRow,
 } from 'components/ExcelTable/types';
+import { RbProject } from 'generated/graphql';
 import { ofAction } from 'operators/ofAction';
 import { Epic } from 'redux-observable';
-import { forkJoin, from, of, throwError } from 'rxjs';
-import {
-  catchError,
-  distinctUntilChanged,
-  ignoreElements,
-  map,
-  mergeMap,
-  switchMap,
-} from 'rxjs/operators';
+import { EMPTY, from, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import actionCreatorFactory, { AnyAction } from 'typescript-fsa';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
+import { unpackTableData } from 'utils';
 import { getRowId } from 'utils/getRowId';
 
 import errorsDuck from './errorsDuck';
@@ -112,27 +107,38 @@ const saveToStorageEpic: Epic<AnyAction, AnyAction, RootState> = (
       actions.updateCell,
       actions.updateColumnsByType,
     ),
-    distinctUntilChanged(),
-    mergeMap((_) => of(projectService)),
-    mergeMap((service) =>
-      forkJoin({
-        structure: from(service.getTableTemplate()),
-        version: from(service.getProjectVersion()),
-      }).pipe(
-        switchMap(({ structure, version }) =>
-          from(
-            service.saveProject(state$.value.table, structure, version),
-          ).pipe(catchError((err) => throwError(err))),
-        ),
+    switchMap(() =>
+      from(projectService.saveProject(state$.value.table)).pipe(
         catchError((err) => {
           // TODO: добавить обработчик для информирования пользователя сообщением
           // eslint-disable-next-line no-console
-          console.trace('Critical exception at send request to server', err);
+          console.error('Critical exception at save project to server', err);
           return of({});
         }),
+        switchMap(() =>
+          from<Promise<RbProject>>(projectService.getResourceBaseData()).pipe(
+            catchError((err) => {
+              // TODO: добавить обработчик для информирования пользователя сообщением
+              // eslint-disable-next-line no-console
+              console.error(
+                'Critical exception at fetch project from server',
+                err,
+              );
+
+              return EMPTY;
+            }),
+            map((loadFromDatabase: RbProject) =>
+              actions.initState(
+                unpackTableData(
+                  loadFromDatabase.conceptions[0].structure,
+                  projectService.version,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     ),
-    ignoreElements(),
   );
 
 export const updateCell: Epic<AnyAction, AnyAction, RootState> = (

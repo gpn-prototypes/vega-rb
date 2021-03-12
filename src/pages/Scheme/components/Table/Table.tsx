@@ -64,7 +64,7 @@ export const Table: React.FC<IProps> = ({ onSelect = (): void => {} }) => {
       projectId,
     });
 
-    loadTableData(dispatch).then();
+    loadTableData(dispatch);
   });
 
   useMount(() => {

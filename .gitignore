@@ -12,6 +12,7 @@ gen:schema.sh
 
 # testing
 /coverage
+/reports
 
 # production
 /build
