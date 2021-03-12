@@ -29,7 +29,7 @@ else
   docker build -t $TAG --no-cache ./ci
 fi
 
-docker rm $NAME
+docker 2>/dev/null 1>&2 rm $NAME || true
 
 docker run \
   --name "$NAME" \
